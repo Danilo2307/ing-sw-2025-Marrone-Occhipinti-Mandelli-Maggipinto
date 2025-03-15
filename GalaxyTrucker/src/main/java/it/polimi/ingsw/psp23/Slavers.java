@@ -3,6 +3,9 @@ package it.polimi.ingsw.psp23;
 import java.util.List;
 
 public class Slavers extends Card{
+
+    // Federico
+
     private int cannonStrength;
     private int membersStolen;
     private int prize;
