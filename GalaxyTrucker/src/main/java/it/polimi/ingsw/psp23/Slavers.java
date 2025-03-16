@@ -16,6 +16,7 @@ public class Slavers extends Card{
         this.days = days;
     }
 
+    @Override
     public void play(List<Player> players){
         int i = 0;
         boolean defeated = false;
