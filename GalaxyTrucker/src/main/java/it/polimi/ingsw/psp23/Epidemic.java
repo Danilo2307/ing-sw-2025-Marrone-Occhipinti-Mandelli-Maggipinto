@@ -19,6 +19,7 @@ public class Epidemic extends Card {
     // fine vado a fare un ulteriore controllo su tutta la nave e diminuisco di uno il numero di membri di ogni hub con il flag a true e mano a mano imposto
     // nuovamente quel flag a false(posso fare così perchè facendo una scansione sequenziale della matrice non rischio di ripassare per lo stesso hub due volte).
     // In questo scrorrimento finale decrementerò anche il numero di componenti totale(crew) di ogni nave di uno per ogni hub visited che incontro.
+    @Override
     public void play(List<Player> players){
         for(Player p : players){
 
