@@ -33,97 +33,111 @@ public class CombatZone extends Card {
         else if(i==3)
             return penalty3;
     }
+
+    private int findMinMembers(List<Player> players){
+        int size = players.size();
+        int pos = -1;
+        for(int i=0;i<size;i++){
+            if(i==0) {
+                tmp = players.get(i).getTruck().getCrew();
+                pos = i;
+            }else if(tmp > players.get(i).getTruck().getCrew()) {
+                tmp = players.get(i).getTruck().getCrew();
+                pos = i;
+            }
+        }
+
+        return pos;
+    }
+
+    private int findMinCannonStrength(List<Player> players){
+        int size = players.size();
+        int pos = -1;
+        int tmp = -1;
+        for(int i=0;i<size;i++){
+            if(i==0) {
+                tmp = players.get(i).getTruck().getCannonStrength();
+                pos = i;
+            }else if(tmp > players.get(i).getTruck().getCannonStrength()){
+                tmp = players.get(i).getTruck().getCannonStrength(); //get cannon strength si occuperà dell'input sulle batterie
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private int findMinEngineStrength(List<Player> players){
+        int size = players.size();
+        int pos = -1;
+        int tmp = -1;
+        for(int i=0;i<size;i++){
+            if(i==0) {
+                tmp = players.get(i).getTruck().getEngineStrength();
+                pos = i;
+            }else if(tmp > players.get(i).getTruck().getEngineStrength()){
+                tmp = players.get(i).getTruck().getEngineStrength(); //get engine strength si occuperà dell'input sulle batterie
+                pos = i;
+            }
+        }
+    }
+
 @Override
     public void play(List<Player> players){
-        CannonShot c;
         int impactLine;
-        int i, pos;
+        int i, pos=-1;
         int size = players.size();
-        int tmp;
-        //inizio prima sfida
-        if(penalty1.equals("Members")){
-            for(i=0;i<size;i++){
-                if(i==0) {
-                    tmp = players.get(i).getTruck().getCrew();
-                    pos = i;
-                }else if(tmp > players.get(i).getTruck().getCrew()) {
-                    tmp = players.get(i).getTruck().getCrew();
-                    pos = i;
-                }
-            }
-            System.out.println(players.get(i).nickname+" has less crew members!");
-            players.get(i).updatePosition(-daysLost);
-        }else if(penalty1.equals("Cannon_strength")){
-            for(i=0;i<size;i++){
-                if(i==0) {
-                    tmp = players.get(i).getTruck().getCannonStrength();
-                    pos = i;
-                }else if(tmp > players.get(i).getTruck().getCannonStrength()){
-                    tmp = players.get(i).getTruck().getCannonStrength(); //get cannon strength si occuperà dell'input sulle batterie
-                    pos = i;
-                }
-            }
+        int tmp = -1;
+//inizio prima sfida
+        if(penalty1 == Challenge.Members){
+            pos = findMinMembers(players);
+
+            System.out.println(players.get(pos).nickname+" has less crew members!");
+            players.get(pos).updatePosition(-daysLost);
+        }else if(penalty1 == Challenge.Cannon_strength){
+            pos = findMinCannonStrength(players);
             System.out.println(players.get(pos).nickname+" has less cannon strength!");
             players.get(pos).updatePosition(-daysLost);
 
 
+        }else{
+            throw new IllegalArgumentException("Eccezione in combatzone ");
         }
 
 //inizio seconda sfida
-            for(i=0;i<size;i++){
-                if(i==0) {
-                    tmp = players.get(i).getTruck().getEngineStrength();
-                    pos = i;
-                }else if(tmp > players.get(i).getTruck().getEngineStrength()){
-                    tmp = players.get(i).getTruck().getEngineStrength(); //get engine strength si occuperà dell'input sulle batterie
-                    pos = i;
-                }
-            }
+            pos = findMinEngineStrength(players);
 
         System.out.println(players.get(pos).nickname + " has less engine strength!");
 
-        if(penalty2.equals("Members")) {
+        if(penalty2 == Challenge.Members) {
             players.get(pos).getTruck().reduceHubCrew(membersLost);
             players.get(pos).getTruck().reduceCrew(membersLost);
-        } else if(penalty2.equals("Goods")){
+        } else if(penalty2 == Challenge.Goods){
             players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
+        }else{
+            throw new IllegalArgumentException("Eccezione in combatzone ");
         }
 
-        //inizio terza sfida
-        if(penalty3.equals("Members")){
-            for(i=0;i<size;i++){
-                if(i==0) {
-                    tmp = players.get(i).getTruck().getCrew();
-                    pos = i;
-                }else if(tmp > players.get(i).getTruck().getCrew()) {
-                    tmp = players.get(i).getTruck().getCrew();
-                    pos = i;
-                }
-            }
+//inizio terza sfida
+        if(penalty3 == Challenge.Members){
+            pos = findMinMembers(players);
 
             System.out.println(players.get(pos).nickname + " has less crew members!");
-            for(c: cannonshot){
+            for(Cannonshot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
 
 
 
-        }else if(penalty3.equals("Cannon_strength")){
-            for(i=0;i<size;i++){
-                if(i==0) {
-                    tmp = players.get(i).getTruck().getCannonStrength();
-                    pos = i;
-                }else if(tmp > players.get(i).getTruck().getCannonStrength()){
-                    tmp = players.get(i).getTruck().getCannonStrength(); //get cannon strength si occuperà dell'input sulle batterie
-                    pos = i;
-                }
-            }
+        }else if(penalty3 == Challenge.Cannon_strength){
+            pos = findMinCannonStrength(players);
             System.out.println(players.get(pos).nickname + " has less cannon strength!");
-            for(c: cannonshot){
+            for(Cannonshot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
+        }else{
+            throw new IllegalArgumentException("Eccezione in combatzone");
         }
 
 
