@@ -4,7 +4,7 @@ import java.util.List;
 public class Planets extends Card {
     private final int daysLost;
     private final List<Item[]> planetGoods;
-
+    //Federico
     Planets (int level, int daysLost, List<Item[]> planetGoods) {
         super(level);
         this.daysLost = daysLost;

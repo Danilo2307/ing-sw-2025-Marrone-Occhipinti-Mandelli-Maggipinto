@@ -23,7 +23,8 @@ public class Epidemic extends Card {
     public void play(List<Player> players){
         for(Player p : players){
 
-            Component[][] nave = p.getTruck().getShip(); // ho creato questa variabile in modo da migliorare la leggibilità del codice
+            Component[][] nave; // ho creato questa variabile in modo da migliorare la leggibilità del codice
+            nave = p.getTruck().getShip();
 
             for(int i = 0; i < nave.length; i++){
                 for(int j = 0; j < nave[i].length; j++){

@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23;
 import java.util.List;
 
 public class MeteorSwarm extends Card {
+    //Federico
     // lista di meteore già ordinata secondo l'ordine di impatto: from up-down and from left-right
     private final List<Meteor> meteors;
 
