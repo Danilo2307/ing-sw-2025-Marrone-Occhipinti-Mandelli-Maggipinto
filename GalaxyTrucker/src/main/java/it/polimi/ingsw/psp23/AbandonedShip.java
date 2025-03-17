@@ -1,13 +1,15 @@
 package it.polimi.ingsw.psp23;
+import java.util.List;
 
 public class AbandonedShip extends Card{
     //Danilo
 
-    int days;
-    int cosmicCredits;
-    int numMembers;
+    private int days;
+    private int cosmicCredits;
+    private int numMembers;
 
-    public AbandonedShip(boolean isSold, int days, int cosmicCredits, int numMembers) {
+    AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
+        super(level);
         this.days = days;
         this.cosmicCredits = cosmicCredits;
         this.numMembers = numMembers;

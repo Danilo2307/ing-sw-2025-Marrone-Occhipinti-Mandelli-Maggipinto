@@ -4,12 +4,13 @@ import java.util.List;
 
 public class Pirates extends Card{
     // Danilo
-    int prize;
-    int days;
-    int firepower;
+    private int prize;
+    private int days;
+    private int firepower;
     List <CannonShot> cannonShot;
 
-    public Pirates(int prize, int days, int firepower, List <CannonShot> cannonShot) {
+    Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
+        super(level);
         this.prize = prize;
         this.days = days;
         this.firepower = firepower;
@@ -29,6 +30,8 @@ public class Pirates extends Card{
     public List<CannonShot> getCannonShot() {
         return cannonShot;
     }
+
+    @Override
     public void play(List<PLayer> players){
         Boolean takePrize = false;
         int size = players.size();
@@ -50,7 +53,7 @@ public class Pirates extends Card{
                 }
 
             }else{
-                for(c : cannonShot) {
+                for(Cannonshot c : cannonShot) {
                     impactLine = DiceUtility.roll2to12();
                     players.get(i).getTruck().handleCannonShot(c, impactLine);
 

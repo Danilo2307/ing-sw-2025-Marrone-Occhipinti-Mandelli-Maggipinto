@@ -1,20 +1,21 @@
 package it.polimi.ingsw.psp23;
+import java.util.List;
 
 public class CombatZone extends Card {
     // Danilo
 
-    String penalty1;
-    String penalty2;
-    String penalty3;
-    int daysLost;
-    int goodsLost;
-    int membersLost;
-    private final List<CannonShot> cannonshot;
+    Challenge penalty1;
+    Challenge penalty2;
+    Challenge penalty3;
+    private int daysLost;
+    private int goodsLost;
+    private int membersLost;
 
     //la maggior parte dei for in questo codice servono a trovare un membro che abbia uno dei parametri minimo
     //quindi si potrebbe anche pensare di definire dei metodi per farlo
 
-    public CombatZone(int daysLost, int goodsLost, int membersLost,String penalty1,String penalty2, String penalty3,List<CannonShot> cannonshot) {
+    CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3,List<CannonShot> cannonshot) {
+        super(level);
         this.daysLost = daysLost;
         this.goodsLost = goodsLost;
         this.membersLost = membersLost;
@@ -24,17 +25,15 @@ public class CombatZone extends Card {
         this.cannonshot = cannonshot;
     }
 
-    public String getPenalty1(int i) {
+    public Challenge getPenalty1(int i) {
         if(i==1)
             return penalty1;
         else if(i==2)
             return penalty2;
         else if(i==3)
             return penalty3;
-        else
-            return "error";
     }
-
+@Override
     public void play(List<Player> players){
         CannonShot c;
         int impactLine;
@@ -45,10 +44,10 @@ public class CombatZone extends Card {
         if(penalty1.equals("Members")){
             for(i=0;i<size;i++){
                 if(i==0) {
-                    tmp = players.get(i).getTruck().crew;
+                    tmp = players.get(i).getTruck().getCrew();
                     pos = i;
-                }else if(tmp > players.get(i).getTruck().crew) {
-                    tmp = players.get(i).getTruck().crew;
+                }else if(tmp > players.get(i).getTruck().getCrew()) {
+                    tmp = players.get(i).getTruck().getCrew();
                     pos = i;
                 }
             }
@@ -94,10 +93,10 @@ public class CombatZone extends Card {
         if(penalty3.equals("Members")){
             for(i=0;i<size;i++){
                 if(i==0) {
-                    tmp = players.get(i).getTruck().crew;
+                    tmp = players.get(i).getTruck().getCrew();
                     pos = i;
-                }else if(tmp > players.get(i).getTruck().crew) {
-                    tmp = players.get(i).getTruck().crew;
+                }else if(tmp > players.get(i).getTruck().getCrew()) {
+                    tmp = players.get(i).getTruck().getCrew();
                     pos = i;
                 }
             }
