@@ -3,16 +3,6 @@ package it.polimi.ingsw.psp23;
 public class CombatZone extends Card {
     // Danilo
 
-    //legenda dei char: E: engine strength
-    //                  C: cannon strength
-    //                  M: members number
-    //                  D: days lost
-    //                  G: Goods
-    //                  R: right
-    //                  L: left
-    //                  U: Up
-    //                  B: bottom
-    // è sottinteso che le regole della carta impongano le sfide a chi ha il minor valore di questi attributi
     String penalty1;
     String penalty2;
     String penalty3;
@@ -20,6 +10,9 @@ public class CombatZone extends Card {
     int goodsLost;
     int membersLost;
     private final List<CannonShot> cannonshot;
+
+    //la maggior parte dei for in questo codice servono a trovare un membro che abbia uno dei parametri minimo
+    //quindi si potrebbe anche pensare di definire dei metodi per farlo
 
     public CombatZone(int daysLost, int goodsLost, int membersLost,String penalty1,String penalty2, String penalty3,List<CannonShot> cannonshot) {
         this.daysLost = daysLost;
