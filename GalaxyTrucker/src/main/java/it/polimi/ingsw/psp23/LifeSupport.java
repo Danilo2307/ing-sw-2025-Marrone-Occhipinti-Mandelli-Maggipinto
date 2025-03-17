@@ -5,12 +5,7 @@ public class LifeSupport extends Component{
     private Color c;
 
     LifeSupport(int up, int down, int left, int right, int x,int y,Color c) {
-        super(up);
-        super(down);
-        super(left);
-        super(right);
-        super(x);
-        super(y);
+        super(up,down,left,right,x,y);
         this.c = c;
     }
 
