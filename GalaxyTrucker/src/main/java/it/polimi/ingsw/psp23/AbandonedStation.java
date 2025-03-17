@@ -15,14 +15,6 @@ public class AbandonedStation extends Card {
         this.prize = prize;
     }
 
-    public int getDays() {
-        return days;
-    }
-
-    public int getNumMembers() {
-        return numMembers;
-    }
-
     public void play(List<Player> players) {
         for (Player player : players) {
             if (player.isInGame() && player.getTruck().getCrewSize() >= numMembers) {
