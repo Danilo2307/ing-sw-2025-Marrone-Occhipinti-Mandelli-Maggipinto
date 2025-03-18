@@ -39,6 +39,7 @@ public class CombatZone extends Card {
     private int findMinMembers(List<Player> players){
         int size = players.size();
         int pos = -1;
+        int tmp = 0;
         for(int i=0;i<size;i++){
             if(i==0) {
                 tmp = players.get(i).getTruck().getCrew();
@@ -94,11 +95,11 @@ public class CombatZone extends Card {
         if(penalty1 == Challenge.Members){
             pos = findMinMembers(players);
 
-            System.out.println(players.get(pos).nickname+" has less crew members!");
+            System.out.println(players.get(pos).getNickname() +" has less crew members!");
             players.get(pos).updatePosition(-daysLost);
         }else if(penalty1 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
-            System.out.println(players.get(pos).nickname+" has less cannon strength!");
+            System.out.println(players.get(pos).getNickname+" has less cannon strength!");
             players.get(pos).updatePosition(-daysLost);
 
 
@@ -109,7 +110,7 @@ public class CombatZone extends Card {
 //inizio seconda sfida
             pos = findMinEngineStrength(players);
 
-        System.out.println(players.get(pos).nickname + " has less engine strength!");
+        System.out.println(players.get(pos).getNickname() + " has less engine strength!");
 
         if(penalty2 == Challenge.Members) {
             players.get(pos).getTruck().reduceHubCrew(membersLost);
@@ -124,8 +125,8 @@ public class CombatZone extends Card {
         if(penalty3 == Challenge.Members){
             pos = findMinMembers(players);
 
-            System.out.println(players.get(pos).nickname + " has less crew members!");
-            for(Cannonshot c: cannonshot){
+            System.out.println(players.get(pos).getNickname() + " has less crew members!");
+            for(CannonShot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
@@ -134,8 +135,8 @@ public class CombatZone extends Card {
 
         }else if(penalty3 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
-            System.out.println(players.get(pos).nickname + " has less cannon strength!");
-            for(Cannonshot c: cannonshot){
+            System.out.println(players.get(pos).getNickname + " has less cannon strength!");
+            for(CannonShot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
