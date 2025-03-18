@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23.model.cards;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
 
 public class CannonShot {
     private final boolean big;
