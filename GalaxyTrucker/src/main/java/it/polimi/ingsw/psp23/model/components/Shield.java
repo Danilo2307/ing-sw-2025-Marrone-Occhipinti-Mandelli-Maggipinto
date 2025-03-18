@@ -17,19 +17,19 @@ public class Shield extends Component {
         this.leftCovered = leftCovered;
     }
 
-    public Boolean getRightCovered(){
+    public boolean getRightCovered(){
         return rightCovered;
     }
 
-    public Boolean getLeftCovered(){
+    public boolean getLeftCovered(){
         return leftCovered;
     }
 
-    public Boolean getUpCovered(){
+    public boolean getUpCovered(){
         return upCovered;
     }
 
-    public Boolean getDownCovered(){
+    public boolean getDownCovered(){
         return downCovered;
     }
 

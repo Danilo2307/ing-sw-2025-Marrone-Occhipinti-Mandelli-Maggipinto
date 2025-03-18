@@ -18,12 +18,18 @@ public class HousingUnit extends Component {
     }
 
     // Serve a assigncrew() per vedere se è possibile mettere un tipo di alieno
-    public boolean canContainAlien(Color color) { return connectedAddons.contains(color); }
+    public boolean canContainAlien(Color color) {
+        return connectedAddons.contains(color);
+    }
 
     // Entrambi i set sono fatti solo prima del primo turno, non vengono più utilizzati
-    public void setAlien(Color color) { if (numAstronaut == 0) this.alien = color; }
+    public void setAlien(Color color) {
+        if (numAstronaut == 0) this.alien = color;
+    }
 
-    public void setAstronaut() { if (alien == null) this.numAstronaut = 2; }
+    public void setAstronaut() {
+        if (alien == null) this.numAstronaut = 2;
+    }
 
     // Servirà a reduceCrew() per la eliminazione di membri dal Component
     public void reduceOccupants(int num) {
@@ -35,13 +41,22 @@ public class HousingUnit extends Component {
     }
 
     //Servirà a checkHousingUnit per vedere quali tipi di alieni può ospitare
-    public void addConnectedAddon(Color color) { if (!connectedAddons.contains(color)) connectedAddons.add(color); }
+    public void addConnectedAddon(Color color) {
+        if (!connectedAddons.contains(color)) connectedAddons.add(color);
+    }
 
-    public Color getAlien() { return alien; }
+    public Color getAlien() {
+        return alien;
+    }
 
-    public int getNumAstronaut() { return numAstronaut; }
+    public int getNumAstronaut() {
+        return numAstronaut;
+    }
 
-    public boolean isStartingCabin() { return isStartingCabin; }
+    public boolean isStartingCabin() {
+        return isStartingCabin;
+    }
 
 //    public List<Color> getConnectedAddons() { return new ArrayList<>(connectedAddons); }
 //}
+}
