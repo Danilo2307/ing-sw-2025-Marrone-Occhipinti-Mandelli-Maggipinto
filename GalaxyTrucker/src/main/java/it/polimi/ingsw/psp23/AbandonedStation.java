@@ -17,11 +17,11 @@ public class AbandonedStation extends Card {
 
     public void play(List<Player> players) {
         for (Player player : players) {
-            if (player.isInGame() && player.getTruck().getCrewSize() >= numMembers) {
+            if (player.isInGame() && player.getTruck().getCrew() >= numMembers) {
                 // Optional: conferma del giocatore (interazione UI)
                 if (playerWantsToAccept(player)) {
                     player.getTruck().loadGoods(prize);
-                    player.updatePosition(-days);
+                    Utility.updatePosition(players,players.indexOf(player),-days);
                     break; // solo uno può accettare
                 }
             }

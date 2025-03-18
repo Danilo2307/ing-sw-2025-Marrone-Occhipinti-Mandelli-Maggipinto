@@ -28,12 +28,12 @@ public class Epidemic extends Card {
 
             for(int i = 0; i < nave.length; i++){
                 for(int j = 0; j < nave[i].length; j++){
-                    if(nave[i][j].getClass() == Hub.class && nave[i][j].getNumMembers() > 0 && nave[i][j].getIsVisited() == false){
+                    if(nave[i][j].getClass() == HousingUnit.class && nave[i][j].getNumMembers() > 0 && nave[i][j].getIsVisited() == false){
 
                         // al posto di questi 4 if si potrebbe iterare su un array contenente:"{1,0}, {-1,0}, {0,1}, {0,-1}" però
                         // comincia a diventare più complesso ed un po' meno esplicito, da valutare il cambiamento
 
-                        if((i+1) < nave.length && nave[i+1][j].getClass() == Hub.class && nave[i+1][j].getNumMembers() > 0){
+                        if((i+1) < nave.length && nave[i+1][j].getClass() == HousingUnit.class && nave[i+1][j].getNumMembers() > 0){
                             if(!nave[i][j].getIsVisited()) nave[i][j].setIsVisited(true); // "!p.Truck.Ship[i][j].visited" vuol dire che il flag visited è false
                             if(nave[i+1][j].getIsVisited() == false){
                                 nave[i+1][j].setIsVisited(true);
