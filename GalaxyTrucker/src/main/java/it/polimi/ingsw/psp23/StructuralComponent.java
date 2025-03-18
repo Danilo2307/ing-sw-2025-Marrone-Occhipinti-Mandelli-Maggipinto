@@ -14,7 +14,7 @@ public class StructuralComponent extends Component{
     }
 
     public String getType(){
-        return type;
+        return new String(type);
     }
 
 }
