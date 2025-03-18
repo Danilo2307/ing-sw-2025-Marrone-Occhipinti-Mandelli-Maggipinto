@@ -42,5 +42,5 @@ public class HousingUnit extends Component {
 
     public boolean isStartingCabin() { return isStartingCabin; }
 
-    public List<Color> getConnectedAddons() { return new ArrayList<>(connectedAddons); }
-}
+//    public List<Color> getConnectedAddons() { return new ArrayList<>(connectedAddons); }
+//}

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23;
 import java.util.List;
+import java.util.ArrayList;
 
 public class CombatZone extends Card {
     // Danilo
@@ -7,14 +8,15 @@ public class CombatZone extends Card {
     Challenge penalty1;
     Challenge penalty2;
     Challenge penalty3;
-    private int daysLost;
-    private int goodsLost;
-    private int membersLost;
+    private final int daysLost;
+    private final int goodsLost;
+    private final int membersLost;
+    private final ArrayList<CannonShot> cannonshot;
 
     //la maggior parte dei for in questo codice servono a trovare un membro che abbia uno dei parametri minimo
     //quindi si potrebbe anche pensare di definire dei metodi per farlo
 
-    CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3,List<CannonShot> cannonshot) {
+    CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3, ArrayList<CannonShot> cannonshot) {
         super(level);
         this.daysLost = daysLost;
         this.goodsLost = goodsLost;
@@ -30,13 +32,14 @@ public class CombatZone extends Card {
             return penalty1;
         else if(i==2)
             return penalty2;
-        else if(i==3)
+        else
             return penalty3;
     }
 
     private int findMinMembers(List<Player> players){
         int size = players.size();
         int pos = -1;
+        int tmp = 0;
         for(int i=0;i<size;i++){
             if(i==0) {
                 tmp = players.get(i).getTruck().getCrew();
@@ -79,6 +82,7 @@ public class CombatZone extends Card {
                 pos = i;
             }
         }
+        return pos;
     }
 
 @Override
@@ -91,11 +95,11 @@ public class CombatZone extends Card {
         if(penalty1 == Challenge.Members){
             pos = findMinMembers(players);
 
-            System.out.println(players.get(pos).nickname+" has less crew members!");
+            System.out.println(players.get(pos).getNickname() +" has less crew members!");
             players.get(pos).updatePosition(-daysLost);
         }else if(penalty1 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
-            System.out.println(players.get(pos).nickname+" has less cannon strength!");
+            System.out.println(players.get(pos).getNickname+" has less cannon strength!");
             players.get(pos).updatePosition(-daysLost);
 
 
@@ -106,7 +110,7 @@ public class CombatZone extends Card {
 //inizio seconda sfida
             pos = findMinEngineStrength(players);
 
-        System.out.println(players.get(pos).nickname + " has less engine strength!");
+        System.out.println(players.get(pos).getNickname() + " has less engine strength!");
 
         if(penalty2 == Challenge.Members) {
             players.get(pos).getTruck().reduceHubCrew(membersLost);
@@ -121,8 +125,8 @@ public class CombatZone extends Card {
         if(penalty3 == Challenge.Members){
             pos = findMinMembers(players);
 
-            System.out.println(players.get(pos).nickname + " has less crew members!");
-            for(Cannonshot c: cannonshot){
+            System.out.println(players.get(pos).getNickname() + " has less crew members!");
+            for(CannonShot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
@@ -131,8 +135,8 @@ public class CombatZone extends Card {
 
         }else if(penalty3 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
-            System.out.println(players.get(pos).nickname + " has less cannon strength!");
-            for(Cannonshot c: cannonshot){
+            System.out.println(players.get(pos).getNickname + " has less cannon strength!");
+            for(CannonShot c: cannonshot){
                 impactLine = DiceUtility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
