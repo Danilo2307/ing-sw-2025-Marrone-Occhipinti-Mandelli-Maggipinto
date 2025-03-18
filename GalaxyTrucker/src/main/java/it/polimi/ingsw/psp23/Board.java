@@ -27,31 +27,75 @@ public class Board {
 
     }
 
-    public Board (Board other) {
+    public Board(Board other) {
         // costruttore di copia
     }
+
+
+    public boolean check() {
+    }
+
+    public Component[][] getShip() {
+    }
+
+    public boolean isValid(int i, int j) {
+    }
+
+    public void delete(int i, int j) {
+    }
+
+    public boolean isFree(int i, int j) {
+    }
+
+    public void reduceBatteries() {
+    }
+
+    public void reduceCrew(int numMembers) {
+    }
+
+    public List<Component> searchComponent(Component c) {
+    }
+
+    public void addComponent(Component c, int i, int j) {
+    }
+
+    public void releaseComponent(int i, int j) {
+    }
+
+    public void calculateExposedConnectors() {
+    }
+
+    public int getExposedConnectors() {
+        return exposedConnectors;
+    }
+
+    public double getCannonStrength() {
+        return cannonStrength;
+    }
+
+    public int getEngineStrength() {
+        return engineStrength;
+    }
+
+    public Component[][] getShip() {
+    }
+
+    public int getCrew() {
+        return crew;
+    }
+
+    public void pickMostImportantGoods(int numGoodsStolen) {
+    }
+
+    public void handleCannonShot(CannonShot cannonShot, int impactLine) {
+    }
+
+    public void handleMeteor(Meteor meteor, int impactLine) {
+    }
+
+    public void loadGoods(List<Item> items) {
+    }
+
+    public void checkHousingUnits() {
+    }
 }
-
-
-    public boolean check(){}
-    public Component[][] getShip() {}
-    public boolean isValid(int i, int j) {}
-    public void delete(int i, int j) {}
-    public boolean isFree(int i, int j){}
-    public void reduceBatteries(){}
-    public void reduceCrew(int numMembers){}
-    public List<Component> searchComponent(Component c){}
-    public void addComponent(Component c, int i, int j){}
-    public void releaseComponent(int i, int j){}
-    public void calculateExposedConnectors() {}
-    public int getExposedConnectors() { return exposedConnectors; }
-    public double getCannonStrength() {return cannonStrength;}
-    public int getEngineStrength() {return engineStrength;}
-    public Component[][] getShip(){}
-    public int getCrew() {return crew;}
-    public void pickMostImportantGoods(int numGoodsStolen){}
-    public void handleCannonShot(CannonShot cannonShot,int impactLine){}
-    public void handleMeteor(Meteor meteor,int impactLine){}
-    public void loadGoods(List<Item> items){}
-    public void checkHousingUnits(){}
-
