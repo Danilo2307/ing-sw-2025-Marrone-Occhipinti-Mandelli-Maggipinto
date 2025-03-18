@@ -1,20 +1,22 @@
 package it.polimi.ingsw.psp23;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Container extends Component {
-    private int size;
+    // Danilo
+    private final int size;
     private Color colorContainer;
-    private List<Item> goods;
+    private ArrayList<Item> goods;
 
-    Container(int size, Color colorContainer, List<Item> goods, Side up, Side down, Side left, Side right, int x, int y) {
-        super(up,down,left,right,x,y);
+    Container(int size, Color colorContainer, ArrayList<Item> goods, Side up, Side down, Side left, Side right) {
+        super(up,down,left,right);
         this.size = size;
         this.colorContainer = colorContainer;
         this.goods = goods;
     }
 
     public List<Item> getItems(){
-        return  goods;
+        return new ArrayList<Item>(goods);
     }
 
     public void loadItem(Item item){
