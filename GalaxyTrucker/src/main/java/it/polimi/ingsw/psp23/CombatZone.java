@@ -96,11 +96,11 @@ public class CombatZone extends Card {
             pos = findMinMembers(players);
 
             System.out.println(players.get(pos).getNickname() +" has less crew members!");
-            players.get(pos).updatePosition(-daysLost);
+            Utility.updatePosition(players, pos, -daysLost);
         }else if(penalty1 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
             System.out.println(players.get(pos).getNickname()+" has less cannon strength!");
-            players.get(pos).updatePosition(-daysLost);
+            Utility.updatePosition(players,pos,-daysLost);
 
 
         }else{
@@ -113,7 +113,6 @@ public class CombatZone extends Card {
         System.out.println(players.get(pos).getNickname() + " has less engine strength!");
 
         if(penalty2 == Challenge.Members) {
-            players.get(pos).getTruck().reduceHubCrew(membersLost);
             players.get(pos).getTruck().reduceCrew(membersLost);
         } else if(penalty2 == Challenge.Goods){
             players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
@@ -126,9 +125,9 @@ public class CombatZone extends Card {
             pos = findMinMembers(players);
 
             System.out.println(players.get(pos).getNickname() + " has less crew members!");
-            for(CannonShot c: cannonshot){
+            for(CannonShot c: cannonShot){
                 impactLine = Utility.roll2to12();
-                players.get(pos).getTruck().handleCannon(c,impactLine);
+                players.get(pos).getTruck().handleCannonShot(c,impactLine);
             }
 
 
@@ -136,9 +135,9 @@ public class CombatZone extends Card {
         }else if(penalty3 == Challenge.Cannon_strength){
             pos = findMinCannonStrength(players);
             System.out.println(players.get(pos).getNickname() + " has less cannon strength!");
-            for(CannonShot c: cannonshot){
+            for(CannonShot c: cannonShot){
                 impactLine = Utility.roll2to12();
-                players.get(pos).getTruck().handleCannon(c,impactLine);
+                players.get(pos).getTruck().handleCannonShot(c,impactLine);
             }
         }else{
             throw new IllegalArgumentException("Eccezione in combatzone");
