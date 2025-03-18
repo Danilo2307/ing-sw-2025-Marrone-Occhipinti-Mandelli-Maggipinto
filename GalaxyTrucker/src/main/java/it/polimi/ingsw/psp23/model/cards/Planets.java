@@ -1,7 +1,4 @@
 package it.polimi.ingsw.psp23.model.cards;
-import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.Player;
-
 import java.util.List;
 
 public class Planets extends Card {
@@ -28,16 +25,16 @@ public class Planets extends Card {
             // se chosenPlanet non è nell'intervallo sensato significa che il player corrente non vuole atterrare.
             // Se utente per errore sceglie pianeta occupato non gli viene data un'altra chance
             if (chosenPlanet >= 1 && chosenPlanet <= planetGoods.size() && !planetOccupied[chosenPlanet-1]) {
-                    planetOccupied[chosenPlanet-1] = true;  // -1 perchè suppongo l'utente inserisca 1-based mentre array 0-based
-                    players.get(i).getTruck().loadGoods(planetGoods.get(chosenPlanet-1));
-                    playerLanded[i] = true;
+                planetOccupied[chosenPlanet-1] = true;  // -1 perchè suppongo l'utente inserisca 1-based mentre array 0-based
+                players.get(i).getTruck().loadGoods(planetGoods.get(chosenPlanet-1));
+                playerLanded[i] = true;
             }
             i++;
         }
         // aggiorno le posizioni in ordine inverso di posizione di rotta
         for (i = players.size() - 1 ; i >= 0 ; i--) {
             if (playerLanded[i]) {
-                players.get(i).updatePosition(-daysLost);
+                Utility.updatePosition(players,i,-daysLost);
             }
         }
     }

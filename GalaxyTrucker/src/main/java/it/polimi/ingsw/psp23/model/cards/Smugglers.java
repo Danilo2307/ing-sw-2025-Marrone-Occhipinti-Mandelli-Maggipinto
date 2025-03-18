@@ -1,8 +1,4 @@
 package it.polimi.ingsw.psp23.model.cards;
-
-import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.Player;
-
 import java.util.List;
 
 public class Smugglers extends Card {
@@ -34,8 +30,8 @@ public class Smugglers extends Card {
             Player giocatore = players.get(i);
 
             if(giocatore.getTruck().getCannonStrength() > firePower){ // ovviamente la cannonStrength sarà prima aggiornata dal giocatore che,
-                                                                      // una volta arrivatagli la carta, decide se usare le batterie o meno(bisogna
-                                                                      // gestire correttamente tutti i casi limite come ad esempio valori non validi)
+                // una volta arrivatagli la carta, decide se usare le batterie o meno(bisogna
+                // gestire correttamente tutti i casi limite come ad esempio valori non validi)
                 defeated = true;
                 giocatore.decide();
             }
