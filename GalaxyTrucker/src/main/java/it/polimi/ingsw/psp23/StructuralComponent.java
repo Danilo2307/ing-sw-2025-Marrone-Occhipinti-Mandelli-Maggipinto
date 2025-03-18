@@ -8,8 +8,8 @@ public class StructuralComponent extends Component{
 
     private final String type;
 
-    StructuralComponent(Side up, Side down, Side left, Side right, int x, int y, String type){
-        super(up, down, left, right, x, y);
+    StructuralComponent(Side up, Side down, Side left, Side right, String type){
+        super(up, down, left, right);
         this.type = type;
     }
 
