@@ -24,7 +24,7 @@ public class Slavers extends Card{
 
         while(!defeated && i < players.size()){
             //in Java è standard dichiarare le variabili il più vicino possibile al loro utilizzo
-            int playerCannonStrength = players.get(i).getTruck().getCannonStrength();
+            double playerCannonStrength = players.get(i).getTruck().getCannonStrength();
 
             if(playerCannonStrength < cannonStrength){
                 // player perde

@@ -35,6 +35,10 @@ public class Player {
         inGame = false;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
 
 
 

@@ -15,7 +15,7 @@ public class Board {
     private final int rows = 5;
     private final int cols = 7;
 
-    Board() {
+    public Board() {
         ship = new Component[rows][cols];
         garbage = new ArrayList<>();
         crew = 0;
