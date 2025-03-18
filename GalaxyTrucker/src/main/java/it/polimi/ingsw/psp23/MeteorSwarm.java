@@ -16,7 +16,7 @@ public class MeteorSwarm extends Card {
     public void play(List<Player> players) {
 
         for (Meteor m : meteors) {
-            int impactLine = DiceUtility.roll2to12();
+            int impactLine = Utility.roll2to12();
             for (Player p : players) {
                 p.getTruck().handleMeteor(m, impactLine);
             }

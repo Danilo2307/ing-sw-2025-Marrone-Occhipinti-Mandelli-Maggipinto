@@ -54,12 +54,10 @@ public class Pirates extends Card{
 
             }else if(players.get(i).getTruck().getCannonStrength() < firepower){
                 for(Cannonshot c : cannonShot) {
-                    impactLine = DiceUtility.roll2to12();
+                    impactLine = Utility.roll2to12();
                     players.get(i).getTruck().handleCannonShot(c, impactLine);
 
                 }
-            }else{
-
             }
         }
     }
