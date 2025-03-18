@@ -3,7 +3,7 @@ package it.polimi.ingsw.psp23;
 import java.util.List;
 
 public class Stardust extends Card {
-
+//GIGI
     public Stardust(int level) {
         super(level);
     }

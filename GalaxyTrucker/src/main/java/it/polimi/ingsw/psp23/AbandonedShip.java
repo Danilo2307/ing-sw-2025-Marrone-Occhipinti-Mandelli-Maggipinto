@@ -4,27 +4,15 @@ import java.util.List;
 public class AbandonedShip extends Card{
     //Danilo
 
-    private int days;
-    private int cosmicCredits;
-    private int numMembers;
+    private final int days;
+    private final int cosmicCredits;
+    private final int numMembers;
 
     AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
         super(level);
         this.days = days;
         this.cosmicCredits = cosmicCredits;
         this.numMembers = numMembers;
-    }
-
-    public int getDays() {
-        return days;
-    }
-
-    public int getCosmicCredits() {
-        return cosmicCredits;
-    }
-
-    public int getNumMembers() {
-        return numMembers;
     }
 
     public void play(List<Player> Players){

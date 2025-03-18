@@ -3,7 +3,7 @@ package it.polimi.ingsw.psp23;
 import java.util.List;
 
 public class AbandonedStation extends Card {
-
+//GIGI
     private final int days;
     private final int numMembers;
     private final List<Item[]> prize;
