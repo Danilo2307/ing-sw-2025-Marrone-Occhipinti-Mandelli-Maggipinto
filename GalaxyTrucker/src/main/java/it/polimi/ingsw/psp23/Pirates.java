@@ -38,7 +38,7 @@ public class Pirates extends Card{
         int i = 0;
         int impactLine;
         for(i=0;i<size;i++) {
-            if (players.get(i).getTruck().getCannonStrength() >= firepower) {
+            if (players.get(i).getTruck().getCannonStrength() > firepower) {
                 //qui il giocatore deve scegliere se prendere il premio e perdere i giorni
                 //oppure se sconfiggerli e rimanere dov'è
                 //decisione del player se sconfiggerli e prendere il premio o soltanto resistere all'attacco
@@ -46,18 +46,20 @@ public class Pirates extends Card{
                 if(!takePrize) {
                     takePrize = false; //inizializzo a caso, questa sarà la decisione del player
                     if(takePrize) {
-                        players.get(i).updatemoney(prize);
-                        players.get(i).updateposition(-days);
+                        players.get(i).updateMoney(prize);
+                        players.get(i).updatePosition(-days);
                     }
                     takePrize = true; //qui faccio in modo che nessuno potrà poi riscuotere il premio
                 }
 
-            }else{
+            }else if(players.get(i).getTruck().getCannonStrength() < firepower){
                 for(Cannonshot c : cannonShot) {
                     impactLine = DiceUtility.roll2to12();
                     players.get(i).getTruck().handleCannonShot(c, impactLine);
 
                 }
+            }else{
+
             }
         }
     }
