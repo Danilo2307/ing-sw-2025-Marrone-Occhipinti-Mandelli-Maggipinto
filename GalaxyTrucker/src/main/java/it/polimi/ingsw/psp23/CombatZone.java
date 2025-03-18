@@ -7,10 +7,9 @@ public class CombatZone extends Card {
     Challenge penalty1;
     Challenge penalty2;
     Challenge penalty3;
-    private final int daysLost;
-    private final int goodsLost;
-    private final int membersLost;
-    private final List<CannonShot> cannonshot;
+    private int daysLost;
+    private int goodsLost;
+    private int membersLost;
 
     //la maggior parte dei for in questo codice servono a trovare un membro che abbia uno dei parametri minimo
     //quindi si potrebbe anche pensare di definire dei metodi per farlo
@@ -80,7 +79,6 @@ public class CombatZone extends Card {
                 pos = i;
             }
         }
-        return pos;
     }
 
 @Override
