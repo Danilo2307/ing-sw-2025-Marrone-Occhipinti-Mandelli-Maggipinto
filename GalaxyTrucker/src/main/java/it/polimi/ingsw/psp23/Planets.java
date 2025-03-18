@@ -34,10 +34,11 @@ public class Planets extends Card {
         // aggiorno le posizioni in ordine inverso di posizione di rotta
         for (i = players.size() - 1 ; i >= 0 ; i--) {
             if (playerLanded[i]) {
-                players.get(i).updatePosition(-daysLost);
+                Utility.updatePosition(players,i,-daysLost);
             }
         }
     }
 }
+
 
 
