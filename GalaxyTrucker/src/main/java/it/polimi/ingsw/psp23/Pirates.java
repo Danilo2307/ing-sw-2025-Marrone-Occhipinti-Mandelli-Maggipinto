@@ -4,10 +4,10 @@ import java.util.List;
 
 public class Pirates extends Card{
     // Danilo
-    private int prize;
-    private int days;
-    private int firepower;
-    List <CannonShot> cannonShot;
+    private final int prize;
+    private final int days;
+    private final int firepower;
+    private final List <CannonShot> cannonShot;
 
     Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
         super(level);
@@ -16,7 +16,6 @@ public class Pirates extends Card{
         this.firepower = firepower;
         this.cannonShot = cannonShot;
     }
-
 
     public int getPrize() {
         return prize;
