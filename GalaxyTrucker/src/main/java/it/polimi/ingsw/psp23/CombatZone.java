@@ -79,6 +79,7 @@ public class CombatZone extends Card {
                 pos = i;
             }
         }
+
     }
 
 @Override
@@ -123,7 +124,7 @@ public class CombatZone extends Card {
 
             System.out.println(players.get(pos).nickname + " has less crew members!");
             for(Cannonshot c: cannonshot){
-                impactLine = DiceUtility.roll2to12();
+                impactLine = Utility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
 
@@ -133,7 +134,7 @@ public class CombatZone extends Card {
             pos = findMinCannonStrength(players);
             System.out.println(players.get(pos).nickname + " has less cannon strength!");
             for(Cannonshot c: cannonshot){
-                impactLine = DiceUtility.roll2to12();
+                impactLine = Utility.roll2to12();
                 players.get(pos).getTruck().handleCannon(c,impactLine);
             }
         }else{
