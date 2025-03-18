@@ -32,7 +32,7 @@ public class Pirates extends Card{
     }
 
     @Override
-    public void play(List<PLayer> players){
+    public void play(List<Player> players){
         Boolean takePrize = false;
         int size = players.size();
         int i = 0;
@@ -47,13 +47,13 @@ public class Pirates extends Card{
                     takePrize = false; //inizializzo a caso, questa sarà la decisione del player
                     if(takePrize) {
                         players.get(i).updateMoney(prize);
-                        players.get(i).updatePosition(-days);
+                        Utility.updatePosition(players,i,-days);
                     }
                     takePrize = true; //qui faccio in modo che nessuno potrà poi riscuotere il premio
                 }
 
             }else if(players.get(i).getTruck().getCannonStrength() < firepower){
-                for(Cannonshot c : cannonShot) {
+                for(CannonShot c : cannonShot) {
                     impactLine = Utility.roll2to12();
                     players.get(i).getTruck().handleCannonShot(c, impactLine);
 

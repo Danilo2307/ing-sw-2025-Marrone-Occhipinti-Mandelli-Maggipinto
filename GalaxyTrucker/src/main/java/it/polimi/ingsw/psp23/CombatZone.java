@@ -22,7 +22,7 @@ public class CombatZone extends Card {
         this.penalty1 = penalty1;
         this.penalty2 = penalty2;
         this.penalty3 = penalty3;
-        this.cannonshot = cannonshot;
+        this.cannonShot = cannonshot;
     }
 
     public Challenge getPenalty1(int i) {
