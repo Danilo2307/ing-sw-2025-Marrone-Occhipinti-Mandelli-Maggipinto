@@ -29,6 +29,16 @@ public class Board {
 
     public Board(Board other) {
         // costruttore di copia
+        this.ship = other.ship;
+        this.garbage = other.garbage;
+        this.crew = other.crew;
+        this.batteries = other.batteries;
+        this.cannonStrength = other.cannonStrength;
+        this.engineStrength = other.engineStrength;
+        this.exposedConnectors = other.exposedConnectors;
+        this.goods = other.goods;
+        // mancano rows e columns??
+
     }
 
 
