@@ -27,6 +27,11 @@ public class Board {
 
     }
 
+    public Board (Board other) {
+        // costruttore di copia
+    }
+}
+
 
     public boolean check(){}
     public Component[][] getShip() {}
