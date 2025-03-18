@@ -1,10 +1,12 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
 
-public class Meteor {
+import it.polimi.ingsw.psp23.Direction;
+
+public class CannonShot {
     private final boolean big;
     private final Direction direction;
 
-    Meteor(boolean big, Direction direction) {
+    CannonShot(boolean big, Direction direction) {
         this.big = big;
         this.direction = direction;
     }
@@ -16,5 +18,4 @@ public class Meteor {
     public Direction getDirection() {
         return direction;
     }
-
 }

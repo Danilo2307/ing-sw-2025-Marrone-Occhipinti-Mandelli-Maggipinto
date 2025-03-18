@@ -1,7 +1,10 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
+
 import java.util.List;
 
-public class AbandonedShip extends Card{
+public class AbandonedShip extends Card {
     //Danilo
 
     private final int days;

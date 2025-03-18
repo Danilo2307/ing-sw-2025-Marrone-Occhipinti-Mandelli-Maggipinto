@@ -1,4 +1,6 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.components;
+
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class BatteryHub extends Component {
     // Alberto

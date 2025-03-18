@@ -1,6 +1,7 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 
-public class Shield extends Component{
+public class Shield extends Component {
     // Alberto
 
     private boolean upCovered;

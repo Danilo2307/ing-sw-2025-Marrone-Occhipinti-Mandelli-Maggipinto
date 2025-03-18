@@ -1,4 +1,7 @@
 package it.polimi.ingsw.psp23;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.components.Component;
 import java.util.ArrayList;
 import java.util.List;
 

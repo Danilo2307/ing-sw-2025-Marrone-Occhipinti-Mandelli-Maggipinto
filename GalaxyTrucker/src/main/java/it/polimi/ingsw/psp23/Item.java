@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23;
 
+import it.polimi.ingsw.psp23.model.enumeration.Color;
+
 public class Item {
     private Color itemcolor;
 

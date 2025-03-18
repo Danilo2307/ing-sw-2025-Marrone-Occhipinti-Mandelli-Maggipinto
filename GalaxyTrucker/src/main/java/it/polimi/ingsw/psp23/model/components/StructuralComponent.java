@@ -1,6 +1,7 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 
-public class StructuralComponent extends Component{
+public class StructuralComponent extends Component {
     // Alberto
 
     // la classe StructuralComponent include tutti quei component con praticamente "nessun metodo utile"

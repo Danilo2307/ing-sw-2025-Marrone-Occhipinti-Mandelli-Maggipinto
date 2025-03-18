@@ -1,9 +1,10 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
+
+import it.polimi.ingsw.psp23.Player;
 
 import java.util.List;
-import java.util.ArrayList;
 
-public class OpenSpace extends Card{
+public class OpenSpace extends Card {
     // Alberto
 
     OpenSpace(int level) {

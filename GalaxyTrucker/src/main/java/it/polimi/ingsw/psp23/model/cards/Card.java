@@ -1,4 +1,6 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
+
+import it.polimi.ingsw.psp23.Player;
 
 import java.util.List;
 

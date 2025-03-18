@@ -1,5 +1,6 @@
-package it.polimi.ingsw.psp23;
-
+package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 import java.util.ArrayList;
 import java.util.List;
 

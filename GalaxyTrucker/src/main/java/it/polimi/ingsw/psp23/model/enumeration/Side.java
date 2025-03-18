@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.enumeration;
 
 public enum Side {
     SINGLE_CONNECTOR,
@@ -10,5 +10,3 @@ public enum Side {
     SINGLE_ENGINE,
     DOUBLE_ENGINE;
 }
-
-

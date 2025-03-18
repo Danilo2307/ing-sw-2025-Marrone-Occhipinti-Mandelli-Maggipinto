@@ -1,4 +1,8 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
+import it.polimi.ingsw.psp23.model.enumeration.Challenge;
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
+
 import java.util.List;
 import java.util.ArrayList;
 

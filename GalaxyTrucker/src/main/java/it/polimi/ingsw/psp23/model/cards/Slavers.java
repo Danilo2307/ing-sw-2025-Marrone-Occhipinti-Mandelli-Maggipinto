@@ -1,7 +1,8 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
+import it.polimi.ingsw.psp23.Player;
 import java.util.List;
 
-public class Slavers extends Card{
+public class Slavers extends Card {
     //Federico
     // final perchè non vengono più modificati dopo l'inizializzazione
     private final int cannonStrength;

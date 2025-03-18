@@ -1,7 +1,10 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.cards;
 
 //import java.awt.*; -> questa libreria l'ha aggiunta automaticamente intellij perchè prende la parola "component" e la interpreta come elemento grafico
 //                      visto che non l'abbiamo definito, quindi stiamo attenti che non importi librerie strane
+import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.HousingUnit;
+import it.polimi.ingsw.psp23.Player;
 import java.util.List;
 
 public class Epidemic extends Card {
