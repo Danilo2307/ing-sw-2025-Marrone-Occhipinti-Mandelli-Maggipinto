@@ -10,15 +10,6 @@ public class OpenSpace extends Card{
         super(level);
     }
 
-    private boolean thereIsCollision(Player giocatore, List<Player> players, int i) {
-        for(int k=0; k<players.size(); k++){
-            if(k!=i && players.get(k).getPosition() == giocatore.getPosition()){
-                return true;
-            }
-        }
-        return false;
-    }
-
     // il ragionamento di play è: open space ci permette di avanzare di un numero di posizioni pari al valore della potenza motrice del player quindi,
     // sapendo che quando usiamo il getter della potenza motrice del player ci arriva già il valore aggiornato della potenza motrice, in cui è considerato
     // l'eventuale uso di batterie per i motori doppi, basta che open space faccia avanzare le posizioni delle pedine.
@@ -46,7 +37,7 @@ public class OpenSpace extends Card{
                 //        giocatore.updatePosition(1);
                 //        k=0;
                 //    }
-                //} -> inizalmente avevo usato questo for, ma ha più senso fare:
+                //}
                 while(thereIsCollision(giocatore, players, i)) {
                     giocatore.updatePosition(1);
                 }

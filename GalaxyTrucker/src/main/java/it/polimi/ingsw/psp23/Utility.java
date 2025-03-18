@@ -40,3 +40,26 @@ public final class Utility {
     //la check per verificare se un giocatore è stato doppiato e quindi dovrebbe abbandonare il gioco, la lascio ad un'altra funzione
     // ma in caso, dovrebbe essere inserita qui, alla fine dell'aggiornamento delle posizioni
 }
+
+
+/* qui sono presenti i metodi thereIsCollision ed il metodo alternativo per scorrere le posizioni
+
+private boolean thereIsCollision(Player giocatore, List<Player> players, int i) {
+    for(int k=0; k<players.size(); k++){
+        if(k!=i && players.get(k).getPosition() == giocatore.getPosition()){
+            return true;
+        }
+    }
+    return false;
+}
+
+--fine metodo thereIsCollision
+
+    for(int k = 0 ; k < players.size() ; k++){
+        if(k != i && players.get(k).getPosition() == giocatore.getPosition()){
+            giocatore.updatePosition(1);
+            k=0;
+         }
+     }
+
+ */
