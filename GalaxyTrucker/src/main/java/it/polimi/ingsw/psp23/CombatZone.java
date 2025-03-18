@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23;
 import java.util.List;
+import java.util.ArrayList;
 
 public class CombatZone extends Card {
     // Danilo
@@ -7,14 +8,15 @@ public class CombatZone extends Card {
     Challenge penalty1;
     Challenge penalty2;
     Challenge penalty3;
-    private int daysLost;
-    private int goodsLost;
-    private int membersLost;
+    private final int daysLost;
+    private final int goodsLost;
+    private final int membersLost;
+    private final ArrayList<CannonShot> cannonshot;
 
     //la maggior parte dei for in questo codice servono a trovare un membro che abbia uno dei parametri minimo
     //quindi si potrebbe anche pensare di definire dei metodi per farlo
 
-    CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3,List<CannonShot> cannonshot) {
+    CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3, ArrayList<CannonShot> cannonshot) {
         super(level);
         this.daysLost = daysLost;
         this.goodsLost = goodsLost;
@@ -30,7 +32,7 @@ public class CombatZone extends Card {
             return penalty1;
         else if(i==2)
             return penalty2;
-        else if(i==3)
+        else
             return penalty3;
     }
 
@@ -79,6 +81,7 @@ public class CombatZone extends Card {
                 pos = i;
             }
         }
+        return pos;
     }
 
 @Override
