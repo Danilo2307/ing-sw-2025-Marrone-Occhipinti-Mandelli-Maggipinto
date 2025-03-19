@@ -16,7 +16,7 @@ public class AbandonedStation extends Card {
         this.numMembers = numMembers;
         this.prize = prize;
     }
-
+    @Override
     public void play(List<Player> players) {
         for (Player player : players) {
             if (player.isInGame() && player.getTruck().getCrew() >= numMembers) {
