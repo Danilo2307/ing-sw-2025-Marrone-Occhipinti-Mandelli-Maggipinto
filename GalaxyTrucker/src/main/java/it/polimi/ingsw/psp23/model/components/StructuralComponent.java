@@ -9,9 +9,9 @@ public class StructuralComponent extends Component {
 
     private final String type;
 
-    StructuralComponent(Side up, Side down, Side left, Side right, String type){
-        super(up, down, left, right);
-        this.type = type;
+    StructuralComponent(String type, Side up, Side down, Side left, Side right, String subType){
+        super("Structural Component"up, down, left, right);
+        this.type = subType;
     }
 
     public String getType(){
