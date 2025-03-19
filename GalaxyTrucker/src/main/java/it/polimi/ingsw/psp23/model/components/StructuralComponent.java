@@ -5,7 +5,7 @@ public class StructuralComponent extends Component {
     // Alberto
 
     // la classe StructuralComponent include tutti quei component con praticamente "nessun metodo utile"
-    // come ad esempio gun, double gun, engine, double engine e structural modules
+    // come ad esempio gun, double gun, engine, double engine, structural modules e shield
 
     private final String type;
 
