@@ -1,47 +1,48 @@
 package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Board {
     private Component[][] ship;
-    private List<Component> garbage;
-    private int crew;
-    private int batteries;
-    private double cannonStrength;
-    private int engineStrength;
-    private int exposedConnectors;
-    private int[] goods;
-    private final int rows = 5;
-    private final int cols = 7;
+    private ArrayList<Component> garbage;
+    private ArrayList<BatteryHub> batteryHubs;
+    private ArrayList<AlienAddOns> alienAddOns;
+    private ArrayList<StructuralComponent> structuralComponents;
+    private ArrayList<Container> containers;
+    private ArrayList<HousingUnit> housingUnits;
+
 
     public Board() {
-        ship = new Component[rows][cols];
-        garbage = new ArrayList<>();
-        crew = 0;
-        batteries = 0;
-        cannonStrength = 0;
-        engineStrength = 0;
-        exposedConnectors = 0;
-        goods = new int[4];
-
+        // per ora istanzio la ship come una 5 x 5, ma la dimensione effettiva sarà da definire
+        ship = new Component[5][5];
+        garbage = new ArrayList<Component>();
+        batteryHubs = new ArrayList<>();
+        alienAddOns = new ArrayList<>();
+        structuralComponents = new ArrayList<>();
+        containers = new ArrayList<>();
+        housingUnits = new ArrayList<>();
     }
 
     public Board(Board other) {
         // costruttore di copia
         this.ship = other.ship;
-        this.garbage = other.garbage;
-        this.crew = other.crew;
-        this.batteries = other.batteries;
-        this.cannonStrength = other.cannonStrength;
-        this.engineStrength = other.engineStrength;
-        this.exposedConnectors = other.exposedConnectors;
-        this.goods = other.goods;
-        // mancano rows e columns??
-
+        this.garbage.addAll(other.garbage);
+        this.batteryHubs.addAll(other.batteryHubs);
+        this.alienAddOns.addAll(other.alienAddOns);\
+        structuralComponents.addAll(other.structuralComponents);
+        containers.addAll(other.containers);
+        housingUnits.addAll(other.housingUnits);
+        /* TODO: chiarire se vogliamo usare il costruttore per creare una lista indipendente o una
+                 lista dipendente da other, perchè se la volessi fare indipendente dovrei cambiare
+                 metodo di istanziamento di tutte le liste usando i vari costruttori di copia
+                 di tutti i vari tipi di components, perchè così sto passando ad ogni elemento
+                 della lista i riferimenti agli elementi dell'altra lista. Questo controllo di
+                 gestione va fatto anche per "ship"*/
     }
 
 
