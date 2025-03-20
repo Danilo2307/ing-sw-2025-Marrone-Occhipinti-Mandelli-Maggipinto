@@ -2,6 +2,9 @@ package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
+/* NOTA IMPORTANTE!!!: QUANDO MODIFICHEREMO COMPONENT CON L'ATTRIBUTO TYPE È IMPORTANTE CHE IL TIPO SIA SCRITTO
+                       IN PascalCase*/
+
 /* @author Federico */
 public class Component {
 
