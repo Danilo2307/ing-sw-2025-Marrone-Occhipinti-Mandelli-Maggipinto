@@ -11,8 +11,8 @@ public class Container extends Component {
     private Color colorContainer;
     private ArrayList<Item> goods;
 
-    Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
-        super(up,down,left,right);
+    Container(String type, Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
+        super("Container", up,down,left,right);
         this.size = size;
         this.colorContainer = colorContainer;
         this.goods = goods;

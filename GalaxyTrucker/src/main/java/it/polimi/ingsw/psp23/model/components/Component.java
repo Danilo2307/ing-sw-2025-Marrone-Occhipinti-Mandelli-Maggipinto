@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 /* @author Federico */
 public class Component {
 
+    private String type;
     private ComponentLocation state;
     private Side up;
     private Side down;
@@ -13,7 +14,8 @@ public class Component {
     private int x;
     private int y;
 
-    public Component(Side up, Side down, Side left, Side right) {
+    public Component(String type, Side up, Side down, Side left, Side right) {
+        this.type = type;
         state = ComponentLocation.PILE;  // inizialmente stanno tutti nel mucchio a faccia in giù
         this.up = up;
         this.down = down;
@@ -41,16 +43,15 @@ public class Component {
     }
 
     /* @param x,y coordinate da piazzare on truck */
-    public void placeOnTruck(int x, int y) {
+    public void placeOnTruck() {
         if (state == ComponentLocation.IN_HAND) {
-            this.x = x;
-            this.y = y;
             this.state = ComponentLocation.ON_TRUCK;
         }
     }
 
     public void discardFaceUp() {
-        if (state == ComponentLocation.IN_HAND) {
+        // 1^ condizione è logica. La 2^ è necessaria per quando ne prendo uno scoperto e decido di rimetterlo a posto senza saldarlo
+        if (state == ComponentLocation.IN_HAND || state == ComponentLocation.FACE_UP) {
             this.state = ComponentLocation.FACE_UP;
         }
     }
@@ -65,5 +66,9 @@ public class Component {
     }
     public int getY() {
         return y;
+    }
+
+    public String getType() {
+        return type;
     }
 }
