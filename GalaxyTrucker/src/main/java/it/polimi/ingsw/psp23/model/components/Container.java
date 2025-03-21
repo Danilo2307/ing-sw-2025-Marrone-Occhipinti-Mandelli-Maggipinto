@@ -22,15 +22,20 @@ public class Container extends Component {
         return new ArrayList<Item>(goods);
     }
 
-    public void loadItem(Item item){
+    public boolean loadItem(Item item){
         if(goods.size() < size ) {
             if((colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green)) ||
-                    (colorContainer == Color.Blue && !(item.getItemColor() == Color.Red)))
+                    (colorContainer == Color.Blue && !(item.getItemColor() == Color.Red))) {
                 goods.add(item);
-            else
+                return true;
+            }
+            else {
                 System.out.println("You cannot add this item here");
+                return false;
+            }
         }else{
             System.out.println("The size of goods is greater than the size of size " + size);
+            return false;
         }
     }
 
