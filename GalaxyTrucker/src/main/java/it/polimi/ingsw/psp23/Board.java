@@ -280,17 +280,21 @@ public class Board {
     /*
     Il ragionamento di loadGoods sarà: se ship[i][j] è un container prova ad aggiungere la lista di items fino
     a quando riesci; se l'aggiunta dovesse fallire o per incompatibilità di colori o per
-    dimensione massima raggiunta lancia un'eccezione
+    dimensione massima raggiunta lancia un'eccezione, quindi andrebbe gestita un'eventuale ritentativo
+    di aggiunta degli elementi in un altro container
      */
     public void loadGoods(List<Item> items, int i, int j) {
-        if(!ship[i][j].getType().equals("Container")){
+        if(!isValid(i, j)|| ship[i][j] == null ||!ship[i][j].getType().equals("Container")) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
         }
         else{
             int indice = containers.indexOf(ship[i][j]);
+            if(indice == -1){
+                throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
+            }
             int scorr = 0;
             while(scorr < items.size()) {
-                if(containers.get(indice).loadItem(items.get(i))){
+                if(containers.get(indice).loadItem(items.get(scorr))){
                     scorr++;
                 }
                 else{
