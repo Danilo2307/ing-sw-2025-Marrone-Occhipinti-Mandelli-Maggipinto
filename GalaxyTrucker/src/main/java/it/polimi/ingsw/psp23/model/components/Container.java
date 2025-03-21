@@ -24,8 +24,8 @@ public class Container extends Component {
 
     public void loadItem(Item item){
         if(goods.size() < size ) {
-            if(colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green) ||
-            colorContainer == Color.Blue && !(item.getItemColor() == Color.Red))
+            if((colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green)) ||
+                    (colorContainer == Color.Blue && !(item.getItemColor() == Color.Red)))
                 goods.add(item);
             else
                 System.out.println("You cannot add this item here");
