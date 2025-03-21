@@ -74,4 +74,17 @@ public class Component {
     public String getType() {
         return type;
     }
+
+    public Side getUp() {
+        return up;
+    }
+    public Side getDown() {
+        return down;
+    }
+    public Side getLeft() {
+        return left;
+    }
+    public Side getRight() {
+        return right;
+    }
 }
