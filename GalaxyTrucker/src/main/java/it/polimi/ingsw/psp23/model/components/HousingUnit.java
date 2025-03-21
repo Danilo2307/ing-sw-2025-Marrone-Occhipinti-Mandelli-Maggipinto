@@ -8,7 +8,7 @@ public class HousingUnit extends Component {
     //GIGI
     private int numAstronaut = 0;
     private Color alien = null;
-    private List<Color> connectedAddons = new ArrayList<>();
+    private ArrayList<Color> connectedAddons = new ArrayList<>();
     private final boolean isStartingCabin;
 
     public HousingUnit(String type, Side up, Side down, Side left, Side right, boolean isStartingCabin) {

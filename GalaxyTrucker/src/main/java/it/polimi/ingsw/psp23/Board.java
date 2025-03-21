@@ -91,7 +91,7 @@ public class Board {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
                 }
             }
-            else if(ship[i][j].getType().equals("StructuralComponent")) {
+            else if(ship[i][j].getType().equals("Gun") || ship[i][j].getType().equals("DoubleGun") || ship[i][j].getType().equals("Engine") || ship[i][j].getType().equals("DoubleEngine") || ship[i][j].getType().equals("StructuralModules") || ship[i][j].getType().equals("Shield")) {
                 if(!structuralComponents.remove(ship[i][j])){
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
                 }
@@ -213,21 +213,25 @@ public class Board {
                 if(cannonShot.getDirection() == Direction.UP){
                     if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
                         isCovered = true;
+                        break;
                     }
                 }
                 else if(cannonShot.getDirection() == Direction.DOWN){
                     if(s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR ){
                         isCovered = true;
+                        break;
                     }
                 }
                 else if(cannonShot.getDirection() == Direction.RIGHT){
                     if(s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR ){
                         isCovered = true;
+                        break;
                     }
                 }
                 else{
                     if(s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR ){
                         isCovered = true;
+                        break;
                     }
                 }
             }
@@ -273,9 +277,39 @@ public class Board {
 
     }
 
-    public void loadGoods(List<Item> items) {
+    /*
+    Il ragionamento di loadGoods sarà: se ship[i][j] è un container prova ad aggiungere la lista di items fino
+    a quando riesci; se l'aggiunta dovesse fallire o per incompatibilità di colori o per
+    dimensione massima raggiunta lancia un'eccezione
+     */
+    public void loadGoods(List<Item> items, int i, int j) {
+        if(!ship[i][j].getType().equals("Container")){
+            throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
+        }
+        else{
+            int indice = containers.indexOf(ship[i][j]);
+            int scorr = 0;
+            while(scorr < items.size()) {
+                if(containers.get(indice).loadItem(items.get(i))){
+                    scorr++;
+                }
+                else{
+                    throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");
+                }
+            }
+        }
     }
 
     public void checkHousingUnits() {
+        /* per ogni housingunit faccio un ciclo che controlli eventuali addons adiacenti, per poi aggiungere
+           il colore dell'alienaddon corrispondente; non ho messo un break nel for
+           quando trovo un addon perchè potrei avere più addons e quindi avere a disposizione più colori*/
+        for(HousingUnit h : housingUnits) {
+            for(AlienAddOns a : alienAddOns) {
+                if((a.getX() == h.getX() + 1 && a.getY() == h.getY())|| (a.getX() == h.getX() - 1 && a.getY() == h.getY()) || (a.getY() == h.getY() + 1 && a.getX() == h.getX()) || (a.getY() == h.getY() - 1 && a.getX() == h.getX())) {
+                    h.addConnectedAddon(a.getColor());
+                }
+            }
+        }
     }
 }

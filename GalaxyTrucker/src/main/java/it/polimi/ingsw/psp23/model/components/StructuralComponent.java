@@ -10,7 +10,7 @@ public class StructuralComponent extends Component {
     private final String type;
 
     StructuralComponent(String type, Side up, Side down, Side left, Side right, String subType){
-        super("Structural Component"up, down, left, right);
+        super("StructuralComponent",up, down, left, right);
         this.type = subType;
     }
 
