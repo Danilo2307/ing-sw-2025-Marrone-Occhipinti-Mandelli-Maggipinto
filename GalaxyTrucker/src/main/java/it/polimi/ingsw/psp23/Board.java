@@ -2,6 +2,8 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,19 +150,127 @@ public class Board {
     }
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
-        // nel caso in cui sia una cannonata grossa non possiamo fare niente perchè distrugge
+        // TODO: manca il controllo se gli scudi sono attivati con le batterie o meno
+
+        // nel caso in cui sia una cannonata grossa non possiamo fare niente perchè distrugge a prescindere
         /*
         in questo metodo dobbiamo stare attenti al fatto che le colonne nel gioco del livello 2
         la plancia della nave ha 5 righe(numerate dal 5 al 9) e 7 colonne(numerate da 4 a 10),
         quindi in questo metodo gestisco prima la conversione di impactLine adattandola agli
         indici della nostra matrice
          */
+        // effettuo prima questa conversione
+        int realImpactLine;
+        if(cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
+            realImpactLine = impactLine-4;
+        }
+        else{
+            realImpactLine = impactLine-5;
+        }
+
+        //gestisco separatamente il caso in cui la cannonata sia grossa e quello in cui sia piccola
         if(cannonShot.isBig()){
-            while(!isValid() && )
+            // devo distinguere i casi in cui arrivi da dx, sx, su e giù perchè dovrò scorrere la matrice in modo diverso
+            if(cannonShot.getDirection() == Direction.UP){
+                for(int i = 0; i < ship.length; i++) {
+                    if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                        delete(i, realImpactLine);
+                        break;
+                    }
+                }
+            }
+            else if(cannonShot.getDirection() == Direction.DOWN){
+                for(int i = ship.length-1; i >= 0; i--) {
+                    if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                        delete(i, realImpactLine);
+                        break;
+                    }
+                }
+            }
+            else if(cannonShot.getDirection() == Direction.RIGHT){
+                for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
+                    if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                        delete(realImpactLine, j);
+                        break;
+                    }
+                }
+            }
+            else{
+                for(int j = 0; j < ship[realImpactLine].length; j++) {
+                    if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                        delete(realImpactLine, j);
+                        break;
+                    }
+                }
+            }
+        }
+        else{
+            // controllo se c'è uno scudo che difende quel lato
+            // creo una variabile booleana e la metto a true se trovo lo scudo
+            boolean isCovered = false;
+            for(StructuralComponent s: structuralComponents){
+                // devo mettere una serie di if per associare la direzione al lato dei componenti
+                if(cannonShot.getDirection() == Direction.UP){
+                    if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                    }
+                }
+                else if(cannonShot.getDirection() == Direction.DOWN){
+                    if(s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                    }
+                }
+                else if(cannonShot.getDirection() == Direction.RIGHT){
+                    if(s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                    }
+                }
+                else{
+                    if(s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                    }
+                }
+            }
+            // in base al valore isCovered capisco se sono coperto in quel lato, se non sono coperto distruggo
+            if(!isCovered){
+                if(cannonShot.getDirection() == Direction.UP){
+                    for(int i = 0; i < ship.length; i++) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            delete(i, realImpactLine);
+                            break;
+                        }
+                    }
+                }
+                else if(cannonShot.getDirection() == Direction.DOWN){
+                    for(int i = ship.length-1; i >= 0; i--) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            delete(i, realImpactLine);
+                            break;
+                        }
+                    }
+                }
+                else if(cannonShot.getDirection() == Direction.RIGHT){
+                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            delete(realImpactLine, j);
+                            break;
+                        }
+                    }
+                }
+                else{
+                    for(int j = 0; j < ship[realImpactLine].length; j++) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            delete(realImpactLine, j);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 
     public void handleMeteor(Meteor meteor, int impactLine) {
+
     }
 
     public void loadGoods(List<Item> items) {
