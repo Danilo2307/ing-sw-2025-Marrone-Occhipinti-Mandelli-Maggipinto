@@ -109,9 +109,6 @@ public class Board {
     public boolean isFree(int i, int j) {
     }
 
-    public void reduceBatteries() {
-    }
-
     public void reduceCrew(int numMembers) {
     }
 
@@ -413,4 +410,28 @@ public class Board {
             }
         }
     }
+
+    public void reduceBatteries(int num, int i, int j) {
+    /* Dopo aver interagito con la UI, il player decide quante batterie vuole usare e per ogni posizione
+       controller chiama reduceBatteries specificandone la quantità e coordinate */
+        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"BatteryHub".equals(ship[i][j].getType()))) {
+            throw new IllegalArgumentException("This is not a battery hub: error in reduceBatteries of Board");
+        } else {
+            int indice = batteryHubs.indexOf(ship[i][j]);
+            if (indice == -1) {
+                throw new IllegalArgumentException("BatteryHub not found in 'batteryHubs' list: error in reduceBatteries of Board");
+            } else {
+                int numbatteries = batteryHubs.get(indice).getNumBatteries();
+                if (num <= 0 || num > numbatteries) {
+                    System.out.println("Error: numBatteries not valid");
+                    // TODO: la view richiede un nuovo numero
+                } else {
+                    int newbatteries = numbatteries - num;
+                    batteryHubs.get(indice).setNumBatteries(newbatteries);
+                }
+            }
+        }
+    }
+
+
 }

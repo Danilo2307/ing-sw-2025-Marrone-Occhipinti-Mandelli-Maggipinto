@@ -1,38 +1,45 @@
 package it.polimi.ingsw.psp23.model.cards;
+
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import java.util.List;
 
 public class AbandonedStation extends Card {
-//GIGI
+
     private final int days;
     private final int numMembers;
-    private final List<Item[]> prize;
+    private final List<Item> prize;
 
-    public AbandonedStation(int level, int days, int numMembers, List<Item[]> prize) {
+    public AbandonedStation(int level, int days, int numMembers, List<Item> prize) {
         super(level);
         this.days = days;
         this.numMembers = numMembers;
         this.prize = prize;
     }
+
     @Override
     public void play(List<Player> players) {
         for (Player player : players) {
             if (player.isInGame() && player.getTruck().getCrew() >= numMembers) {
-                // Optional: conferma del giocatore (interazione UI)
+                // Optional: conferma del giocatore (interaction UI)
                 if (playerWantsToAccept(player)) {
-                    player.getTruck().loadGoods(prize);
-                    Utility.updatePosition(players,players.indexOf(player),-days);
-                    break; // solo uno può accettare
+                    for (Item item : prize) {
+                        // TODO: ottenere x, y del container per ogni merce dal giocatore con interazione UI
+                        int i = 0; // placeholder
+                        int j = 0; // placeholder
+                        player.getTruck().loadGoods(item, i, j);
+                    }
+                    Utility.updatePosition(players, players.indexOf(player), -days);
+                    break;
                 }
             }
         }
     }
 
-    // Simulazione di decisione (da sostituire con input reale)
-    //private boolean playerWantsToAccept(Player player) {
-        // TODO: logica reale di interazione
-       // return true;
-   // }
+    // Placeholder per interazione reale
+    private boolean playerWantsToAccept(Player player) {
+        // TODO: implementare logica di input utente
+        return true;
+    }
 }
