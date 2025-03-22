@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Board;
 import java.util.List;
 
 public class Slavers extends Card {
