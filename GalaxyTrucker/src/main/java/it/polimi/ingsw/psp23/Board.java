@@ -275,6 +275,103 @@ public class Board {
 
     public void handleMeteor(Meteor meteor, int impactLine) {
 
+        //prima di tutto converto la impactLine per far sì che rientri nei limiti della mia matrice
+        int realImpactLine;
+        if(meteor.getDirection() == Direction.UP || meteor.getDirection() == Direction.DOWN) {
+            realImpactLine = impactLine-4;
+        }
+        else{
+            realImpactLine = impactLine-5;
+        }
+
+        if(!meteor.isBig()){
+            boolean isCovered = false;
+
+            for(StructuralComponent s: structuralComponents){
+                // devo mettere una serie di if per associare la direzione al lato dei componenti
+                if(meteor.getDirection() == Direction.UP){
+                    if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                        break;
+                    }
+                }
+                else if(meteor.getDirection() == Direction.DOWN){
+                    if(s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                        break;
+                    }
+                }
+                else if(meteor.getDirection() == Direction.RIGHT){
+                    if(s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                        break;
+                    }
+                }
+                else{
+                    if(s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                        isCovered = true;
+                        break;
+                    }
+                }
+            }
+
+            if(!isCovered){
+                if(meteor.getDirection() == Direction.UP){
+                    for(int i = 0; i < ship.length; i++) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            if(ship[i][realImpactLine].getUp() != Side.EMPTY) {
+                                delete(i, realImpactLine);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if(meteor.getDirection() == Direction.DOWN){
+                    for(int i = ship.length-1; i >= 0; i--) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            if(ship[i][realImpactLine].getDown() != Side.EMPTY) {
+                                delete(i, realImpactLine);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else if(meteor.getDirection() == Direction.RIGHT){
+                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            if(ship[realImpactLine][j].getRight() != Side.EMPTY) {
+                                delete(realImpactLine, j);
+                            }
+                            break;
+                        }
+                    }
+                }
+                else{
+                    for(int j = 0; j < ship[realImpactLine].length; j++) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            if(ship[realImpactLine][j].getLeft() != Side.EMPTY) {
+                                delete(realImpactLine, j);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+
+        }
+        else{
+            /* Adesso, per la direzione up e down, scorro la lista di cannoni singoli o doppi e vedo se ce n'è almeno
+               uno che abbia la colonna corrispondente con la colonna di arrivo del meteorite e che sia rivolto
+               verso il lato corretto. Per le direzioni laterali devo invece controllare che ce ne siano anche due
+               adiacenti perchè in caso potrebbero farlo esplodere.
+               Non mi preoccupo di controllare che il cannone trovato sia il primo della riga/colonna perchè
+               do per scontato che in questa fase del gioco la nave sia fatta bene e quindi con nessun componente
+               davanti alla bocca dei cannoni in quella direzione
+             */
+            if(meteor.getDirection() == Direction.UP){
+
+            }
+        }
     }
 
     /*
