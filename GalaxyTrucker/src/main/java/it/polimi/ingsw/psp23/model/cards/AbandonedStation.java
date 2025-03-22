@@ -21,7 +21,7 @@ public class AbandonedStation extends Card {
     @Override
     public void play(List<Player> players) {
         for (Player player : players) {
-            if (player.isInGame() && player.getTruck().getCrew() >= numMembers) {
+            if (player.isInGame() && player.getTruck().calculateCrew() >= numMembers) {
                 // Optional: conferma del giocatore (interaction UI)
                 if (playerWantsToAccept(player)) {
                     for (Item item : prize) {
