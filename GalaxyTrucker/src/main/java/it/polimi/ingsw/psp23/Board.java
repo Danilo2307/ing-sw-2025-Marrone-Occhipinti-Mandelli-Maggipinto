@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
@@ -57,7 +58,75 @@ public class Board {
     public boolean isValid(int i, int j) {
     }
 
+    public void setTrue(boolean[][] m, int i, int j) {
+        m[i][j]=true;
+    }
+
+    /* Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
+       che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
+     */
+    // modCentrX e modCentrY mi servono come parametri per creare la funzione ricorsiva, altrimenti non riuscirei
+    // s confrontare mano a mano tutti i componenti con il loro adiacente(se mettessimo questo metodo in component
+    // per sapere se è raggiungibile potremmo risparmiarci i parametri i e j, in modo da semplificare l'etichetta del
+    // metodo ma a queste "sottigliezze" ci penseremo più avanti)
+
+    public boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
+        // inizializzo scorrX e scorrY alle coordinate del modulo centrale del livello due
+        int scorrX = modCentrX;
+        int scorrY = modCentrY;
+        boolean check1 = false, check2 = false, check3 = false, check4 = false;
+
+        setTrue(alreadyChecked, scorrX, scorrY);
+
+        if (i == scorrX && j == scorrY) {
+            return true;
+        }
+        if (isValid(scorrX + 1, scorrY) && alreadyChecked[scorrX + 1][scorrY] == false) {
+            if (scorrX + 1 == i && scorrY == j) {
+                return true;
+            } else {
+                // setTrue(alreadyChecked, scorrX + 1, scorrY);
+                check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
+            }
+        }
+        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX-1][scorrY] == false) {
+            if (scorrX - 1 == i && scorrY == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX - 1, scorrY);
+                check2 = isReachable(alreadyChecked,scorrX - 1, scorrY, i, j);
+            }
+        }
+
+        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY+1] == false) {
+            if (scorrX == i && scorrY + 1 == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX, scorrY + 1);
+                check3 = isReachable(alreadyChecked,scorrX, scorrY + 1, i, j);
+            }
+        }
+
+        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY-1] == false) {
+            if (scorrX == i && scorrY - 1 == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX, scorrY - 1);
+                check4 = isReachable(alreadyChecked,scorrX, scorrY - 1, i, j);
+            }
+        }
+
+
+        return (check1 || check2 || check3 || check4);
+
+    }
+
     public void delete(int i, int j) {
+        boolean[][] alreadyChecked = new boolean[5][7]; // scritto in questo modo sto inizializzando una matrice di booleani
+                                                        // che JAVA INIZIALIZZERÀ A FALSE
         if(!isValid(i, j) || ship[i][j] == null) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         }
@@ -104,6 +173,9 @@ public class Board {
             }
             ship[i][j] = null;
         }
+
+        // adesso elimino i pezzi che non sono più raggiungibili
+        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
     }
 
     public boolean isFree(int i, int j) {
@@ -144,6 +216,19 @@ public class Board {
     }
 
     public void pickMostImportantGoods(int numGoodsStolen) {
+        // creo una variabile che mano a mano decrementerò per sapere quante merci/batterie mancano da essere
+        // rubati
+        int rubati = numGoodsStolen;
+        Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
+        while(rubati > 0) {
+            /* Faccio il seguente ragionamento: itero sull'array di color ordinati in ordine di preziosità e,
+               appena posso togierlo lo tolgo e arresto il ciclo, altrimenti tolgo una batteria.*/
+            boolean removed = false;
+            for(Color colore : ordineGoods) {
+                // TODO: serve la scelta da parte dell'utente sul container da svuotare
+            }
+            rubati--;
+        }
     }
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
