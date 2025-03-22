@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
-import javax.naming.directory.InvalidAttributeValueException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class Board {
         this.ship = other.ship;
         this.garbage.addAll(other.garbage);
         this.batteryHubs.addAll(other.batteryHubs);
-        this.alienAddOns.addAll(other.alienAddOns);
+        this.alienAddOns.addAll(other.alienAddOns);\
         structuralComponents.addAll(other.structuralComponents);
         containers.addAll(other.containers);
         housingUnits.addAll(other.housingUnits);
@@ -56,9 +55,9 @@ public class Board {
         for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
-                        if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+                    if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
 
-                        }
+                    }
                 }
             }
         }
@@ -97,22 +96,22 @@ public class Board {
         validPositions[4][5] = true;
         validPositions[4][6] = true;*/
 
-            final boolean[][] validPositions = new boolean[ROWS][COLS];
+        final boolean[][] validPositions = new boolean[ROWS][COLS];
 
-                int[][] validCoords = {
-                        {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
-                };
+        int[][] validCoords = {
+                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
+        };
 
-                for (int[] coord : validCoords) {
-                    int x = coord[0];
-                    int y = coord[1];
-                    validPositions[x][y] = true;
-                }
+        for (int[] coord : validCoords) {
+            int x = coord[0];
+            int y = coord[1];
+            validPositions[x][y] = true;
+        }
 
-                if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
-                    return false;
-                else
-                    return true;
+        if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
+            return false;
+        else
+            return true;
 
     }
 
@@ -177,6 +176,7 @@ public class Board {
 
     public List<Component> searchComponent(Component c) {
     }
+
 
     public void addComponent(Component c, int i, int j) {
         if (i >= 0 && i < ROWS && j >= 0 && j < COLS && isFree(i, j)) {

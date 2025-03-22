@@ -29,6 +29,7 @@ public class BatteryHub extends Component {
         }
         else{
             throw new IllegalArgumentException("Error: num of batteries removed from Battery Hub is out of bounds");
+            // TODO: la view richiede un nuovo numero
         }
     }
 
