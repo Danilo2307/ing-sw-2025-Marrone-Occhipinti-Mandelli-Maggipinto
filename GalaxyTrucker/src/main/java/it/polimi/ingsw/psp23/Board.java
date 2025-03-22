@@ -365,8 +365,76 @@ public class Board {
                do per scontato che in questa fase del gioco la nave sia fatta bene e quindi con nessun componente
                davanti alla bocca dei cannoni in quella direzione
              */
+            boolean isDestroyed = false; // questa variabile è praticamente la stessa di isCovered nel caso di prima
+                                         // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
+            // distinguo i casi delle varie direzioni
             if(meteor.getDirection() == Direction.UP){
-
+                for(StructuralComponent s: structuralComponents){
+                    if(s.getY() == realImpactLine && (s.getUp() == Side.SINGLE_GUN || s.getUp() == Side.DOUBLE_GUN)){
+                        isDestroyed = true;
+                        break;
+                    }
+                }
+            }
+            else if(meteor.getDirection() == Direction.DOWN){
+                for(StructuralComponent s: structuralComponents){
+                    if(s.getY() == realImpactLine && (s.getDown() == Side.SINGLE_GUN || s.getDown() == Side.DOUBLE_GUN)){
+                        isDestroyed = true;
+                        break;
+                    }
+                }
+            }
+            else if(meteor.getDirection() == Direction.RIGHT){
+                for(StructuralComponent s: structuralComponents){
+                    //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
+                    if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.SINGLE_GUN || s.getRight() == Side.DOUBLE_GUN)){
+                        isDestroyed = true;
+                        break;
+                    }
+                }
+            }
+            else{
+                for(StructuralComponent s: structuralComponents){
+                    //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
+                    if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.SINGLE_GUN || s.getLeft() == Side.DOUBLE_GUN)){
+                        isDestroyed = true;
+                        break;
+                    }
+                }
+            }
+            if(!isDestroyed){
+                if(meteor.getDirection() == Direction.UP){
+                    for(int i = 0; i < ship.length; i++) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            delete(i, realImpactLine);
+                            break;
+                        }
+                    }
+                }
+                else if(meteor.getDirection() == Direction.DOWN){
+                    for(int i = ship.length-1; i >= 0; i--) {
+                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            delete(i, realImpactLine);
+                            break;
+                        }
+                    }
+                }
+                else if(meteor.getDirection() == Direction.RIGHT){
+                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            delete(realImpactLine, j);
+                            break;
+                        }
+                    }
+                }
+                else{
+                    for(int j = 0; j < ship[realImpactLine].length; j++) {
+                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            delete(realImpactLine, j);
+                            break;
+                        }
+                    }
+                }
             }
         }
     }
