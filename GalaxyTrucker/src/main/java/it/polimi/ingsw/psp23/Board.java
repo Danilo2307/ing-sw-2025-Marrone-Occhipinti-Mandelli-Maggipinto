@@ -2,9 +2,11 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
+import javax.naming.directory.InvalidAttributeValueException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,8 @@ public class Board {
     private ArrayList<StructuralComponent> structuralComponents;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
+    private final int ROWS = 10;
+    private final int COLS = 10;
 
 
     public Board() {
@@ -35,7 +39,7 @@ public class Board {
         this.ship = other.ship;
         this.garbage.addAll(other.garbage);
         this.batteryHubs.addAll(other.batteryHubs);
-        this.alienAddOns.addAll(other.alienAddOns);\
+        this.alienAddOns.addAll(other.alienAddOns);
         structuralComponents.addAll(other.structuralComponents);
         containers.addAll(other.containers);
         housingUnits.addAll(other.housingUnits);
@@ -49,12 +53,67 @@ public class Board {
 
 
     public boolean check() {
+        for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
+            for (int j = 0; j < COLS; j++) {
+                if(!isFree(i, j)) {
+                        if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+
+                        }
+                }
+            }
+        }
     }
 
     public Component[][] getShip() {
     }
 
     public boolean isValid(int i, int j) {
+       /* final boolean[][] validPositions = new boolean[5][7];
+        validPositions[0][2] = true;
+        validPositions[0][4] = true;
+        validPositions[1][1] = true;
+        validPositions[1][2] = true;
+        validPositions[1][3] = true;
+        validPositions[1][4] = true;
+        validPositions[1][5] = true;
+        validPositions[2][0] = true;
+        validPositions[2][1] = true;
+        validPositions[2][2] = true;
+        validPositions[2][3] = true;
+        validPositions[2][4] = true;
+        validPositions[2][5] = true;
+        validPositions[2][6] = true;
+        validPositions[3][0] = true;
+        validPositions[3][1] = true;
+        validPositions[3][2] = true;
+        validPositions[3][3] = true;
+        validPositions[3][4] = true;
+        validPositions[3][5] = true;
+        validPositions[3][6] = true;
+        validPositions[4][0] = true;
+        validPositions[4][1] = true;
+        validPositions[4][2] = true;
+        validPositions[4][4] = true;
+        validPositions[4][5] = true;
+        validPositions[4][6] = true;*/
+
+            final boolean[][] validPositions = new boolean[ROWS][COLS];
+
+                int[][] validCoords = {
+                        {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
+                };
+
+                for (int[] coord : validCoords) {
+                    int x = coord[0];
+                    int y = coord[1];
+                    validPositions[x][y] = true;
+                }
+
+                if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
+                    return false;
+                else
+                    return true;
+
     }
 
     public void delete(int i, int j) {
@@ -107,6 +166,10 @@ public class Board {
     }
 
     public boolean isFree(int i, int j) {
+        if(ship[i][j] == null)
+            return true;
+        else
+            return false;
     }
 
     public void reduceCrew(int numMembers) {
@@ -116,6 +179,25 @@ public class Board {
     }
 
     public void addComponent(Component c, int i, int j) {
+        if (i >= 0 && i < ROWS && j >= 0 && j < COLS && isFree(i, j)) {
+            ship[i][j] = c;
+            c.setX(i);
+            c.setY(j);
+            c.placeOnTruck();
+        }else
+            throw new IllegalArgumentException("Invalid parameters i and j");
+
+        switch(c.getType()) {
+            case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
+            case CANNON -> structuralComponents.add((StructuralComponent) c);
+            case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
+            case CONTAINER -> containers.add((Container) c);
+            case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
+            case DOUBLECANNON -> structuralComponents.add((StructuralComponent) c);
+            case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
+            case ENGINE -> structuralComponents.add((StructuralComponent) c);
+        }
+
     }
 
     public void releaseComponent(int i, int j) {
