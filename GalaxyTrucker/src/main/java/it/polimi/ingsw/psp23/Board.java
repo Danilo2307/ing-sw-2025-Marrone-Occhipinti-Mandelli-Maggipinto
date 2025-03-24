@@ -303,9 +303,6 @@ public class Board {
     public Component[][] getShip() {
     }
 
-    public int getCrew() {
-        return crew;
-    }
 
     public void pickMostImportantGoods(int numGoodsStolen) {
         // creo una variabile che mano a mano decrementerò per sapere quante merci/batterie mancano da essere
