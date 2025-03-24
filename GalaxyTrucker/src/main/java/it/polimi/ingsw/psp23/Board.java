@@ -805,8 +805,6 @@ public class Board {
         return ship;
     }
 
-// ciao sto provando ok
-    // hello world ok
-    // okok
+// ciao sto provando
 // ok
 }
