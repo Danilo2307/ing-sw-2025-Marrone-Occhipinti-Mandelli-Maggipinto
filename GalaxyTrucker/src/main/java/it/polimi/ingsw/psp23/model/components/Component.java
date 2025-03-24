@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
-
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 /* NOTA IMPORTANTE!!!: QUANDO MODIFICHEREMO COMPONENT CON L'ATTRIBUTO TYPE È IMPORTANTE CHE IL TIPO SIA SCRITTO
                        IN PascalCase*/
 
@@ -17,7 +17,7 @@ public class Component {
     private int x;
     private int y;
 
-    public Component(String type, Side up, Side down, Side left, Side right) {
+    public Component(ComponentType type, Side up, Side down, Side left, Side right) {
         this.type = type;
         state = ComponentLocation.PILE;  // inizialmente stanno tutti nel mucchio a faccia in giù
         this.up = up;
@@ -78,7 +78,7 @@ public class Component {
         this.y = y;
     }
 
-    public String getType() {
+    public ComponentType getType() {
         return type;
     }
 

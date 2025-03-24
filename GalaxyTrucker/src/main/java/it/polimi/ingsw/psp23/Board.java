@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +19,13 @@ public class Board {
     private ArrayList<StructuralComponent> structuralComponents;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
-    private final int ROWS = 10;
-    private final int COLS = 10;
+    private final int ROWS = 5;
+    private final int COLS = 7;
 
 
     public Board() {
         // per ora istanzio la ship come una 5 x 5, ma la dimensione effettiva sarà da definire
-        ship = new Component[5][7];
+        ship = new Component[ROWS][COLS];
         garbage = new ArrayList<Component>();
         batteryHubs = new ArrayList<>();
         alienAddOns = new ArrayList<>();
