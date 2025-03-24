@@ -9,6 +9,7 @@ public enum ComponentType {
     DOUBLECANNON,
     HOUSINGUNIT,
     CONTAINER,
-    TUBE
+    TUBE,
+    SHIELD
 
 }
