@@ -6,6 +6,8 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
+import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.StructuralComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +55,10 @@ public class Board {
 
 
     public boolean check() { //restituisce un boolean che indica se la nave è legale o meno
+        //empty space va solo con empty space nei componenti
+        // double connector va o con universal o con double
+        // single va o con single o con universal
+        //
         for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
@@ -278,6 +284,7 @@ public class Board {
             case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
             case ENGINE -> structuralComponents.add((StructuralComponent) c);
             case TUBE -> structuralComponents.add((StructuralComponent) c);
+            case SHIELD -> structuralComponents.add((StructuralComponent) c);
         }
 
     }
@@ -598,6 +605,7 @@ public class Board {
     dimensione massima raggiunta lancia un'eccezione, quindi andrebbe gestita un'eventuale ritentativo
     di aggiunta degli elementi in un altro container
      */
+
     public void loadGoods(List<Item> items, int i, int j) {
         if(!isValid(i, j)|| ship[i][j] == null ||!ship[i][j].getType().equals("Container")) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");

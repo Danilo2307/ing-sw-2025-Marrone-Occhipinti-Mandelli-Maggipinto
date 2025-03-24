@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class StructuralComponent extends Component {
@@ -7,15 +8,15 @@ public class StructuralComponent extends Component {
     // la classe StructuralComponent include tutti quei component con praticamente "nessun metodo utile"
     // come ad esempio gun, double gun, engine, double engine, structural modules e shield
 
-    private final String type;
+    private final ComponentType type;
 
-    StructuralComponent(String type, Side up, Side down, Side left, Side right, String subType){
+    StructuralComponent(ComponentType type, Side up, Side down, Side left, Side right, ComponentType subType){
         super("StructuralComponent",up, down, left, right);
         this.type = subType;
     }
 
-    public String getType(){
-        return new String(type);
+    public ComponentType getType(){
+        return type;
     }
 
 }

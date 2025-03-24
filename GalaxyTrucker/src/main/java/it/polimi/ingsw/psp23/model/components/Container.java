@@ -39,9 +39,12 @@ public class Container extends Component {
         }
     }
 
-    public void loseItem(Item item){
+    public void loseItem(Item item){ // da gestire la scelta di rimozione in fase di carico merci posso anche scaricarle
         goods.remove(item); //qui la remove effettua un confronto tra gli attributi di item che in realtà è solo color
                             // e ne rimuove la prima occorrenza
+
     }
+
+
 }
 
