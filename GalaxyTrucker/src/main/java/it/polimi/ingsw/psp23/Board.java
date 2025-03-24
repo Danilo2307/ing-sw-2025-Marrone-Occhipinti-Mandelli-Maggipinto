@@ -16,7 +16,7 @@ public class Board {
     private ArrayList<Component> garbage;
     private ArrayList<BatteryHub> batteryHubs;
     private ArrayList<AlienAddOns> alienAddOns;
-    private ArrayList<StructuralComponent> structuralComponents;
+    private ArrayList<Component> structuralComponents;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
     private final int ROWS = 5;
