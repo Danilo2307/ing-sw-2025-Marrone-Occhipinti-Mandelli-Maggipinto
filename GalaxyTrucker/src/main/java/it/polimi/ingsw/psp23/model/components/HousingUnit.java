@@ -23,7 +23,6 @@ public class HousingUnit extends Component {
     }
 
     // Entrambi i set sono fatti solo prima del primo turno, non vengono più utilizzati
-    //TODO: controllare che non ci sia già un alieno di quel colore sulla nave
     public void setAlien(Color color) {
         if (numAstronaut == 0) this.alien = color;
     }

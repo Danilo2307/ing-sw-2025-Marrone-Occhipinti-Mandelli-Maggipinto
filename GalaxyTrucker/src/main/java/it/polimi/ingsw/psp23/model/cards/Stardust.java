@@ -1,7 +1,4 @@
 package it.polimi.ingsw.psp23.model.cards;
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.Board;
-
 import java.util.List;
 
 public class Stardust extends Card {
@@ -14,7 +11,7 @@ public class Stardust extends Card {
     public void play(List<Player> players) {
         for (Player player : players) {
             if (player.isInGame()) {
-                int penalty = player.getTruck().calculateExposedConnectors();
+                int penalty = player.getTruck().getExposedConnectors();
                 player.updatePosition(-penalty);
             }
         }

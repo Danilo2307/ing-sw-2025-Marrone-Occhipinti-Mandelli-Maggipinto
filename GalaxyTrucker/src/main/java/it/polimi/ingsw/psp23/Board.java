@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
@@ -18,8 +18,6 @@ public class Board {
     private ArrayList<StructuralComponent> structuralComponents;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
-    private final int ROWS = 10;
-    private final int COLS = 10;
 
 
     public Board() {
@@ -52,70 +50,83 @@ public class Board {
 
 
     public boolean check() {
-        for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
-            for (int j = 0; j < COLS; j++) {
-                if(!isFree(i, j)) {
-                    if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
-
-                    }
-                }
-            }
-        }
     }
 
     public Component[][] getShip() {
     }
 
     public boolean isValid(int i, int j) {
-       /* final boolean[][] validPositions = new boolean[5][7];
-        validPositions[0][2] = true;
-        validPositions[0][4] = true;
-        validPositions[1][1] = true;
-        validPositions[1][2] = true;
-        validPositions[1][3] = true;
-        validPositions[1][4] = true;
-        validPositions[1][5] = true;
-        validPositions[2][0] = true;
-        validPositions[2][1] = true;
-        validPositions[2][2] = true;
-        validPositions[2][3] = true;
-        validPositions[2][4] = true;
-        validPositions[2][5] = true;
-        validPositions[2][6] = true;
-        validPositions[3][0] = true;
-        validPositions[3][1] = true;
-        validPositions[3][2] = true;
-        validPositions[3][3] = true;
-        validPositions[3][4] = true;
-        validPositions[3][5] = true;
-        validPositions[3][6] = true;
-        validPositions[4][0] = true;
-        validPositions[4][1] = true;
-        validPositions[4][2] = true;
-        validPositions[4][4] = true;
-        validPositions[4][5] = true;
-        validPositions[4][6] = true;*/
+    }
 
-        final boolean[][] validPositions = new boolean[ROWS][COLS];
+    public void setTrue(boolean[][] m, int i, int j) {
+        m[i][j]=true;
+    }
 
-        int[][] validCoords = {
-                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
-        };
+    /* Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
+       che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
+     */
+    // modCentrX e modCentrY mi servono come parametri per creare la funzione ricorsiva, altrimenti non riuscirei
+    // s confrontare mano a mano tutti i componenti con il loro adiacente(se mettessimo questo metodo in component
+    // per sapere se è raggiungibile potremmo risparmiarci i parametri i e j, in modo da semplificare l'etichetta del
+    // metodo ma a queste "sottigliezze" ci penseremo più avanti)
 
-        for (int[] coord : validCoords) {
-            int x = coord[0];
-            int y = coord[1];
-            validPositions[x][y] = true;
+    public boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
+        // inizializzo scorrX e scorrY alle coordinate del modulo centrale del livello due
+        int scorrX = modCentrX;
+        int scorrY = modCentrY;
+        boolean check1 = false, check2 = false, check3 = false, check4 = false;
+
+        setTrue(alreadyChecked, scorrX, scorrY);
+
+        if (i == scorrX && j == scorrY) {
+            return true;
+        }
+        if (isValid(scorrX + 1, scorrY) && alreadyChecked[scorrX + 1][scorrY] == false) {
+            if (scorrX + 1 == i && scorrY == j) {
+                return true;
+            } else {
+                // setTrue(alreadyChecked, scorrX + 1, scorrY);
+                check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
+            }
+        }
+        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX-1][scorrY] == false) {
+            if (scorrX - 1 == i && scorrY == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX - 1, scorrY);
+                check2 = isReachable(alreadyChecked,scorrX - 1, scorrY, i, j);
+            }
         }
 
-        if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
-            return false;
-        else
-            return true;
+        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY+1] == false) {
+            if (scorrX == i && scorrY + 1 == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX, scorrY + 1);
+                check3 = isReachable(alreadyChecked,scorrX, scorrY + 1, i, j);
+            }
+        }
+
+        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY-1] == false) {
+            if (scorrX == i && scorrY - 1 == j) {
+                return true;
+            }
+            else {
+                // setTrue(alreadyChecked, scorrX, scorrY - 1);
+                check4 = isReachable(alreadyChecked,scorrX, scorrY - 1, i, j);
+            }
+        }
+
+
+        return (check1 || check2 || check3 || check4);
 
     }
 
     public void delete(int i, int j) {
+        boolean[][] alreadyChecked = new boolean[5][7]; // scritto in questo modo sto inizializzando una matrice di booleani
+                                                        // che JAVA INIZIALIZZERÀ A FALSE
         if(!isValid(i, j) || ship[i][j] == null) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         }
@@ -162,13 +173,22 @@ public class Board {
             }
             ship[i][j] = null;
         }
+
+        // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
+        // perchè potrebbe essere importante per collegare altri componenti
+        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
+        for(int row = 0; row < ship.length ; row++){
+            for(int col = 0; col < ship[row].length ; col++){
+                if(!isReachable(alreadyChecked, 2, 3, row, col)){
+                    delete(row, col);
+                    row = 0;
+                    col = 0;
+                }
+            }
+        }
     }
 
     public boolean isFree(int i, int j) {
-        if(ship[i][j] == null)
-            return true;
-        else
-            return false;
     }
 
     public void reduceCrew(int numMembers) {
@@ -177,27 +197,7 @@ public class Board {
     public List<Component> searchComponent(Component c) {
     }
 
-
     public void addComponent(Component c, int i, int j) {
-        if (i >= 0 && i < ROWS && j >= 0 && j < COLS && isFree(i, j)) {
-            ship[i][j] = c;
-            c.setX(i);
-            c.setY(j);
-            c.placeOnTruck();
-        }else
-            throw new IllegalArgumentException("Invalid parameters i and j");
-
-        switch(c.getType()) {
-            case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
-            case CANNON -> structuralComponents.add((StructuralComponent) c);
-            case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
-            case CONTAINER -> containers.add((Container) c);
-            case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
-            case DOUBLECANNON -> structuralComponents.add((StructuralComponent) c);
-            case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
-            case ENGINE -> structuralComponents.add((StructuralComponent) c);
-        }
-
     }
 
     public void releaseComponent(int i, int j) {
@@ -226,6 +226,19 @@ public class Board {
     }
 
     public void pickMostImportantGoods(int numGoodsStolen) {
+        // creo una variabile che mano a mano decrementerò per sapere quante merci/batterie mancano da essere
+        // rubati
+        int rubati = numGoodsStolen;
+        Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
+        while(rubati > 0) {
+            /* Faccio il seguente ragionamento: itero sull'array di color ordinati in ordine di preziosità e,
+               appena posso togierlo lo tolgo e arresto il ciclo, altrimenti tolgo una batteria.*/
+            boolean removed = false;
+            for(Color colore : ordineGoods) {
+                // TODO: serve la scelta da parte dell'utente sul container da svuotare
+            }
+            rubati--;
+        }
     }
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
