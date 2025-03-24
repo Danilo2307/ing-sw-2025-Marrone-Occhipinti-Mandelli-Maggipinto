@@ -8,7 +8,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 /* @author Federico */
 public class Component {
 
-    private String type;
+    private ComponentType type;
     private ComponentLocation state;
     private Side up;
     private Side down;
@@ -69,6 +69,13 @@ public class Component {
     }
     public int getY() {
         return y;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+    public void setY(int y) {
+        this.y = y;
     }
 
     public String getType() {
