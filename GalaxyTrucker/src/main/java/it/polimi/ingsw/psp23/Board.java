@@ -270,14 +270,14 @@ public class Board {
 
         switch(c.getType()) {
             case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
-            case CANNON -> structuralComponents.add((StructuralComponent) c);
+            case CANNON -> structuralComponents.add((Component) c);
             case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
             case CONTAINER -> containers.add((Container) c);
             case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
-            case DOUBLECANNON -> structuralComponents.add((StructuralComponent) c);
-            case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
-            case ENGINE -> structuralComponents.add((StructuralComponent) c);
-            case TUBE -> structuralComponents.add((StructuralComponent) c);
+            case DOUBLECANNON -> structuralComponents.add((Component) c);
+            case DOUBLEENGINE -> structuralComponents.add((Component) c);
+            case ENGINE -> structuralComponents.add((Component) c);
+            case TUBE -> structuralComponents.add((Component) c);
         }
 
     }
@@ -636,7 +636,7 @@ public class Board {
     /* Dopo aver interagito con la UI, il player decide quante batterie vuole usare e per ogni posizione
        controller chiama reduceBatteries specificandone la quantità e coordinate */
         //TODO: pensare se il giocatore può essere stupido o meno
-        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"BatteryHub".equals(ship[i][j].getType()))) {
+        if ((!isValid(i, j)) || (ship[i][j] == null) || (!(ComponentType.BATTERYHUB == ship[i][j].getType()))){
             throw new IllegalArgumentException("This is not a battery hub: error in reduceBatteries of Board");
         } else {
             int indice = batteryHubs.indexOf(ship[i][j]);
@@ -651,7 +651,7 @@ public class Board {
     public void reduceCrew(int num, int i, int j){
         /* Dopo aver interagito con la UI, il player decide se togliere alieni o astronauti e da dove e per ogni posizione
        controller chiama reduceCrew specificandone la quantità e coordinate */
-        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"HousingUnit".equals(ship[i][j].getType()))) {
+        if ((!isValid(i, j)) || (ship[i][j] == null) || (!(ComponentType.HOUSINGUNIT == ship[i][j].getType()))) {
             throw new IllegalArgumentException("This is not an housing unit: error in reduceCrew of Board");
         } else {
             int indice = housingUnits.indexOf(ship[i][j]);
@@ -725,7 +725,7 @@ public class Board {
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
         int i = 0, j = 0;
-        for (StructuralComponent gun : guns) {
+        for (Component gun : guns) {
             if ("DoubleGun".equals(gun.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo cannone
@@ -760,7 +760,7 @@ public class Board {
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
         int i = 0, j = 0; //placeholder
-        for (StructuralComponent engine : engines) {
+        for (Component engine : structuralComponents) {
             if ("DoubleEngine".equals(engine.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo motore
