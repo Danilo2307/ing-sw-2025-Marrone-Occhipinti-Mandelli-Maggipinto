@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +18,18 @@ public class Board {
     private ArrayList<StructuralComponent> structuralComponents;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
-    private final int ROWS = 5;
-    private final int COLS = 7;
-
+    private ArrayList<StructuralComponent> guns;
+    private ArrayList<StructuralComponent> engines;
 
     public Board() {
         // per ora istanzio la ship come una 5 x 5, ma la dimensione effettiva sarà da definire
-        ship = new Component[ROWS][COLS];
+        ship = new Component[5][7];
         garbage = new ArrayList<Component>();
         batteryHubs = new ArrayList<>();
         alienAddOns = new ArrayList<>();
         structuralComponents = new ArrayList<>();
+        guns = new ArrayList<>();
+        engines = new ArrayList<>();
         containers = new ArrayList<>();
         housingUnits = new ArrayList<>();
     }
@@ -53,138 +53,12 @@ public class Board {
 
 
     public boolean check() {
-        for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
-            for (int j = 0; j < COLS; j++) {
-                if(!isFree(i, j)) {
-                    if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
-
-                    }
-                }
-            }
-        }
-    }
-
-    public Component[][] getShip() {
     }
 
     public boolean isValid(int i, int j) {
-       /* final boolean[][] validPositions = new boolean[5][7];
-        validPositions[0][2] = true;
-        validPositions[0][4] = true;
-        validPositions[1][1] = true;
-        validPositions[1][2] = true;
-        validPositions[1][3] = true;
-        validPositions[1][4] = true;
-        validPositions[1][5] = true;
-        validPositions[2][0] = true;
-        validPositions[2][1] = true;
-        validPositions[2][2] = true;
-        validPositions[2][3] = true;
-        validPositions[2][4] = true;
-        validPositions[2][5] = true;
-        validPositions[2][6] = true;
-        validPositions[3][0] = true;
-        validPositions[3][1] = true;
-        validPositions[3][2] = true;
-        validPositions[3][3] = true;
-        validPositions[3][4] = true;
-        validPositions[3][5] = true;
-        validPositions[3][6] = true;
-        validPositions[4][0] = true;
-        validPositions[4][1] = true;
-        validPositions[4][2] = true;
-        validPositions[4][4] = true;
-        validPositions[4][5] = true;
-        validPositions[4][6] = true;*/
-
-        final boolean[][] validPositions = new boolean[ROWS][COLS];
-
-        int[][] validCoords = {
-                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
-        };
-
-        for (int[] coord : validCoords) {
-            int x = coord[0];
-            int y = coord[1];
-            validPositions[x][y] = true;
-        }
-
-        if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
-            return false;
-        else
-            return true;
-
-    }
-
-    public void setTrue(boolean[][] m, int i, int j) {
-        m[i][j]=true;
-    }
-
-    /* Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
-       che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
-     */
-    // modCentrX e modCentrY mi servono come parametri per creare la funzione ricorsiva, altrimenti non riuscirei
-    // s confrontare mano a mano tutti i componenti con il loro adiacente(se mettessimo questo metodo in component
-    // per sapere se è raggiungibile potremmo risparmiarci i parametri i e j, in modo da semplificare l'etichetta del
-    // metodo ma a queste "sottigliezze" ci penseremo più avanti)
-
-    public boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
-        // inizializzo scorrX e scorrY alle coordinate del modulo centrale del livello due
-        int scorrX = modCentrX;
-        int scorrY = modCentrY;
-        boolean check1 = false, check2 = false, check3 = false, check4 = false;
-
-        setTrue(alreadyChecked, scorrX, scorrY);
-
-        if (i == scorrX && j == scorrY) {
-            return true;
-        }
-        if (isValid(scorrX + 1, scorrY) && alreadyChecked[scorrX + 1][scorrY] == false) {
-            if (scorrX + 1 == i && scorrY == j) {
-                return true;
-            } else {
-                // setTrue(alreadyChecked, scorrX + 1, scorrY);
-                check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
-            }
-        }
-        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX-1][scorrY] == false) {
-            if (scorrX - 1 == i && scorrY == j) {
-                return true;
-            }
-            else {
-                // setTrue(alreadyChecked, scorrX - 1, scorrY);
-                check2 = isReachable(alreadyChecked,scorrX - 1, scorrY, i, j);
-            }
-        }
-
-        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY+1] == false) {
-            if (scorrX == i && scorrY + 1 == j) {
-                return true;
-            }
-            else {
-                // setTrue(alreadyChecked, scorrX, scorrY + 1);
-                check3 = isReachable(alreadyChecked,scorrX, scorrY + 1, i, j);
-            }
-        }
-
-        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY-1] == false) {
-            if (scorrX == i && scorrY - 1 == j) {
-                return true;
-            }
-            else {
-                // setTrue(alreadyChecked, scorrX, scorrY - 1);
-                check4 = isReachable(alreadyChecked,scorrX, scorrY - 1, i, j);
-            }
-        }
-
-
-        return (check1 || check2 || check3 || check4);
-
     }
 
     public void delete(int i, int j) {
-        boolean[][] alreadyChecked = new boolean[5][7]; // scritto in questo modo sto inizializzando una matrice di booleani
-                                                        // che JAVA INIZIALIZZERÀ A FALSE
         if(!isValid(i, j) || ship[i][j] == null) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         }
@@ -231,93 +105,21 @@ public class Board {
             }
             ship[i][j] = null;
         }
-
-        // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
-        // perchè potrebbe essere importante per collegare altri componenti
-        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
-        for(int row = 0; row < ship.length ; row++){
-            for(int col = 0; col < ship[row].length ; col++){
-                if(!isReachable(alreadyChecked, 2, 3, row, col)){
-                    delete(row, col);
-                    row = 0;
-                    col = 0;
-                }
-            }
-        }
     }
 
     public boolean isFree(int i, int j) {
-        if(ship[i][j] == null)
-            return true;
-        else
-            return false;
-    }
-
-    public void reduceCrew(int numMembers) {
     }
 
     public List<Component> searchComponent(Component c) {
     }
 
     public void addComponent(Component c, int i, int j) {
-        if (i >= 0 && i < ROWS && j >= 0 && j < COLS && isFree(i, j)) {
-            ship[i][j] = c;
-            c.setX(i);
-            c.setY(j);
-            c.placeOnTruck();
-        }else
-            throw new IllegalArgumentException("Invalid parameters i and j");
-
-        switch(c.getType()) {
-            case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
-            case CANNON -> structuralComponents.add((StructuralComponent) c);
-            case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
-            case CONTAINER -> containers.add((Container) c);
-            case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
-            case DOUBLECANNON -> structuralComponents.add((StructuralComponent) c);
-            case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
-            case ENGINE -> structuralComponents.add((StructuralComponent) c);
-            case TUBE -> structuralComponents.add((StructuralComponent) c);
-        }
-
     }
 
     public void releaseComponent(int i, int j) {
     }
 
-    public void calculateExposedConnectors() {
-    }
-
-    public int getExposedConnectors() {
-        return exposedConnectors;
-    }
-
-    public double getCannonStrength() {
-        return cannonStrength;
-    }
-
-    public int getEngineStrength() {
-        return engineStrength;
-    }
-
-    public Component[][] getShip() {
-    }
-
-
     public void pickMostImportantGoods(int numGoodsStolen) {
-        // creo una variabile che mano a mano decrementerò per sapere quante merci/batterie mancano da essere
-        // rubati
-        int rubati = numGoodsStolen;
-        Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
-        while(rubati > 0) {
-            /* Faccio il seguente ragionamento: itero sull'array di color ordinati in ordine di preziosità e,
-               appena posso togierlo lo tolgo e arresto il ciclo, altrimenti tolgo una batteria.*/
-            boolean removed = false;
-            for(Color colore : ordineGoods) {
-                // TODO: serve la scelta da parte dell'utente sul container da svuotare
-            }
-            rubati--;
-        }
     }
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
@@ -656,6 +458,7 @@ public class Board {
     public void reduceBatteries(int num, int i, int j) {
     /* Dopo aver interagito con la UI, il player decide quante batterie vuole usare e per ogni posizione
        controller chiama reduceBatteries specificandone la quantità e coordinate */
+        //TODO: pensare se il giocatore può essere stupido o meno
         if ((!isValid(i, j)) || (ship[i][j] == null) || (!"BatteryHub".equals(ship[i][j].getType()))) {
             throw new IllegalArgumentException("This is not a battery hub: error in reduceBatteries of Board");
         } else {
@@ -663,17 +466,172 @@ public class Board {
             if (indice == -1) {
                 throw new IllegalArgumentException("BatteryHub not found in 'batteryHubs' list: error in reduceBatteries of Board");
             } else {
-                int numbatteries = batteryHubs.get(indice).getNumBatteries();
-                if (num <= 0 || num > numbatteries) {
-                    System.out.println("Error: numBatteries not valid");
-                    // TODO: la view richiede un nuovo numero
-                } else {
-                    int newbatteries = numbatteries - num;
-                    batteryHubs.get(indice).setNumBatteries(newbatteries);
-                }
+                batteryHubs.get(indice).removeBatteries(num);
             }
         }
     }
+
+    public void reduceCrew(int num, int i, int j){
+        /* Dopo aver interagito con la UI, il player decide se togliere alieni o astronauti e da dove e per ogni posizione
+       controller chiama reduceCrew specificandone la quantità e coordinate */
+        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"HousingUnit".equals(ship[i][j].getType()))) {
+            throw new IllegalArgumentException("This is not an housing unit: error in reduceCrew of Board");
+        } else {
+            int indice = housingUnits.indexOf(ship[i][j]);
+            if (indice == -1) {
+                throw new IllegalArgumentException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+            } else {
+                housingUnits.get(indice).reduceOccupants(num);
+            }
+        }
+        if(calculateCrew() == 0){
+            //TODO: gestire il caso in cui il giocatore non ha più equipaggio ed è costretto ad abbandonare la corsa
+            System.out.println("Player must leave game!");
+        }
+    }
+
+    public int calculateExposedConnectors(){
+        /* Fa dei controlli lato per lato, analizzando esclusivamente i component che definiscono il bordo della nave,
+        * e controlla se ci sono dei controllori esposti. In quel caso aggiorno il contatore*/
+        int count = 0;
+        int rows = ship.length;
+        int cols = ship[0].length;
+        //SIDE UP
+        for(int j = 0; j < cols; j++){
+            for(int i = 0; i < rows; i++){
+                if(isValid(i,j) && ship[i][j] != null){
+                    if(ship[i][j].getUp().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
+                        count ++;
+                    }
+                    break;
+                }
+            }
+        }
+        //SIDE DOWN
+        for(int j = 0; j < cols ; j++){
+            for(int i = rows - 1; i >= 0; i--){
+                if(isValid(i,j) && ship[i][j] != null){
+                    if(ship[i][j].getDown().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
+                        count ++;
+                    }
+                    break;
+                }
+            }
+        }
+        //SIDE LEFT
+        for(int i = 0; i < rows ; i++){
+            for(int j = 0; j < cols; j++){
+                if(isValid(i,j) && ship[i][j] != null){
+                    if(ship[i][j].getLeft().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
+                        count ++;
+                    }
+                    break;
+                }
+            }
+        }
+        //SIDE RIGHT
+        for(int i = 0; i < rows ; i++){
+            for(int j = cols - 1; j >= 0; j--){
+                if(isValid(i,j) && ship[i][j] != null){
+                    if(ship[i][j].getRight().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
+                        count ++;
+                    }
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+    public double calculateCannonStrength() {
+        /*  I cannoni singoli puntati in avanti contano +1, gli altri +½. Se spendi una batteria, i cannoni doppi puntati in avanti contano +2, gli altri +1.
+        L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
+        double strength = 0;
+        int i = 0, j = 0;
+        for (StructuralComponent gun : guns) {
+            if ("DoubleGun".equals(gun.getType())) {
+                if (calculateBatteriesAvailable() > 0) {
+                    // TODO: chiedere al player se vuole spendere la batteria per questo cannone
+                    if (playerSaysYes()) {
+                        reduceBatteries(1, i, j); // scarica la batteria
+                        if (gun.getUp().equals(Side.DOUBLE_GUN)) {
+                            strength += 2;
+                        } else {
+                            strength += 1; // orientamento orizzontale: potenza dimezzata
+                        }
+                    }
+                }
+            } else if ("SingleGun".equals(gun.getType())) {
+                if (gun.getUp().equals(Side.SINGLE_GUN)) {
+                    strength += 1;
+                } else {
+                    strength += 0.5;
+                }
+            }
+        }
+        for(HousingUnit housing: housingUnits){
+            if(housing.getAlien().equals(Color.Purple) && strength > 0){
+                strength += 2;
+                break;
+            }
+        }
+        return strength;
+    }
+
+    public int calculateEngineStrength() {
+        /*  I motori singoli contano +1. I motori doppi contano +2 se spendi una batteria. L’alieno marrone
+        conta +2, ma solo se la potenza motrice è già superiore a 0. */
+        int strength = 0;
+        int i = 0, j = 0; //placeholder
+        for (StructuralComponent engine : engines) {
+            if ("DoubleEngine".equals(engine.getType())) {
+                if (calculateBatteriesAvailable() > 0) {
+                    // TODO: chiedere al player se vuole spendere la batteria per questo motore
+                    if (playerSaysYes()) {
+                        reduceBatteries(1, i, j); // scarica la batteria
+                        strength += 2;
+                    }
+                }
+            } else if ("SingleEngine".equals(engine.getType())) {
+                strength += 1;
+            }
+        }
+        for(HousingUnit housing: housingUnits){
+            if(housing.getAlien().equals(Color.Brown) && strength > 0){
+                strength += 2;
+                break;
+            }
+        }
+        return strength;
+    }
+
+    public int calculateBatteriesAvailable(){
+        int numbatteries = 0;
+        for(BatteryHub BatteryHub: batteryHubs){
+            numbatteries += BatteryHub.getNumBatteries();
+        }
+        return numbatteries;
+    }
+
+    public int calculateCrew(){
+        int crew = 0;
+        for(HousingUnit housing: housingUnits){
+            if(housing.getAlien() != null){
+                crew += 1;
+            }
+            else{crew += housing.getNumAstronaut();}
+        }
+        return crew;
+    }
+
+    public Component[][] getShip(){
+        return ship;
+    }
+
+
+
+
+
 
 
 }
