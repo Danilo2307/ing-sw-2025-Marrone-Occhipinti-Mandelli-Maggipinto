@@ -800,9 +800,8 @@ public class Board {
 
     public Component[][] getShip(){
         return ship;
-    } //
-//
+    }
 
 
-}//
-//
+
+}
