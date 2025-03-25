@@ -54,8 +54,8 @@ public class Board {
     public boolean check() { //restituisce un boolean che indica se la nave è legale o meno
         for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
             for (int j = 0; j < COLS; j++) {
-                if(!isFree(i, j)) {
-                    if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+                if (!isFree(i, j)) {
+                    if (isValid(i - 1, j) && (ship[i - 1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
 
                     }
                 }
@@ -64,8 +64,6 @@ public class Board {
     }
 
     //
-
-
 
 
     public boolean isValid(int i, int j) {
@@ -101,7 +99,7 @@ public class Board {
         final boolean[][] validPositions = new boolean[ROWS][COLS];
 
         int[][] validCoords = {
-                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5},{2, 0},{2, 1},{2, 2},{2, 3},{2, 4},{2, 5},{2, 6},{3, 0},{3, 1},{3, 2},{3, 3},{3, 4},{3, 5},{3, 6},{4, 0},{4, 1},{4, 2},{4, 4},{4, 5},{4, 6}
+                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 0}, {4, 1}, {4, 2}, {4, 4}, {4, 5}, {4, 6}
         };
 
         for (int[] coord : validCoords) {
@@ -118,7 +116,7 @@ public class Board {
     }
 
     public void setTrue(boolean[][] m, int i, int j) {
-        m[i][j]=true;
+        m[i][j] = true;
     }
 
     /* Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
@@ -148,33 +146,30 @@ public class Board {
                 check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
             }
         }
-        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX-1][scorrY] == false) {
+        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX - 1][scorrY] == false) {
             if (scorrX - 1 == i && scorrY == j) {
                 return true;
-            }
-            else {
+            } else {
                 // setTrue(alreadyChecked, scorrX - 1, scorrY);
-                check2 = isReachable(alreadyChecked,scorrX - 1, scorrY, i, j);
+                check2 = isReachable(alreadyChecked, scorrX - 1, scorrY, i, j);
             }
         }
 
-        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY+1] == false) {
+        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY + 1] == false) {
             if (scorrX == i && scorrY + 1 == j) {
                 return true;
-            }
-            else {
+            } else {
                 // setTrue(alreadyChecked, scorrX, scorrY + 1);
-                check3 = isReachable(alreadyChecked,scorrX, scorrY + 1, i, j);
+                check3 = isReachable(alreadyChecked, scorrX, scorrY + 1, i, j);
             }
         }
 
-        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY-1] == false) {
+        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY - 1] == false) {
             if (scorrX == i && scorrY - 1 == j) {
                 return true;
-            }
-            else {
+            } else {
                 // setTrue(alreadyChecked, scorrX, scorrY - 1);
-                check4 = isReachable(alreadyChecked,scorrX, scorrY - 1, i, j);
+                check4 = isReachable(alreadyChecked, scorrX, scorrY - 1, i, j);
             }
         }
 
@@ -185,13 +180,12 @@ public class Board {
 
     public void delete(int i, int j) {
         boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
-                                                        // che JAVA INIZIALIZZERÀ A FALSE
-        if(!isValid(i, j) || ship[i][j] == null) {
+        // che JAVA INIZIALIZZERÀ A FALSE
+        if (!isValid(i, j) || ship[i][j] == null) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
-        }
-        else {
+        } else {
             // È importante che i "type" in component siano scritti in PascalCase!!!
-            if(ship[i][j].getType() == ComponentType.ALIENADDONS) {
+            if (ship[i][j].getType() == ComponentType.ALIENADDONS) {
                 /* Nelle ArrayList il metodo remove ha due implementazioni, una che riceve in ingresso
                    l'indice dell'elemento da rimuovere ed una che riceve un oggetto e riceverà la prima
                    occorrenza dell'oggetto da rimuovere. Io sto usando la seconda.*/
@@ -202,32 +196,28 @@ public class Board {
                 if (!alienAddOns.remove(ship[i][j])) {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
                 }
-            }
-            else if(ship[i][j].getType() == ComponentType.BATTERYHUB) {
-                if(!batteryHubs.remove(ship[i][j])){
+            } else if (ship[i][j].getType() == ComponentType.BATTERYHUB) {
+                if (!batteryHubs.remove(ship[i][j])) {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di batteryHubs");
                 }
-            }
-            else if(ship[i][j].getType() == ComponentType.CONTAINER) {
+            } else if (ship[i][j].getType() == ComponentType.CONTAINER) {
 
-                if(!containers.remove(ship[i][j])){
+                if (!containers.remove(ship[i][j])) {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di containers");
                 }
-            }
-            else if(ship[i][j].getType() == ComponentType.HOUSINGUNIT) {
-                if(!housingUnits.remove(ship[i][j])){
+            } else if (ship[i][j].getType() == ComponentType.HOUSINGUNIT) {
+                if (!housingUnits.remove(ship[i][j])) {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
                 }
-            }
-            else if(ship[i][j].getType() == ComponentType.CANNON || ship[i][j].getType() == ComponentType.DOUBLECANNON || ship[i][j].getType() == ComponentType.ENGINE || ship[i][j].getType() == ComponentType.DOUBLEENGINE || ship[i][j].getType() == ComponentType.TUBE || ship[i][j].getType() == ComponentType.SHIELD) {
-                if(!structuralComponents.remove(ship[i][j])){
+            } else if (ship[i][j].getType() == ComponentType.CANNON || ship[i][j].getType() == ComponentType.DOUBLECANNON || ship[i][j].getType() == ComponentType.ENGINE || ship[i][j].getType() == ComponentType.DOUBLEENGINE || ship[i][j].getType() == ComponentType.TUBE || ship[i][j].getType() == ComponentType.SHIELD) {
+                if (!structuralComponents.remove(ship[i][j])) {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
                 }
             }
 
             /* Ho aggiunto questa condizione nel caso dovessimo inserire un type in maniera errata
                di modo che sappiamo dove controllare */
-            else{
+            else {
                 throw new IllegalArgumentException("There isn't any component like this in the lists: exception in delete(i,j) of Board");
             }
             ship[i][j] = null;
@@ -236,10 +226,10 @@ public class Board {
         // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
         // perchè potrebbe essere importante per collegare altri componenti
         // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
-        for(int row = 0; row < ship.length ; row++){
-            for(int col = 0; col < ship[row].length ; col++){
+        for (int row = 0; row < ship.length; row++) {
+            for (int col = 0; col < ship[row].length; col++) {
                 // analizzando la matrice, 2 e 3 sono le coordinate del centro
-                if(!isReachable(alreadyChecked, 2, 3, row, col)){
+                if (!isReachable(alreadyChecked, 2, 3, row, col)) {
                     delete(row, col);
                     row = 0;
                     col = 0;
@@ -249,7 +239,7 @@ public class Board {
     }
 
     public boolean isFree(int i, int j) {
-        if(ship[i][j] == null)
+        if (ship[i][j] == null)
             return true;
         else
             return false;
@@ -265,10 +255,10 @@ public class Board {
             c.setX(i);
             c.setY(j);
             c.placeOnTruck();
-        }else
+        } else
             throw new IllegalArgumentException("Invalid parameters i and j");
 
-        switch(c.getType()) {
+        switch (c.getType()) {
             case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
             case CANNON -> structuralComponents.add((Component) c);
             case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
@@ -288,11 +278,11 @@ public class Board {
         // rubati
         int rubati = numGoodsStolen;
         Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
-        while(rubati > 0) {
+        while (rubati > 0) {
             /* Faccio il seguente ragionamento: itero sull'array di color ordinati in ordine di preziosità e,
                appena posso togierlo lo tolgo e arresto il ciclo, altrimenti tolgo una batteria.*/
             boolean removed = false;
-            for(Color colore : ordineGoods) {
+            for (Color colore : ordineGoods) {
                 // TODO: serve la scelta da parte dell'utente sul container da svuotare
             }
             rubati--;
@@ -311,109 +301,98 @@ public class Board {
          */
         // effettuo prima questa conversione
         int realImpactLine;
-        if(cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
-            realImpactLine = impactLine-4;
-        }
-        else{
-            realImpactLine = impactLine-5;
+        if (cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
+            realImpactLine = impactLine - 4;
+        } else {
+            realImpactLine = impactLine - 5;
         }
 
         //gestisco separatamente il caso in cui la cannonata sia grossa e quello in cui sia piccola
-        if(cannonShot.isBig()){
+        if (cannonShot.isBig()) {
             // devo distinguere i casi in cui arrivi da dx, sx, su e giù perchè dovrò scorrere la matrice in modo diverso
-            if(cannonShot.getDirection() == Direction.UP){
-                for(int i = 0; i < ship.length; i++) {
-                    if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+            if (cannonShot.getDirection() == Direction.UP) {
+                for (int i = 0; i < ship.length; i++) {
+                    if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                         delete(i, realImpactLine);
                         break;
                     }
                 }
-            }
-            else if(cannonShot.getDirection() == Direction.DOWN){
-                for(int i = ship.length-1; i >= 0; i--) {
-                    if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+            } else if (cannonShot.getDirection() == Direction.DOWN) {
+                for (int i = ship.length - 1; i >= 0; i--) {
+                    if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                         delete(i, realImpactLine);
                         break;
                     }
                 }
-            }
-            else if(cannonShot.getDirection() == Direction.RIGHT){
-                for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
-                    if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+            } else if (cannonShot.getDirection() == Direction.RIGHT) {
+                for (int j = ship[realImpactLine].length - 1; j >= 0; j--) {
+                    if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                        delete(realImpactLine, j);
+                        break;
+                    }
+                }
+            } else {
+                for (int j = 0; j < ship[realImpactLine].length; j++) {
+                    if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
                         delete(realImpactLine, j);
                         break;
                     }
                 }
             }
-            else{
-                for(int j = 0; j < ship[realImpactLine].length; j++) {
-                    if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
-                        delete(realImpactLine, j);
-                        break;
-                    }
-                }
-            }
-        }
-        else{
+        } else {
             // controllo se c'è uno scudo che difende quel lato
             // creo una variabile booleana e la metto a true se trovo lo scudo
             boolean isCovered = false;
-            for(Component s: structuralComponents){
+            for (Component s : structuralComponents) {
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
-                if(cannonShot.getDirection() == Direction.UP){
-                    if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                if (cannonShot.getDirection() == Direction.UP) {
+                    if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else if(cannonShot.getDirection() == Direction.DOWN){
-                    if(s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else if (cannonShot.getDirection() == Direction.DOWN) {
+                    if (s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else if(cannonShot.getDirection() == Direction.RIGHT){
-                    if(s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else if (cannonShot.getDirection() == Direction.RIGHT) {
+                    if (s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else{
-                    if(s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else {
+                    if (s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
                 }
             }
             // in base al valore isCovered capisco se sono coperto in quel lato, se non sono coperto distruggo
-            if(!isCovered){
-                if(cannonShot.getDirection() == Direction.UP){
-                    for(int i = 0; i < ship.length; i++) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+            if (!isCovered) {
+                if (cannonShot.getDirection() == Direction.UP) {
+                    for (int i = 0; i < ship.length; i++) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                             delete(i, realImpactLine);
                             break;
                         }
                     }
-                }
-                else if(cannonShot.getDirection() == Direction.DOWN){
-                    for(int i = ship.length-1; i >= 0; i--) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                } else if (cannonShot.getDirection() == Direction.DOWN) {
+                    for (int i = ship.length - 1; i >= 0; i--) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                             delete(i, realImpactLine);
                             break;
                         }
                     }
-                }
-                else if(cannonShot.getDirection() == Direction.RIGHT){
-                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                } else if (cannonShot.getDirection() == Direction.RIGHT) {
+                    for (int j = ship[realImpactLine].length - 1; j >= 0; j--) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
                             delete(realImpactLine, j);
                             break;
                         }
                     }
-                }
-                else{
-                    for(int j = 0; j < ship[realImpactLine].length; j++) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                } else {
+                    for (int j = 0; j < ship[realImpactLine].length; j++) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
                             delete(realImpactLine, j);
                             break;
                         }
@@ -427,79 +406,72 @@ public class Board {
 
         //prima di tutto converto la impactLine per far sì che rientri nei limiti della mia matrice
         int realImpactLine;
-        if(meteor.getDirection() == Direction.UP || meteor.getDirection() == Direction.DOWN) {
-            realImpactLine = impactLine-4;
-        }
-        else{
-            realImpactLine = impactLine-5;
+        if (meteor.getDirection() == Direction.UP || meteor.getDirection() == Direction.DOWN) {
+            realImpactLine = impactLine - 4;
+        } else {
+            realImpactLine = impactLine - 5;
         }
 
-        if(!meteor.isBig()){
+        if (!meteor.isBig()) {
             boolean isCovered = false;
 
-            for(Component s: structuralComponents){
+            for (Component s : structuralComponents) {
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
-                if(meteor.getDirection() == Direction.UP){
-                    if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                if (meteor.getDirection() == Direction.UP) {
+                    if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else if(meteor.getDirection() == Direction.DOWN){
-                    if(s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else if (meteor.getDirection() == Direction.DOWN) {
+                    if (s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else if(meteor.getDirection() == Direction.RIGHT){
-                    if(s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else if (meteor.getDirection() == Direction.RIGHT) {
+                    if (s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
-                }
-                else{
-                    if(s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR ){
+                } else {
+                    if (s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) {
                         isCovered = true;
                         break;
                     }
                 }
             }
 
-            if(!isCovered){
-                if(meteor.getDirection() == Direction.UP){
-                    for(int i = 0; i < ship.length; i++) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
-                            if(ship[i][realImpactLine].getUp() != Side.EMPTY) {
+            if (!isCovered) {
+                if (meteor.getDirection() == Direction.UP) {
+                    for (int i = 0; i < ship.length; i++) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            if (ship[i][realImpactLine].getUp() != Side.EMPTY) {
                                 delete(i, realImpactLine);
                             }
                             break;
                         }
                     }
-                }
-                else if(meteor.getDirection() == Direction.DOWN){
-                    for(int i = ship.length-1; i >= 0; i--) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
-                            if(ship[i][realImpactLine].getDown() != Side.EMPTY) {
+                } else if (meteor.getDirection() == Direction.DOWN) {
+                    for (int i = ship.length - 1; i >= 0; i--) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                            if (ship[i][realImpactLine].getDown() != Side.EMPTY) {
                                 delete(i, realImpactLine);
                             }
                             break;
                         }
                     }
-                }
-                else if(meteor.getDirection() == Direction.RIGHT){
-                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
-                            if(ship[realImpactLine][j].getRight() != Side.EMPTY) {
+                } else if (meteor.getDirection() == Direction.RIGHT) {
+                    for (int j = ship[realImpactLine].length - 1; j >= 0; j--) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            if (ship[realImpactLine][j].getRight() != Side.EMPTY) {
                                 delete(realImpactLine, j);
                             }
                             break;
                         }
                     }
-                }
-                else{
-                    for(int j = 0; j < ship[realImpactLine].length; j++) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
-                            if(ship[realImpactLine][j].getLeft() != Side.EMPTY) {
+                } else {
+                    for (int j = 0; j < ship[realImpactLine].length; j++) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                            if (ship[realImpactLine][j].getLeft() != Side.EMPTY) {
                                 delete(realImpactLine, j);
                             }
                             break;
@@ -508,8 +480,7 @@ public class Board {
                 }
             }
 
-        }
-        else{
+        } else {
             /* Adesso, per la direzione up e down, scorro la lista di cannoni singoli o doppi e vedo se ce n'è almeno
                uno che abbia la colonna corrispondente con la colonna di arrivo del meteorite e che sia rivolto
                verso il lato corretto. Per le direzioni laterali devo invece controllare che ce ne siano anche due
@@ -519,70 +490,64 @@ public class Board {
                davanti alla bocca dei cannoni in quella direzione
              */
             boolean isDestroyed = false; // questa variabile è praticamente la stessa di isCovered nel caso di prima
-                                         // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
+            // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
             // distinguo i casi delle varie direzioni
-            if(meteor.getDirection() == Direction.UP){
-                for(Component s: structuralComponents){
-                    if(s.getY() == realImpactLine && (s.getUp() == Side.SINGLE_GUN || s.getUp() == Side.DOUBLE_GUN)){
+            if (meteor.getDirection() == Direction.UP) {
+                for (Component s : structuralComponents) {
+                    if (s.getY() == realImpactLine && (s.getUp() == Side.SINGLE_GUN || s.getUp() == Side.DOUBLE_GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
-            }
-            else if(meteor.getDirection() == Direction.DOWN){
-                for(Component s: structuralComponents){
-                    if(s.getY() == realImpactLine && (s.getDown() == Side.SINGLE_GUN || s.getDown() == Side.DOUBLE_GUN)){
+            } else if (meteor.getDirection() == Direction.DOWN) {
+                for (Component s : structuralComponents) {
+                    if (s.getY() == realImpactLine && (s.getDown() == Side.SINGLE_GUN || s.getDown() == Side.DOUBLE_GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
-            }
-            else if(meteor.getDirection() == Direction.RIGHT){
-                for(Component s: structuralComponents){
+            } else if (meteor.getDirection() == Direction.RIGHT) {
+                for (Component s : structuralComponents) {
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.SINGLE_GUN || s.getRight() == Side.DOUBLE_GUN)){
+                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.SINGLE_GUN || s.getRight() == Side.DOUBLE_GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
-            }
-            else{
-                for(Component s: structuralComponents){
+            } else {
+                for (Component s : structuralComponents) {
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.SINGLE_GUN || s.getLeft() == Side.DOUBLE_GUN)){
+                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.SINGLE_GUN || s.getLeft() == Side.DOUBLE_GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
             }
-            if(!isDestroyed){
-                if(meteor.getDirection() == Direction.UP){
-                    for(int i = 0; i < ship.length; i++) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+            if (!isDestroyed) {
+                if (meteor.getDirection() == Direction.UP) {
+                    for (int i = 0; i < ship.length; i++) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                             delete(i, realImpactLine);
                             break;
                         }
                     }
-                }
-                else if(meteor.getDirection() == Direction.DOWN){
-                    for(int i = ship.length-1; i >= 0; i--) {
-                        if(isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
+                } else if (meteor.getDirection() == Direction.DOWN) {
+                    for (int i = ship.length - 1; i >= 0; i--) {
+                        if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                             delete(i, realImpactLine);
                             break;
                         }
                     }
-                }
-                else if(meteor.getDirection() == Direction.RIGHT){
-                    for(int j = ship[realImpactLine].length-1; j >= 0; j--) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                } else if (meteor.getDirection() == Direction.RIGHT) {
+                    for (int j = ship[realImpactLine].length - 1; j >= 0; j--) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
                             delete(realImpactLine, j);
                             break;
                         }
                     }
-                }
-                else{
-                    for(int j = 0; j < ship[realImpactLine].length; j++) {
-                        if(isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
+                } else {
+                    for (int j = 0; j < ship[realImpactLine].length; j++) {
+                        if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
                             delete(realImpactLine, j);
                             break;
                         }
@@ -599,20 +564,18 @@ public class Board {
     di aggiunta degli elementi in un altro container
      */
     public void loadGoods(List<Item> items, int i, int j) {
-        if(!isValid(i, j)|| ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
+        if (!isValid(i, j) || ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
-        }
-        else{
+        } else {
             int indice = containers.indexOf(ship[i][j]);
-            if(indice == -1){
+            if (indice == -1) {
                 throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
             }
             int scorr = 0;
-            while(scorr < items.size()) {
-                if(containers.get(indice).loadItem(items.get(scorr))){
+            while (scorr < items.size()) {
+                if (containers.get(indice).loadItem(items.get(scorr))) {
                     scorr++;
-                }
-                else{
+                } else {
                     throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");
                 }
             }
@@ -623,9 +586,9 @@ public class Board {
         /* per ogni housingunit faccio un ciclo che controlli eventuali addons adiacenti, per poi aggiungere
            il colore dell'alienaddon corrispondente; non ho messo un break nel for
            quando trovo un addon perchè potrei avere più addons e quindi avere a disposizione più colori*/
-        for(HousingUnit h : housingUnits) {
-            for(AlienAddOns a : alienAddOns) {
-                if((a.getX() == h.getX() + 1 && a.getY() == h.getY())|| (a.getX() == h.getX() - 1 && a.getY() == h.getY()) || (a.getY() == h.getY() + 1 && a.getX() == h.getX()) || (a.getY() == h.getY() - 1 && a.getX() == h.getX())) {
+        for (HousingUnit h : housingUnits) {
+            for (AlienAddOns a : alienAddOns) {
+                if ((a.getX() == h.getX() + 1 && a.getY() == h.getY()) || (a.getX() == h.getX() - 1 && a.getY() == h.getY()) || (a.getY() == h.getY() + 1 && a.getX() == h.getX()) || (a.getY() == h.getY() - 1 && a.getX() == h.getX())) {
                     h.addConnectedAddon(a.getColor());
                 }
             }
@@ -648,7 +611,7 @@ public class Board {
         }
     }
 
-    public void reduceCrew(int num, int i, int j){
+    public void reduceCrew(int num, int i, int j) {
         /* Dopo aver interagito con la UI, il player decide se togliere alieni o astronauti e da dove e per ogni posizione
        controller chiama reduceCrew specificandone la quantità e coordinate */
         if ((!isValid(i, j)) || (ship[i][j] == null) || (!"HousingUnit".equals(ship[i][j].getType()))) {
@@ -661,57 +624,57 @@ public class Board {
                 housingUnits.get(indice).reduceOccupants(num);
             }
         }
-        if(calculateCrew() == 0){
+        if (calculateCrew() == 0) {
             //TODO: gestire il caso in cui il giocatore non ha più equipaggio ed è costretto ad abbandonare la corsa
             System.out.println("Player must leave game!");
         }
     }
 
-    public int calculateExposedConnectors(){
+    public int calculateExposedConnectors() {
         /* Fa dei controlli lato per lato, analizzando esclusivamente i component che definiscono il bordo della nave,
          * e controlla se ci sono dei controllori esposti. In quel caso aggiorno il contatore*/
         int count = 0;
         int rows = ship.length;
         int cols = ship[0].length;
         //SIDE UP
-        for(int j = 0; j < cols; j++){
-            for(int i = 0; i < rows; i++){
-                if(isValid(i,j) && ship[i][j] != null){
-                    if(ship[i][j].getUp().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
-                        count ++;
+        for (int j = 0; j < cols; j++) {
+            for (int i = 0; i < rows; i++) {
+                if (isValid(i, j) && ship[i][j] != null) {
+                    if (ship[i][j].getUp().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
+                        count++;
                     }
                     break;
                 }
             }
         }
         //SIDE DOWN
-        for(int j = 0; j < cols ; j++){
-            for(int i = rows - 1; i >= 0; i--){
-                if(isValid(i,j) && ship[i][j] != null){
-                    if(ship[i][j].getDown().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
-                        count ++;
+        for (int j = 0; j < cols; j++) {
+            for (int i = rows - 1; i >= 0; i--) {
+                if (isValid(i, j) && ship[i][j] != null) {
+                    if (ship[i][j].getDown().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
+                        count++;
                     }
                     break;
                 }
             }
         }
         //SIDE LEFT
-        for(int i = 0; i < rows ; i++){
-            for(int j = 0; j < cols; j++){
-                if(isValid(i,j) && ship[i][j] != null){
-                    if(ship[i][j].getLeft().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
-                        count ++;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (isValid(i, j) && ship[i][j] != null) {
+                    if (ship[i][j].getLeft().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
+                        count++;
                     }
                     break;
                 }
             }
         }
         //SIDE RIGHT
-        for(int i = 0; i < rows ; i++){
-            for(int j = cols - 1; j >= 0; j--){
-                if(isValid(i,j) && ship[i][j] != null){
-                    if(ship[i][j].getRight().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_DOUBLE_CONNECTOR)){
-                        count ++;
+        for (int i = 0; i < rows; i++) {
+            for (int j = cols - 1; j >= 0; j--) {
+                if (isValid(i, j) && ship[i][j] != null) {
+                    if (ship[i][j].getRight().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
+                        count++;
                     }
                     break;
                 }
@@ -746,8 +709,8 @@ public class Board {
                 }
             }
         }
-        for(HousingUnit housing: housingUnits){
-            if(housing.getAlien().equals(Color.Purple) && strength > 0){
+        for (HousingUnit housing : housingUnits) {
+            if (housing.getAlien().equals(Color.Purple) && strength > 0) {
                 strength += 2;
                 break;
             }
@@ -773,8 +736,8 @@ public class Board {
                 strength += 1;
             }
         }
-        for(HousingUnit housing: housingUnits){
-            if(housing.getAlien().equals(Color.Brown) && strength > 0){
+        for (HousingUnit housing : housingUnits) {
+            if (housing.getAlien().equals(Color.Brown) && strength > 0) {
                 strength += 2;
                 break;
             }
@@ -782,29 +745,35 @@ public class Board {
         return strength;
     }
 
-    public int calculateBatteriesAvailable(){
+    public int calculateBatteriesAvailable() {
         int numbatteries = 0;
-        for(BatteryHub BatteryHub: batteryHubs){
+        for (BatteryHub BatteryHub : batteryHubs) {
             numbatteries += BatteryHub.getNumBatteries();
         }
         return numbatteries;
     }
 
-    public int calculateCrew(){
+    public int calculateCrew() {
         int crew = 0;
-        for(HousingUnit housing: housingUnits){
-            if(housing.getAlien() != null){
+        for (HousingUnit housing : housingUnits) {
+            if (housing.getAlien() != null) {
                 crew += 1;
+            } else {
+                crew += housing.getNumAstronaut();
             }
-            else{crew += housing.getNumAstronaut();}
         }
         return crew;
     }
 
-    public Component[][] getShip(){
+    public Component[][] getShip() {
         return ship;
     }
 
 // ciao sto provando altro ciao
 // ok
+
+    public ArrayList<HousingUnit> getHousingUnitsList() {
+        return housingUnits;
+    }
+
 }
