@@ -6,8 +6,6 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
-import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.model.components.StructuralComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -605,7 +603,6 @@ public class Board {
     dimensione massima raggiunta lancia un'eccezione, quindi andrebbe gestita un'eventuale ritentativo
     di aggiunta degli elementi in un altro container
      */
-
     public void loadGoods(List<Item> items, int i, int j) {
         if(!isValid(i, j)|| ship[i][j] == null ||!ship[i][j].getType().equals("Container")) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
@@ -733,7 +730,7 @@ public class Board {
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
         int i = 0, j = 0;
-        for (StructuralComponent gun : guns) {
+        for (Component gun : guns) {
             if ("DoubleGun".equals(gun.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo cannone
@@ -768,7 +765,7 @@ public class Board {
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
         int i = 0, j = 0; //placeholder
-        for (StructuralComponent engine : engines) {
+        for (Component engine : structuralComponents) {
             if ("DoubleEngine".equals(engine.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo motore
@@ -813,6 +810,6 @@ public class Board {
         return ship;
     }
 
-// ciao sto provando
+// ciao sto provando altro ciao
 // ok
 }
