@@ -185,14 +185,14 @@ public class Board {
     }
 
     public void delete(int i, int j) {
-        boolean[][] alreadyChecked = new boolean[5][7]; // scritto in questo modo sto inizializzando una matrice di booleani
+        boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
                                                         // che JAVA INIZIALIZZERÀ A FALSE
         if(!isValid(i, j) || ship[i][j] == null) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         }
         else {
             // È importante che i "type" in component siano scritti in PascalCase!!!
-            if(ship[i][j].getType().equals("AlienAddOns")) {
+            if(ship[i][j].getType() == ComponentType.ALIENADDONS) {
                 /* Nelle ArrayList il metodo remove ha due implementazioni, una che riceve in ingresso
                    l'indice dell'elemento da rimuovere ed una che riceve un oggetto e riceverà la prima
                    occorrenza dell'oggetto da rimuovere. Io sto usando la seconda.*/
@@ -204,23 +204,23 @@ public class Board {
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
                 }
             }
-            else if(ship[i][j].getType().equals("BatteryHub")) {
+            else if(ship[i][j].getType() == ComponentType.BATTERYHUB) {
                 if(!batteryHubs.remove(ship[i][j])){
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di batteryHubs");
                 }
             }
-            else if(ship[i][j].getType().equals("Container")) {
+            else if(ship[i][j].getType() == ComponentType.CONTAINER) {
 
                 if(!containers.remove(ship[i][j])){
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di containers");
                 }
             }
-            else if(ship[i][j].getType().equals("HousingUnit")) {
+            else if(ship[i][j].getType() == ComponentType.HOUSINGUNIT) {
                 if(!housingUnits.remove(ship[i][j])){
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
                 }
             }
-            else if(ship[i][j].getType().equals("Gun") || ship[i][j].getType().equals("DoubleGun") || ship[i][j].getType().equals("Engine") || ship[i][j].getType().equals("DoubleEngine") || ship[i][j].getType().equals("StructuralModules") || ship[i][j].getType().equals("Shield")) {
+            else if(ship[i][j].getType() == ComponentType.CANNON || ship[i][j].getType() == ComponentType.DOUBLECANNON || ship[i][j].getType() == ComponentType.ENGINE || ship[i][j].getType() == ComponentType.DOUBLEENGINE || ship[i][j].getType() == ComponentType.TUBE || ship[i][j].getType() == ComponentType.SHIELD) {
                 if(!structuralComponents.remove(ship[i][j])){
                     System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
                 }
@@ -239,6 +239,7 @@ public class Board {
         // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
         for(int row = 0; row < ship.length ; row++){
             for(int col = 0; col < ship[row].length ; col++){
+                // analizzando la matrice, 2 e 3 sono le coordinate del centro
                 if(!isReachable(alreadyChecked, 2, 3, row, col)){
                     delete(row, col);
                     row = 0;
@@ -358,7 +359,7 @@ public class Board {
             // controllo se c'è uno scudo che difende quel lato
             // creo una variabile booleana e la metto a true se trovo lo scudo
             boolean isCovered = false;
-            for(StructuralComponent s: structuralComponents){
+            for(Component s: structuralComponents){
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
                 if(cannonShot.getDirection() == Direction.UP){
                     if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
@@ -437,7 +438,7 @@ public class Board {
         if(!meteor.isBig()){
             boolean isCovered = false;
 
-            for(StructuralComponent s: structuralComponents){
+            for(Component s: structuralComponents){
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
                 if(meteor.getDirection() == Direction.UP){
                     if(s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR ){
@@ -522,7 +523,7 @@ public class Board {
                                          // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
             // distinguo i casi delle varie direzioni
             if(meteor.getDirection() == Direction.UP){
-                for(StructuralComponent s: structuralComponents){
+                for(Component s: structuralComponents){
                     if(s.getY() == realImpactLine && (s.getUp() == Side.SINGLE_GUN || s.getUp() == Side.DOUBLE_GUN)){
                         isDestroyed = true;
                         break;
@@ -530,7 +531,7 @@ public class Board {
                 }
             }
             else if(meteor.getDirection() == Direction.DOWN){
-                for(StructuralComponent s: structuralComponents){
+                for(Component s: structuralComponents){
                     if(s.getY() == realImpactLine && (s.getDown() == Side.SINGLE_GUN || s.getDown() == Side.DOUBLE_GUN)){
                         isDestroyed = true;
                         break;
@@ -538,7 +539,7 @@ public class Board {
                 }
             }
             else if(meteor.getDirection() == Direction.RIGHT){
-                for(StructuralComponent s: structuralComponents){
+                for(Component s: structuralComponents){
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
                     if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.SINGLE_GUN || s.getRight() == Side.DOUBLE_GUN)){
                         isDestroyed = true;
@@ -547,7 +548,7 @@ public class Board {
                 }
             }
             else{
-                for(StructuralComponent s: structuralComponents){
+                for(Component s: structuralComponents){
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
                     if((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.SINGLE_GUN || s.getLeft() == Side.DOUBLE_GUN)){
                         isDestroyed = true;
@@ -599,7 +600,7 @@ public class Board {
     di aggiunta degli elementi in un altro container
      */
     public void loadGoods(List<Item> items, int i, int j) {
-        if(!isValid(i, j)|| ship[i][j] == null ||!ship[i][j].getType().equals("Container")) {
+        if(!isValid(i, j)|| ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
         }
         else{
