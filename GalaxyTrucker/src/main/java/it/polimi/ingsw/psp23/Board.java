@@ -53,12 +53,109 @@ public class Board {
 
 
     public boolean check() { //restituisce un boolean che indica se la nave è legale o meno
+        //empty space va solo con empty space nei componenti
+        // double connector va o con universal o con double
+        // single va o con single o con universal
+        //
         for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
-                    if(isValid(i-1,j ) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+                        return false; //ho un pezzo sotto un motore singolo o doppio
+                    }
+
+                    if(isValid(i,j+1 ) && !isFree(i,j+1)){ //componente di destra
+                        if(ship[i][j+1].getLeft() == Side.SINGLE_GUN || ship[i][j+1].getLeft() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                            return false;
+                        }
+                        if((ship[i][j].getRight() == Side.EMPTY || ship[i][j].getRight() == Side.SHIELD )&& !(ship[i][j+1].getLeft() == Side.EMPTY)) { // empty con qualcosa di non empty
+                            return false;
+                        }
+                        if((ship[i][j].getRight() == Side.SINGLE_CONNECTOR || ship[i][j].getRight() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i][j+1].getLeft() == Side.SINGLE_CONNECTOR || ship[i][j+1].getLeft() == Side.UNIVERSAL_CONNECTOR || ship[i][j+1].getLeft() == Side.SHIELD_SINGLE_CONNECTOR)) {
+                            return false;
+                        }
+                        if((ship[i][j].getRight() == Side.DOUBLE_CONNECTOR || ship[i][j].getRight() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i][j+1].getLeft() == Side.DOUBLE_CONNECTOR || ship[i][j+1].getLeft() == Side.UNIVERSAL_CONNECTOR || ship[i][j+1].getLeft() == Side.SHIELD_DOUBLE_CONNECTOR)){
+                            return false;
+                        }
+                        if((ship[i][j].getRight() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j+1].getLeft() == Side.EMPTY)){
+                            return false;
+                        }
+                        if(ship[i][j+1].getLeft() == Side.DOUBLE_ENGINE || ship[i][j+1].getLeft() == Side.SINGLE_ENGINE){
+                            return false;
+                        }
+
 
                     }
+
+                    if(isValid(i,j-1 ) && !isFree(i,j-1)){ //componente di sinistra
+                        if(ship[i][j-1].getRight() == Side.SINGLE_GUN || ship[i][j-1].getLeft() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                            return false;
+                        }
+                        if((ship[i][j].getLeft() == Side.EMPTY || ship[i][j].getLeft() == Side.SHIELD )&& !(ship[i][j-1].getRight() == Side.EMPTY)) { // empty con qualcosa di non empty
+                            return false;
+                        }
+                        if((ship[i][j].getLeft() == Side.SINGLE_CONNECTOR || ship[i][j].getLeft() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i][j-1].getRight() == Side.SINGLE_CONNECTOR || ship[i][j-1].getRight() == Side.UNIVERSAL_CONNECTOR || ship[i][j-1].getRight() == Side.SHIELD_SINGLE_CONNECTOR)) {
+                            return false;
+                        }
+                        if((ship[i][j].getLeft() == Side.DOUBLE_CONNECTOR || ship[i][j].getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i][j-1].getRight() == Side.DOUBLE_CONNECTOR || ship[i][j-1].getRight() == Side.UNIVERSAL_CONNECTOR || ship[i][j-1].getRight() == Side.SHIELD_DOUBLE_CONNECTOR)){
+                            return false;
+                        }
+                        if((ship[i][j].getLeft() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j-1].getRight() == Side.EMPTY)){
+                            return false;
+                        }
+                        if(ship[i][j-1].getRight() == Side.DOUBLE_ENGINE || ship[i][j-1].getRight() == Side.SINGLE_ENGINE){
+                            return false;
+                        }
+
+
+                    }
+
+                    if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sotto
+                        if(ship[i+1][j].getUp() == Side.SINGLE_GUN || ship[i+1][j].getUp() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                            return false;
+                        }
+                        if((ship[i][j].getDown() == Side.EMPTY || ship[i][j].getDown() == Side.SHIELD )&& !(ship[i+1][j].getUp() == Side.EMPTY)) { // empty con qualcosa di non empty
+                            return false;
+                        }
+                        if((ship[i][j].getDown() == Side.SINGLE_CONNECTOR || ship[i][j].getDown() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i+1][j].getUp() == Side.SINGLE_CONNECTOR || ship[i+1][j].getUp() == Side.UNIVERSAL_CONNECTOR || ship[i+1][j].getUp() == Side.SHIELD_SINGLE_CONNECTOR)) {
+                            return false;
+                        }
+                        if((ship[i][j].getDown() == Side.DOUBLE_CONNECTOR || ship[i][j].getDown() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i+1][j].getUp() == Side.DOUBLE_CONNECTOR || ship[i+1][j].getUp() == Side.UNIVERSAL_CONNECTOR || ship[i+1][j].getUp() == Side.SHIELD_DOUBLE_CONNECTOR)){
+                            return false;
+                        }
+                        if((ship[i][j].getDown() == Side.UNIVERSAL_CONNECTOR) && (ship[i+1][j].getUp() == Side.EMPTY)){
+                            return false;
+                        }
+                        if(ship[i+1][j].getUp() == Side.DOUBLE_ENGINE || ship[i+1][j].getUp() == Side.SINGLE_ENGINE){
+                            return false;
+                        }
+
+
+                    }
+
+                    if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sopra
+                        if(ship[i-1][j].getDown() == Side.SINGLE_GUN || ship[i-1][j].getDown() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                            return false;
+                        }
+                        if((ship[i][j].getUp() == Side.EMPTY || ship[i][j].getUp() == Side.SHIELD )&& !(ship[i-1][j].getDown() == Side.EMPTY)) { // empty con qualcosa di non empty
+                            return false;
+                        }
+                        if((ship[i][j].getUp() == Side.SINGLE_CONNECTOR || ship[i][j].getUp() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i-1][j].getDown() == Side.SINGLE_CONNECTOR || ship[i-1][j].getDown() == Side.UNIVERSAL_CONNECTOR || ship[i-1][j].getDown() == Side.SHIELD_SINGLE_CONNECTOR)) {
+                            return false;
+                        }
+                        if((ship[i][j].getUp() == Side.DOUBLE_CONNECTOR || ship[i][j].getUp() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i-1][j].getDown() == Side.DOUBLE_CONNECTOR || ship[i-1][j].getDown() == Side.UNIVERSAL_CONNECTOR || ship[i-1][j].getDown() == Side.SHIELD_DOUBLE_CONNECTOR)){
+                            return false;
+                        }
+                        if((ship[i][j].getUp() == Side.UNIVERSAL_CONNECTOR) && (ship[i-1][j].getDown() == Side.EMPTY)){
+                            return false;
+                        }
+                        if(ship[i-1][j].getDown() == Side.DOUBLE_ENGINE || ship[i-1][j].getDown() == Side.SINGLE_ENGINE){
+                            return false;
+                        }
+
+
+                    }
+
                 }
             }
         }
@@ -279,6 +376,7 @@ public class Board {
             case DOUBLEENGINE -> structuralComponents.add((StructuralComponent) c);
             case ENGINE -> structuralComponents.add((StructuralComponent) c);
             case TUBE -> structuralComponents.add((StructuralComponent) c);
+            case SHIELD -> structuralComponents.add((StructuralComponent) c);
         }
 
     }
@@ -726,7 +824,7 @@ public class Board {
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
         int i = 0, j = 0;
-        for (StructuralComponent gun : guns) {
+        for (Component gun : guns) {
             if ("DoubleGun".equals(gun.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo cannone
@@ -761,7 +859,7 @@ public class Board {
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
         int i = 0, j = 0; //placeholder
-        for (StructuralComponent engine : engines) {
+        for (Component engine : structuralComponents) {
             if ("DoubleEngine".equals(engine.getType())) {
                 if (calculateBatteriesAvailable() > 0) {
                     // TODO: chiedere al player se vuole spendere la batteria per questo motore
