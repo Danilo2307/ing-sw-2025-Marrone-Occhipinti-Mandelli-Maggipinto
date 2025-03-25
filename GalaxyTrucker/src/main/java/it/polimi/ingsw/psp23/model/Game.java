@@ -38,6 +38,7 @@ public class Game {
             }
         }
         players.sort(Comparator.comparingInt(Player::getPosition).reversed());
+        //check
 
 
     }
