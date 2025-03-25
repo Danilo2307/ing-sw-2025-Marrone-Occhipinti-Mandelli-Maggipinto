@@ -24,7 +24,6 @@ public class Board {
 
 
     public Board() {
-        // per ora istanzio la ship come una 5 x 5, ma la dimensione effettiva sarà da definire
         ship = new Component[ROWS][COLS];
         garbage = new ArrayList<Component>();
         batteryHubs = new ArrayList<>();
