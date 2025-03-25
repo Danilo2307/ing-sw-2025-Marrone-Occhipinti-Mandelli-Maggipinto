@@ -12,10 +12,11 @@ public class Stardust extends Card {
 
     @Override
     public void play(List<Player> players) {
-        for (Player player : players) {
-            if (player.isInGame()) {
-                int penalty = player.getTruck().calculateExposedConnectors();
-                Utility.updatePosition(players,players.indexOf(player),-penalty);
+        int size = players.size();
+        for (size = size-1 ;size >= 0; size--) {
+            if (players.get(size).isInGame()) {
+                int penalty = players.get(size).getTruck().calculateExposedConnectors();
+                Utility.updatePosition(players,size,-penalty);
             }
         }
     }
