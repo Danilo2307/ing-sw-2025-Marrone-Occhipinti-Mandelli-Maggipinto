@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -22,7 +25,7 @@ public class OpenSpace extends Card{
 
         while (i < players.size()){
             Player giocatore = players.get(i);
-            int potenzaMotrice = giocatore.getTruck().getEngineStrength();
+            int potenzaMotrice = giocatore.getTruck().calculateEngineStrength();
 
             Utility.updatePosition(players, i , potenzaMotrice);
 

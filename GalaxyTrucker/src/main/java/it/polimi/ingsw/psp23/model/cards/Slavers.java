@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
+
 import java.util.List;
 
 public class Slavers extends Card {
@@ -25,11 +27,12 @@ public class Slavers extends Card {
 
         while(!defeated && i < players.size()){
             //in Java è standard dichiarare le variabili il più vicino possibile al loro utilizzo
-            double playerCannonStrength = players.get(i).getTruck().getCannonStrength();
+            double playerCannonStrength = players.get(i).getTruck().calculateCannonStrength();
 
             if(playerCannonStrength < cannonStrength){
                 // player perde
-                players.get(i).getTruck().reduceCrew(membersStolen); //dovrò gestire se perde tutti i membri lascia il gioco
+                // 1 e 1 sono la posizione dell'HousingUnit da cui togliere i membri
+                players.get(i).getTruck().reduceCrew(membersStolen,1,1); //dovrò gestire se perde tutti i membri lascia il gioco
                 //scegli quali membri rimuovere da quali cabine
                 //search_component in board? il nostro però ha String e non Type..
 
@@ -40,7 +43,7 @@ public class Slavers extends Card {
 
                 if(option == 0){    //sceglie money. se sceglie l'altra opzione non succede nulla
                     players.get(i).updateMoney(prize) ;
-                    players.get(i).updatePosition(-days);
+                    Utility.updatePosition(players,i,-days);
                 }
             }
             //in caso di pareggio non succedde nulla e passo al giocatore successivo
