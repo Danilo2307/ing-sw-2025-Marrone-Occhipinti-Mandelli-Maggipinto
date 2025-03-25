@@ -45,10 +45,10 @@ public class CombatZone extends Card {
         int tmp = 0;
         for(int i=0;i<size;i++){
             if(i==0) {
-                tmp = players.get(i).getTruck().getCrew();
+                tmp = players.get(i).getTruck().calculateCrew();
                 pos = i;
-            }else if(tmp > players.get(i).getTruck().getCrew()) {
-                tmp = players.get(i).getTruck().getCrew();
+            }else if(tmp > players.get(i).getTruck().calculateCrew()) {
+                tmp = players.get(i).getTruck().calculateCrew();
                 pos = i;
             }
         }
@@ -62,10 +62,10 @@ public class CombatZone extends Card {
         double tmp = -1;
         for(int i=0;i<size;i++){
             if(i==0) {
-                tmp = players.get(i).getTruck().getCannonStrength();
+                tmp = players.get(i).getTruck().calculateCannonStrength();
                 pos = i;
-            }else if(tmp > players.get(i).getTruck().getCannonStrength()){
-                tmp = players.get(i).getTruck().getCannonStrength(); //get cannon strength si occuperà dell'input sulle batterie
+            }else if(tmp > players.get(i).getTruck().calculateCannonStrength()){
+                tmp = players.get(i).getTruck().calculateCannonStrength(); //get cannon strength si occuperà dell'input sulle batterie
                 pos = i;
             }
         }
@@ -78,10 +78,10 @@ public class CombatZone extends Card {
         int tmp = -1;
         for(int i=0;i<size;i++){
             if(i==0) {
-                tmp = players.get(i).getTruck().getEngineStrength();
+                tmp = players.get(i).getTruck().calculateEngineStrength();
                 pos = i;
-            }else if(tmp > players.get(i).getTruck().getEngineStrength()){
-                tmp = players.get(i).getTruck().getEngineStrength(); //get engine strength si occuperà dell'input sulle batterie
+            }else if(tmp > players.get(i).getTruck().calculateEngineStrength()){
+                tmp = players.get(i).getTruck().calculateEngineStrength(); //get engine strength si occuperà dell'input sulle batterie
                 pos = i;
             }
         }
@@ -116,7 +116,8 @@ public class CombatZone extends Card {
         System.out.println(players.get(pos).getNickname() + " has less engine strength!");
 
         if(penalty2 == Challenge.Members) {
-            players.get(pos).getTruck().reduceCrew(membersLost);
+            // dobbiamo sapere da che cabina togliere l'equipaggio
+            players.get(pos).getTruck().reduceCrew(membersLost,1,1);
         } else if(penalty2 == Challenge.Goods){
             players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
         }else{
