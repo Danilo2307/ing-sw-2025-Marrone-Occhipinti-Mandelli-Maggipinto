@@ -9,7 +9,7 @@ public class Planets extends Card {
     private final int daysLost;
     private final List<Item[]> planetGoods;
     //Federico
-    Planets (int level, int daysLost, List<Item[]> planetGoods) {
+    public Planets (int level, int daysLost, List<Item[]> planetGoods) {
         super(level);
         this.daysLost = daysLost;
         this.planetGoods = planetGoods;

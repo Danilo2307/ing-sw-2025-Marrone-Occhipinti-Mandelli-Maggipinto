@@ -10,7 +10,7 @@ public class AbandonedShip extends Card {
     private final int cosmicCredits;
     private final int numMembers;
 
-    AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
+    public AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
         super(level);
         this.days = days;
         this.cosmicCredits = cosmicCredits;

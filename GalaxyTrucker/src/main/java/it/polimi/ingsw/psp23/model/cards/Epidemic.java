@@ -12,7 +12,7 @@ import java.util.List;
 public class Epidemic extends Card {
     // Alberto
 
-    Epidemic(int level) {
+    public Epidemic(int level) {
         super(level);
     }
 

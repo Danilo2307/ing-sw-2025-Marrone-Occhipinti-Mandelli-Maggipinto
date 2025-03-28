@@ -10,7 +10,7 @@ public class Pirates extends Card {
     private final int firepower;
     private final List <CannonShot> cannonShot;
 
-    Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
+    public Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
         super(level);
         this.prize = prize;
         this.days = days;

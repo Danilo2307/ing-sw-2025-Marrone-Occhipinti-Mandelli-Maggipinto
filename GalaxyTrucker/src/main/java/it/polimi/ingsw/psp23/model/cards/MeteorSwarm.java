@@ -8,7 +8,7 @@ public class MeteorSwarm extends Card {
     // lista di meteore già ordinata secondo l'ordine di impatto: from up-down and from left-right
     private final List<Meteor> meteors;
 
-    MeteorSwarm(int level, List<Meteor> meteors) {
+    public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
         this.meteors = meteors;
     }

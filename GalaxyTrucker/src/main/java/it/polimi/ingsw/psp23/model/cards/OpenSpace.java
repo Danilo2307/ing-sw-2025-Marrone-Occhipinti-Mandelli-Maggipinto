@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class OpenSpace extends Card{
     // Alberto
 
-    OpenSpace(int level) {
+    public OpenSpace(int level) {
         super(level);
     }
 

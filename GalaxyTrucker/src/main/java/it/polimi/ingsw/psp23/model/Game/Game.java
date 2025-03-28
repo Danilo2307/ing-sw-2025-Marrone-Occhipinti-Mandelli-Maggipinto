@@ -20,8 +20,8 @@ public class Game {
         this.heap = new ArrayList<>();
         this.uncovered = new ArrayList<>();
 
-        // heap creo ComponentFactory in cui istanzio tutto, anche con sottometodo per generare ogni set di component.
-        // this.heap.addAll(ComponentFactory.generateAllComponents()); . Questo sarà metodo public static
+        this.heap.addAll(ComponentFactory.generateAllComponents());
+
 
         // stessa cosa con CardFactory solo che dovrò avere 2 liste: una di livello 1 e una di liv2 e poi faccio shuffle
     }

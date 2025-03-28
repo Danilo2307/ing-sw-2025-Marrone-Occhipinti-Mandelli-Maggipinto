@@ -6,7 +6,7 @@ public class Meteor{
     private final boolean big;
     private final Direction direction;
 
-    Meteor(boolean big, Direction direction) {
+    public Meteor(boolean big, Direction direction) {
         this.big = big;
         this.direction = direction;
     }

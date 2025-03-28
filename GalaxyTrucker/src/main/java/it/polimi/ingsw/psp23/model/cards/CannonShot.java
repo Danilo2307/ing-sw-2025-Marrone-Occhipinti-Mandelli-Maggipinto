@@ -5,7 +5,7 @@ public class CannonShot {
     private final boolean big;
     private final Direction direction;
 
-    CannonShot(boolean big, Direction direction) {
+    public CannonShot(boolean big, Direction direction) {
         this.big = big;
         this.direction = direction;
     }

@@ -19,7 +19,12 @@ public class ComponentFactory {
         components.addAll(generateHousingUnits());
         components.addAll(generateBatteryHubs());
         components.addAll(generateAlienAddOns());
+        components.addAll(generateCannons());
+        components.addAll(generateEngines());
+        components.addAll(generateShields());
+        components.addAll(generateStructuralComponents());
 
+        return components;
     }
 
     // sottometodi statici perchè anche questi non devono essere chiamati su oggetti. Privati perchè sono metodi di supporto che servono solo alla classe.
@@ -87,6 +92,21 @@ public class ComponentFactory {
 
         return subComponents;
     }
+
+    private static ArrayList<Component> generateCannons() {
+    }
+
+    private static ArrayList<Component> generateEngines() {}
+
+    private static ArrayList<Component> generateShields() {}
+
+    private static ArrayList<Component> generateStructuralComponents() {}
+
+    private static ArrayList<Component> generateBatteryHubs() {}
+
+    private static ArrayList<Component> generateAlienAddOns() {}
+
+
 
 
 

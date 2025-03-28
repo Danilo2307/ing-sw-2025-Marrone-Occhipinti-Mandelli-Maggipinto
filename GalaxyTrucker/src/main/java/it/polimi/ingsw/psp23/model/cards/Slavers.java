@@ -12,7 +12,7 @@ public class Slavers extends Card {
     private final int prize;
     private final int days;
 
-    Slavers(int level, int cannonStrength, int membersStolen, int prize, int days){
+    public Slavers(int level, int cannonStrength, int membersStolen, int prize, int days){
         super(level);
         this.cannonStrength = cannonStrength;
         this.membersStolen = membersStolen;

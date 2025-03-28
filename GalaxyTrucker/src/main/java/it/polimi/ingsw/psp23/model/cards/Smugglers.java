@@ -14,7 +14,7 @@ public class Smugglers extends Card {
     private boolean defeated = false; // questa variabile mi serve per capire se sono stati sconfitti ed in caso non continuare con i giocatori successivi
 
 
-    Smugglers(int level, int firePower, int numItemsStolen, int days, Item[] prize ) {
+    public Smugglers(int level, int firePower, int numItemsStolen, int days, Item[] prize ) {
         super(level);
         this.firePower = firePower;
         this.numItemsStolen = numItemsStolen;
