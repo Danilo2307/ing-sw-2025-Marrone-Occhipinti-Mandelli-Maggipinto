@@ -5,10 +5,10 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class AlienAddOns extends Component {
     //danilo
-    private Color c;
+    private final Color c;
 
     AlienAddOns(Side up, Side down, Side left, Side right, Color c) {
-        super( ComponentType.ALIENADDONS, up, down, left, right);
+        super(ComponentType.ALIENADDONS, up, down, left, right);
         this.c = c;
     }
 

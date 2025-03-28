@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class Engine extends Component{
 
-    private boolean isDouble;
+    private final boolean isDouble;
 
     Engine (Side up, Side down, Side left, Side right, boolean isDouble) {
         super(ComponentType.ENGINE, up, down, left, right);

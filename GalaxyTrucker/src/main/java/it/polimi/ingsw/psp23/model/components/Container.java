@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.Item;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,11 +9,11 @@ import java.util.List;
 public class Container extends Component {
     // Danilo
     private final int size;
-    private Color colorContainer;
+    private final Color colorContainer;
     private ArrayList<Item> goods;
 
-    Container(String type, Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
-        super("Container", up,down,left,right);
+    public Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
+        super(ComponentType.CONTAINER, up,down,left,right);
         this.size = size;
         this.colorContainer = colorContainer;
         this.goods = goods;
