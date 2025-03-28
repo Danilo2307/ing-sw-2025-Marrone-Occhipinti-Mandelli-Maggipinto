@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 
 public class Game {
@@ -20,10 +21,18 @@ public class Game {
         this.heap = new ArrayList<>();
         this.uncovered = new ArrayList<>();
 
+        // creo e aggiungo nel mucchio tutti i component della nave
         this.heap.addAll(ComponentFactory.generateAllComponents());
 
+        // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
+        ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
+        ArrayList<Card> level2Cards = CardFactory.generateLevel2Cards();
+        Collections.shuffle(level1Cards);
+        Collections.shuffle(level2Cards);
+        this.deck.addAll(level1Cards.subList(0,4));  // indice finale è escluso
+        this.deck.addAll(level2Cards.subList(0,8));
+        Collections.shuffle(this.deck);
 
-        // stessa cosa con CardFactory solo che dovrò avere 2 liste: una di livello 1 e una di liv2 e poi faccio shuffle
     }
 
     // riordina la lista ad ogni turno
