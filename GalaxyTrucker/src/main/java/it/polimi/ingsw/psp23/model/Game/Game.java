@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.model;
+package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -42,6 +42,9 @@ public class Game {
 
 
     }
+
+
+    
 
 
 
