@@ -5,6 +5,8 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
+
 import java.util.List;
 
 public class Epidemic extends Card {
@@ -31,7 +33,10 @@ public class Epidemic extends Card {
 
             for(int i = 0; i < nave.length; i++){
                 for(int j = 0; j < nave[i].length; j++){
-                    if(nave[i][j].getClass() == HousingUnit.class && nave[i][j].calculateCrew() > 0 && nave[i][j].getIsVisited() == false){
+                    int indiceComponente = p.getTruck().getHousingUnitsList().indexOf(nave[i][j]);
+                    HousingUnit componente = p.getTruck().getHousingUnitsList().get(indiceComponente); // salvo l'housing unit preso dalla lista apposita
+                                                                       // e lo metto in una variabile ausiliaria in modo da poter usare i suoi metodi
+                    if(componente.getType() == ComponentType.HOUSINGUNIT && componente.getNumAstronaut() > 0 && componente.getIsVisited() == false){
 
                         // al posto di questi 4 if si potrebbe iterare su un array contenente:"{1,0}, {-1,0}, {0,1}, {0,-1}" però
                         // comincia a diventare più complesso ed un po' meno esplicito, da valutare il cambiamento

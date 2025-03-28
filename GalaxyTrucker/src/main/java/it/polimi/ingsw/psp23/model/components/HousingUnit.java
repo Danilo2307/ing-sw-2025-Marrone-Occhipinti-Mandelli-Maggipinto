@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +12,8 @@ public class HousingUnit extends Component {
     private ArrayList<Color> connectedAddons = new ArrayList<>();
     private final boolean isStartingCabin;
 
-    public HousingUnit(String type, Side up, Side down, Side left, Side right, boolean isStartingCabin) {
-        super("HousingUnit", up, down, left, right);
+    public HousingUnit(ComponentType type, Side up, Side down, Side left, Side right, boolean isStartingCabin) {
+        super(type, up, down, left, right);
         this.isStartingCabin = isStartingCabin;
         if (isStartingCabin) numAstronaut = 2;
     }
