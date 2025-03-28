@@ -12,8 +12,8 @@ public class HousingUnit extends Component {
     private ArrayList<Color> connectedAddons = new ArrayList<>();
     private final boolean isStartingCabin;
 
-    public HousingUnit(ComponentType type, Side up, Side down, Side left, Side right, boolean isStartingCabin) {
-        super(type, up, down, left, right);
+    public HousingUnit(Side up, Side down, Side left, Side right, boolean isStartingCabin) {
+        super(ComponentType.HOUSINGUNIT, up, down, left, right);
         this.isStartingCabin = isStartingCabin;
         if (isStartingCabin) numAstronaut = 2;
     }

@@ -5,11 +5,11 @@ public enum Side {
     DOUBLE_CONNECTOR,
     UNIVERSAL_CONNECTOR,
     EMPTY,
-    SINGLE_GUN,
-    DOUBLE_GUN,
-    SINGLE_ENGINE,
-    DOUBLE_ENGINE,
+    GUN,
+    ENGINE,
     SHIELD,
     SHIELD_SINGLE_CONNECTOR,
     SHIELD_DOUBLE_CONNECTOR;
 }
+
+// alcune Side come GUN, SHIELD ecc. sono necessarie perchè quando chiamo component.rotate() devo far ruotare anche il cannone/lo scudo

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.components;
 
+import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class BatteryHub extends Component {
@@ -7,8 +8,8 @@ public class BatteryHub extends Component {
 
     private int numBatteries;
 
-    BatteryHub(String type, Side up, Side down, Side left, Side right, int numBatteries) {
-        super("BatteryHub", up, down, left, right);
+    BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
+        super(ComponentType.BATTERYHUB, up, down, left, right);
         this.numBatteries = numBatteries;
     }
 
