@@ -7,7 +7,7 @@ public class Engine extends Component{
 
     private final boolean isDouble;
 
-    Engine (Side up, Side down, Side left, Side right, boolean isDouble) {
+    public Engine (Side up, Side down, Side left, Side right, boolean isDouble) {
         super(ComponentType.ENGINE, up, down, left, right);
         this.isDouble = isDouble;
     }

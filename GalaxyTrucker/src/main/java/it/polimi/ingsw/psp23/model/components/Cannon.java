@@ -6,7 +6,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 public class Cannon extends Component {
     private final boolean isDouble;
 
-    Cannon (Side up, Side down, Side left, Side right, boolean isDouble) {
+    public Cannon (Side up, Side down, Side left, Side right, boolean isDouble) {
         super(ComponentType.CANNON, up, down, left, right);
         this.isDouble = isDouble;
     }

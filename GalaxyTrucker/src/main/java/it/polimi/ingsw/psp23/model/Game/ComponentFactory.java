@@ -100,7 +100,21 @@ public class ComponentFactory {
 
     private static ArrayList<Component> generateShields() {}
 
-    private static ArrayList<Component> generateStructuralComponents() {}
+    private static ArrayList<Component> generateStructuralComponents() {
+        ArrayList<Component> subComponents = new ArrayList<>();
+
+        // ordine Side: up, down, left, right
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.DOUBLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR));
+
+        return subComponents;
+    }
 
     private static ArrayList<Component> generateBatteryHubs() {}
 

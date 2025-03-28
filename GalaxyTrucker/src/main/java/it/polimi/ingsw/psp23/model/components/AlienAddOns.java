@@ -7,7 +7,7 @@ public class AlienAddOns extends Component {
     //danilo
     private final Color c;
 
-    AlienAddOns(Side up, Side down, Side left, Side right, Color c) {
+    public AlienAddOns(Side up, Side down, Side left, Side right, Color c) {
         super(ComponentType.ALIENADDONS, up, down, left, right);
         this.c = c;
     }

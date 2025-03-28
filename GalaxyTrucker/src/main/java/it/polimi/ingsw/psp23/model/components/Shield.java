@@ -7,7 +7,7 @@ public class Shield extends Component{
 
     // VALUTO ATTRIBUTI COVERED per indicare Direction coperta; verranno settati quando lo Shield è stato saldato
 
-    Shield(Side up, Side down, Side left, Side right) {
+    public Shield(Side up, Side down, Side left, Side right) {
         super((ComponentType.SHIELD), up, down, left, right);
     }
 

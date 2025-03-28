@@ -8,7 +8,7 @@ public class BatteryHub extends Component {
 
     private int numBatteries;
 
-    BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
+    public BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
         super(ComponentType.BATTERYHUB, up, down, left, right);
         this.numBatteries = numBatteries;
     }
