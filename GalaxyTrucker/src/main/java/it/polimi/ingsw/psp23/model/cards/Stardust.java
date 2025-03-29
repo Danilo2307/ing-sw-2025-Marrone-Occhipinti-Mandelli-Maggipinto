@@ -10,14 +10,4 @@ public class Stardust extends Card {
         super(level);
     }
 
-    @Override
-    public void play(List<Player> players) {
-        int size = players.size();
-        for (size = size-1 ;size >= 0; size--) {
-            if (players.get(size).isInGame()) {
-                int penalty = players.get(size).getTruck().calculateExposedConnectors();
-                Utility.updatePosition(players,size,-penalty);
-            }
-        }
-    }
 }

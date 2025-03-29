@@ -1,8 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.Player;
 
-import java.util.List;
+import java.util.Arrays;
 
 public class Smugglers extends Card {
     // Alberto
@@ -11,8 +10,6 @@ public class Smugglers extends Card {
     private final int numItemsStolen;
     private final int days;
     private final Item[] prize;
-    private boolean defeated = false; // questa variabile mi serve per capire se sono stati sconfitti ed in caso non continuare con i giocatori successivi
-
 
     public Smugglers(int level, int firePower, int numItemsStolen, int days, Item[] prize ) {
         super(level);
@@ -22,27 +19,20 @@ public class Smugglers extends Card {
         this.prize = prize;
     }
 
-    // Il ragionamento dietro play è: uso un while che continua a scorrere fintanto che il flag defeated degli Smugglers è settato a false
-    @Override
-    public void play(List<Player> players){
+    public int getFirePower() {
+        return firePower;
+    }
 
-        int i = 0; //userò questo indice per scorrere la lista di players
+    public int getNumItemsStolen() {
+        return numItemsStolen;
+    }
 
-        while(!defeated && i < players.size()){
+    public int getDays() {
+        return days;
+    }
 
-            Player giocatore = players.get(i);
-
-            if(giocatore.getTruck().calculateCannonStrength() > firePower){ // ovviamente la cannonStrength sarà prima aggiornata dal giocatore che,
-                // una volta arrivatagli la carta, decide se usare le batterie o meno(bisogna
-                // gestire correttamente tutti i casi limite come ad esempio valori non validi)
-                defeated = true;
-                giocatore.decide();
-            }
-            else if(giocatore.getTruck().calculateCannonStrength() < firePower){
-                giocatore.getTruck().pickMostImportantGoods(2); // questo metodo presente in board toglierà due delle merci più importanti dalla board del player
-            }
-            i++;
-        }
+    public Item[] getPrize() {
+        return Arrays.copyOf(prize, prize.length);
     }
 
 }

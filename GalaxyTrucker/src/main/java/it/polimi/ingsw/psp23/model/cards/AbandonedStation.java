@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.Utility;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedStation extends Card {
@@ -18,28 +18,13 @@ public class AbandonedStation extends Card {
         this.prize = prize;
     }
 
-    @Override
-    public void play(List<Player> players) {
-        for (Player player : players) {
-            if (player.isInGame() && player.getTruck().calculateCrew() >= numMembers) {
-                // Optional: conferma del giocatore (interaction UI)
-                if (playerWantsToAccept(player)) {
-                    for (Item item : prize) {
-                        // TODO: ottenere x, y del container per ogni merce dal giocatore con interazione UI
-                        int i = 0; // placeholder
-                        int j = 0; // placeholder
-                        player.getTruck().loadGoods(item, i, j);
-                    }
-                    Utility.updatePosition(players, players.indexOf(player), -days);
-                    break;
-                }
-            }
-        }
+    public int getDays() {
+        return days;
     }
-
-    // Placeholder per interazione reale
-    private boolean playerWantsToAccept(Player player) {
-        // TODO: implementare logica di input utente
-        return true;
+    public int getNumMembers() {
+        return numMembers;
+    }
+    public List<Item> getPrize() {
+        return new ArrayList<>(prize);
     }
 }

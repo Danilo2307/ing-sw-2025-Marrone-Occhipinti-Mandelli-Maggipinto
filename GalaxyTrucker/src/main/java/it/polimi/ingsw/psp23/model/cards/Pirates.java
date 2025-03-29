@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.Utility;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class Pirates extends Card {
@@ -28,37 +28,9 @@ public class Pirates extends Card {
         return firepower;
     }
     public List<CannonShot> getCannonShot() {
-        return cannonShot;
+        return new ArrayList<>(cannonShot);
     }
 
-    @Override
-    public void play(List<Player> players){
-        Boolean takePrize = false;
-        int size = players.size();
-        int i = 0;
-        int impactLine;
-        for(i=0;i<size;i++) {
-            if (players.get(i).getTruck().calculateCannonStrength() > firepower) {
-                //qui il giocatore deve scegliere se prendere il premio e perdere i giorni
-                //oppure se sconfiggerli e rimanere dov'è
-                //decisione del player se sconfiggerli e prendere il premio o soltanto resistere all'attacco
 
-                if(!takePrize) {
-                    takePrize = false; //inizializzo a caso, questa sarà la decisione del player
-                    if(takePrize) {
-                        players.get(i).updateMoney(prize);
-                        Utility.updatePosition(players,i,-days);
-                    }
-                    takePrize = true; //qui faccio in modo che nessuno potrà poi riscuotere il premio
-                }
 
-            }else if(players.get(i).getTruck().calculateCannonStrength() < firepower){
-                for(CannonShot c : cannonShot) {
-                    impactLine = Utility.roll2to12();
-                    players.get(i).getTruck().handleCannonShot(c, impactLine);
-
-                }
-            }
-        }
-    }
 }

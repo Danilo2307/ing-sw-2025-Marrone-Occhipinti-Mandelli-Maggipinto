@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.Utility;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class MeteorSwarm extends Card {
@@ -13,14 +13,12 @@ public class MeteorSwarm extends Card {
         this.meteors = meteors;
     }
 
-    @Override
-    public void play(List<Player> players) {
+    public List<Meteor> getMeteors() {
+        return new ArrayList<>(meteors);
+    }
 
-        for (Meteor m : meteors) {
-            int impactLine = Utility.roll2to12();
-            for (Player p : players) {
-                p.getTruck().handleMeteor(m, impactLine);
-            }
-        }
+    @Override
+    public List<Meteor> call(Visitor visitor){
+        Visitor
     }
 }
