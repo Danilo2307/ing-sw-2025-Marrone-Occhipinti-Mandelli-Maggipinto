@@ -17,11 +17,6 @@ public class BatteryHub extends Component {
         return numBatteries;
     }
 
-    public void setNumBatteries(int n){
-        if(n >= 0) numBatteries = n;
-        else System.out.println("Error: numBatteries must be greater than 0");
-    }
-
     public void removeBatteries(int numRemoved){ // numRemoved indica il numero di batterie da rimuovere
         // metto questo if-else per controllare che stia rimuovendo un numero valido di batterie e che non stia
         // andando oltre il numero di batterie disponibili. Valutiamo se inserire una eccezione.
@@ -32,5 +27,4 @@ public class BatteryHub extends Component {
             throw new IllegalArgumentException("Error: num of batteries removed from Battery Hub is out of bounds");
         }
     }
-
 }
