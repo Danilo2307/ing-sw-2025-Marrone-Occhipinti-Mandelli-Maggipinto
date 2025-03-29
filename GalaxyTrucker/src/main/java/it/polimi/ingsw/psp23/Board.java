@@ -209,7 +209,7 @@ public class Board {
         if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
             return false;
         else
-            return true;
+            return validPositions[i][j];
 
     }
 
@@ -442,7 +442,7 @@ public class Board {
             // controllo se c'è uno scudo che difende quel lato
             // creo una variabile booleana e la metto a true se trovo lo scudo
             boolean isCovered = false;
-            for (Component s : structuralComponents) {
+            for (Shield s: shields) {
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
                 if (cannonShot.getDirection() == Direction.UP) {
                     if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
@@ -472,7 +472,7 @@ public class Board {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
                             delete(i, realImpactLine);
-                            break;
+                            break;   // appena trovo il 1^ componente da distruggere esco; ci penserà delete a controllare i pezzi eventualmente scollegati
                         }
                     }
                 } else if (cannonShot.getDirection() == Direction.DOWN) {
@@ -699,7 +699,7 @@ public class Board {
     /* Dopo aver interagito con la UI, il player decide quante batterie vuole usare e per ogni posizione
        controller chiama reduceBatteries specificandone la quantità e coordinate */
         //TODO: pensare se il giocatore può essere stupido o meno
-        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"BatteryHub".equals(ship[i][j].getType()))) {
+        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
             throw new IllegalArgumentException("This is not a battery hub: error in reduceBatteries of Board");
         } else {
             int indice = batteryHubs.indexOf(ship[i][j]);
@@ -714,7 +714,7 @@ public class Board {
     public void reduceCrew(int num, int i, int j) {
         /* Dopo aver interagito con la UI, il player decide se togliere alieni o astronauti e da dove e per ogni posizione
        controller chiama reduceCrew specificandone la quantità e coordinate */
-        if ((!isValid(i, j)) || (ship[i][j] == null) || (!"HousingUnit".equals(ship[i][j].getType()))) {
+        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
             throw new IllegalArgumentException("This is not an housing unit: error in reduceCrew of Board");
         } else {
             int indice = housingUnits.indexOf(ship[i][j]);
@@ -739,7 +739,7 @@ public class Board {
         //SIDE UP
         for (int j = 0; j < cols; j++) {
             for (int i = 0; i < rows; i++) {
-                if (isValid(i, j) && ship[i][j] != null) {
+                if (isValid(i, j) && !isFree(i,j)) {
                     if (ship[i][j].getUp().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getUp().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
                         count++;
                     }
@@ -750,7 +750,7 @@ public class Board {
         //SIDE DOWN
         for (int j = 0; j < cols; j++) {
             for (int i = rows - 1; i >= 0; i--) {
-                if (isValid(i, j) && ship[i][j] != null) {
+                if (isValid(i, j) && !isFree(i,j)) {
                     if (ship[i][j].getDown().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getDown().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
                         count++;
                     }
@@ -761,7 +761,7 @@ public class Board {
         //SIDE LEFT
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if (isValid(i, j) && ship[i][j] != null) {
+                if (isValid(i, j) && !isFree(i,j)) {
                     if (ship[i][j].getLeft().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getLeft().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
                         count++;
                     }
@@ -772,7 +772,7 @@ public class Board {
         //SIDE RIGHT
         for (int i = 0; i < rows; i++) {
             for (int j = cols - 1; j >= 0; j--) {
-                if (isValid(i, j) && ship[i][j] != null) {
+                if (isValid(i, j) && !isFree(i,j)) {
                     if (ship[i][j].getRight().equals(Side.SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.DOUBLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_SINGLE_CONNECTOR) || ship[i][j].getRight().equals(Side.SHIELD_DOUBLE_CONNECTOR)) {
                         count++;
                     }
@@ -869,11 +869,7 @@ public class Board {
         return ship;
     }
 
-// ciao sto provando altro ciao
-// ok
-
     public ArrayList<HousingUnit> getHousingUnitsList() {
         return housingUnits;
     }
-
 }
