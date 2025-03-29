@@ -13,27 +13,36 @@ import java.util.List;
 
 public class Board {
     private Component[][] ship;
-    private ArrayList<Component> garbage;
+    // per i rifiuti mi interessa solo il numero, non sapere il tipo degli oggetti scartati
+    private int garbage;
+    // creo liste dei sottotipi per poter chiamare i metodi specifici e facilitare la ricerca
     private ArrayList<BatteryHub> batteryHubs;
     private ArrayList<AlienAddOns> alienAddOns;
-    private ArrayList<Component> structuralComponents;
+    private ArrayList<Cannon> cannons;
+    private ArrayList<Engine> engines;
+    private ArrayList<Shield> shields;
     private ArrayList<Container> containers;
     private ArrayList<HousingUnit> housingUnits;
+    private ArrayList<StructuralComponent> structuralComponents;
     private final int ROWS = 5;
     private final int COLS = 7;
 
 
     public Board() {
         ship = new Component[ROWS][COLS];
-        garbage = new ArrayList<Component>();
+        garbage = 0;
         batteryHubs = new ArrayList<>();
         alienAddOns = new ArrayList<>();
-        structuralComponents = new ArrayList<>();
+        cannons = new ArrayList<>();
+        engines = new ArrayList<>();
+        shields = new ArrayList<>();
         containers = new ArrayList<>();
         housingUnits = new ArrayList<>();
+        structuralComponents = new ArrayList<>();
     }
 
-    public Board(Board other) {
+    // FEDE: lo leverei
+    /*public Board(Board other) {
         // costruttore di copia
         this.ship = other.ship;
         this.garbage.addAll(other.garbage);
@@ -42,13 +51,13 @@ public class Board {
         structuralComponents.addAll(other.structuralComponents);
         containers.addAll(other.containers);
         housingUnits.addAll(other.housingUnits);
-        /* TODO: chiarire se vogliamo usare il costruttore per creare una lista indipendente o una
+         TODO: chiarire se vogliamo usare il costruttore per creare una lista indipendente o una
                  lista dipendente da other, perchè se la volessi fare indipendente dovrei cambiare
                  metodo di istanziamento di tutte le liste usando i vari costruttori di copia
                  di tutti i vari tipi di components, perchè così sto passando ad ogni elemento
                  della lista i riferimenti agli elementi dell'altra lista. Questo controllo di
-                 gestione va fatto anche per "ship"*/
-    }
+                 gestione va fatto anche per "ship"
+    }*/
 
 
 
@@ -56,17 +65,17 @@ public class Board {
         //empty space va solo con empty space nei componenti
         // double connector va o con universal o con double
         // single va o con single o con universal
-        //
+
         for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
-                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getType() == (ComponentType.ENGINE) || ship[i][j].getType() == (ComponentType.DOUBLEENGINE))) {
+                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getType() == (ComponentType.ENGINE))) {
                         return false; //ho un pezzo sotto un motore singolo o doppio
                     }
 
                     if(isValid(i,j+1 ) && !isFree(i,j+1)){ //componente di destra
-                        if(ship[i][j+1].getLeft() == Side.SINGLE_GUN || ship[i][j+1].getLeft() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
-                            return false;
+                        if(ship[i][j+1].getLeft() == Side.GUN) {
+                            return false;  // gun rivolta verso il mio componente
                         }
                         if((ship[i][j].getRight() == Side.EMPTY || ship[i][j].getRight() == Side.SHIELD )&& !(ship[i][j+1].getLeft() == Side.EMPTY)) { // empty con qualcosa di non empty
                             return false;
@@ -80,15 +89,13 @@ public class Board {
                         if((ship[i][j].getRight() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j+1].getLeft() == Side.EMPTY)){
                             return false;
                         }
-                        if(ship[i][j+1].getLeft() == Side.DOUBLE_ENGINE || ship[i][j+1].getLeft() == Side.SINGLE_ENGINE){
+                        if(ship[i][j+1].getLeft() == Side.ENGINE){
                             return false;
                         }
-
-
                     }
 
                     if(isValid(i,j-1 ) && !isFree(i,j-1)){ //componente di sinistra
-                        if(ship[i][j-1].getRight() == Side.SINGLE_GUN || ship[i][j-1].getLeft() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                        if(ship[i][j-1].getRight() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
                         if((ship[i][j].getLeft() == Side.EMPTY || ship[i][j].getLeft() == Side.SHIELD )&& !(ship[i][j-1].getRight() == Side.EMPTY)) { // empty con qualcosa di non empty
@@ -103,15 +110,13 @@ public class Board {
                         if((ship[i][j].getLeft() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j-1].getRight() == Side.EMPTY)){
                             return false;
                         }
-                        if(ship[i][j-1].getRight() == Side.DOUBLE_ENGINE || ship[i][j-1].getRight() == Side.SINGLE_ENGINE){
+                        if(ship[i][j-1].getRight() == Side.ENGINE){
                             return false;
                         }
-
-
                     }
 
                     if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sotto
-                        if(ship[i+1][j].getUp() == Side.SINGLE_GUN || ship[i+1][j].getUp() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                        if(ship[i+1][j].getUp() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
                         if((ship[i][j].getDown() == Side.EMPTY || ship[i][j].getDown() == Side.SHIELD )&& !(ship[i+1][j].getUp() == Side.EMPTY)) { // empty con qualcosa di non empty
@@ -126,15 +131,13 @@ public class Board {
                         if((ship[i][j].getDown() == Side.UNIVERSAL_CONNECTOR) && (ship[i+1][j].getUp() == Side.EMPTY)){
                             return false;
                         }
-                        if(ship[i+1][j].getUp() == Side.DOUBLE_ENGINE || ship[i+1][j].getUp() == Side.SINGLE_ENGINE){
+                        if(ship[i+1][j].getUp() == Side.ENGINE){
                             return false;
                         }
-
-
                     }
 
                     if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sopra
-                        if(ship[i-1][j].getDown() == Side.SINGLE_GUN || ship[i-1][j].getDown() == Side.DOUBLE_GUN) { // gun rivolta verso il mio componente
+                        if(ship[i-1][j].getDown() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
                         if((ship[i][j].getUp() == Side.EMPTY || ship[i][j].getUp() == Side.SHIELD )&& !(ship[i-1][j].getDown() == Side.EMPTY)) { // empty con qualcosa di non empty
@@ -149,18 +152,16 @@ public class Board {
                         if((ship[i][j].getUp() == Side.UNIVERSAL_CONNECTOR) && (ship[i-1][j].getDown() == Side.EMPTY)){
                             return false;
                         }
-                        if(ship[i-1][j].getDown() == Side.DOUBLE_ENGINE || ship[i-1][j].getDown() == Side.SINGLE_ENGINE){
+                        if(ship[i-1][j].getDown() == Side.ENGINE){
                             return false;
                         }
-
-
                     }
-
                 }
             }
         }
+        // se non ho fatto return false prima significa che è legale
+        return true;
     }
-
 
 
     public boolean isValid(int i, int j) {
@@ -269,85 +270,87 @@ public class Board {
                 check4 = isReachable(alreadyChecked, scorrX, scorrY - 1, i, j);
             }
         }
-
-
         return (check1 || check2 || check3 || check4);
 
     }
 
+    // determina se ship[i][j] contiene un component oppure no
+    public boolean isFree(int i, int j) {
+        return ship[i][j] == null;
+    }
+
+    // elimina elemento in posizione i,j della ship e lo rimuove dalla rispettiva lista
+    // funziona perchè ship[i][j] e l'elemento della rispettiva lista puntano allo stesso oggetto in memoria:
+    // la prima lo "vede" come Component (sovraclasse), mentre la lista lo vede come oggetto della sottoclasse
     public void delete(int i, int j) {
         boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
         // che JAVA INIZIALIZZERÀ A FALSE
-        if (!isValid(i, j) || ship[i][j] == null) {
+        if (!isValid(i, j) || ship[i][j] == null || isFree(i, j)) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         } else {
-            // È importante che i "type" in component siano scritti in PascalCase!!!
+            /* Nelle ArrayList il metodo remove ha due implementazioni: una riceve in ingresso
+               l'indice dell'elemento da rimuovere; l'altra riceve un oggetto e rimuove la prima
+               occorrenza di questo oggetto. Io sto usando la seconda. Inoltre, metto la rimozione in un if nel caso in cui non trovasse l'elemento,
+               un if nel caso in cui non trovasse l'elemento, il che sarebbe un problema bello peso!!! */
             if (ship[i][j].getType() == ComponentType.ALIENADDONS) {
-                /* Nelle ArrayList il metodo remove ha due implementazioni, una che riceve in ingresso
-                   l'indice dell'elemento da rimuovere ed una che riceve un oggetto e riceverà la prima
-                   occorrenza dell'oggetto da rimuovere. Io sto usando la seconda.*/
-                /*
-                Inoltre, metto la rimozione in un if nel caso in cui non trovasse l'elemento,
-                il che sarebbe un problema bello peso!!!
-                 */
                 if (!alienAddOns.remove(ship[i][j])) {
-                    System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
                 }
             } else if (ship[i][j].getType() == ComponentType.BATTERYHUB) {
                 if (!batteryHubs.remove(ship[i][j])) {
-                    System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di batteryHubs");
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di batteryHubs");
                 }
             } else if (ship[i][j].getType() == ComponentType.CONTAINER) {
-
                 if (!containers.remove(ship[i][j])) {
-                    System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di containers");
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di containers");
                 }
             } else if (ship[i][j].getType() == ComponentType.HOUSINGUNIT) {
                 if (!housingUnits.remove(ship[i][j])) {
-                    System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
                 }
-            } else if (ship[i][j].getType() == ComponentType.CANNON || ship[i][j].getType() == ComponentType.DOUBLECANNON || ship[i][j].getType() == ComponentType.ENGINE || ship[i][j].getType() == ComponentType.DOUBLEENGINE || ship[i][j].getType() == ComponentType.TUBE || ship[i][j].getType() == ComponentType.SHIELD) {
+            } else if (ship[i][j].getType() == ComponentType.CANNON) {
+                if (!cannons.remove(ship[i][j])) {
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di cannons");
+                }
+            } else if (ship[i][j].getType() == ComponentType.ENGINE) {
+                if (!engines.remove(ship[i][j])) {
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di engines");
+                }
+            } else if (ship[i][j].getType() == ComponentType.SHIELD) {
+                if (!shields.remove(ship[i][j])) {
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di shields");
+                }
+            } else if (ship[i][j].getType() == ComponentType.STRUCTURAL_COMPONENT) {
                 if (!structuralComponents.remove(ship[i][j])) {
-                    System.out.println("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
+                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
                 }
-            }
 
             /* Ho aggiunto questa condizione nel caso dovessimo inserire un type in maniera errata
                di modo che sappiamo dove controllare */
-            else {
-                throw new IllegalArgumentException("There isn't any component like this in the lists: exception in delete(i,j) of Board");
+                else {
+                    throw new IllegalArgumentException("There isn't any component like this in the lists: exception in delete(i,j) of Board");
+                }
             }
             ship[i][j] = null;
-        }
 
-        // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
-        // perchè potrebbe essere importante per collegare altri componenti
-        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
-        for (int row = 0; row < ship.length; row++) {
-            for (int col = 0; col < ship[row].length; col++) {
-                // analizzando la matrice, 2 e 3 sono le coordinate del centro
-                if (!isReachable(alreadyChecked, 2, 3, row, col)) {
-                    delete(row, col);
-                    row = 0;
-                    col = 0;
+            // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
+            // perchè potrebbe essere importante per collegare altri componenti
+            // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
+            for (int row = 0; row < ship.length; row++) {
+                for (int col = 0; col < ship[row].length; col++) {
+                    // analizzando la matrice, 2 e 3 sono le coordinate del centro
+                    if (!isReachable(alreadyChecked, 2, 3, row, col)) {
+                        delete(row, col);
+                        row = 0;
+                        col = 0;
+                    }
                 }
             }
         }
     }
 
-    public boolean isFree(int i, int j) {
-        if (ship[i][j] == null)
-            return true;
-        else
-            return false;
-    }
-
-
-    public List<Component> searchComponent(Component c) {
-    }
-
     public void addComponent(Component c, int i, int j) {
-        if (i >= 0 && i < ROWS && j >= 0 && j < COLS && isFree(i, j)) {
+        if (isValid(i,j) && isFree(i, j)) {
             ship[i][j] = c;
             c.setX(i);
             c.setY(j);
@@ -355,18 +358,17 @@ public class Board {
         } else
             throw new IllegalArgumentException("Invalid parameters i and j");
 
+        // aggiungo nella rispettiva lista in base al tipo
         switch (c.getType()) {
             case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
-            case CANNON -> structuralComponents.add((Component) c);
+            case CANNON -> cannons.add((Cannon) c);
             case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
             case CONTAINER -> containers.add((Container) c);
             case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
-            case DOUBLECANNON -> structuralComponents.add((Component) c);
-            case DOUBLEENGINE -> structuralComponents.add((Component) c);
-            case ENGINE -> structuralComponents.add((Component) c);
-            case TUBE -> structuralComponents.add((Component) c);
+            case ENGINE -> engines.add((Engine) c);
+            case STRUCTURAL_COMPONENT -> structuralComponents.add((StructuralComponent) c);
+            case SHIELD -> shields.add((Shield) c);
         }
-
     }
 
 
@@ -511,8 +513,8 @@ public class Board {
 
         if (!meteor.isBig()) {
             boolean isCovered = false;
-
-            for (Component s : structuralComponents) {
+            // se la meteora è piccola, vedo se c'è uno shield che mi può difendere
+            for (Shield s : shields) {
                 // devo mettere una serie di if per associare la direzione al lato dei componenti
                 if (meteor.getDirection() == Direction.UP) {
                     if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
@@ -590,36 +592,37 @@ public class Board {
             // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
             // distinguo i casi delle varie direzioni
             if (meteor.getDirection() == Direction.UP) {
-                for (Component s : structuralComponents) {
-                    if (s.getY() == realImpactLine && (s.getUp() == Side.SINGLE_GUN || s.getUp() == Side.DOUBLE_GUN)) {
+                for (Cannon s : cannons) {
+                    if (s.getY() == realImpactLine && (s.getUp() == Side.GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
             } else if (meteor.getDirection() == Direction.DOWN) {
-                for (Component s : structuralComponents) {
-                    if (s.getY() == realImpactLine && (s.getDown() == Side.SINGLE_GUN || s.getDown() == Side.DOUBLE_GUN)) {
+                for (Cannon s : cannons) {
+                    if (s.getY() == realImpactLine && (s.getDown() == Side.GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
             } else if (meteor.getDirection() == Direction.RIGHT) {
-                for (Component s : structuralComponents) {
+                for (Cannon s : cannons) {
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.SINGLE_GUN || s.getRight() == Side.DOUBLE_GUN)) {
+                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
             } else {
-                for (Component s : structuralComponents) {
+                for (Cannon s : cannons) {
                     //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.SINGLE_GUN || s.getLeft() == Side.DOUBLE_GUN)) {
+                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.GUN)) {
                         isDestroyed = true;
                         break;
                     }
                 }
             }
+            // se la meteor non è stata distrutta ho impatto: devo rimuovere
             if (!isDestroyed) {
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
