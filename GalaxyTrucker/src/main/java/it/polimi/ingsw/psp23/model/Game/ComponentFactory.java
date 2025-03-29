@@ -1,5 +1,4 @@
 package it.polimi.ingsw.psp23.model.Game;
-import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
@@ -10,7 +9,7 @@ import java.util.ArrayList;
 public class ComponentFactory {
 
     // costruttore private e vuoto, così impedisco istanziazione: i components vengono creati una sola volta chiamando dal Game ComponentFactory.generateAllComponents()
-    private ComponentFactory() {};
+    private ComponentFactory() {}
 
     // non necessita di uno stato interno dell'oggetto; può essere usato senza l'istanza della classe
     public static ArrayList<Component> generateAllComponents() {
@@ -94,11 +93,105 @@ public class ComponentFactory {
     }
 
     private static ArrayList<Component> generateCannons() {
+        ArrayList<Component> subComponents = new ArrayList<>();
+
+        // genero tutti i singoli
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+
+        // genero tutti i doppi
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, true));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
+
+        return subComponents;
     }
 
-    private static ArrayList<Component> generateEngines() {}
+    private static ArrayList<Component> generateEngines() {
+        ArrayList<Component> subComponents = new ArrayList<>();
 
-    private static ArrayList<Component> generateShields() {}
+        //genero tutti i singoli
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
+
+        // genero tutti i doppi
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, true));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, true));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
+
+        return subComponents;
+    }
+
+    private static ArrayList<Component> generateShields() {
+        ArrayList<Component> subComponents = new ArrayList<>();
+
+        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR));
+        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD));
+        subComponents.add(new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR));
+        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD));
+        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
+        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
+        subComponents.add(new Shield(Side.SHIELD, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD));
+        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
+
+        return subComponents;
+    }
 
     private static ArrayList<Component> generateStructuralComponents() {
         ArrayList<Component> subComponents = new ArrayList<>();
@@ -116,12 +209,52 @@ public class ComponentFactory {
         return subComponents;
     }
 
-    private static ArrayList<Component> generateBatteryHubs() {}
+    private static ArrayList<Component> generateBatteryHubs() {
+        ArrayList<Component> subComponents = new ArrayList<>();
 
-    private static ArrayList<Component> generateAlienAddOns() {}
+        // genero tutte quelle da 2
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
 
+        // genero i pacchi da 3 batterie
+        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3));
+        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 3));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 3));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 3));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 3));
 
+        return subComponents;
+    }
 
+    private static ArrayList<Component> generateAlienAddOns() {
+        ArrayList<Component> subComponents = new ArrayList<>();
 
+        // genero i supporti marroni
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
 
+        // genero tutti i supporti viola
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
+
+        return subComponents;
+    }
 }
