@@ -32,4 +32,9 @@ public class Slavers extends Card {
     public int getDays() {
         return days;
     }
+
+    @Override
+    public Object call(Visitor visitor){
+        return visitor.visitForSlavers(this);
+    }
 }

@@ -35,4 +35,8 @@ public class Smugglers extends Card {
         return Arrays.copyOf(prize, prize.length);
     }
 
+    public Object call(Visitor visitor){
+        return visitor.visitForSmugglers(this);
+    }
+
 }

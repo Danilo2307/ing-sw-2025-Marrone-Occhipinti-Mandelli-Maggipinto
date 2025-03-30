@@ -18,7 +18,7 @@ public class MeteorSwarm extends Card {
     }
 
     @Override
-    public List<Meteor> call(Visitor visitor){
-        Visitor
+    public Object call(Visitor visitor){
+        return visitor.visitForMeteorSwarm(this);
     }
 }

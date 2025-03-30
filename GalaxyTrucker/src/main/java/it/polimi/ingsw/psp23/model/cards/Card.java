@@ -24,11 +24,15 @@ public class Card implements CardInterface {
         turned = updatedFlag;
     }
 
-    // call sarebbe il metodo preso dall'implementazione di CardInterface, qui scrivo un metodo "inutile"
+    // call sarebbeero i metodi presi dall'implementazione di CardInterface, qui scrivo due metodi "inutili"
     // per poi fare override nelle varie sottoclassi
     @Override
-    public Void call(Visitor visitor){
+    public Object call(Visitor visitor){
         return null;
     }
 
+    @Override
+    public Object call(VisitorParametrico visitorParametrico){
+        return null;
+    }
 }

@@ -24,4 +24,9 @@ public class AbandonedShip extends Card {
     public int getNumMembers() {
         return numMembers;
     }
+
+    @Override
+    public Object call(Visitor visitor){
+        return visitor.visitForAbandonedShip(this);
+    }
 }

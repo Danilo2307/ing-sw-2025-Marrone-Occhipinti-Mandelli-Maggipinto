@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-public class GetDaysVisitor implements Visitor<Integer> {
+public class GetDaysVisitor implements Visitor {
 
     public Integer visitForPlanets(Planets planets){
         return planets.getDaysLost();

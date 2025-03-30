@@ -6,7 +6,7 @@ import java.util.List;
 
 // qui uso la classe List in maniera raw, ovvero senza dire che tipi contiene perchè in alcuni casi devono essere ad
 // esempio Item e in altri cannonShot
-public class GetListVisitor implements Visitor<List> {
+public class GetListVisitor implements Visitor {
 
     public List<List<Item>> visitForPlanets(Planets planets){
         return planets.getPlanetGoods();

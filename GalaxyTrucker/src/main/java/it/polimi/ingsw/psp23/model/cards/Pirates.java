@@ -31,6 +31,9 @@ public class Pirates extends Card {
         return new ArrayList<>(cannonShot);
     }
 
-
+    @Override
+    public Object call(Visitor visitor){
+        return visitor.visitForPirates(this);
+    }
 
 }

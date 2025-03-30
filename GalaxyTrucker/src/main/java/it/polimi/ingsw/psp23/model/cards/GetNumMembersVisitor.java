@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Item;
 
-public class GetNumMembersVisitor implements Visitor<Integer> {
+public class GetNumMembersVisitor implements Visitor {
     public Integer visitForPlanets(Planets planets){
         return null;
     }

@@ -27,4 +27,9 @@ public class AbandonedStation extends Card {
     public List<Item> getPrize() {
         return new ArrayList<>(prize);
     }
+
+    @Override
+    public Object call(Visitor visitor){
+        return visitor.visitForAbandonedStation(this);
+    }
 }

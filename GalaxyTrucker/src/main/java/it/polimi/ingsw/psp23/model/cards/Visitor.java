@@ -1,30 +1,33 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-// ho definito l'interfaccia di tipo generico in modo da poter fare vari override dei metodi che ritornano tipi diversi
-public interface Visitor<T> {
+// questa è l'interfaccia visitor che conterrà i metodi su cui fare Override nelle varie istanze di visitor
+// ritorna degli oggetti perchè, avendo la necessità di tornare sempre tipi diversi, usando gli Object
+// posso usare gli oggetti Wrapper che il compilatore vede sempre come oggetti ma possono contenere
+// tutti i tipi che mi servono
+public interface Visitor {
 
-    public T visitForPlanets(Planets planets);
+    public Object visitForPlanets(Planets planets);
 
-    public T visitForAbandonedShip(AbandonedShip abandonedShip);
+    public Object visitForAbandonedShip(AbandonedShip abandonedShip);
 
-    public T visitForAbandonedStation(AbandonedStation abandonedStation);
+    public Object visitForAbandonedStation(AbandonedStation abandonedStation);
 
-    public T visitForCannonShot(CannonShot cannonShot);
+    public Object visitForCannonShot(CannonShot cannonShot);
 
-    public T visitForCombatZone(CombatZone combatZone);
+    public Object visitForCombatZone(CombatZone combatZone);
 
-    public T visitForEpidemic(Epidemic epidemic);
+    public Object visitForEpidemic(Epidemic epidemic);
 
-    public T visitForMeteorSwarm(MeteorSwarm meteorSwarm);
+    public Object visitForMeteorSwarm(MeteorSwarm meteorSwarm);
 
-    public T visitForOpenSpace(OpenSpace openSpace);
+    public Object visitForOpenSpace(OpenSpace openSpace);
 
-    public T visitForPirates(Pirates pirates);
+    public Object visitForPirates(Pirates pirates);
 
-    public T visitForSlavers(Slavers slavers);
+    public Object visitForSlavers(Slavers slavers);
 
-    public T visitForSmugglers(Smugglers smugglers);
+    public Object visitForSmugglers(Smugglers smugglers);
 
-    public T visitForStardust(Stardust stardust);
+    public Object visitForStardust(Stardust stardust);
 
 }

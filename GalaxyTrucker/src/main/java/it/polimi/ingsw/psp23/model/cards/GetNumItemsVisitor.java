@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-public class GetNumItemsVisitor implements Visitor<Integer>{
+public class GetNumItemsVisitor implements Visitor{
 
     public Integer visitForPlanets(Planets planets){
         return null;
