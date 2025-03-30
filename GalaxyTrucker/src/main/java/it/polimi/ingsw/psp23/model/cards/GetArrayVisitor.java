@@ -45,8 +45,8 @@ public class GetArrayVisitor implements Visitor {
         return null;
     }
 
-    public Item[] visitForSmugglers(Smugglers smugglers){
-        return smugglers.getPrize();
+    public Void visitForSmugglers(Smugglers smugglers){
+        return null;
     }
 
     public Void visitForStardust(Stardust stardust){

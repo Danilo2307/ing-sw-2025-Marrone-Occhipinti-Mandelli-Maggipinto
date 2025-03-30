@@ -48,8 +48,8 @@ public class GetListVisitor implements Visitor {
         return null;
     }
 
-    public List visitForSmugglers(Smugglers smugglers){
-        return null;
+    public List<Item> visitForSmugglers(Smugglers smugglers){
+        return smugglers.getPrize();
     }
 
     public List visitForStardust(Stardust stardust){

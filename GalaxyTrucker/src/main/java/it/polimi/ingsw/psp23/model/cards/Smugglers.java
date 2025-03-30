@@ -1,7 +1,9 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Item;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Smugglers extends Card {
     // Alberto
@@ -9,9 +11,9 @@ public class Smugglers extends Card {
     private final int firePower;
     private final int numItemsStolen;
     private final int days;
-    private final Item[] prize;
+    private final List<Item> prize;
 
-    public Smugglers(int level, int firePower, int numItemsStolen, int days, Item[] prize ) {
+    public Smugglers(int level, int firePower, int numItemsStolen, int days, List<Item> prize ) {
         super(level);
         this.firePower = firePower;
         this.numItemsStolen = numItemsStolen;
@@ -31,8 +33,8 @@ public class Smugglers extends Card {
         return days;
     }
 
-    public Item[] getPrize() {
-        return Arrays.copyOf(prize, prize.length);
+    public List<Item> getPrize() {
+        return new ArrayList<Item>(prize);
     }
 
     public Object call(Visitor visitor){
