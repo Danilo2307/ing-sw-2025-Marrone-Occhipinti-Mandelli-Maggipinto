@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 public class Item {
     private Color itemcolor;
 
-    Item(Color itemcolor) {
+    public Item(Color itemcolor) {
         this.itemcolor = itemcolor;
     }
 
