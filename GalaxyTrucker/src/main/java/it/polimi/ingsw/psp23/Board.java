@@ -882,4 +882,15 @@ public class Board {
     public ArrayList<HousingUnit> getHousingUnitsList() {
         return housingUnits;
     }
+
+    public boolean isWelded(){ //restituisce vero se il player ha almeno un pezzo saldato
+        for(int i = 0; i < ROWS ; i++){
+            for(int j = 0; j < COLS ; j++){
+                if(i!= 2 && j!= 3) // non considero la cabina centrale
+                    if(ship[i][j]!= null)
+                        return true;
+            }
+        }
+        return false;
+    }
 }

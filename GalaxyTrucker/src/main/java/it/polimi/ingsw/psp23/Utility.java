@@ -13,6 +13,10 @@ public final class Utility {
         return rand.nextInt(6) + 1 + rand.nextInt(6) + 1;
     }
 
+    public static int randomComponent(int size){
+        return rand.nextInt(0, size );
+    }
+
     // È importante che il positionsToJump sia negativo quando si arretra!!!
     public static void updatePosition(List<Player> players,int playerIndex, int positionsToJump){
         Player giocatore = players.get(playerIndex);
