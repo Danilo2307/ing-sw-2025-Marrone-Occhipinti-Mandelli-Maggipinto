@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23;
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -667,8 +668,8 @@ public class Board {
         if (!isValid(i, j) || ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
             throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
         } else {
-            int indice = containers.indexOf(ship[i][j]);
-            if (indice == -1) {
+            int index = containers.indexOf(ship[i][j]);
+            if (index == -1) {
                 throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
             }
             int scorr = 0;
@@ -695,33 +696,29 @@ public class Board {
         }
     }
 
-    public void reduceBatteries(int num, int i, int j) {
-    /* Dopo aver interagito con la UI, il player decide quante batterie vuole usare e per ogni posizione
-       controller chiama reduceBatteries specificandone la quantità e coordinate */
+    public void reduceBatteries(int num, int i, int j) throws IllegalType {
         //TODO: pensare se il giocatore può essere stupido o meno
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
-            throw new IllegalArgumentException("This is not a battery hub: error in reduceBatteries of Board");
+            throw new IllegalType();
         } else {
-            int indice = batteryHubs.indexOf(ship[i][j]);
-            if (indice == -1) {
+            int index = batteryHubs.indexOf(ship[i][j]);
+            if (index == -1) {
                 throw new IllegalArgumentException("BatteryHub not found in 'batteryHubs' list: error in reduceBatteries of Board");
             } else {
-                batteryHubs.get(indice).removeBatteries(num);
+                batteryHubs.get(index).removeBatteries(num);
             }
         }
     }
 
-    public void reduceCrew(int num, int i, int j) {
-        /* Dopo aver interagito con la UI, il player decide se togliere alieni o astronauti e da dove e per ogni posizione
-       controller chiama reduceCrew specificandone la quantità e coordinate */
+    public void reduceCrew(int num, int i, int j) throws IllegalType {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
-            throw new IllegalArgumentException("This is not an housing unit: error in reduceCrew of Board");
+            throw new IllegalType();
         } else {
-            int indice = housingUnits.indexOf(ship[i][j]);
-            if (indice == -1) {
+            int index = housingUnits.indexOf(ship[i][j]);
+            if (index == -1) {
                 throw new IllegalArgumentException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
             } else {
-                housingUnits.get(indice).reduceOccupants(num);
+                housingUnits.get(indx).reduceOccupants(num);
             }
         }
         if (calculateCrew() == 0) {
@@ -783,29 +780,45 @@ public class Board {
         return count;
     }
 
+    public void activeCannon(int i, int j) throws IllegalType {
+        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.CANNON)) {
+            throw new IllegalType();
+        } else {
+            int index = cannons.indexOf(ship[i][j]);
+            if(!cannons.get(index).isDouble()){
+                throw new IllegalArgumentException("This is not a double cannon!");
+            }
+            else{
+                cannons.get(index).activeCannon();
+            }
+        }
+    }
+
+    public void activeEngine(int i, int j) throws IllegalType {
+        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.ENGINE)) {
+            throw new IllegalType();
+        } else {
+            int index = engines.indexOf(ship[i][j]);
+            if(!engines.get(index).isDouble()){
+                throw new IllegalArgumentException("This is not a double engine!");
+            }
+            else{
+                engines.get(index).activeEngine();
+            }
+        }
+    }
+
     public double calculateCannonStrength() {
         /*  I cannoni singoli puntati in avanti contano +1, gli altri +½. Se spendi una batteria, i cannoni doppi puntati in avanti contano +2, gli altri +1.
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
-        int i = 0, j = 0;
-        for (StructuralComponent gun : guns) {
-            if ("DoubleGun".equals(gun.getType())) {
-                if (calculateBatteriesAvailable() > 0) {
-                    // TODO: chiedere al player se vuole spendere la batteria per questo cannone
-                    if (playerSaysYes()) {
-                        reduceBatteries(1, i, j); // scarica la batteria
-                        if (gun.getUp().equals(Side.DOUBLE_GUN)) {
-                            strength += 2;
-                        } else {
-                            strength += 1; // orientamento orizzontale: potenza dimezzata
-                        }
-                    }
-                }
-            } else if ("SingleGun".equals(gun.getType())) {
-                if (gun.getUp().equals(Side.SINGLE_GUN)) {
-                    strength += 1;
+        for (Cannon gun : cannons) {
+            if (gun.checkIfIsActive()) {
+                gun.disactiveCannon();
+                if (gun.getUp().equals(Side.GUN)) {
+                    strength += 2;
                 } else {
-                    strength += 0.5;
+                    strength += 1; // orientamento orizzontale: potenza dimezzata
                 }
             }
         }
@@ -822,18 +835,15 @@ public class Board {
         /*  I motori singoli contano +1. I motori doppi contano +2 se spendi una batteria. L’alieno marrone
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
-        int i = 0, j = 0; //placeholder
-        for (StructuralComponent engine : engines) {
-            if ("DoubleEngine".equals(engine.getType())) {
-                if (calculateBatteriesAvailable() > 0) {
-                    // TODO: chiedere al player se vuole spendere la batteria per questo motore
-                    if (playerSaysYes()) {
-                        reduceBatteries(1, i, j); // scarica la batteria
-                        strength += 2;
-                    }
+        for (Engine engine : engines) {
+            if (engine.checkIfIsActive()) {
+                engine.disactiveEngine();
+                if(engine.isDouble()){
+                    strength += 2;
                 }
-            } else if ("SingleEngine".equals(engine.getType())) {
-                strength += 1;
+                else{
+                    strength += 1;
+                }
             }
         }
         for (HousingUnit housing : housingUnits) {

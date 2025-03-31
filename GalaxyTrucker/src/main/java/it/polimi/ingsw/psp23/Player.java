@@ -76,27 +76,31 @@ public class Player {
         this.isConnected = true;
     }
 
-    public void drawFromHeap() throws NotCardInHandException{
+    public Component chooseTileFromHeap() throws NotCardInHandException{
         try{
-            int index = rand.nextInt(heap.size());
-            // sincronizzo su heap così che solo un Player alla volta possa rimuovere un component dal mucchio.
-            synchronized (heap) {
-                randomComponent = heap.remove(index);  // rimuove dalla lista l'elemento heap(index) e lo restituisce
-            }
-            randomComponent.moveToHand();
+            Component component = game.getTileFromHeap();
+            component.moveToHand();
+            return component;
         }
         catch(HeapIsEmptyException e){
             throw new NotCardInHandException();
         }
     }
 
-    public void chooseCardCovered() throws NotCardInHandException{
+    public Component chooseCardUncovered(int position) throws NotCardInHandException{
         try{
-
+            Component component = game.getTileUncovered(position);
+            component.moveToHand();
+            return component;
         }
         catch(UncoveredIsEmptyException e){
             throw new NotCardInHandException();
         }
+    }
+
+    public void discardComponent(Component component){
+        game.addTileUncovered(component);
+        component.discardFaceUp();
     }
 
 }
