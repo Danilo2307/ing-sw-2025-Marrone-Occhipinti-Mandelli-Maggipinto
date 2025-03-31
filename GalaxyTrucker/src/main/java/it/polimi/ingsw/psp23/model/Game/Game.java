@@ -113,9 +113,9 @@ public class Game {
         gameStatus = status;
     }
 
-    public Timer getTimer(){
-        return Timer;
-    }
+   // public Timer getTimer(){
+  //      return Timer;
+  //  }
 
 
     public Component getTileFromHeap(){
@@ -214,6 +214,17 @@ public class Game {
             } else {
                 throw new IllegalStateException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
             }
+        }
+    }
+
+    public Player getNextPlayer(){
+        int size = players.size();
+        int pos = players.indexOf(currentPlayer);
+        if(pos+1 < size){
+            currentPlayer = players.get(pos+1);
+            return currentPlayer;
+        }else{
+            throw new IndexOutOfBoundsException("Giocatori terminati");
         }
     }
 
