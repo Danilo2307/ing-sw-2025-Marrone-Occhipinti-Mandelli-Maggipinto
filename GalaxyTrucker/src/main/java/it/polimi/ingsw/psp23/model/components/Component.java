@@ -81,7 +81,7 @@ public class Component {
     public ComponentType getType() {
         return type;
     }
-
+    public void setState(ComponentLocation location){this.state = location; }
     public Side getUp() {
         return up;
     }

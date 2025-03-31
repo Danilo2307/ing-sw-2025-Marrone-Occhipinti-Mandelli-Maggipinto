@@ -3,6 +3,7 @@ import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
@@ -60,6 +61,9 @@ public class Game {
         this.deck.addAll(level1Cards.subList(0,4));  // indice finale è escluso
         this.deck.addAll(level2Cards.subList(0,8));
         Collections.shuffle(this.deck);
+
+        this.heap = ComponentFactory.generateAllComponents();
+        Collections.shuffle(this.heap);
 
     }
 
@@ -119,19 +123,32 @@ public class Game {
 
 
     public Component getTileFromHeap(){
-        return heap.get(Utility.randomComponent(heap.size()));
+        Component c =  heap.get(Utility.randomComponent(heap.size()));
+        synchronized (c) {
+            if (c.getState() == ComponentLocation.PILE) {
+                c.setState(ComponentLocation.IN_HAND);
+                return c;
+            }
+            else
+                throw new RuntimeException("Errore, componente non disponibile");
+        }
     }
 
-
-    public void shuffleComponent(){
-        Collections.shuffle(heap);
-    }
 
     public Component getTileUncovered(int position){
-        return uncovered.get(position);
+        Component c =  heap.get(Utility.randomComponent(heap.size()));
+        synchronized (c) {
+            if (c.getState() == ComponentLocation.FACE_UP) {
+                c.setState(ComponentLocation.IN_HAND);
+                return c;
+            }
+            else
+                throw new RuntimeException("Errore, componente non disponibile");
+        }
     }
 
     public void addTileUncovered(Component component){
+        component.setState(ComponentLocation.FACE_UP);
         uncovered.add(component);
     }
 
@@ -227,6 +244,7 @@ public class Game {
             throw new IndexOutOfBoundsException("Giocatori terminati");
         }
     }
+
 
 
 }
