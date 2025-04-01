@@ -153,7 +153,7 @@ public class Game {
         }
     }
 
-    public void addTileUncovered(Component c){
+    public synchronized void addTileUncovered(Component c){
         uncovered.add(c);
         c.discardFaceUp();
     }
