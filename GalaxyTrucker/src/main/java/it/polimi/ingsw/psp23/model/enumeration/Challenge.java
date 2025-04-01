@@ -1,15 +1,15 @@
 package it.polimi.ingsw.psp23.model.enumeration;
 
     public enum Challenge {
-        Cannon_strength,
+        CannonStrength,
         Members,
-        Engine_strength;
+        EngineStrength;
 
         public String toString() {
-            if(this == Engine_strength){
+            if(this == EngineStrength){
                 return "Engine_strength";
             }
-            else if(this == Cannon_strength){
+            else if(this == CannonStrength){
                 return "Cannon_strength";
             }
             else{
