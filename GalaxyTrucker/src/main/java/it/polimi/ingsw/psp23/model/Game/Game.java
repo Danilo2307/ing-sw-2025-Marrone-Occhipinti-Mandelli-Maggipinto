@@ -126,7 +126,7 @@ public class Game {
         Component c =  heap.get(Utility.randomComponent(heap.size()));
         synchronized (c) {
             if (c.getState() == ComponentLocation.PILE) {
-                c.setState(ComponentLocation.IN_HAND);
+                c.moveToHand();
                 return c;
             }
             else
@@ -139,7 +139,7 @@ public class Game {
         Component c =  heap.get(Utility.randomComponent(heap.size()));
         synchronized (c) {
             if (c.getState() == ComponentLocation.FACE_UP) {
-                c.setState(ComponentLocation.IN_HAND);
+                c.moveToHand();
                 return c;
             }
             else
@@ -148,7 +148,7 @@ public class Game {
     }
 
     public void addTileUncovered(Component component){
-        component.setState(ComponentLocation.FACE_UP);
+        component.discardFaceUp();
         uncovered.add(component);
     }
 
