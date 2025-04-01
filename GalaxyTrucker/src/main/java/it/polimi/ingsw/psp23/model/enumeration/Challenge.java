@@ -7,10 +7,10 @@ package it.polimi.ingsw.psp23.model.enumeration;
 
         public String toString() {
             if(this == EngineStrength){
-                return "Engine_strength";
+                return "EngineStrength";
             }
             else if(this == CannonStrength){
-                return "Cannon_strength";
+                return "CannonStrength";
             }
             else{
                 return "Members";
