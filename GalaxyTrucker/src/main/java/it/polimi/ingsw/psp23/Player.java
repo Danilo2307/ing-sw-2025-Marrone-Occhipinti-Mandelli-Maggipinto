@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 public class Player {
     private final String nickname;
-    private final int position ;
+    private int position ;
     private final Board truck;
     private int money;
     private boolean inGame;
@@ -45,7 +45,9 @@ public class Player {
         this.money += moneyVariation;
     }
 
-    // TO DO: updateposition
+    public void setPosition(int offset) {
+        position = position + offset;
+    }
 
     public int getPosition() {
         return position;
