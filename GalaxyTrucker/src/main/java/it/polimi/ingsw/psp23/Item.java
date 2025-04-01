@@ -12,4 +12,9 @@ public class Item {
     public Color getItemColor() {
         return itemcolor;
     }
+
+    @Override
+    public String toString() {
+        return itemcolor.toString();
+    }
 }
