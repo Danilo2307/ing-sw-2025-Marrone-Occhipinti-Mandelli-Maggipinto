@@ -167,7 +167,7 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck1(Player player){
-        if(gameStatus == GameStatus.Build && deck1Owner == null && player.getTruck().isWelded()) {
+        if(gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
             synchronized (visibleCards1) {
                 deck1Owner = player.getNickname();
                 return new ArrayList<>(visibleCards1);
@@ -178,7 +178,7 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck2(Player player){
-        if(gameStatus == GameStatus.Build && deck2Owner == null && player.getTruck().isWelded()) {
+        if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
             synchronized (visibleCards2) {
                 deck2Owner = player.getNickname();
                 return new ArrayList<>(visibleCards2);
@@ -189,7 +189,7 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck3(Player player){
-        if(gameStatus == GameStatus.Build && deck3Owner == null && player.getTruck().isWelded()) {
+        if(gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
             synchronized (visibleCards3) {
                 deck3Owner = player.getNickname();
                 return new ArrayList<>(visibleCards3);
