@@ -674,7 +674,7 @@ public class Board {
             }
             int scorr = 0;
             while (scorr < items.size()) {
-                if (containers.get(indice).loadItem(items.get(scorr))) {
+                if (containers.get(index).loadItem(items.get(scorr))) {
                     scorr++;
                 } else {
                     throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");
@@ -718,7 +718,7 @@ public class Board {
             if (index == -1) {
                 throw new IllegalArgumentException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
             } else {
-                housingUnits.get(indx).reduceOccupants(num);
+                housingUnits.get(index).reduceOccupants(num);
             }
         }
         if (calculateCrew() == 0) {

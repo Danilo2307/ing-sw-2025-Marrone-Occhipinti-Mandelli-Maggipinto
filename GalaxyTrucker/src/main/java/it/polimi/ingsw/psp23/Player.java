@@ -79,7 +79,6 @@ public class Player {
     public Component chooseTileFromHeap() throws NotCardInHandException{
         try{
             Component component = game.getTileFromHeap();
-            component.moveToHand();
             return component;
         }
         catch(HeapIsEmptyException e){
@@ -90,7 +89,6 @@ public class Player {
     public Component chooseCardUncovered(int position) throws NotCardInHandException{
         try{
             Component component = game.getTileUncovered(position);
-            component.moveToHand();
             return component;
         }
         catch(UncoveredIsEmptyException e){
@@ -100,7 +98,6 @@ public class Player {
 
     public void discardComponent(Component component){
         game.addTileUncovered(component);
-        component.discardFaceUp();
     }
 
 }
