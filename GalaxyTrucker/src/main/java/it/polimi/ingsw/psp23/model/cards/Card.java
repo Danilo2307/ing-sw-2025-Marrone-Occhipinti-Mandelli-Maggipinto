@@ -27,12 +27,12 @@ public class Card implements CardInterface {
     // call sarebbeero i metodi presi dall'implementazione di CardInterface, qui scrivo due metodi "inutili"
     // per poi fare override nelle varie sottoclassi
     @Override
-    public Object call(Visitor visitor){
+    public <T> T call(Visitor<T> visitor){
         return null;
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico){
+    public <T> T call(VisitorParametrico<T> visitorParametrico){
         return null;
     }
 }
