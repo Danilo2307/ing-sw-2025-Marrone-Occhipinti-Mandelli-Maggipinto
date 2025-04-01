@@ -6,6 +6,4 @@ public interface CardInterface {
     // I defined this method as "call" because it calls the method visit in the "Visitor" interface
     public <T> T call(Visitor<T> visitor);
 
-    public <T> T call(VisitorParametrico<T> visitorParametrico);
-
 }

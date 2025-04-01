@@ -13,10 +13,6 @@ public class CombatZone extends Card{
     private final int goodsLost;
     private final int membersLost;
     private final List<CannonShot> cannonShot;
-    private int index = 0; // uso questo index tramite un setter che mi permetterà di impostare
-                           // questo indice sul numero della penalità che mi interessa(non serve un
-                           // getter perchè tanto questo indice non ha senso che sia accessibile
-                           // dall'esterno
 
     public CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3, List<CannonShot> cannonshot) {
         super(level);
@@ -57,14 +53,14 @@ public class CombatZone extends Card{
         return new ArrayList<CannonShot>(cannonShot);
     }
 
-    public void setIndex(int numeroPenalità){
+    /*public void setIndex(int numeroPenalità){
         if(numeroPenalità >= 1 && numeroPenalità <= 3) {
             index = numeroPenalità;
         }
         else{
             throw new IndexOutOfBoundsException("Eccezione lanciata nel metodo setIndex presente in combatZone");
         }
-    }
+    }*/
 
     @Override
     public Object call(Visitor visitor){
@@ -72,7 +68,10 @@ public class CombatZone extends Card{
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico){
+    public Object call(VisitorParametrico visitorParametrico, int index){
+        if(index < 1 || index > 3) {
+            throw new IndexOutOfBoundsException("Eccezione lanciata nel metodo setIndex presente in combatZone");
+        }
         return visitorParametrico.visitForCombatZone(this, index);
     }
 }

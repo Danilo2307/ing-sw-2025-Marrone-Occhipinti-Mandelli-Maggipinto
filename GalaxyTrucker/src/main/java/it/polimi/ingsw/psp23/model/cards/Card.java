@@ -3,7 +3,7 @@ import it.polimi.ingsw.psp23.Player;
 
 import java.util.List;
 
-public class Card implements CardInterface {
+public class Card implements CardInterface, CardInterfaceParametrica {
     private int level;
     private boolean turned = false; // quando è false noi vediamo il retro della carta
 
@@ -32,7 +32,7 @@ public class Card implements CardInterface {
     }
 
     @Override
-    public <T> T call(VisitorParametrico<T> visitorParametrico){
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index){
         return null;
     }
 }
