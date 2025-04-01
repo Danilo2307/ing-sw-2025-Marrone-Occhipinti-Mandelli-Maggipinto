@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.model.enumeration;
 
     public enum Challenge {
-        Cannon_strength,
+        Cannon_Strength,
         Members,
-        Goods
+        Engine_Strength
     }

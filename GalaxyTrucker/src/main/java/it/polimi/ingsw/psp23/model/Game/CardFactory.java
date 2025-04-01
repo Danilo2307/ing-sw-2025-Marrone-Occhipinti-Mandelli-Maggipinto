@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 
@@ -56,8 +57,8 @@ public class CardFactory {
         cardsOne.add(new MeteorSwarm(1, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT), new Meteor(false, Direction.DOWN))));
         cardsOne.add(new MeteorSwarm(1, List.of(new Meteor(true, Direction.UP), new Meteor(false, Direction.UP), new Meteor(true, Direction.UP))));
 
-        // warzone MANCA
-        //cardsOne.add(new )
+        // warzone
+        cardsOne.add(new CombatZone(1,3,0,2, Challenge.Members, Challenge.Engine_Strength, Challenge.Cannon_Strength, List.of(new CannonShot(false, Direction.DOWN), new CannonShot(true, Direction.DOWN))));
 
         return cardsOne;
     }
@@ -104,8 +105,8 @@ public class CardFactory {
         // epidemic
         cardsTwo.add(new Epidemic(2));
 
-        // combatzone: MANCA
-
+        // combatzone
+        cardsTwo.add(new CombatZone(2,4,3,0, Challenge.Cannon_Strength, Challenge.Engine_Strength, Challenge.Members, List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN))));
 
         return cardsTwo;
     }
