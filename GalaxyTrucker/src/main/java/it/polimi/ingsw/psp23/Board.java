@@ -813,12 +813,25 @@ public class Board {
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
         for (Cannon gun : cannons) {
-            if (gun.checkIfIsActive()) {
-                gun.disactiveCannon();
-                if (gun.getUp().equals(Side.GUN)) {
-                    strength += 2;
-                } else {
-                    strength += 1; // orientamento orizzontale: potenza dimezzata
+            if (gun.getUp().equals(Side.GUN)) {
+                if(gun.isDouble()){
+                    if(gun.checkIfIsActive()){
+                        strength += 2;
+                        gun.disactiveCannon();
+                    }
+                }
+                else{
+                    strength += 1;
+                }
+            } else {
+                if(gun.isDouble()){
+                    if(gun.checkIfIsActive()){
+                        strength += 1;
+                        gun.disactiveCannon();
+                    }
+                }
+                else {
+                    strength += 0.5;
                 }
             }
         }
@@ -836,14 +849,14 @@ public class Board {
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
         for (Engine engine : engines) {
-            if (engine.checkIfIsActive()) {
-                engine.disactiveEngine();
-                if(engine.isDouble()){
+            if(engine.isDouble()){
+                if(engine.checkIfIsActive()) {
                     strength += 2;
+                    engine.disactiveEngine();
                 }
-                else{
-                    strength += 1;
-                }
+            }
+            else{
+                strength += 1;
             }
         }
         for (HousingUnit housing : housingUnits) {
