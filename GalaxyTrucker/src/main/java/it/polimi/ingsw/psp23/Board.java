@@ -674,7 +674,7 @@ public class Board {
             }
             int scorr = 0;
             while (scorr < items.size()) {
-                if (containers.get(indice).loadItem(items.get(scorr))) {
+                if (containers.get(index).loadItem(items.get(scorr))) {
                     scorr++;
                 } else {
                     throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");
@@ -718,7 +718,7 @@ public class Board {
             if (index == -1) {
                 throw new IllegalArgumentException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
             } else {
-                housingUnits.get(indx).reduceOccupants(num);
+                housingUnits.get(index).reduceOccupants(num);
             }
         }
         if (calculateCrew() == 0) {
@@ -813,12 +813,25 @@ public class Board {
         L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
         double strength = 0;
         for (Cannon gun : cannons) {
-            if (gun.checkIfIsActive()) {
-                gun.disactiveCannon();
-                if (gun.getUp().equals(Side.GUN)) {
-                    strength += 2;
-                } else {
-                    strength += 1; // orientamento orizzontale: potenza dimezzata
+            if (gun.getUp().equals(Side.GUN)) {
+                if(gun.isDouble()){
+                    if(gun.checkIfIsActive()){
+                        strength += 2;
+                        gun.disactiveCannon();
+                    }
+                }
+                else{
+                    strength += 1;
+                }
+            } else {
+                if(gun.isDouble()){
+                    if(gun.checkIfIsActive()){
+                        strength += 1;
+                        gun.disactiveCannon();
+                    }
+                }
+                else {
+                    strength += 0.5;
                 }
             }
         }
@@ -836,14 +849,14 @@ public class Board {
         conta +2, ma solo se la potenza motrice è già superiore a 0. */
         int strength = 0;
         for (Engine engine : engines) {
-            if (engine.checkIfIsActive()) {
-                engine.disactiveEngine();
-                if(engine.isDouble()){
+            if(engine.isDouble()){
+                if(engine.checkIfIsActive()) {
                     strength += 2;
+                    engine.disactiveEngine();
                 }
-                else{
-                    strength += 1;
-                }
+            }
+            else{
+                strength += 1;
             }
         }
         for (HousingUnit housing : housingUnits) {

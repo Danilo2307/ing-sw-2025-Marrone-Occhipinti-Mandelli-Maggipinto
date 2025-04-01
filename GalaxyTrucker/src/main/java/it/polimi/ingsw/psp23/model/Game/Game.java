@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.HeapIsEmptyException;
+import it.polimi.ingsw.psp23.exceptions.UncoveredIsEmptyException;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -122,34 +124,38 @@ public class Game {
   //  }
 
 
-    public Component getTileFromHeap(){
-        Component c =  heap.get(Utility.randomComponent(heap.size()));
-        synchronized (c) {
-            if (c.getState() == ComponentLocation.PILE) {
-                c.setState(ComponentLocation.IN_HAND);
+    public Component getTileFromHeap() throws HeapIsEmptyException {
+        if(heap == null){
+            throw new HeapIsEmptyException();
+        }
+        else{
+            Component c =  heap.get(Utility.randomComponent(heap.size()));
+            synchronized (c) {
+                heap.remove(c);
+                c.moveToHand();
                 return c;
             }
-            else
-                throw new RuntimeException("Errore, componente non disponibile");
         }
     }
 
 
-    public Component getTileUncovered(int position){
-        Component c =  heap.get(Utility.randomComponent(heap.size()));
-        synchronized (c) {
-            if (c.getState() == ComponentLocation.FACE_UP) {
-                c.setState(ComponentLocation.IN_HAND);
+    public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
+        if(uncovered == null){
+            throw new UncoveredIsEmptyException();
+        }
+        else{
+            Component c =  uncovered.get(position);
+            synchronized (c) {
+                uncovered.remove(c);
+                c.moveToHand();
                 return c;
             }
-            else
-                throw new RuntimeException("Errore, componente non disponibile");
         }
     }
 
-    public void addTileUncovered(Component component){
-        component.setState(ComponentLocation.FACE_UP);
-        uncovered.add(component);
+    public synchronized void addTileUncovered(Component c){
+        uncovered.add(c);
+        c.discardFaceUp();
     }
 
     public void setCurrentPlayer(Player player){
