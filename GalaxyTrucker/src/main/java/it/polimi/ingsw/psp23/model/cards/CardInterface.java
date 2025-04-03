@@ -4,8 +4,6 @@ package it.polimi.ingsw.psp23.model.cards;
 public interface CardInterface {
 
     // I defined this method as "call" because it calls the method visit in the "Visitor" interface
-    public Object call(Visitor visitor);
-
-    public Object call(VisitorParametrico visitorParametrico);
+    public <T> T call(Visitor<T> visitor);
 
 }

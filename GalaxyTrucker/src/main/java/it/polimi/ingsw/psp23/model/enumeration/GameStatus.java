@@ -1,7 +1,10 @@
 package it.polimi.ingsw.psp23.model.enumeration;
 
 public enum GameStatus {
-    Idle,
-    Build,
+    Setup,
+    Building,
+    CheckBoards,
+    Playing,
+    End
     //aggiungere altri stati
 }

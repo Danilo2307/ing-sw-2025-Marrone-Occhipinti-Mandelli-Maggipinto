@@ -1,33 +1,42 @@
 package it.polimi.ingsw.psp23.model.cards;
 
 // questa è l'interfaccia visitor che conterrà i metodi su cui fare Override nelle varie istanze di visitor
-// ritorna degli oggetti perchè, avendo la necessità di tornare sempre tipi diversi, usando gli Object
-// posso usare gli oggetti Wrapper che il compilatore vede sempre come oggetti ma possono contenere
-// tutti i tipi che mi servono
-public interface Visitor {
+// ritorna degli oggetti generici perchè, avendo la necessità di tornare sempre tipi diversi, usando i Generics
+// posso usare gli oggetti Wrapper per i tipi primitivi ma possono contenere
+// tutti gli altri tipi che mi servono. Quando creo un visitor(soprattutto quando mi ritorna un tipo non primitivo
+// come ad esempio una lista che possiede quindi dei metodi che possono essere chiamati, motivo per il
+// quale è importante riportare il tipo statico) dovrò creare il visitor specificando il tipo generico
+// tra parentesi angolari, ad esempio:" Visitor<List<List<Item>>> visitor1 = new GetListVisitor();",
+// oppure "Visitor<Integer> visitor2 = new getDaysVisitor()" quando so che mi ritornerà un intero.
+// Nel caso di Visitor che mi ritornano "tipi primitiv", quindi ogetti su cui non chiamerò altri
+// metodi come ad esempio "get" si potrebbe anche omettere la specifica del tipo tra parentesi angolari,
+// tuttavia questa operazione prende il nome di "raw usage of parametrized class" e, oltre ad essere rischiosa,
+// rende il codice meno leggibile!!!!
 
-    public Object visitForPlanets(Planets planets);
+public interface Visitor<T> {
 
-    public Object visitForAbandonedShip(AbandonedShip abandonedShip);
+    public T visitForPlanets(Planets planets);
 
-    public Object visitForAbandonedStation(AbandonedStation abandonedStation);
+    public T visitForAbandonedShip(AbandonedShip abandonedShip);
 
-    public Object visitForCannonShot(CannonShot cannonShot);
+    public T visitForAbandonedStation(AbandonedStation abandonedStation);
 
-    public Object visitForCombatZone(CombatZone combatZone);
+    public T visitForCannonShot(CannonShot cannonShot);
 
-    public Object visitForEpidemic(Epidemic epidemic);
+    public T visitForCombatZone(CombatZone combatZone);
 
-    public Object visitForMeteorSwarm(MeteorSwarm meteorSwarm);
+    public T visitForEpidemic(Epidemic epidemic);
 
-    public Object visitForOpenSpace(OpenSpace openSpace);
+    public T visitForMeteorSwarm(MeteorSwarm meteorSwarm);
 
-    public Object visitForPirates(Pirates pirates);
+    public T visitForOpenSpace(OpenSpace openSpace);
 
-    public Object visitForSlavers(Slavers slavers);
+    public T visitForPirates(Pirates pirates);
 
-    public Object visitForSmugglers(Smugglers smugglers);
+    public T visitForSlavers(Slavers slavers);
 
-    public Object visitForStardust(Stardust stardust);
+    public T visitForSmugglers(Smugglers smugglers);
+
+    public T visitForStardust(Stardust stardust);
 
 }

@@ -3,7 +3,7 @@ import it.polimi.ingsw.psp23.Player;
 
 import java.util.List;
 
-public class Card implements CardInterface {
+public class Card implements CardInterface, CardInterfaceParametrica {
     private int level;
     private boolean turned = false; // quando è false noi vediamo il retro della carta
 
@@ -27,12 +27,12 @@ public class Card implements CardInterface {
     // call sarebbeero i metodi presi dall'implementazione di CardInterface, qui scrivo due metodi "inutili"
     // per poi fare override nelle varie sottoclassi
     @Override
-    public Object call(Visitor visitor){
+    public <T> T call(Visitor<T> visitor){
         return null;
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico){
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index){
         return null;
     }
 }
