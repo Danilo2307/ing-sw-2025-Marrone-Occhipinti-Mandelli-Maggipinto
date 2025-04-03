@@ -19,8 +19,9 @@ public class Container extends Component {
         this.goods = goods;
     }
 
+    // ritorno una copia di goods al fine di evitare side-effects esterni. Principio Encapsulation OOP.
     public List<Item> getItems(){
-        return new ArrayList<Item>(goods);
+        return new ArrayList<>(goods);
     }
 
     public boolean loadItem(Item item){

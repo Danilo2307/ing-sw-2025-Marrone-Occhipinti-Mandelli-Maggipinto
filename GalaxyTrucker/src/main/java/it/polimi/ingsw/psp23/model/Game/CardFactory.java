@@ -58,7 +58,7 @@ public class CardFactory {
         cardsOne.add(new MeteorSwarm(1, List.of(new Meteor(true, Direction.UP), new Meteor(false, Direction.UP), new Meteor(true, Direction.UP))));
 
         // warzone
-        cardsOne.add(new CombatZone(1,3,0,2, Challenge.Members, Challenge.Engine_Strength, Challenge.Cannon_Strength, List.of(new CannonShot(false, Direction.DOWN), new CannonShot(true, Direction.DOWN))));
+        cardsOne.add(new CombatZone(1,3,0,2, Challenge.Members, Challenge.EngineStrength, Challenge.CannonStrength, List.of(new CannonShot(false, Direction.DOWN), new CannonShot(true, Direction.DOWN))));
 
         return cardsOne;
     }
@@ -106,7 +106,7 @@ public class CardFactory {
         cardsTwo.add(new Epidemic(2));
 
         // combatzone
-        cardsTwo.add(new CombatZone(2,4,3,0, Challenge.Cannon_Strength, Challenge.Engine_Strength, Challenge.Members, List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN))));
+        cardsTwo.add(new CombatZone(2,4,3,0, Challenge.CannonStrength, Challenge.EngineStrength, Challenge.Members, List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN))));
 
         return cardsTwo;
     }

@@ -12,5 +12,5 @@ public enum Side {
     SHIELD_DOUBLE_CONNECTOR;
 }
 
-// alcune Side come GUN, SHIELD ecc. sono necessarie perchè quando chiamo component.rotate() devo far ruotare anche il cannone/lo scudo
+// alcune Side come GUN, SHIELD ecc. sono necessarie perchè quando chiamo component.rotate() devo far ruotare anche il cannone/lo scudo.
 // Bastano GUN e ENGINE perchè poi per capire se è doppio chiamo il rispettivo metodo isDouble()

@@ -1,14 +1,13 @@
 package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.exceptions.ComponentStateException;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
-/* NOTA IMPORTANTE!!!: QUANDO MODIFICHEREMO COMPONENT CON L'ATTRIBUTO TYPE È IMPORTANTE CHE IL TIPO SIA SCRITTO
-                       IN PascalCase*/
 
 /* @author Federico */
 public class Component {
 
-    private ComponentType type;
+    private final ComponentType type;
     private ComponentLocation state;
     private Side up;
     private Side down;
@@ -17,6 +16,7 @@ public class Component {
     private int x;
     private int y;
 
+    // lo chiamo sempre tramite super(...) quando istanzio le sottoclassi
     public Component(ComponentType type, Side up, Side down, Side left, Side right) {
         this.type = type;
         state = ComponentLocation.PILE;  // inizialmente stanno tutti nel mucchio a faccia in giù
@@ -30,10 +30,25 @@ public class Component {
 
     // player prende in mano il component
     public void moveToHand() {
-        if (state == ComponentLocation.PILE || state == ComponentLocation.FACE_UP) {
+        if (state == ComponentLocation.PILE || state == ComponentLocation.FACE_UP)
             this.state = ComponentLocation.IN_HAND;
-        }
-        //else: PRINT MESSAGGIO D'ERRORE / ECCEZIONE ????
+        else
+            throw new ComponentStateException("Puoi prendere in mano il component solo se è nel mucchio o scoperto. Metodo moveToHand in Component");
+    }
+
+    /* @param x,y coordinate da piazzare on truck */
+    public void placeOnTruck() {
+        if (state == ComponentLocation.IN_HAND)
+            this.state = ComponentLocation.ON_TRUCK;
+        else
+            throw new ComponentStateException("Puoi saldare il component sulla nave solo se lo hai in mano. Metodo placeOnTruck in Component");
+    }
+
+    public void discardFaceUp() {
+        if (state == ComponentLocation.IN_HAND)
+            this.state = ComponentLocation.FACE_UP;
+        else
+            throw new ComponentStateException("Puoi scartare il component solo se lo hai in mano. Metodo discardFaceUp in Component");
     }
 
     // rotazione di 90 gradi verso destra. Se player vuole ruotarlo di più si applica più volte il metodo
@@ -43,20 +58,6 @@ public class Component {
         this.left = this.down;
         this.down = this.right;
         this.right = support;
-    }
-
-    /* @param x,y coordinate da piazzare on truck */
-    public void placeOnTruck() {
-        if (state == ComponentLocation.IN_HAND) {
-            this.state = ComponentLocation.ON_TRUCK;
-        }
-    }
-
-    public void discardFaceUp() {
-        // 1^ condizione è logica. La 2^ è necessaria per quando ne prendo uno scoperto e decido di rimetterlo a posto senza saldarlo
-        if (state == ComponentLocation.IN_HAND || state == ComponentLocation.FACE_UP) {
-            this.state = ComponentLocation.FACE_UP;
-        }
     }
 
     public ComponentLocation getState() {
@@ -71,6 +72,7 @@ public class Component {
         return y;
     }
 
+    // set coordinates component: necessario quando salderò il component sulla nave
     public void setX(int x) {
         this.x = x;
     }
@@ -81,7 +83,7 @@ public class Component {
     public ComponentType getType() {
         return type;
     }
-    public void setState(ComponentLocation location){this.state = location; }
+
     public Side getUp() {
         return up;
     }

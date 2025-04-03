@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class Cannon extends Component {
+
     private final boolean isDouble;
     private boolean isActive = false;
 
