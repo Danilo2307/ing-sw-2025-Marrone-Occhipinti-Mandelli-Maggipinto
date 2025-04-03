@@ -40,7 +40,7 @@ public class Game {
         // creo e aggiungo nel mucchio tutti i component della nave
         this.heap.addAll(ComponentFactory.generateAllComponents());
         this.currentPlayer = null;
-        this.gameStatus = GameStatus.Idle;
+        this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
         this.visibleCards1 = new ArrayList<>(); //questi sono i tre mazzetti visibili ad inizio game, vanno staccati
         this.visibleCards2 = new ArrayList<>(); //perchè possono essere visti solo uno alla volta
