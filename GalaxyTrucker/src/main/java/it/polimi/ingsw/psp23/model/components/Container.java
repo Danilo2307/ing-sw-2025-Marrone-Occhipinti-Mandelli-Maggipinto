@@ -29,8 +29,8 @@ public class Container extends Component {
     public boolean canLoadItem(Item item) {
         if (goods.size() >= size) return false;
 
-        return (colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green)) ||
-                (colorContainer == Color.Blue && item.getItemColor() != Color.Red);
+        return (colorContainer == Color.Red && (item.getColor() == Color.Red || item.getColor() == Color.Green)) ||
+                (colorContainer == Color.Blue && item.getColor() != Color.Red);
     }
 
     public void loadItem(Item item){

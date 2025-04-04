@@ -9,7 +9,7 @@ public class Item {
         this.color = itemcolor;
     }
 
-    public Color getItemColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -25,6 +25,6 @@ public class Item {
 
         // cast diretto; assumo che 'o' sia sempre un Item (infatti goods è list<Item>
         Item other = (Item) o;
-        return color == other.getItemColor();
+        return color == other.getColor();
     }
 }

@@ -13,18 +13,18 @@ import java.util.List;
 
 
 public class Board {
-    private Component[][] ship;
+    private final Component[][] ship;
     // per i rifiuti mi interessa solo il numero, non sapere il tipo degli oggetti scartati
     private int garbage;
     // creo liste dei sottotipi per poter chiamare i metodi specifici e facilitare la ricerca
-    private ArrayList<BatteryHub> batteryHubs;
-    private ArrayList<AlienAddOns> alienAddOns;
-    private ArrayList<Cannon> cannons;
-    private ArrayList<Engine> engines;
-    private ArrayList<Shield> shields;
-    private ArrayList<Container> containers;
-    private ArrayList<HousingUnit> housingUnits;
-    private ArrayList<StructuralComponent> structuralComponents;
+    private final ArrayList<BatteryHub> batteryHubs;
+    private final ArrayList<AlienAddOns> alienAddOns;
+    private final ArrayList<Cannon> cannons;
+    private final ArrayList<Engine> engines;
+    private final ArrayList<Shield> shields;
+    private final ArrayList<Container> containers;
+    private final ArrayList<HousingUnit> housingUnits;
+    private final ArrayList<StructuralComponent> structuralComponents;
     private final int ROWS = 5;
     private final int COLS = 7;
 
@@ -42,42 +42,27 @@ public class Board {
         structuralComponents = new ArrayList<>();
     }
 
-    // FEDE: lo leverei
-    /*public Board(Board other) {
-        // costruttore di copia
-        this.ship = other.ship;
-        this.garbage.addAll(other.garbage);
-        this.batteryHubs.addAll(other.batteryHubs);
-        this.alienAddOns.addAll(other.alienAddOns);
-        structuralComponents.addAll(other.structuralComponents);
-        containers.addAll(other.containers);
-        housingUnits.addAll(other.housingUnits);
-         TODO: chiarire se vogliamo usare il costruttore per creare una lista indipendente o una
-                 lista dipendente da other, perchè se la volessi fare indipendente dovrei cambiare
-                 metodo di istanziamento di tutte le liste usando i vari costruttori di copia
-                 di tutti i vari tipi di components, perchè così sto passando ad ogni elemento
-                 della lista i riferimenti agli elementi dell'altra lista. Questo controllo di
-                 gestione va fatto anche per "ship"
-    }*/
-
-
-
-    public boolean check() { //restituisce un boolean che indica se la nave è legale o meno
+    // controllo legalità della nave
+    public boolean check() {
         //empty space va solo con empty space nei componenti
         // double connector va o con universal o con double
         // single va o con single o con universal
 
-        for (int i = 0; i < ROWS; i++) { //scorro tutti componenti della plancia
+        //scorro tutti componenti della plancia
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
                     if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getType() == (ComponentType.ENGINE))) {
-                        return false; //ho un pezzo sotto un motore singolo o doppio
+                        // il componente i,j sta sotto al motore di posizione i-1,j
+                        return false;
                     }
 
-                    if(isValid(i,j+1 ) && !isFree(i,j+1)){ //componente di destra
+                    // valuto componente alla destra del corrente i,j
+                    if(isValid(i,j+1 ) && !isFree(i,j+1)){
                         if(ship[i][j+1].getLeft() == Side.GUN) {
                             return false;  // gun rivolta verso il mio componente
                         }
+                        // controllo connettori
                         if((ship[i][j].getRight() == Side.EMPTY || ship[i][j].getRight() == Side.SHIELD )&& !(ship[i][j+1].getLeft() == Side.EMPTY)) { // empty con qualcosa di non empty
                             return false;
                         }
@@ -95,10 +80,12 @@ public class Board {
                         }
                     }
 
-                    if(isValid(i,j-1 ) && !isFree(i,j-1)){ //componente di sinistra
+                    // valuto componente alla sinistra del corrente i,j
+                    if(isValid(i,j-1 ) && !isFree(i,j-1)){
                         if(ship[i][j-1].getRight() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
+                        // controllo connettori
                         if((ship[i][j].getLeft() == Side.EMPTY || ship[i][j].getLeft() == Side.SHIELD )&& !(ship[i][j-1].getRight() == Side.EMPTY)) { // empty con qualcosa di non empty
                             return false;
                         }
@@ -116,10 +103,12 @@ public class Board {
                         }
                     }
 
+                    // valuto componente al di sotto del corrente i,j
                     if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sotto
                         if(ship[i+1][j].getUp() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
+                        // controllo connettori
                         if((ship[i][j].getDown() == Side.EMPTY || ship[i][j].getDown() == Side.SHIELD )&& !(ship[i+1][j].getUp() == Side.EMPTY)) { // empty con qualcosa di non empty
                             return false;
                         }
@@ -137,7 +126,8 @@ public class Board {
                         }
                     }
 
-                    if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sopra
+                    // valuto componente che sta sopra al corrente i,j
+                    if(isValid(i+1,j ) && !isFree(i+1,j)){
                         if(ship[i-1][j].getDown() == Side.GUN) { // gun rivolta verso il mio componente
                             return false;
                         }
@@ -164,36 +154,8 @@ public class Board {
         return true;
     }
 
-
+    // indica se nella posizione i,j può starci un componente oppure no: la plancia non ha una forma perfettamente matriciale
     public boolean isValid(int i, int j) {
-       /* final boolean[][] validPositions = new boolean[5][7];
-        validPositions[0][2] = true;
-        validPositions[0][4] = true;
-        validPositions[1][1] = true;
-        validPositions[1][2] = true;
-        validPositions[1][3] = true;
-        validPositions[1][4] = true;
-        validPositions[1][5] = true;
-        validPositions[2][0] = true;
-        validPositions[2][1] = true;
-        validPositions[2][2] = true;
-        validPositions[2][3] = true;
-        validPositions[2][4] = true;
-        validPositions[2][5] = true;
-        validPositions[2][6] = true;
-        validPositions[3][0] = true;
-        validPositions[3][1] = true;
-        validPositions[3][2] = true;
-        validPositions[3][3] = true;
-        validPositions[3][4] = true;
-        validPositions[3][5] = true;
-        validPositions[3][6] = true;
-        validPositions[4][0] = true;
-        validPositions[4][1] = true;
-        validPositions[4][2] = true;
-        validPositions[4][4] = true;
-        validPositions[4][5] = true;
-        validPositions[4][6] = true;*/
 
         final boolean[][] validPositions = new boolean[ROWS][COLS];
 
@@ -211,7 +173,11 @@ public class Board {
             return false;
         else
             return validPositions[i][j];
+    }
 
+    // determina se ship[i][j] contiene un component oppure no
+    public boolean isFree(int i, int j) {
+        return ship[i][j] == null;
     }
 
     public void setTrue(boolean[][] m, int i, int j) {
@@ -222,7 +188,7 @@ public class Board {
        che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
      */
     // modCentrX e modCentrY mi servono come parametri per creare la funzione ricorsiva, altrimenti non riuscirei
-    // s confrontare mano a mano tutti i componenti con il loro adiacente(se mettessimo questo metodo in component
+    // a confrontare mano a mano tutti i componenti con il loro adiacente (se mettessimo questo metodo in component
     // per sapere se è raggiungibile potremmo risparmiarci i parametri i e j, in modo da semplificare l'etichetta del
     // metodo ma a queste "sottigliezze" ci penseremo più avanti)
 
@@ -237,7 +203,7 @@ public class Board {
         if (i == scorrX && j == scorrY) {
             return true;
         }
-        if (isValid(scorrX + 1, scorrY) && alreadyChecked[scorrX + 1][scorrY] == false) {
+        if (isValid(scorrX + 1, scorrY) && !alreadyChecked[scorrX + 1][scorrY]) {
             if (scorrX + 1 == i && scorrY == j) {
                 return true;
             } else {
@@ -245,7 +211,7 @@ public class Board {
                 check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
             }
         }
-        if (isValid(scorrX - 1, scorrY) && alreadyChecked[scorrX - 1][scorrY] == false) {
+        if (isValid(scorrX - 1, scorrY) && !alreadyChecked[scorrX - 1][scorrY]) {
             if (scorrX - 1 == i && scorrY == j) {
                 return true;
             } else {
@@ -254,7 +220,7 @@ public class Board {
             }
         }
 
-        if (isValid(scorrX, scorrY + 1) && alreadyChecked[scorrX][scorrY + 1] == false) {
+        if (isValid(scorrX, scorrY + 1) && !alreadyChecked[scorrX][scorrY + 1]) {
             if (scorrX == i && scorrY + 1 == j) {
                 return true;
             } else {
@@ -263,7 +229,7 @@ public class Board {
             }
         }
 
-        if (isValid(scorrX, scorrY - 1) && alreadyChecked[scorrX][scorrY - 1] == false) {
+        if (isValid(scorrX, scorrY - 1) && !alreadyChecked[scorrX][scorrY - 1]) {
             if (scorrX == i && scorrY - 1 == j) {
                 return true;
             } else {
@@ -275,10 +241,6 @@ public class Board {
 
     }
 
-    // determina se ship[i][j] contiene un component oppure no
-    public boolean isFree(int i, int j) {
-        return ship[i][j] == null;
-    }
 
     // elimina elemento in posizione i,j della ship e lo rimuove dalla rispettiva lista
     // funziona perchè ship[i][j] e l'elemento della rispettiva lista puntano allo stesso oggetto in memoria:
@@ -286,13 +248,11 @@ public class Board {
     public void delete(int i, int j) {
         boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
         // che JAVA INIZIALIZZERÀ A FALSE
-        if (!isValid(i, j) || ship[i][j] == null || isFree(i, j)) {
+        if (!isValid(i, j) || isFree(i, j)) {
             throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         } else {
-            /* Nelle ArrayList il metodo remove ha due implementazioni: una riceve in ingresso
-               l'indice dell'elemento da rimuovere; l'altra riceve un oggetto e rimuove la prima
-               occorrenza di questo oggetto. Io sto usando la seconda. Inoltre, metto la rimozione in un if nel caso in cui non trovasse l'elemento,
-               un if nel caso in cui non trovasse l'elemento, il che sarebbe un problema bello peso!!! */
+            /* Nelle ArrayList il metodo remove ha due implementazioni: uso quella che riceve un oggetto e rimuove il primo elemento
+               su cui equals restituisce true: non serve override perchè equals confronta i riferimenti (in questo caso sono gli stessi). Controllo che esista lo stesso oggetto e venga rimosso correttamente.  */
             if (ship[i][j].getType() == ComponentType.ALIENADDONS) {
                 if (!alienAddOns.remove(ship[i][j])) {
                     throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
@@ -357,9 +317,10 @@ public class Board {
             c.setY(j);
             c.placeOnTruck();
         } else
-            throw new IllegalArgumentException("Invalid parameters i and j");
+            throw new IllegalArgumentException("You can't add this component: invalid parameters i and j");
 
-        // aggiungo nella rispettiva lista in base al tipo
+        // aggiungo nella rispettiva lista in base al tipo. I due oggetti (in ship e nella lista) avranno
+        // lo stesso riferimento, ma verranno visti da "due punti di vista diversi"
         switch (c.getType()) {
             case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
             case CANNON -> cannons.add((Cannon) c);
@@ -372,21 +333,28 @@ public class Board {
         }
     }
 
-
+    // il programma decide quali merci rimuovere e da quali container, a parità di preziosità.
     public void pickMostImportantGoods(int numGoodsStolen) {
-        // creo una variabile che mano a mano decrementerò per sapere quante merci/batterie mancano da essere
-        // rubati
-        int rubati = numGoodsStolen;
+        int itemsToLose = numGoodsStolen;
+        // array che stabilisce l'ordine di preziosità delle merci e quindi l'ordine di priorità nella rimozione
         Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
-        while (rubati > 0) {
-            /* Faccio il seguente ragionamento: itero sull'array di color ordinati in ordine di preziosità e,
-               appena posso togierlo lo tolgo e arresto il ciclo, altrimenti tolgo una batteria.*/
-            boolean removed = false;
-            for (Color colore : ordineGoods) {
-                // TODO: serve la scelta da parte dell'utente sul container da svuotare
+        for (Color color : ordineGoods) {
+            for (Container container : containers) {
+                for (Item item : container.getItems()) {
+                    if (item.getColor() == color) {
+                        container.loseItem(item);
+                        itemsToLose--;
+                    }
+                    if (itemsToLose == 0)
+                        break;
+                }
+                if (itemsToLose == 0)
+                    break;
             }
-            rubati--;
+            if (itemsToLose == 0)
+                break;
         }
+        // TODO: if itemsToLose>0 devo rimuovere le batterie
     }
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
