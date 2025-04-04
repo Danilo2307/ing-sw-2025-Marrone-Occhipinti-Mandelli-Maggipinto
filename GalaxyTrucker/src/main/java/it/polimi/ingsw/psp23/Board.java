@@ -674,7 +674,8 @@ public class Board {
             }
             int scorr = 0;
             while (scorr < items.size()) {
-                if (containers.get(index).loadItem(items.get(scorr))) {
+                if (containers.get(index).canLoadItem(items.get(scorr))) {
+                    containers.get(index).loadItem(items.get(scorr));
                     scorr++;
                 } else {
                     throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");

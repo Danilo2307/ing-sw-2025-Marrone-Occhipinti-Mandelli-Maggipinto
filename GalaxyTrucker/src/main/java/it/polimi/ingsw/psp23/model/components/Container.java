@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23.model.components;
+import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
@@ -10,7 +11,7 @@ public class Container extends Component {
     // Danilo
     private final int size;
     private final Color colorContainer;
-    private ArrayList<Item> goods;
+    private final ArrayList<Item> goods;   // il riferimento è immutabile, ma posso fare add/remove
 
     public Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
         super(ComponentType.CONTAINER, up,down,left,right);
@@ -24,29 +25,31 @@ public class Container extends Component {
         return new ArrayList<>(goods);
     }
 
-    public boolean loadItem(Item item){
-        if(goods.size() < size ) {
-            if((colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green)) ||
-                    (colorContainer == Color.Blue && !(item.getItemColor() == Color.Red))) {
-                goods.add(item);
-                return true;
-            }
-            else {
-                System.out.println("You cannot add this item here");
-                return false;
-            }
-        }else{
-            System.out.println("The size of goods is greater than the size of size " + size);
-            return false;
+    // disaccoppio logica controllo inserimento dall'inserimento. Principio single responsibility OOP.
+    public boolean canLoadItem(Item item) {
+        if (goods.size() >= size) return false;
+
+        return (colorContainer == Color.Red && (item.getItemColor() == Color.Red || item.getItemColor() == Color.Green)) ||
+                (colorContainer == Color.Blue && item.getItemColor() != Color.Red);
+    }
+
+    public void loadItem(Item item){
+        if (canLoadItem(item)) {
+            goods.add(item);
         }
+        else
+            // eccezione che verrà gestita nel controller con un try-catch (se scegliamo di dare 2^ chance al player)
+            throw new ContainerException("Cannot load item: either the container is full or the color is not allowed.");
     }
 
-    public void loseItem(Item item){ // da gestire la scelta di rimozione in fase di carico merci posso anche scaricarle
-        goods.remove(item); //qui la remove effettua un confronto tra gli attributi di item che in realtà è solo color
-                            // e ne rimuove la prima occorrenza
-
+    public void looseItem(Item item){
+        if (goods.isEmpty())
+            throw new ContainerException("Cannot remove: container is empty.");
+        if (!goods.remove(item))
+            throw new ContainerException("Cannot remove: item not found in container.");
     }
 
+    // NOTA: il ribilanciamento delle merci sarà gestito nel controller tramite continui loadItem e loseItem a scelta dell'utente
 
 }
 
