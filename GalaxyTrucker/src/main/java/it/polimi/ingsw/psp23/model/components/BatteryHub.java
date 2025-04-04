@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public class BatteryHub extends Component {
     // Alberto
-
     private int numBatteries;
 
     public BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
@@ -17,14 +16,14 @@ public class BatteryHub extends Component {
         return numBatteries;
     }
 
-    public void removeBatteries(int numRemoved){ // numRemoved indica il numero di batterie da rimuovere
-        // metto questo if-else per controllare che stia rimuovendo un numero valido di batterie e che non stia
-        // andando oltre il numero di batterie disponibili. Valutiamo se inserire una eccezione.
+    public void removeBatteries(int numRemoved){
+
+        // numRemoved è il numero di batterie che l'utente vuole rimuovere
         if(numRemoved <= numBatteries && numRemoved >= 0) {
-            numBatteries = numBatteries - numRemoved;
+            numBatteries -= numRemoved;
         }
         else{
-            throw new IllegalArgumentException("Error: num of batteries removed from Battery Hub is out of bounds");
+            throw new IllegalArgumentException("Error: num of batteries removed from this Battery Hub is out of bounds");
         }
     }
 }

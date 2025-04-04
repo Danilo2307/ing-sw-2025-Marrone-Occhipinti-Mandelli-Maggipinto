@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 public class Cannon extends Component {
 
     private final boolean isDouble;
+    // necessario per gestire attivazione cannoni doppi
     private boolean isActive = false;
 
     public Cannon (Side up, Side down, Side left, Side right, boolean isDouble) {

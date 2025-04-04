@@ -23,8 +23,8 @@ public class HousingUnit extends Component {
         return connectedAddons.contains(color);
     }
 
-    // Entrambi i set sono fatti solo prima del primo turno, non vengono più utilizzati
-    // TODO: verifica prima che la lista di housing unit presente in board non contenga già alieni di questo colore
+    // Entrambi i set verranno chiamati dal controller solo prima del primo turno, non vengono più utilizzati
+    // TODO: verifica prima che la lista di housing unit presente in board non contenga già alieni di questo colore (per ogni board solo un alieno viola e solo uno marrone al massimo)
     public void setAlien(Color color) {
         if (numAstronaut == 0) this.alien = color;
     }
@@ -36,8 +36,12 @@ public class HousingUnit extends Component {
     // Servirà a reduceCrew() per la eliminazione di membri dal Component
     public void reduceOccupants(int num) {
         if (alien != null) {
-            alien = null;
-        } else if (num <= numAstronaut && num >= 0) {
+            if (num == 1)
+                alien = null;
+            else
+                throw new IllegalArgumentException("You can't remove more than one alien!");
+        }
+        else if (num <= numAstronaut && num >= 0) {
             numAstronaut -= num;
         }
     }

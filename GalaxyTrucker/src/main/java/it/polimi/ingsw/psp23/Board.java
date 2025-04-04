@@ -810,8 +810,8 @@ public class Board {
     }
 
     public double calculateCannonStrength() {
-        /*  I cannoni singoli puntati in avanti contano +1, gli altri +½. Se spendi una batteria, i cannoni doppi puntati in avanti contano +2, gli altri +1.
-        L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0. */
+
+        // I cannoni singoli puntati in avanti contano +1, gli altri +½. Se spendi una batteria, i cannoni doppi puntati in avanti contano +2, gli altri +1.
         double strength = 0;
         for (Cannon gun : cannons) {
             if (gun.getUp().equals(Side.GUN)) {
@@ -836,10 +836,13 @@ public class Board {
                 }
             }
         }
-        for (HousingUnit housing : housingUnits) {
-            if (housing.getAlien().equals(Color.Purple) && strength > 0) {
-                strength += 2;
-                break;
+        // L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0.
+        if (strength > 0) {
+            for (HousingUnit housing : housingUnits) {
+                if (housing.getAlien().equals(Color.Purple)) {
+                    strength += 2;
+                    break;
+                }
             }
         }
         return strength;

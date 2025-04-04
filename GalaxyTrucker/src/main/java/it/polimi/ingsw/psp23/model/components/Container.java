@@ -42,7 +42,7 @@ public class Container extends Component {
             throw new ContainerException("Cannot load item: either the container is full or the color is not allowed.");
     }
 
-    public void looseItem(Item item){
+    public void loseItem(Item item){
         if (goods.isEmpty())
             throw new ContainerException("Cannot remove: container is empty.");
         if (!goods.remove(item))
