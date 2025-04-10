@@ -388,7 +388,7 @@ public class Board {
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine, Shield shieldUsed) {
 
-        /* Se la cannonata è grande, distrugge sempre il primo modulo colpito.
+        /* Se la cannonata è grande, distrugge sempre il primo componente colpito.
         La plancia del livello 2 ha coordinate di gioco diverse dalla matrice interna,
         quindi convertiamo impactLine negli indici reali prima di applicare l'effetto. */
 
@@ -511,7 +511,10 @@ public class Board {
                     isCovered = true;
             }
 
-            // utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da meteora piccola
+            // Utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da meteora piccola.
+            // Appena trovo un componente valido sulla colonna/linea di impatto:
+            // - Se ha lato EMPTY nella direzione d'impatto, la meteora rimbalza → esco subito (break)
+            // - Altrimenti il modulo ha un connettore esposto → lo elimino
             if (shieldUsed == null || !isCovered) {
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
@@ -553,50 +556,51 @@ public class Board {
             }
 
         } else {
-            /* Adesso, per la direzione up e down, scorro la lista di cannoni singoli o doppi e vedo se ce n'è almeno
-               uno che abbia la colonna corrispondente con la colonna di arrivo del meteorite e che sia rivolto
-               verso il lato corretto. Per le direzioni laterali devo invece controllare che ce ne siano anche due
-               adiacenti perchè in caso potrebbero farlo esplodere.
-               Non mi preoccupo di controllare che il cannone trovato sia il primo della riga/colonna perchè
-               do per scontato che in questa fase del gioco la nave sia fatta bene e quindi con nessun componente
-               davanti alla bocca dei cannoni in quella direzione
-             */
-            boolean isDestroyed = false; // questa variabile è praticamente la stessa di isCovered nel caso di prima
-            // non ne uso una unica perchè mettendo nomi adatti il codice è più leggibile
-            // distinguo i casi delle varie direzioni
-            if (meteor.getDirection() == Direction.UP) {
-                for (Cannon s : cannons) {
-                    if (s.getY() == realImpactLine && (s.getUp() == Side.GUN)) {
+            /* Per meteore verticali, cerco un cannone (singolo o doppio) nella stessa colonna e rivolto nella direzione corretta.
+               Per meteore orizzontali, verifico la presenza di cannoni adiacenti lungo la linea d’impatto.
+               Non controllo eventuali ostacoli davanti al cannone: si assume che la nave sia costruita correttamente. */
+
+            // Flag che indica se la meteora è stata distrutta da un cannone
+            boolean isDestroyed = false;
+            // Scorro tutti i cannoni installati sulla nave
+            for (Cannon s : cannons) {
+                // Determino se il cannone si trova in una posizione adatta a colpire la meteora
+                boolean matchesPosition = switch (meteor.getDirection()) {
+                    // Per meteore verticali (UP/DOWN), servono cannoni nella stessa colonna
+                    case UP, DOWN -> s.getY() == realImpactLine;
+                    // Per meteore orizzontali (RIGHT/LEFT), bastano cannoni nella stessa riga o nelle righe adiacenti
+                    case RIGHT, LEFT ->
+                            s.getX() == realImpactLine || s.getX() == realImpactLine + 1 || s.getX() == realImpactLine - 1;
+                };
+                // (L'ho svolto così per evitare quadruplicazione cospicua di codice).
+                // Verifico se il cannone è rivolto nella direzione da cui arriva la meteora
+                boolean facesCorrectDirection = switch (meteor.getDirection()) {
+                    case UP -> s.getUp() == Side.GUN;
+                    case DOWN -> s.getDown() == Side.GUN;
+                    case RIGHT -> s.getRight() == Side.GUN;
+                    case LEFT -> s.getLeft() == Side.GUN;
+                };
+
+                // Se il cannone è in posizione corretta e rivolto nel verso giusto
+                if (matchesPosition && facesCorrectDirection) {
+                    if (s.isDouble()) {
+                        // Se il cannone è doppio, può sparare solo se è stato attivato dal Controller
+                        if (s.checkIfIsActive()) {
+                            isDestroyed = true;          // Meteora distrutta
+                            s.disactiveCannon();         // Disattivo il cannone dopo l’uso
+                            break;                       // Esco dal ciclo: non serve cercare altri cannoni
+                        }
+                    } else {
+                        // I cannoni singoli possono sparare senza attivazione
                         isDestroyed = true;
-                        break;
-                    }
-                }
-            } else if (meteor.getDirection() == Direction.DOWN) {
-                for (Cannon s : cannons) {
-                    if (s.getY() == realImpactLine && (s.getDown() == Side.GUN)) {
-                        isDestroyed = true;
-                        break;
-                    }
-                }
-            } else if (meteor.getDirection() == Direction.RIGHT) {
-                for (Cannon s : cannons) {
-                    //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getRight() == Side.GUN)) {
-                        isDestroyed = true;
-                        break;
-                    }
-                }
-            } else {
-                for (Cannon s : cannons) {
-                    //devo inserire il controllo che sia nelle celle adiacenti alla linea di arrivo essendo che arriva dal lato
-                    if ((s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1) && (s.getLeft() == Side.GUN)) {
-                        isDestroyed = true;
-                        break;
+                        break;                           // Meteora distrutta, interrompo la ricerca
                     }
                 }
             }
+
             // se la meteor non è stata distrutta ho impatto: devo rimuovere
             if (!isDestroyed) {
+                // distinguo in base alle direzioni perchè devo scorrere la matrice in modo diverso
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
