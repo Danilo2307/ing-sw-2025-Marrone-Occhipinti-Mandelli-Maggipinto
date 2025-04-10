@@ -10,6 +10,11 @@ public enum Side {
     SHIELD,
     SHIELD_SINGLE_CONNECTOR,
     SHIELD_DOUBLE_CONNECTOR;
+
+    // determino se la Side this è uno scudo
+    public boolean isShield() {
+        return (this == SHIELD || this == SHIELD_SINGLE_CONNECTOR || this == SHIELD_DOUBLE_CONNECTOR);
+    }
 }
 
 // alcune Side come GUN, SHIELD ecc. sono necessarie perchè quando chiamo component.rotate() devo far ruotare anche il cannone/lo scudo.

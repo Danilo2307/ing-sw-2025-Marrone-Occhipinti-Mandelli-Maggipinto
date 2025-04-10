@@ -333,41 +333,65 @@ public class Board {
         }
     }
 
-    // il programma decide quali merci rimuovere e da quali container, a parità di preziosità.
-    public void pickMostImportantGoods(int numGoodsStolen) {
-        int itemsToLose = numGoodsStolen;
-        // array che stabilisce l'ordine di preziosità delle merci e quindi l'ordine di priorità nella rimozione
-        Color[] ordineGoods = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
-        for (Color color : ordineGoods) {
-            for (Container container : containers) {
-                for (Item item : container.getItems()) {
-                    if (item.getColor() == color) {
-                        container.loseItem(item);
-                        itemsToLose--;
-                    }
-                    if (itemsToLose == 0)
-                        break;
-                }
-                if (itemsToLose == 0)
-                    break;
+    /**
+     * @param item è l'oggetto che l'utente desidera rimuovere
+     * @return true se l'item è tra i più preziosi disponibili, false altrimenti
+     */
+    public boolean isMostPrecious(Item item) {
+        Color[] preciousness = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
+
+        for (Color priority_color : preciousness) {
+            if (priority_color == item.getColor()) {
+                // abbiamo raggiunto il colore dell’item: nessuna merce più preziosa trovata
+                return true;
             }
-            if (itemsToLose == 0)
-                break;
+            for (Container container : containers) {
+                for (Item current_item : container.getItems()) {
+                    if (current_item.getColor() == priority_color) {
+                        // esiste almeno una merce più preziosa
+                        return false;
+                    }
+                }
+            }
         }
-        // TODO: if itemsToLose>0 devo rimuovere le batterie
+        // si eseguiranno sempre e solo i due return precedenti. L'ho messo per evitare error "missing return statement"
+        return true;
     }
 
-    public void handleCannonShot(CannonShot cannonShot, int impactLine) {
-        // TODO: manca il controllo se gli scudi sono attivati con le batterie o meno
+    /**
+     * Rimuove una merce da un container in posizione (i,j), solo se risulta tra le più preziose ancora presenti a bordo.
+     * @param i coordinata riga del container
+     * @param j coordinata colonna del container
+     * @param itemToRemove oggetto Item che il giocatore ha scelto di rimuovere
+     * @throws IllegalArgumentException se la merce non è tra le più preziose o se ship[i][j] non contiene un container valido
+     */
+    public void removePreciousItemFromContainer(int i, int j, Item itemToRemove) {
 
-        // nel caso in cui sia una cannonata grossa non possiamo fare niente perchè distrugge a prescindere
-        /*
-        in questo metodo dobbiamo stare attenti al fatto che le colonne nel gioco del livello 2
-        la plancia della nave ha 5 righe(numerate dal 5 al 9) e 7 colonne(numerate da 4 a 10),
-        quindi in questo metodo gestisco prima la conversione di impactLine adattandola agli
-        indici della nostra matrice
-         */
-        // effettuo prima questa conversione
+        // Controllo che l'item sia tra i più preziosi attualmente a bordo
+        if (!isMostPrecious(itemToRemove)) {
+            throw new IllegalArgumentException("You must remove the most precious item available first.");
+        }
+
+        // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
+        // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
+        int index = containers.indexOf(ship[i][j]);
+
+        // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
+        if (index == -1) {
+            throw new IllegalArgumentException("Invalid coordinates: ship[i][j] does not contain a container.");
+        }
+
+        // Rimuovo l'item dal container specifico
+        containers.get(index).loseItem(itemToRemove);
+    }
+
+
+    public void handleCannonShot(CannonShot cannonShot, int impactLine, Shield shieldUsed) {
+
+        /* Se la cannonata è grande, distrugge sempre il primo modulo colpito.
+        La plancia del livello 2 ha coordinate di gioco diverse dalla matrice interna,
+        quindi convertiamo impactLine negli indici reali prima di applicare l'effetto. */
+
         int realImpactLine;
         if (cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
             realImpactLine = impactLine - 4;
@@ -408,35 +432,25 @@ public class Board {
                 }
             }
         } else {
-            // controllo se c'è uno scudo che difende quel lato
-            // creo una variabile booleana e la metto a true se trovo lo scudo
+            // cannonata piccola
             boolean isCovered = false;
-            for (Shield s: shields) {
-                // devo mettere una serie di if per associare la direzione al lato dei componenti
-                if (cannonShot.getDirection() == Direction.UP) {
-                    if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else if (cannonShot.getDirection() == Direction.DOWN) {
-                    if (s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else if (cannonShot.getDirection() == Direction.RIGHT) {
-                    if (s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else {
-                    if (s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                }
+            // Se lo scudo è stato attivato, controllo se copre la direzione da cui arriva la cannonata
+            if (shieldUsed != null) {
+                Direction dir = cannonShot.getDirection();
+                // In base alla direzione da cui arriva la cannonata, seleziono il lato dello scudo corrispondente
+                Side sideDir = switch (dir) {
+                    case UP -> shieldUsed.getUp();
+                    case DOWN -> shieldUsed.getDown();
+                    case LEFT -> shieldUsed.getLeft();
+                    case RIGHT -> shieldUsed.getRight();
+                };
+                // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
+                if (sideDir.isShield())
+                    isCovered = true;
             }
-            // in base al valore isCovered capisco se sono coperto in quel lato, se non sono coperto distruggo
-            if (!isCovered) {
+
+            // utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da cannonata piccola
+            if (shieldUsed == null || !isCovered) {
                 if (cannonShot.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
@@ -470,7 +484,7 @@ public class Board {
         }
     }
 
-    public void handleMeteor(Meteor meteor, int impactLine) {
+    public void handleMeteor(Meteor meteor, int impactLine, Shield shieldUsed) {
 
         //prima di tutto converto la impactLine per far sì che rientri nei limiti della mia matrice
         int realImpactLine;
@@ -482,33 +496,23 @@ public class Board {
 
         if (!meteor.isBig()) {
             boolean isCovered = false;
-            // se la meteora è piccola, vedo se c'è uno shield che mi può difendere
-            for (Shield s : shields) {
-                // devo mettere una serie di if per associare la direzione al lato dei componenti
-                if (meteor.getDirection() == Direction.UP) {
-                    if (s.getUp() == Side.SHIELD || s.getUp() == Side.SHIELD_SINGLE_CONNECTOR || s.getUp() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else if (meteor.getDirection() == Direction.DOWN) {
-                    if (s.getDown() == Side.SHIELD || s.getDown() == Side.SHIELD_SINGLE_CONNECTOR || s.getDown() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else if (meteor.getDirection() == Direction.RIGHT) {
-                    if (s.getRight() == Side.SHIELD || s.getRight() == Side.SHIELD_SINGLE_CONNECTOR || s.getRight() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                } else {
-                    if (s.getLeft() == Side.SHIELD || s.getLeft() == Side.SHIELD_SINGLE_CONNECTOR || s.getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) {
-                        isCovered = true;
-                        break;
-                    }
-                }
+            // se lo scudo è stato attivato, controllo se copre la direzione da cui arriva la meteora
+            if (shieldUsed != null) {
+                Direction dir = meteor.getDirection();
+                // In base alla direzione da cui arriva la meteora, seleziono il lato dello scudo corrispondente
+                Side sideDir = switch (dir) {
+                    case UP -> shieldUsed.getUp();
+                    case DOWN -> shieldUsed.getDown();
+                    case LEFT -> shieldUsed.getLeft();
+                    case RIGHT -> shieldUsed.getRight();
+                };
+                // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
+                if (sideDir.isShield())
+                    isCovered = true;
             }
 
-            if (!isCovered) {
+            // utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da meteora piccola
+            if (shieldUsed == null || !isCovered) {
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
@@ -665,19 +669,20 @@ public class Board {
         }
     }
 
-    public void reduceBatteries(int num, int i, int j) throws IllegalType {
-        //TODO: pensare se il giocatore può essere stupido o meno
-        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
-            throw new IllegalType();
-        } else {
-            int index = batteryHubs.indexOf(ship[i][j]);
-            if (index == -1) {
-                throw new IllegalArgumentException("BatteryHub not found in 'batteryHubs' list: error in reduceBatteries of Board");
-            } else {
-                batteryHubs.get(index).removeBatteries(num);
-            }
+    public void reduceBatteries(int i, int j, int num) {
+        if ((!isValid(i, j)) || isFree(i, j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
+            throw new IllegalArgumentException("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
         }
+
+        int index = batteryHubs.indexOf(ship[i][j]);
+        if (index == -1) {
+            throw new IllegalArgumentException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
+        }
+
+        // controllo su numero batterie è gestito in removeBatteries
+        batteryHubs.get(index).removeBatteries(num);
     }
+
 
     public void reduceCrew(int num, int i, int j) throws IllegalType {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
