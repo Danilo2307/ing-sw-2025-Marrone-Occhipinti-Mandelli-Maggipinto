@@ -635,30 +635,35 @@ public class Board {
     }
 
     /*
-    Il ragionamento di loadGoods sarà: se ship[i][j] è un container prova ad aggiungere la lista di items fino
-    a quando riesci; se l'aggiunta dovesse fallire o per incompatibilità di colori o per
-    dimensione massima raggiunta lancia un'eccezione, quindi andrebbe gestita un'eventuale ritentativo
-    di aggiunta degli elementi in un altro container
-     */
+    Il metodo loadGoods carica una lista di item in un singolo container in posizione (i,j).
+    Si assume che la lista sia stata già validata dal Controller come carico destinato a quel container specifico.
+    Il metodo prova a caricare ogni item e, se anche uno solo non rispetta le regole (colore o spazio disponibile),
+    viene lanciata un'eccezione (presente in loadItem) e nessun item successivo viene caricato.
+    Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
+    */
     public void loadGoods(List<Item> items, int i, int j) {
         if (!isValid(i, j) || ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
-            throw new IllegalArgumentException("This is not a container: error in loadGoods of Board");
-        } else {
-            int index = containers.indexOf(ship[i][j]);
-            if (index == -1) {
-                throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
-            }
-            int scorr = 0;
-            while (scorr < items.size()) {
-                if (containers.get(index).canLoadItem(items.get(scorr))) {
-                    containers.get(index).loadItem(items.get(scorr));
-                    scorr++;
-                } else {
-                    throw new IllegalArgumentException("You can't add all the items here: error in loadGoods of Board");
-                }
+            throw new IllegalType("This is not a container: error in loadGoods of Board");
+        }
+
+        int index = containers.indexOf(ship[i][j]);
+        if (index == -1) {
+            throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
+        }
+
+        int scorr = 0;
+        while (scorr < items.size()) {
+            try {
+                // loadItem controlla anche se l'item può essere caricato in quello specifico container
+                containers.get(index).loadItem(items.get(scorr));
+                scorr++;
+            } catch (ContainerException c) {
+                // Rilancio una IllegalArgument con contesto, da gestire poi nel Controller
+                throw new ContainerException("Item at index " + scorr + " cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
             }
         }
     }
+
 
     public void checkHousingUnits() {
         /* per ogni housingunit faccio un ciclo che controlli eventuali addons adiacenti, per poi aggiungere
@@ -675,22 +680,27 @@ public class Board {
 
     public void reduceBatteries(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i, j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
-            throw new IllegalArgumentException("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
+            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
         }
 
         int index = batteryHubs.indexOf(ship[i][j]);
         if (index == -1) {
             throw new IllegalArgumentException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
         }
+        try {
+            // controllo su numero batterie è gestito in removeBatteries
+            batteryHubs.get(index).removeBatteries(num);
+        } catch (IllegalArgumentException e) {
+            // RIPRENDI DA QUA
 
-        // controllo su numero batterie è gestito in removeBatteries
-        batteryHubs.get(index).removeBatteries(num);
+
+        }
     }
 
 
-    public void reduceCrew(int num, int i, int j) throws IllegalType {
+    public void reduceCrew(int i, int j, int num) throws IllegalType {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
-            throw new IllegalType();
+            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = housingUnits.indexOf(ship[i][j]);
             if (index == -1) {
@@ -758,9 +768,9 @@ public class Board {
         return count;
     }
 
-    public void activeCannon(int i, int j) throws IllegalType {
+    public void activeCannon(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.CANNON)) {
-            throw new IllegalType();
+            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Cannon");
         } else {
             int index = cannons.indexOf(ship[i][j]);
             if(!cannons.get(index).isDouble()){
@@ -772,9 +782,9 @@ public class Board {
         }
     }
 
-    public void activeEngine(int i, int j) throws IllegalType {
+    public void activeEngine(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.ENGINE)) {
-            throw new IllegalType();
+            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = engines.indexOf(ship[i][j]);
             if(!engines.get(index).isDouble()){

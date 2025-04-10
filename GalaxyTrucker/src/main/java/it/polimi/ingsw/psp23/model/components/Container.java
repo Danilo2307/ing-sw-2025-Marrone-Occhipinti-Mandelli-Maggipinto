@@ -26,7 +26,7 @@ public class Container extends Component {
     }
 
     // disaccoppio logica controllo inserimento dall'inserimento. Principio single responsibility OOP.
-    public boolean canLoadItem(Item item) {
+    private boolean canLoadItem(Item item) {
         if (goods.size() >= size) return false;
 
         return (colorContainer == Color.Red && (item.getColor() == Color.Red || item.getColor() == Color.Green)) ||
