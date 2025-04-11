@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.HeapIsEmptyException;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
+import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.UncoveredIsEmptyException;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
@@ -246,6 +247,14 @@ public class Game {
         }else{
             throw new IndexOutOfBoundsException("Giocatori terminati");
         }
+    }
+
+    public Player getPlayerFromNickname(String nickname) throws PlayerExistsException {
+        for (Player player : players) {
+            if(player.getNickname().equals(nickname))
+                return player;
+        }
+        throw new PlayerNotExistsException("Player not found");
     }
 
 
