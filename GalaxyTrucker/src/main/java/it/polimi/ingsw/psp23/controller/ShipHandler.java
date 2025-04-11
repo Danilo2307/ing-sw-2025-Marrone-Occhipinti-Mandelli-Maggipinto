@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.model.controller;
+package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.model.components.Component;
 
