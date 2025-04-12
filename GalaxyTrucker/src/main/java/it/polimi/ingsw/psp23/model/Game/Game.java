@@ -7,13 +7,11 @@ import it.polimi.ingsw.psp23.exceptions.UncoveredIsEmptyException;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Random;
 
 public class Game {
     private ArrayList<Player> players;
@@ -26,7 +24,7 @@ public class Game {
     private ArrayList<Component> uncovered;
     private int gameId;
     private Player currentPlayer;
-    private GameStatus  gameStatus;
+    private GameStatus gameStatus;
     private Card currentCard;
     private String deck1Owner;
     private String deck2Owner;
@@ -39,8 +37,6 @@ public class Game {
         this.heap = new ArrayList<>();
         this.uncovered = new ArrayList<>();
         this.gameId = gameId;
-        // creo e aggiungo nel mucchio tutti i component della nave
-        this.heap.addAll(ComponentFactory.generateAllComponents());
         this.currentPlayer = null;
         this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
@@ -60,18 +56,33 @@ public class Game {
         this.visibleCards1.addAll(level2Cards.subList(0,2));
         this.visibleCards2.add(level1Cards.get(1));
         this.visibleCards2.addAll(level2Cards.subList(2,4));
-        this.visibleCards3.add(level1Cards.get(3));
+        this.visibleCards3.add(level1Cards.get(2));
         this.visibleCards3.addAll(level2Cards.subList(4,6));
         this.deck.addAll(level1Cards.subList(0,4));  // indice finale è escluso
         this.deck.addAll(level2Cards.subList(0,8));
         Collections.shuffle(this.deck);
 
-        this.heap = ComponentFactory.generateAllComponents();
+        // istanzio tutti i componenti e li metto nell'heap
+        this.heap.addAll(ComponentFactory.generateAllComponents());
         Collections.shuffle(this.heap);
-
     }
 
-    // riordina la lista ad ogni turno
+    /** Player per rimanere in partita deve avere almeno un umano e non essere stato doppiato */
+    public void checkEliminationPlayers() {
+        // ricavo posizione del leader
+        int maxPosition = players.stream().mapToInt(Player::getPosition).max().orElse(0);
+
+        for (Player player : players) {
+            // check umani
+            if (player.getTruck().calculateHumanCrew() == 0)
+                player.leaveFlight();
+            // check doppiaggio
+            if (maxPosition - player.getPosition() > 24)
+                player.leaveFlight();
+        }
+    }
+
+    /** riordina la lista (dei giocatori ancora in partita) in ordine decrescente ad ogni turno */
     public void sortPlayersByPosition() {
 
         // se player è uscito al turno corrente, lo levo dalla lista dei player correnti.
@@ -82,13 +93,8 @@ public class Game {
                 players.remove(player);
             }
         }
-        players.sort(Comparator.comparingInt(Player::getPosition).reversed());
-        //check
-    }
 
-    public void removeFromGame(Player player) {
-        playersNotOnFlight.add(player);
-        players.remove(player);
+        players.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
 
     public void addPlayer(String nickname) {
@@ -256,8 +262,6 @@ public class Game {
         }
         throw new PlayerNotExistsException("Player not found");
     }
-
-
 
 }
 

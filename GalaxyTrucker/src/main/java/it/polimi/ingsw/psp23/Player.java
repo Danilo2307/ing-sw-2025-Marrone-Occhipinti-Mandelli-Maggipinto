@@ -3,8 +3,6 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Game.*;
 import it.polimi.ingsw.psp23.model.components.*;
-import java.util.Random;
-import java.util.ArrayList;
 
 
 public class Player {
@@ -53,7 +51,8 @@ public class Player {
         return position;
     }
 
-    public void leaveGame() {
+    // player abbandona il volo, ma parteciperà al calcolo del punteggio finale
+    public void leaveFlight() {
         this.inGame = false;
         // il metodo sort() presente in Game provvederà a spostare il Player da players a playersNotInGame
     }
@@ -80,8 +79,7 @@ public class Player {
 
     public Component chooseTileFromHeap() throws NotCardInHandException{
         try{
-            Component component = game.getTileFromHeap();
-            return component;
+            return game.getTileFromHeap();
         }
         catch(HeapIsEmptyException e){
             throw new NotCardInHandException();
@@ -90,8 +88,7 @@ public class Player {
 
     public Component chooseCardUncovered(int position) throws NotCardInHandException{
         try{
-            Component component = game.getTileUncovered(position);
-            return component;
+            return game.getTileUncovered(position);
         }
         catch(UncoveredIsEmptyException e){
             throw new NotCardInHandException();

@@ -36,7 +36,6 @@ public class Component {
             throw new ComponentStateException("Puoi prendere in mano il component solo se è nel mucchio o scoperto. Metodo moveToHand in Component");
     }
 
-    /* @param x,y coordinate da piazzare on truck */
     public void placeOnTruck() {
         if (state == ComponentLocation.IN_HAND)
             this.state = ComponentLocation.ON_TRUCK;

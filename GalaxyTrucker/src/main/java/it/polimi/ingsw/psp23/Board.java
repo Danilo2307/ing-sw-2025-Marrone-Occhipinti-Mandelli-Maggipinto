@@ -860,17 +860,33 @@ public class Board {
         return numbatteries;
     }
 
-    public int calculateCrew() {
-        int crew = 0;
-        for (HousingUnit housing : housingUnits) {
-            if (housing.getAlien() != null) {
-                crew += 1;
-            } else {
-                crew += housing.getNumAstronaut();
+    /** @return the total number of human crew members */
+    public int calculateHumanCrew() {
+        int humans = 0;
+        for (HousingUnit h : housingUnits) {
+            if (h.getAlien() == null) {
+                humans += h.getNumAstronaut();
             }
         }
-        return crew;
+        return humans;
     }
+
+    /** @return the total number of aliens on board*/
+    public int calculateAlienCrew() {
+        int aliens = 0;
+        for (HousingUnit h : housingUnits) {
+            if (h.getAlien() != null) {
+                aliens += 1;
+            }
+        }
+        return aliens;
+    }
+
+    /** @return  total crew members (humans + aliens) */
+    public int calculateCrew() {
+        return calculateHumanCrew() + calculateAlienCrew();
+    }
+
 
     /**
     * @return somma totale in crediti ricavati dalle merci.
