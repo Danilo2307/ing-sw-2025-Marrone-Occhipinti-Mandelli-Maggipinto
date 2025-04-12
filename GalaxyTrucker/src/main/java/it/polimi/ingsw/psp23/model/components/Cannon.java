@@ -26,7 +26,7 @@ public class Cannon extends Component {
         isActive = false;
     }
 
-    public boolean checkIfIsActive(){
+    public boolean isActive(){
         return isActive;
     }
 }

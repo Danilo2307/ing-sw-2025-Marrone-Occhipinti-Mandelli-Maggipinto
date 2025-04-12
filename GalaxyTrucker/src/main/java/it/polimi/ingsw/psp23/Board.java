@@ -249,50 +249,29 @@ public class Board {
         boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
         // che JAVA INIZIALIZZERÀ A FALSE
         if (!isValid(i, j) || isFree(i, j)) {
-            throw new IllegalArgumentException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
+            throw new InvalidCoordinatesException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
         } else {
             /* Nelle ArrayList il metodo remove ha due implementazioni: uso quella che riceve un oggetto e rimuove il primo elemento
                su cui equals restituisce true: non serve override perchè equals confronta i riferimenti (in questo caso sono gli stessi). Controllo che esista lo stesso oggetto e venga rimosso correttamente.  */
-            if (ship[i][j].getType() == ComponentType.ALIENADDONS) {
-                if (!alienAddOns.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di alienAddOns");
-                }
-            } else if (ship[i][j].getType() == ComponentType.BATTERYHUB) {
-                if (!batteryHubs.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di batteryHubs");
-                }
-            } else if (ship[i][j].getType() == ComponentType.CONTAINER) {
-                if (!containers.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di containers");
-                }
-            } else if (ship[i][j].getType() == ComponentType.HOUSINGUNIT) {
-                if (!housingUnits.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di housingUnits");
-                }
-            } else if (ship[i][j].getType() == ComponentType.CANNON) {
-                if (!cannons.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di cannons");
-                }
-            } else if (ship[i][j].getType() == ComponentType.ENGINE) {
-                if (!engines.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di engines");
-                }
-            } else if (ship[i][j].getType() == ComponentType.SHIELD) {
-                if (!shields.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di shields");
-                }
-            } else if (ship[i][j].getType() == ComponentType.STRUCTURAL_COMPONENT) {
-                if (!structuralComponents.remove(ship[i][j])) {
-                    throw new IllegalArgumentException("Non è stato trovato l'elemento per eliminarlo in 'delete' di Board, controlla la lista di structuralComponents");
-                }
+            boolean removed = switch (ship[i][j].getType()) {
+                case ALIENADDONS -> alienAddOns.remove(ship[i][j]);
+                case BATTERYHUB -> batteryHubs.remove(ship[i][j]);
+                case CONTAINER -> containers.remove(ship[i][j]);
+                case HOUSINGUNIT -> housingUnits.remove(ship[i][j]);
+                case CANNON -> cannons.remove(ship[i][j]);
+                case ENGINE -> engines.remove(ship[i][j]);
+                case SHIELD -> shields.remove(ship[i][j]);
+                case STRUCTURAL_COMPONENT -> structuralComponents.remove(ship[i][j]);
+            };
 
-            /* Ho aggiunto questa condizione nel caso dovessimo inserire un type in maniera errata
-               di modo che sappiamo dove controllare */
-                else {
-                    throw new IllegalArgumentException("There isn't any component like this in the lists: exception in delete(i,j) of Board");
-                }
+            if (!removed) {
+                throw new ComponentMismatchException("Componente di tipo " + ship[i][j].getType() +
+                        " non trovato nella rispettiva lista: errore in delete() di Board alla cella [" + i + "][" + j + "]");
             }
+
+            // elimino component e aggiorno la pila degli scarti
             ship[i][j] = null;
+            garbage++;
 
             // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
             // perchè potrebbe essere importante per collegare altri componenti
@@ -317,7 +296,7 @@ public class Board {
             c.setY(j);
             c.placeOnTruck();
         } else
-            throw new IllegalArgumentException("You can't add this component: invalid parameters i and j");
+            throw new InvalidCoordinatesException("You can't add this component: invalid parameters i and j");
 
         // aggiungo nella rispettiva lista in base al tipo. I due oggetti (in ship e nella lista) avranno
         // lo stesso riferimento, ma verranno visti da "due punti di vista diversi"
@@ -337,7 +316,7 @@ public class Board {
      * @param item è l'oggetto che l'utente desidera rimuovere
      * @return true se l'item è tra i più preziosi disponibili, false altrimenti
      */
-    public boolean isMostPrecious(Item item) {
+    private boolean isMostPrecious(Item item) {
         Color[] preciousness = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
 
         for (Color priority_color : preciousness) {
@@ -363,26 +342,28 @@ public class Board {
      * @param i coordinata riga del container
      * @param j coordinata colonna del container
      * @param itemToRemove oggetto Item che il giocatore ha scelto di rimuovere
-     * @throws IllegalArgumentException se la merce non è tra le più preziose o se ship[i][j] non contiene un container valido
      */
     public void removePreciousItemFromContainer(int i, int j, Item itemToRemove) {
 
         // Controllo che l'item sia tra i più preziosi attualmente a bordo
         if (!isMostPrecious(itemToRemove)) {
-            throw new IllegalArgumentException("You must remove the most precious item available first.");
+            throw new IllegalArgumentException("Item" + itemToRemove.getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
         }
 
         // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
         // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
         int index = containers.indexOf(ship[i][j]);
-
         // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
         if (index == -1) {
-            throw new IllegalArgumentException("Invalid coordinates: ship[i][j] does not contain a container.");
+            throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
         }
-
-        // Rimuovo l'item dal container specifico
-        containers.get(index).loseItem(itemToRemove);
+        // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
+        try {
+            containers.get(index).loseItem(itemToRemove);
+        }
+        catch (ContainerException e) {
+            throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
+        }
     }
 
 
@@ -585,7 +566,7 @@ public class Board {
                 if (matchesPosition && facesCorrectDirection) {
                     if (s.isDouble()) {
                         // Se il cannone è doppio, può sparare solo se è stato attivato dal Controller
-                        if (s.checkIfIsActive()) {
+                        if (s.isActive()) {
                             isDestroyed = true;          // Meteora distrutta
                             s.disactiveCannon();         // Disattivo il cannone dopo l’uso
                             break;                       // Esco dal ciclo: non serve cercare altri cannoni
@@ -642,8 +623,8 @@ public class Board {
     Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
     */
     public void loadGoods(List<Item> items, int i, int j) {
-        if (!isValid(i, j) || ship[i][j] == null || ship[i][j].getType() != ComponentType.CONTAINER) {
-            throw new IllegalType("This is not a container: error in loadGoods of Board");
+        if (!isValid(i, j) || isFree(i,j) || ship[i][j].getType() != ComponentType.CONTAINER) {
+            throw new InvalidCoordinatesException("This is not a container: error in loadGoods of Board");
         }
 
         int index = containers.indexOf(ship[i][j]);
@@ -680,7 +661,7 @@ public class Board {
 
     public void reduceBatteries(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i, j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
-            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
+            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
         }
 
         int index = batteryHubs.indexOf(ship[i][j]);
@@ -698,7 +679,7 @@ public class Board {
 
     public void reduceCrew(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
-            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
+            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = housingUnits.indexOf(ship[i][j]);
             if (index == -1) {
@@ -776,7 +757,7 @@ public class Board {
 
     public void activeCannon(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.CANNON)) {
-            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Cannon");
+            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Cannon");
         } else {
             int index = cannons.indexOf(ship[i][j]);
             if (index == -1)
@@ -790,7 +771,7 @@ public class Board {
 
     public void activeEngine(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.ENGINE)) {
-            throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
+            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = engines.indexOf(ship[i][j]);
             if (index == -1)
@@ -810,9 +791,10 @@ public class Board {
         for (Cannon gun : cannons) {
             if (gun.getUp().equals(Side.GUN)) {
                 if(gun.isDouble()){
-                    if(gun.checkIfIsActive()){
+                    if(gun.isActive()){
+                        // cannone doppio conta solo se è stato attivato prima dall'utente tramite activeCannon(i,j)
                         strength += 2;
-                        gun.disactiveCannon();
+                        gun.disactiveCannon();   // lo disattivo: attivazione è "monouso"
                     }
                 }
                 else{
@@ -820,7 +802,7 @@ public class Board {
                 }
             } else {
                 if(gun.isDouble()){
-                    if(gun.checkIfIsActive()){
+                    if(gun.isActive()){
                         strength += 1;
                         gun.disactiveCannon();
                     }
@@ -835,7 +817,7 @@ public class Board {
             for (HousingUnit housing : housingUnits) {
                 if (housing.getAlien().equals(Color.Purple)) {
                     strength += 2;
-                    break;
+                    break;  // esco perchè può esserci solo un alieno viola
                 }
             }
         }
@@ -843,24 +825,28 @@ public class Board {
     }
 
     public int calculateEngineStrength() {
-        /*  I motori singoli contano +1. I motori doppi contano +2 se spendi una batteria. L’alieno marrone
-        conta +2, ma solo se la potenza motrice è già superiore a 0. */
+        //  I motori singoli contano +1. I motori doppi contano +2 se spendi una batteria.
         int strength = 0;
         for (Engine engine : engines) {
             if(engine.isDouble()){
-                if(engine.checkIfIsActive()) {
+                if(engine.isActive()) {
+                    // motore doppio conta solo se è stato attivato
                     strength += 2;
-                    engine.disactiveEngine();
+                    engine.disactiveEngine();   // lo disattivo: attivazione è "monouso"
                 }
             }
             else{
                 strength += 1;
             }
         }
-        for (HousingUnit housing : housingUnits) {
-            if (housing.getAlien().equals(Color.Brown) && strength > 0) {
-                strength += 2;
-                break;
+
+        // L’alieno marrone conta +2, ma solo se la potenza motrice è già superiore a 0.
+        if (strength > 0) {
+            for (HousingUnit housing : housingUnits) {
+                if (housing.getAlien().equals(Color.Brown)) {
+                    strength += 2;
+                    break;   // esco perchè può esserci solo un alieno marrone
+                }
             }
         }
         return strength;
@@ -886,12 +872,25 @@ public class Board {
         return crew;
     }
 
-    public Component[][] getShip() {
-        return ship;
-    }
-
-    public ArrayList<HousingUnit> getHousingUnitsList() {
-        return housingUnits;
+    /**
+    * @return somma totale in crediti ricavati dalle merci.
+    * */
+    public int calculateGoodsSales() {
+        int money = 0;
+        for (Container c : containers) {
+            for (Item item: c.getItems()) {
+                money += switch(item.getColor()) {
+                    case Red -> 4;
+                    case Yellow -> 3;
+                    case Green -> 2;
+                    case Blue -> 1;
+                    // aggiungo questi casi per evitare error di java "switch-case does not cover all input values"
+                    case Brown -> 0;
+                    case Purple -> 0;
+                };
+            }
+        }
+        return money;
     }
 
     public boolean isWelded(){ //restituisce vero se il player ha almeno un pezzo saldato

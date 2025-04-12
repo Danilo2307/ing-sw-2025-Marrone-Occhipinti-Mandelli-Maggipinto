@@ -38,7 +38,7 @@ public class Container extends Component {
             goods.add(item);
         }
         else
-            // eccezione che verrà gestita nel controller con un try-catch (se scegliamo di dare 2^ chance al player)
+            // eccezione che verrà raccolta nel model e gestita nel controller con un try-catch (se scegliamo di dare 2^ chance al player)
             throw new ContainerException("Cannot load item: either the container is full or the color is not allowed.");
     }
 

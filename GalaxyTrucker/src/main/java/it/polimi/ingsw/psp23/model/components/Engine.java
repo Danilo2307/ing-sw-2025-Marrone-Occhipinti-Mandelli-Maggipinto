@@ -26,7 +26,7 @@ public class Engine extends Component{
         isActive = false;
     }
 
-    public boolean checkIfIsActive(){
+    public boolean isActive(){
         return isActive;
     }
 
