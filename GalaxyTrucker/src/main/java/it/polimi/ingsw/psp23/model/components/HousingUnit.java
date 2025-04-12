@@ -35,14 +35,18 @@ public class HousingUnit extends Component {
 
     // Servirà a reduceCrew() per la eliminazione di membri dal Component
     public void reduceOccupants(int num) {
+        // una cabina può contenere solo un alieno oppure 1/2 umani
         if (alien != null) {
             if (num == 1)
                 alien = null;
             else
                 throw new IllegalArgumentException("You can't remove more than one alien!");
         }
-        else if (num <= numAstronaut && num >= 0) {
-            numAstronaut -= num;
+        else {
+            if (num <= numAstronaut && num >= 0)
+                numAstronaut -= num;
+            else
+                throw new IllegalArgumentException("Number of humans to remove is invalid");
         }
     }
 

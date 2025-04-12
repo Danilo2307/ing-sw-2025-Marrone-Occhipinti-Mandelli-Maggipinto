@@ -648,7 +648,7 @@ public class Board {
 
         int index = containers.indexOf(ship[i][j]);
         if (index == -1) {
-            throw new IllegalArgumentException("Container not found in 'containers' list: error in loadGoods of Board");
+            throw new ComponentMismatchException("Container not found in 'containers' list: error in loadGoods of Board");
         }
 
         int scorr = 0;
@@ -658,7 +658,7 @@ public class Board {
                 containers.get(index).loadItem(items.get(scorr));
                 scorr++;
             } catch (ContainerException c) {
-                // Rilancio una IllegalArgument con contesto, da gestire poi nel Controller
+                // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
                 throw new ContainerException("Item at index " + scorr + " cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
             }
         }
@@ -685,32 +685,38 @@ public class Board {
 
         int index = batteryHubs.indexOf(ship[i][j]);
         if (index == -1) {
-            throw new IllegalArgumentException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
+            throw new ComponentMismatchException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
         }
         try {
             // controllo su numero batterie è gestito in removeBatteries
             batteryHubs.get(index).removeBatteries(num);
         } catch (IllegalArgumentException e) {
-            // RIPRENDI DA QUA
-
-
+            throw new BatteryOperationException("BatteryHub at Ship["+i+"]["+j+"]" + e.getMessage());
         }
     }
 
 
-    public void reduceCrew(int i, int j, int num) throws IllegalType {
+    public void reduceCrew(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
             throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = housingUnits.indexOf(ship[i][j]);
             if (index == -1) {
-                throw new IllegalArgumentException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+                throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
             } else {
-                housingUnits.get(index).reduceOccupants(num);
+                try {
+                    // controllo rimozione implementato in reduceOccupants
+                    housingUnits.get(index).reduceOccupants(num);
+                }
+                catch (IllegalArgumentException e) {
+                    throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+                }
             }
         }
+
         if (calculateCrew() == 0) {
-            //TODO: gestire il caso in cui il giocatore non ha più equipaggio ed è costretto ad abbandonare la corsa
+            //TODO: gestire il caso in cui il giocatore non ha più equipaggio ed è costretto ad abbandonare la corsa.
+            // MEGLIO FARE METODO IN GAME CHE DOPO OGNI TURNO (e prima del successivo) CONTROLLA CONDIZIONI DI ABBANDONO
             System.out.println("Player must leave game!");
         }
     }
@@ -773,12 +779,12 @@ public class Board {
             throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Cannon");
         } else {
             int index = cannons.indexOf(ship[i][j]);
-            if(!cannons.get(index).isDouble()){
-                throw new IllegalArgumentException("This is not a double cannon!");
-            }
-            else{
+            if (index == -1)
+                throw new ComponentMismatchException("Cannons list does not contain the cannon at Ship["+i+"]["+j+"]");
+            if(!cannons.get(index).isDouble())
+                throw new InvalidComponentActionException("The cannon at Ship["+i+"]["+j+"] is not a double cannon!");
+            else
                 cannons.get(index).activeCannon();
-            }
         }
     }
 
@@ -787,9 +793,10 @@ public class Board {
             throw new IllegalType("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
         } else {
             int index = engines.indexOf(ship[i][j]);
-            if(!engines.get(index).isDouble()){
-                throw new IllegalArgumentException("This is not a double engine!");
-            }
+            if (index == -1)
+                throw new ComponentMismatchException("Engines list does not contain the engine at Ship["+i+"]["+j+"]");
+            if(!engines.get(index).isDouble())
+                throw new InvalidComponentActionException("The engine at Ship["+i+"]["+j+"] is  not a double engine!");
             else{
                 engines.get(index).activeEngine();
             }
