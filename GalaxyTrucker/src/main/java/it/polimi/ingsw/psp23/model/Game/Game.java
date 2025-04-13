@@ -208,7 +208,7 @@ public class Game {
         }
     }
 
-    public Player getPlayerFromNickname(String nickname) throws PlayerExistsException {
+    public Player getPlayerFromNickname(String nickname) throws PlayerNotExistsException {
         for (Player player : players) {
             if(player.getNickname().equals(nickname))
                 return player;
@@ -233,39 +233,50 @@ public class Game {
         }
     }
 
+    /** Allows a player to temporarily view a deck during the Building phase.
+     * Access is granted only if:
+     *  - the game is in Building phase
+     *  - no other player is currently viewing this deck
+     *  - the player has at least one tile on the truck (isWelded)
+     * @param player who wants to see the deck1
+     * @return a copy of the visible deck if access is granted, otherwise null
+     */
     public ArrayList<Card> getVisibleDeck1(Player player){
-        if(gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards1) {
+        synchronized (visibleCards1) {
+            if (gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
                 deck1Owner = player.getNickname();
                 return new ArrayList<>(visibleCards1);
-            }
+            } else
+                return null;
         }
-        else
-            return null;
     }
 
     public ArrayList<Card> getVisibleDeck2(Player player){
-        if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards2) {
-                deck2Owner = player.getNickname();
-                return new ArrayList<>(visibleCards2);
-            }
+        synchronized (visibleCards2) {
+            if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
+                    deck2Owner = player.getNickname();
+                    return new ArrayList<>(visibleCards2);
+                }
+            else
+                return null;
         }
-        else
-            return null;
     }
 
-    public ArrayList<Card> getVisibleDeck3(Player player){
-        if(gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards3) {
+    public ArrayList<Card> getVisibleDeck3(Player player) {
+        synchronized (visibleCards3) {
+            if (gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
                 deck3Owner = player.getNickname();
                 return new ArrayList<>(visibleCards3);
             }
+            else
+                return null;
         }
-        else
-            return null;
     }
 
+    /** releases the deck after the player has  finished viewing it
+     * @param player releasing the deck
+     * @throws IllegalStateException if the player is not the current owner
+     */
     public void releaseVisibleDeck1(Player player){
         synchronized (visibleCards1) {
             if (player.getNickname().equals(deck1Owner)) {
