@@ -3,16 +3,19 @@ package it.polimi.ingsw.psp23.controller;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
+import java.util.ArrayList;
+
 public class Controller {
     private Game game; //inizializzo il model
     private CardHandler cardHandler;
     private Timer timer;
-    private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se il timer deve ancora essere girato
+    private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
 
     public Controller(int gameId) {
@@ -47,6 +50,7 @@ public class Controller {
     }
 
 
+
     public void handleTimeout() {
         if (!isFirstBuildingPhaseEnded) {
             isFirstBuildingPhaseEnded = true;
@@ -57,6 +61,8 @@ public class Controller {
 
 
     }
+
+
 
     public void startCheckBoard() throws IllegalTruckException {
 
@@ -74,17 +80,100 @@ public class Controller {
 
     }
 
+    public void removeComponent(String nickname,int i, int j){
+        game.getPlayerFromNickname(nickname).getTruck().delete(i,j);
+    }
+
+
+
     public void addComponent(String nickname, Component c, int x, int y) {
         game.getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
     }
 
+
+
+
     public void playerFinishedBuilding(String nickname) {
         switch (currentPosition) {
-            case 1:
+            case 1: {
                 game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
                 game.getPlayerFromNickname(nickname).setPosition(8);
+                break;
+            }
+            case 2: {
+                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
+                game.getPlayerFromNickname(nickname).setPosition(5);
+                break;
+            }
+            case 3: {
+                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
+                game.getPlayerFromNickname(nickname).setPosition(3);
+                break;
+            }
+            case 4: {
+                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
+                game.getPlayerFromNickname(nickname).setPosition(2);
+                break;
+            }
+        }
+        currentPosition++;
+    }
+
+    public void startFlight(){
+        game.sortPlayersByPosition();
+        game.setGameStatus(GameStatus.Playing);
+
+    }
+
+    public Card getNextCard(){
+        return game.getNextCard();
+    }
+
+    public ArrayList<Card> getVisibleDeck1(String nickname){
+        ArrayList<Card> deck;
+        deck = game.getVisibleDeck1(game.getPlayerFromNickname(nickname));
+        if(deck != null){
+            return deck;
+        }else{
+            throw new DeckAlreadyTakenException("The deck is already taken by another player");
         }
     }
+
+    public ArrayList<Card> getVisibleDeck2(String nickname){
+        ArrayList<Card> deck;
+        deck = game.getVisibleDeck2(game.getPlayerFromNickname(nickname));
+        if(deck != null){
+            return deck;
+        }else{
+            throw new DeckAlreadyTakenException("The deck is already taken by another player");
+        }
+    }
+
+    public ArrayList<Card> getVisibleDeck3(String nickname){
+        ArrayList<Card> deck;
+        deck = game.getVisibleDeck3(game.getPlayerFromNickname(nickname));
+        if(deck != null){
+            return deck;
+        }else{
+            throw new DeckAlreadyTakenException("The deck is already taken by another player");
+        }
+    }
+
+    public void releaseDeck1(String nickname){
+        game.releaseVisibleDeck1(game.getPlayerFromNickname(nickname));
+    }
+
+    public void releaseDeck2(String nickname){
+        game.releaseVisibleDeck2(game.getPlayerFromNickname(nickname));
+    }
+
+    public void releaseDeck3(String nickname){
+        game.releaseVisibleDeck3(game.getPlayerFromNickname(nickname));
+    }
+
+
+
+
 }
 
 
