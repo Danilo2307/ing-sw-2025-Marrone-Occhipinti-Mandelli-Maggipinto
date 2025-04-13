@@ -1,9 +1,6 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Utility;
-import it.polimi.ingsw.psp23.exceptions.HeapIsEmptyException;
-import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
-import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
-import it.polimi.ingsw.psp23.exceptions.UncoveredIsEmptyException;
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -129,15 +126,14 @@ public class Game {
 
     /**
      * Draws a random component from the shared heap (face-down pile) and removes it.
-     *
      * @return the randomly selected Component from the heap
-     * @throws HeapIsEmptyException if the heap is empty
+     * @throws NoTileException if the heap is empty
      */
-    public Component getTileFromHeap() throws HeapIsEmptyException {
+    public Component getTileFromHeap() {
         // Synchronize on the heap to avoid concurrent modifications
         synchronized (heap) {
             if (heap.isEmpty()) {
-                throw new HeapIsEmptyException("No more components available in the heap!");
+                throw new NoTileException("No more tiles available in the heap! Pick from the uncovered");
             }
             // Pick a random index and remove that component from the heap
             Component c = heap.get(Utility.randomComponent(heap.size()));
@@ -150,17 +146,16 @@ public class Game {
 
     /**
      * Takes a face-up component from the uncovered list at the position chosen by the player, removing it from that list.
-     *
      * @param position index of the tile to be taken
      * @return the selected face-up component
-     * @throws UncoveredIsEmptyException if the uncovered list is empty
+     * @throws NoTileException if the uncovered list is empty
      * @throws IndexOutOfBoundsException if position is invalid
      */
-    public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
+    public Component getTileUncovered(int position)  {
         // Synchronize on the uncovered list to avoid race conditions
         synchronized (uncovered) {
             if (uncovered.isEmpty()) {
-                throw new UncoveredIsEmptyException("No tiles are face-up!");
+                throw new NoTileException("No tiles are face-up! Pick from the heap");
             }
             if (position < 0 || position >= uncovered.size()) {
                 throw new IndexOutOfBoundsException("Position invalid: " + position);
@@ -175,7 +170,6 @@ public class Game {
 
     /**
      * Releases a component to the face-up area, making it available for others to see or pick.
-     *
      * @param c the component being discarded face-up
      */
     public void releaseTile(Component c) {
