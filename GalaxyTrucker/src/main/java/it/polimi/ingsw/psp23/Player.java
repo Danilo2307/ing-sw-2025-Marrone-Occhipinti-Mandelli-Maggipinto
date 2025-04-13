@@ -55,7 +55,7 @@ public class Player {
     // player abbandona il volo, ma parteciperà al calcolo del punteggio finale
     public void leaveFlight() {
         this.inGame = false;
-        // il metodo sort() presente in Game provvederà a spostare il Player da players a playersNotInGame
+        // il metodo sort() presente in Game provvederà a spostare il Player da players a playersNotOnFlight
     }
 
     public String getNickname() {
@@ -97,7 +97,7 @@ public class Player {
     }
 
     public void discardComponent(Component component){
-        game.addTileUncovered(component);
+        game.releaseTile(component);
     }
 
 }

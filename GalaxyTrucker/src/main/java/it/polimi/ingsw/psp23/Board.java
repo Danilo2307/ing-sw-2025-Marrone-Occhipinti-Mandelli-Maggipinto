@@ -694,12 +694,6 @@ public class Board {
                 }
             }
         }
-
-        if (calculateCrew() == 0) {
-            //TODO: gestire il caso in cui il giocatore non ha più equipaggio ed è costretto ad abbandonare la corsa.
-            // MEGLIO FARE METODO IN GAME CHE DOPO OGNI TURNO (e prima del successivo) CONTROLLA CONDIZIONI DI ABBANDONO
-            System.out.println("Player must leave game!");
-        }
     }
 
     public int calculateExposedConnectors() {
