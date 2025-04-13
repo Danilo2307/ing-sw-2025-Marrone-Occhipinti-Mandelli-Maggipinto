@@ -919,4 +919,8 @@ public class Board {
         }
         return false;
     }
+
+    public int getGarbage() {
+        return garbage;
+    }
 }

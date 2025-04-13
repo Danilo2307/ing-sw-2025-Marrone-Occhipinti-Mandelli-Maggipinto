@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class Game {
     private ArrayList<Player> players;
@@ -80,19 +81,23 @@ public class Game {
             if (maxPosition - player.getPosition() > 24)
                 player.leaveFlight();
         }
+    // OSS: se elimino il leader non riaggiorno maxPosition: potremmo supporre che si faccia riferimento sempre a lui anche se eliminato (non specificato su regolamento)
     }
 
-    /** riordina la lista (dei giocatori ancora in partita) in ordine decrescente ad ogni turno */
+    /** ad ogni turno elimina i giocatori non più in volo e riordina la lista in ordine di position decrescente */
     public void sortPlayersByPosition() {
 
+        // necessaria perchè non posso rimuovere un oggetto dalla stessa lista su cui sto iterando tramite for-each
+        List<Player> toRemove = new ArrayList<>();
         // se player è uscito al turno corrente, lo levo dalla lista dei player correnti.
         // Lo salvo in un'altra lista perchè partecipa comunque alla conclusione del viaggio
         for (Player player : players) {
             if (!player.isInGame()) {
                 playersNotOnFlight.add(player);
-                players.remove(player);
+                toRemove.add(player);
             }
         }
+        players.removeAll(toRemove);
 
         players.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
@@ -261,6 +266,47 @@ public class Game {
                 return player;
         }
         throw new PlayerNotExistsException("Player not found");
+    }
+
+    /**
+     * Calculates and updates the final score (money) for all players at the end of the game.
+     * Applies rewards for arrival order and ship quality, computes profits from goods,
+     * and applies penalties for lost components. Players who abandoned the flight
+     * receive only half of goods sales and penalties for lost components.
+     * */
+    public void calculateFinalScores() {
+
+        // lista già ordinata: calcolo ricompense per ordine di arrivo
+        int []arrivalPrize = {4, 3, 2, 1};
+        for (int i = 0; i < players.size(); i++) {
+            players.get(i).updateMoney(arrivalPrize[i]);
+        }
+
+        // ricompensa nave più bella (meno connettori esposti). In caso di pareggio, tutti i giocatori ricevono la ricompensa
+        int minExposedConnectors = players.stream().mapToInt(p -> p.getTruck().calculateExposedConnectors()).min().orElse(0);
+
+        // sfrutto lo stesso for: calcolo vendita merci, perdite componenti persi e nave più bella
+        for (Player player : players) {
+            int sales = player.getTruck().calculateGoodsSales();
+            player.updateMoney(sales);
+            int lostComponents = player.getTruck().getGarbage();
+            player.updateMoney(-lostComponents);
+            if (player.getTruck().calculateExposedConnectors() == minExposedConnectors)
+                player.updateMoney(2);
+        }
+
+        // considero giocatori che hanno abbandonato la corsa: non partecipano all'ordine di arrivo e alla nave più bella.
+        // Tuttavia, possono vendere le loro merci a metà del prezzo e devono comunque pagare la penale.
+        for (Player player : playersNotOnFlight) {
+
+            int sales = player.getTruck().calculateGoodsSales();
+            // arrotondamento per eccesso
+            int halfSalesRoundedUp = (sales + 1) / 2;
+            player.updateMoney(halfSalesRoundedUp);
+
+            int lostComponents = player.getTruck().getGarbage();
+            player.updateMoney(-lostComponents);
+        }
     }
 
 }
