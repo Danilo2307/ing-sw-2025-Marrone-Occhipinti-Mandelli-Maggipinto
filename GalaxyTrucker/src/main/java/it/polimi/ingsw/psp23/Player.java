@@ -39,6 +39,7 @@ public class Player {
         return truck;
     }
 
+    // per le perdite, passerò un intero negativo
     public void updateMoney(int moneyVariation) {
         this.money += moneyVariation;
     }
