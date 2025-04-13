@@ -15,15 +15,15 @@ import java.util.Comparator;
 import java.util.List;
 
 public class Game {
-    private ArrayList<Player> players;
-    private ArrayList<Player> playersNotOnFlight;
-    private ArrayList<Card> deck;
-    private ArrayList<Card> visibleCards1;
-    private ArrayList<Card> visibleCards2;
-    private ArrayList<Card> visibleCards3;
-    private ArrayList<Component> heap;
-    private ArrayList<Component> uncovered;
-    private int gameId;
+    private final ArrayList<Player> players;
+    private final ArrayList<Player> playersNotOnFlight;
+    private final ArrayList<Card> deck;
+    private final ArrayList<Card> visibleCards1;
+    private final ArrayList<Card> visibleCards2;
+    private final ArrayList<Card> visibleCards3;
+    private final ArrayList<Component> heap;
+    private final ArrayList<Component> uncovered;
+    private final int gameId;
     private Player currentPlayer;
     private GameStatus gameStatus;
     private Card currentCard;
@@ -86,7 +86,6 @@ public class Game {
 
     /** ad ogni turno elimina i giocatori non più in volo e riordina la lista in ordine di position decrescente */
     public void sortPlayersByPosition() {
-
         // necessaria perchè non posso rimuovere un oggetto dalla stessa lista su cui sto iterando tramite for-each
         List<Player> toRemove = new ArrayList<>();
         // se player è uscito al turno corrente, lo levo dalla lista dei player correnti.
@@ -132,40 +131,65 @@ public class Game {
         gameStatus = status;
     }
 
-
+    /**
+     * Draws a random component from the shared heap (face-down pile) and removes it.
+     *
+     * @return the randomly selected Component from the heap
+     * @throws HeapIsEmptyException if the heap is empty
+     */
     public Component getTileFromHeap() throws HeapIsEmptyException {
-        if(heap == null){
-            throw new HeapIsEmptyException();
-        }
-        else{
-            Component c =  heap.get(Utility.randomComponent(heap.size()));
-            synchronized (c) {
-                heap.remove(c);
-                c.moveToHand();
-                return c;
+        // Synchronize on the heap to avoid concurrent modifications
+        synchronized (heap) {
+            if (heap.isEmpty()) {
+                throw new HeapIsEmptyException("No more components available in the heap!");
             }
+            // Pick a random index and remove that component from the heap
+            Component c = heap.get(Utility.randomComponent(heap.size()));
+            heap.remove(c);
+            // Mark the component as "in hand"
+            c.moveToHand();
+            return c;
         }
     }
 
-
+    /**
+     * Takes a face-up component from the uncovered list at the position chosen by the player, removing it from that list.
+     *
+     * @param position index of the tile to be taken
+     * @return the selected face-up component
+     * @throws UncoveredIsEmptyException if the uncovered list is empty
+     * @throws IndexOutOfBoundsException if position is invalid
+     */
     public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
-        if(uncovered == null){
-            throw new UncoveredIsEmptyException();
-        }
-        else{
-            Component c =  uncovered.get(position);
-            synchronized (c) {
-                uncovered.remove(c);
-                c.moveToHand();
-                return c;
+        // Synchronize on the uncovered list to avoid race conditions
+        synchronized (uncovered) {
+            if (uncovered.isEmpty()) {
+                throw new UncoveredIsEmptyException("No tiles are face-up!");
             }
+            if (position < 0 || position >= uncovered.size()) {
+                throw new IndexOutOfBoundsException("Position invalid: " + position);
+            }
+            Component c = uncovered.get(position);
+            uncovered.remove(c);
+            // Mark the component as "in hand"
+            c.moveToHand();
+            return c;
         }
     }
 
-    public synchronized void addTileUncovered(Component c){
-        uncovered.add(c);
-        c.discardFaceUp();
+    /**
+     * Releases a component to the face-up area, making it available for others to see or pick.
+     *
+     * @param c the component being discarded face-up
+     */
+    public void releaseTile(Component c) {
+        // Synchronize on the uncovered list to safely add the tile
+        synchronized (uncovered) {
+            uncovered.add(c);
+            c.discardFaceUp();
+        }
     }
+
 
     public void setCurrentPlayer(Player player){
         currentPlayer = player;

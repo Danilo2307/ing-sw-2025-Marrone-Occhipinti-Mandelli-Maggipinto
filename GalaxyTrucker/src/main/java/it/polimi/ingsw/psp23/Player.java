@@ -97,7 +97,7 @@ public class Player {
     }
 
     public void discardComponent(Component component){
-        game.addTileUncovered(component);
+        game.releaseTile(component);
     }
 
 }
