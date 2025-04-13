@@ -119,10 +119,6 @@ public class Game {
         return players;
     }
 
-    public Player getCurrentPlayer(){
-        return currentPlayer;
-    }
-
     public GameStatus getGameStatus() {
         return gameStatus;
     }
@@ -190,13 +186,51 @@ public class Game {
         }
     }
 
+    /** @return the current player in the round */
+    public Player getCurrentPlayer(){
+        return currentPlayer;
+    }
 
+    /** @param player the player to set as current */
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
     }
 
+    /** @return the next player in the round, or null if the round is over        */
+    public Player getNextPlayer(){
+        int size = players.size();
+        int pos = players.indexOf(currentPlayer);
+        if(pos+1 < size){
+            setCurrentPlayer(players.get(pos+1));
+            return currentPlayer;
+        } else{
+            return null;
+        }
+    }
+
+    public Player getPlayerFromNickname(String nickname) throws PlayerExistsException {
+        for (Player player : players) {
+            if(player.getNickname().equals(nickname))
+                return player;
+        }
+        throw new PlayerNotExistsException("Player not found");
+    }
+
+    /** @return the current card */
     public Card getCurrentCard(){
         return currentCard;
+    }
+
+    /** @return the next card in the deck, or null if every card has been played */
+    public Card getNextCard(){
+        int size = deck.size();
+        int pos = deck.indexOf(currentCard);
+        if(pos+1 < size){
+            currentCard = deck.get(pos+1);
+            return currentCard;
+        }else{
+            return null;
+        }
     }
 
     public ArrayList<Card> getVisibleDeck1(Player player){
@@ -232,17 +266,6 @@ public class Game {
             return null;
     }
 
-    public Card getNextCard(){
-        int size = deck.size();
-        int pos = deck.indexOf(currentCard);
-        if(pos+1 < size){
-            currentCard = deck.get(pos+1);
-            return currentCard;
-        }else{
-            throw new IndexOutOfBoundsException("Gioco finito");
-        }
-    }
-
     public void releaseVisibleDeck1(Player player){
         synchronized (visibleCards1) {
             if (player.getNickname().equals(deck1Owner)) {
@@ -273,24 +296,6 @@ public class Game {
         }
     }
 
-    public Player getNextPlayer(){
-        int size = players.size();
-        int pos = players.indexOf(currentPlayer);
-        if(pos+1 < size){
-            currentPlayer = players.get(pos+1);
-            return currentPlayer;
-        }else{
-            throw new IndexOutOfBoundsException("Giocatori terminati");
-        }
-    }
-
-    public Player getPlayerFromNickname(String nickname) throws PlayerExistsException {
-        for (Player player : players) {
-            if(player.getNickname().equals(nickname))
-                return player;
-        }
-        throw new PlayerNotExistsException("Player not found");
-    }
 
     /**
      * Calculates and updates the final score (money) for all players at the end of the game.
