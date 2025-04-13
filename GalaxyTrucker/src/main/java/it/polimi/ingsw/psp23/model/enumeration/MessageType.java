@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.enumeration;
 
-public enum ClientMessageType {
+public enum MessageType {
     SELECT_CANNONS,
-    SELECT_ENGINES
+    SELECT_ENGINES,
+    UPDATE_STATE
 }
