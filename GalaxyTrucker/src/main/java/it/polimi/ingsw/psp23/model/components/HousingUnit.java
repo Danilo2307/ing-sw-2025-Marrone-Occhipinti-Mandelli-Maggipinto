@@ -1,11 +1,9 @@
 package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import java.util.ArrayList;
-import java.util.List;
 
-public class HousingUnit extends Component {
+public final class HousingUnit extends Component {
     //GIGI
     private int numAstronaut = 0;
     private Color alien = null;
@@ -13,7 +11,7 @@ public class HousingUnit extends Component {
     private final boolean isStartingCabin;
 
     public HousingUnit(Side up, Side down, Side left, Side right, boolean isStartingCabin) {
-        super(ComponentType.HOUSINGUNIT, up, down, left, right);
+        super(up, down, left, right);
         this.isStartingCabin = isStartingCabin;
         if (isStartingCabin) numAstronaut = 2;
     }

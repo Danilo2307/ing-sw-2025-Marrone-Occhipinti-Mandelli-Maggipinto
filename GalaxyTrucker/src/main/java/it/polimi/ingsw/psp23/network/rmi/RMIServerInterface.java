@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.network.client.*;
+import it.polimi.ingsw.psp23.network.common.*;
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -7,15 +10,16 @@ import java.util.List;
 /**
  * Remote interface that exposes the available operations of the UserStub for RMI clients.
  */
-public interface UserStubRMI extends Remote {
+public interface RMIServerInterface extends Remote {
 
     /**
-     * Registers a PushServiceOfClient instance with the remote UserStub.
+     * Registers the client's remote callback interface used by the server to send asynchronous events.
+     * This enables the server to notify the client in real-time via push-based communication.
      *
-     * @param pushService the client's push service to register
-     * @throws RemoteException if a remote communication error occurs
+     * @param clientPushCallback the client's remote implementation of the push interface
+     * @throws RemoteException if a communication error occurs during registration
      */
-    void registerPushService(PushServiceOfClientRMI pushService) throws RemoteException;
+    void registerClientPushCallback(PushServiceOfClientRMI clientPushCallback) throws RemoteException;
 
     /**
      * Sends a heartbeat signal to notify that the client is still active.
@@ -23,7 +27,7 @@ public interface UserStubRMI extends Remote {
      * @param heartbeat the heartbeat object to send
      * @throws RemoteException if a remote communication error occurs
      */
-    void heartbeat(Heartbeat heartbeat) throws RemoteException;
+    void sendHeartbeat(Heartbeat heartbeat) throws RemoteException;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -65,13 +69,13 @@ public interface UserStubRMI extends Remote {
      */
     Boolean joinLobbyRMI(String lobbyUUID) throws RemoteException;
 
-    /**
-     * Retrieves the list of available lobbies that can be joined.
-     *
-     * @return a list of available lobbies; may be null depending on the controller specifications
-     * @throws RemoteException if a remote communication error occurs
-     */
-    List<ListOfLobbyToJoinMessage.LobbyInfo> getListOfLobbyToJoinRMI() throws RemoteException;
+//    /**
+//     * Retrieves the list of available lobbies that can be joined.
+//     *
+//     * @return a list of available lobbies; may be null depending on the controller specifications
+//     * @throws RemoteException if a remote communication error occurs
+//     */
+// TODO per extra:  List<ListOfLobbyToJoinMessage.LobbyInfo> getListOfLobbyToJoinRMI() throws RemoteException;
 
     /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -79,13 +83,13 @@ public interface UserStubRMI extends Remote {
      * Lobby interaction phase
      */
 
-    /**
-     * Retrieves information about the current lobby.
-     *
-     * @return the lobby's details, or null if not available (see controller docs)
-     * @throws RemoteException if a remote communication error occurs
-     */
-    LobbyInfo getLobbyInfoRMI() throws RemoteException;
+//    /**
+//     * Retrieves information about the current lobby.
+//     *
+//     * @return the lobby's details, or null if not available (see controller docs)
+//     * @throws RemoteException if a remote communication error occurs
+//     */
+// TODO per conoscere dettagli di una partita già creata  LobbyInfo getLobbyInfoRMI() throws RemoteException;
 
     /**
      * Starts the game in the current lobby.
@@ -103,3 +107,5 @@ public interface UserStubRMI extends Remote {
      */
     Boolean exitLobbyRMI() throws RemoteException;
 }
+
+//TODO: inserire i metodi da controller

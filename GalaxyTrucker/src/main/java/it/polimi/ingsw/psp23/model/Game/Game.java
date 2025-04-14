@@ -1,9 +1,6 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Utility;
-import it.polimi.ingsw.psp23.exceptions.HeapIsEmptyException;
-import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
-import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
-import it.polimi.ingsw.psp23.exceptions.UncoveredIsEmptyException;
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -129,15 +126,14 @@ public class Game {
 
     /**
      * Draws a random component from the shared heap (face-down pile) and removes it.
-     *
      * @return the randomly selected Component from the heap
-     * @throws HeapIsEmptyException if the heap is empty
+     * @throws NoTileException if the heap is empty
      */
-    public Component getTileFromHeap() throws HeapIsEmptyException {
+    public Component getTileFromHeap() {
         // Synchronize on the heap to avoid concurrent modifications
         synchronized (heap) {
             if (heap.isEmpty()) {
-                throw new HeapIsEmptyException("No more components available in the heap!");
+                throw new NoTileException("No more tiles available in the heap! Pick from the uncovered");
             }
             // Pick a random index and remove that component from the heap
             Component c = heap.get(Utility.randomComponent(heap.size()));
@@ -150,17 +146,16 @@ public class Game {
 
     /**
      * Takes a face-up component from the uncovered list at the position chosen by the player, removing it from that list.
-     *
      * @param position index of the tile to be taken
      * @return the selected face-up component
-     * @throws UncoveredIsEmptyException if the uncovered list is empty
+     * @throws NoTileException if the uncovered list is empty
      * @throws IndexOutOfBoundsException if position is invalid
      */
-    public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
+    public Component getTileUncovered(int position)  {
         // Synchronize on the uncovered list to avoid race conditions
         synchronized (uncovered) {
             if (uncovered.isEmpty()) {
-                throw new UncoveredIsEmptyException("No tiles are face-up!");
+                throw new NoTileException("No tiles are face-up! Pick from the heap");
             }
             if (position < 0 || position >= uncovered.size()) {
                 throw new IndexOutOfBoundsException("Position invalid: " + position);
@@ -175,7 +170,6 @@ public class Game {
 
     /**
      * Releases a component to the face-up area, making it available for others to see or pick.
-     *
      * @param c the component being discarded face-up
      */
     public void releaseTile(Component c) {
@@ -208,7 +202,7 @@ public class Game {
         }
     }
 
-    public Player getPlayerFromNickname(String nickname) throws PlayerExistsException {
+    public Player getPlayerFromNickname(String nickname) throws PlayerNotExistsException {
         for (Player player : players) {
             if(player.getNickname().equals(nickname))
                 return player;
@@ -233,39 +227,50 @@ public class Game {
         }
     }
 
+    /** Allows a player to temporarily view a deck during the Building phase.
+     * Access is granted only if:
+     *  - the game is in Building phase
+     *  - no other player is currently viewing this deck
+     *  - the player has at least one tile on the truck (isWelded)
+     * @param player who wants to see the deck1
+     * @return a copy of the visible deck if access is granted, otherwise null
+     */
     public ArrayList<Card> getVisibleDeck1(Player player){
-        if(gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards1) {
+        synchronized (visibleCards1) {
+            if (gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
                 deck1Owner = player.getNickname();
                 return new ArrayList<>(visibleCards1);
-            }
+            } else
+                return null;
         }
-        else
-            return null;
     }
 
     public ArrayList<Card> getVisibleDeck2(Player player){
-        if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards2) {
-                deck2Owner = player.getNickname();
-                return new ArrayList<>(visibleCards2);
-            }
+        synchronized (visibleCards2) {
+            if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
+                    deck2Owner = player.getNickname();
+                    return new ArrayList<>(visibleCards2);
+                }
+            else
+                return null;
         }
-        else
-            return null;
     }
 
-    public ArrayList<Card> getVisibleDeck3(Player player){
-        if(gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
-            synchronized (visibleCards3) {
+    public ArrayList<Card> getVisibleDeck3(Player player) {
+        synchronized (visibleCards3) {
+            if (gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
                 deck3Owner = player.getNickname();
                 return new ArrayList<>(visibleCards3);
             }
+            else
+                return null;
         }
-        else
-            return null;
     }
 
+    /** releases the deck after the player has  finished viewing it
+     * @param player releasing the deck
+     * @throws IllegalStateException if the player is not the current owner
+     */
     public void releaseVisibleDeck1(Player player){
         synchronized (visibleCards1) {
             if (player.getNickname().equals(deck1Owner)) {
@@ -306,7 +311,7 @@ public class Game {
     public void calculateFinalScores() {
 
         // lista già ordinata: calcolo ricompense per ordine di arrivo
-        int []arrivalPrize = {4, 3, 2, 1};
+        int []arrivalPrize = {8, 6, 4, 2};
         for (int i = 0; i < players.size(); i++) {
             players.get(i).updateMoney(arrivalPrize[i]);
         }
@@ -321,7 +326,7 @@ public class Game {
             int lostComponents = player.getTruck().getGarbage();
             player.updateMoney(-lostComponents);
             if (player.getTruck().calculateExposedConnectors() == minExposedConnectors)
-                player.updateMoney(2);
+                player.updateMoney(4);
         }
 
         // considero giocatori che hanno abbandonato la corsa: non partecipano all'ordine di arrivo e alla nave più bella.

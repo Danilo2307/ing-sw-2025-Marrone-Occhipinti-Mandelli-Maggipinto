@@ -1,121 +1,250 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
 import it.polimi.ingsw.psp23.network.*;
+import it.polimi.ingsw.psp23.network.client.*;
+import it.polimi.ingsw.psp23.network.common.*;
 
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.rmi.*;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.ServerError;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Utility class for managing the RMI registry and object lifecycle,
- * including creation, exporting, and cleanup of remote objects.
+ * This class represents the RMI implementation of the UserStubRMI interface.
+ * It handles client-server communication via RMI and manages the user's state and events.
  */
-public class RMIServer {
-
-    private static final int DEFAULT_PORT = 1099;
-    private static boolean isRegistryInitialized = false;
-    private static int activePort = -1;
+public class RMIServer implements RMIServerInterface {
+    private final ClientInfo user;
+    private PushServiceOfClientRMI clientPushCallback;
+    private final AtomicLong lastHeartbeat;
+    private final ScheduledExecutorService executorService;
 
     /**
-     * Initializes an RMI registry on the given port.
+     * Constructs a UserStub and initializes heartbeat monitoring.
+     * If the client fails to send a heartbeat in time, the server will consider it disconnected.
      *
-     * @param port port number to bind the registry
-     * @throws RemoteException if the registry already exists or cannot be created
+     * @param connectionUUID the UUID of the client connection
+     * @param heartbeatMs the maximum allowed time between heartbeats in milliseconds
+     * @throws RemoteException if an error occurs during initialization
      */
-    public static void createRegistry(int port) throws RemoteException {
-        if (!isRegistryInitialized) {
-            try {
-                String hostAddress = InetAddress.getLocalHost().getHostAddress();
-                System.setProperty("java.rmi.server.hostname", hostAddress);
-            } catch (UnknownHostException e) {
-                throw new ServerCriticalError("Unable to determine host IP. Aborting server startup.");
+    public RMIServer(String connectionUUID, Integer heartbeatMs) throws RemoteException {
+        this.user = new ClientInfo(connectionUUID, true, this);
+        this.clientPushCallback = null;
+        this.lastHeartbeat = new AtomicLong(System.currentTimeMillis());
+        this.executorService = Executors.newSingleThreadScheduledExecutor();
+
+        this.executorService.scheduleAtFixedRate(() -> {
+            if (System.currentTimeMillis() - this.lastHeartbeat.get() > heartbeatMs) {
+                try {
+                    RMIServerHandler.unexportObject("User", true);
+                } catch (NotBoundException | RemoteException e) {
+                    throw new ServerCriticalError("Failed to release RMI resources for disconnected client.");
+                } finally {
+                    Profiles.getInstance().silentPruneUser(connectionUUID, true);
+                    this.executorService.shutdownNow();
+                }
             }
+        }, 1, 1, TimeUnit.SECONDS);
+    }
 
-            LocateRegistry.createRegistry(port);
-            activePort = port;
-            isRegistryInitialized = true;
-        } else {
-            throw new RemoteException("An RMI registry is already active.");
+    /**
+     * Returns the associated user instance.
+     *
+     * @return the user object
+     */
+    public ClientInfo getUser() {
+        return user;
+    }
+
+    /**
+     * Registers the client-side push service used by the server to send events back.
+     * Only the first non-null registration is accepted.
+     *
+     * @param clientPushCallback the remote push service of the client
+     * @throws RemoteException if an RMI error occurs
+     */
+    @Override
+    public void registerClientPushCallback(PushServiceOfClientRMI clientPushCallback) throws RemoteException {
+        if (this.clientPushCallback != null) return;
+        if (clientPushCallback != null) {
+            this.clientPushCallback = clientPushCallback;
         }
     }
 
     /**
-     * Initializes the RMI registry on the default port (1099).
+     * Receives a heartbeat signal from the client and pushes back a sense signal.
      *
-     * @throws RemoteException if a registry already exists or fails to start
+     * @param heartbeat the heartbeat message
+     * @throws RemoteException if the client is unreachable
      */
-    public static void createRegistry() throws RemoteException {
-        createRegistry(DEFAULT_PORT);
+    @Override
+    public void sendHeartbeat(Heartbeat heartbeat) throws RemoteException {
+        this.lastHeartbeat.set(System.currentTimeMillis());
     }
 
     /**
-     * Shuts down the current registry instance.
+     * Pushes an event object to the client using its registered push service.
      *
-     * @throws RemoteException if no registry is active or shutdown fails
+     * @param object the event to be sent
+     * @throws RemoteException if the client is not reachable
      */
-    public static void destroyRegistry() throws RemoteException {
-        if (isRegistryInitialized) {
-            Registry registry = LocateRegistry.getRegistry(activePort);
-            UnicastRemoteObject.unexportObject(registry, true);
-            activePort = -1;
-            isRegistryInitialized = false;
-        } else {
-            throw new RemoteException("No active registry to destroy.");
+    public void pushEvent(Object object) throws RemoteException {
+        if (this.clientPushCallback == null) return;
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        Future<Void> future = executorService.submit(() -> {
+            clientPushCallback.pushEvent(object);
+            return null;
+        });
+
+        try {
+            future.get();
+        } catch (InterruptedException e) {
+            throw new ServerCriticalError("Unexpected thread interruption occurred in server execution.");
+        } catch (ExecutionException e) {
+//            if (e.getCause() instanceof RemoteException) {
+//                throw (RemoteException) e.getCause();
+//            }
+            throw new ServerCriticalError("Unexpected execution failure during push to client.");
         }
     }
 
     /**
-     * Makes a remote object accessible via RMI by binding it to the registry.
+     * Attempts to set the user's username if the state allows it.
      *
-     * @param obj  the remote object to expose
-     * @param name name under which the object is bound
-     * @throws RemoteException if no registry is active or if export fails
-     * @throws MalformedURLException if the RMI URL is invalid
+     * @param username the desired username
+     * @return true if the username was set successfully, false otherwise
+     * @throws RemoteException if an RMI error occurs
      */
-    public static void exportObject(Remote obj, String name) throws RemoteException, MalformedURLException {
-        if (!isRegistryInitialized) {
-            throw new RemoteException("Registry must be created before exporting objects.");
+    @Override
+    public Boolean setUsernameRMI(String username) throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.SETTINGUSERNAME) return false;
+
+        if (!Profiles.getInstance().isUsernameTaken(username)) {
+            try {
+                Profiles.getInstance().setUserUsername(this.user.getConnectionUUID(), username);
+                this.user.setState(new ChooseCreateJoinState(this.user));
+                return true;
+            } catch (ProfilesException | UserException e) {
+                return false;
+            }
         }
-        UnicastRemoteObject.exportObject(obj, 0);
-        Naming.rebind("rmi://localhost:" + activePort + "/" + name, obj);
+
+        return false;
     }
 
     /**
-     * Unregisters a remote object from the RMI registry.
+     * Attempts to create a new lobby for the user.
      *
-     * @param name  identifier used in the registry
-     * @param force true to force unbinding even if calls are in progress
-     * @return true if the object was successfully unbound
-     * @throws RemoteException if there is no active registry or unbinding fails
-     * @throws NotBoundException if the object name is not found in the registry
+     * @param name the lobby name
+     * @param maxPlayers the max number of players
+     * @return true if lobby creation succeeds, false otherwise
+     * @throws RemoteException if an RMI error occurs
      */
-    public static boolean unexportObject(String name, boolean force) throws RemoteException, NotBoundException {
-        if (isRegistryInitialized) {
-            Remote stub = getStub(name);
-            return UnicastRemoteObject.unexportObject(stub, force);
-        } else {
-            throw new RemoteException("No registry is currently running.");
+    @Override
+    public Boolean createLobbyRMI(String name, Integer maxPlayers) throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return false;
+
+        try {
+            MatchController.getInstance().createLobbyRMI(name, maxPlayers, this.user);
+            return true;
+        } catch (GameLobbyException | MatchControllerException e) {
+            return false;
         }
     }
 
     /**
-     * Retrieves a stub for the given object name from the registry.
+     * Joins the user to a specific lobby.
      *
-     * @param name the identifier used to bind the object
-     * @return the corresponding stub, to be cast to the appropriate interface
-     * @throws RemoteException if no registry is available or lookup fails
-     * @throws NotBoundException if the object is not currently bound
+     * @param lobbyUUID the target lobby's UUID
+     * @return true if the join was successful, false otherwise
+     * @throws RemoteException if an RMI error occurs
      */
-    public static Remote getStub(String name) throws RemoteException, NotBoundException {
-        if (isRegistryInitialized) {
-            Registry registry = LocateRegistry.getRegistry(activePort);
-            return registry.lookup(name);
-        } else {
-            throw new RemoteException("Cannot fetch stub: no registry available.");
+    @Override
+    public Boolean joinLobbyRMI(String lobbyUUID) throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return false;
+
+        try {
+            MatchController.getInstance().joinLobbyRMI(lobbyUUID, this.user);
+            return true;
+        } catch (GameLobbyException | MatchControllerException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Retrieves a list of lobbies available for the user to join.
+     *
+     * @return list of available lobbies or null if not available
+     * @throws RemoteException if an RMI error occurs
+     */
+    @Override
+    public List<ListOfLobbyToJoinMessage.LobbyInfo> getListOfLobbyToJoinRMI() throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return null;
+
+        try {
+            return MatchController.getInstance().getListOfLobbyToJoinRMI(this.user);
+        } catch (MatchControllerException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Retrieves current lobby information for the user.
+     *
+     * @return lobby info or null if not available
+     * @throws RemoteException if an RMI error occurs
+     */
+    @Override
+    public LobbyInfo getLobbyInfoRMI() throws RemoteException {
+        if (this.user.getState().getStateType() == StateType.INLOBBY ||
+                this.user.getState().getStateType() == StateType.INGAME) {
+            try {
+                return MatchController.getInstance().getLobbyInfoRMI(this.user);
+            } catch (MatchControllerException e) {
+                return null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Starts the lobby session for the user.
+     *
+     * @return true if the lobby was started, false otherwise
+     * @throws RemoteException if an RMI error occurs
+     */
+    @Override
+    public Boolean startLobbyRMI() throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.INLOBBY) return false;
+
+        try {
+            MatchController.getInstance().startLobbyRMI(this);
+            return true;
+        } catch (MatchControllerException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Exits the current lobby session.
+     *
+     * @return true if the user exited the lobby, false otherwise
+     * @throws RemoteException if an RMI error occurs
+     */
+    @Override
+    public Boolean exitLobbyRMI() throws RemoteException {
+        if (this.user.getState().getStateType() != StateType.INLOBBY) return false;
+
+        try {
+            MatchController.getInstance().exitLobbyRMI(this.user);
+            return true;
+        } catch (MatchControllerException e) {
+            return false;
         }
     }
 }
+

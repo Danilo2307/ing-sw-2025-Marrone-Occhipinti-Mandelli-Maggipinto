@@ -66,7 +66,7 @@ public class Player {
         return money;
     }
 
-    public boolean getConnected(){
+    public boolean isConnected(){
         return isConnected;
     }
 
@@ -78,22 +78,18 @@ public class Player {
         this.isConnected = true;
     }
 
-    public Component chooseTileFromHeap() throws NotCardInHandException{
-        try{
-            return game.getTileFromHeap();
-        }
-        catch(HeapIsEmptyException e){
-            throw new NotCardInHandException();
-        }
+    /** La logica effettiva rimane nel Game (dove risiedono le risorse condivise),
+     * ma questi metodi agiscono come facciata per mantenere un design orientato agli oggetti:
+     * è il Player che compie l'azione, e sa cosa chiedere al Game.
+     */
+    public Component chooseTileFromHeap() {
+        // eventuale eccezione verrà propagata e gestita dal controller
+        return game.getTileFromHeap();
     }
 
-    public Component chooseCardUncovered(int position) throws NotCardInHandException{
-        try{
-            return game.getTileUncovered(position);
-        }
-        catch(UncoveredIsEmptyException e){
-            throw new NotCardInHandException();
-        }
+    public Component chooseCardUncovered(int position) {
+        // eventuale eccezione verrà propagata e gestita dal controller
+        return game.getTileUncovered(position);
     }
 
     public void discardComponent(Component component){
