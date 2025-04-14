@@ -2,19 +2,18 @@ package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Container extends Component {
+public final class Container extends Component {
     // Danilo
     private final int size;
     private final Color colorContainer;
     private final ArrayList<Item> goods;   // il riferimento è immutabile, ma posso fare add/remove
 
     public Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
-        super(ComponentType.CONTAINER, up,down,left,right);
+        super(up,down,left,right);
         this.size = size;
         this.colorContainer = colorContainer;
         this.goods = goods;

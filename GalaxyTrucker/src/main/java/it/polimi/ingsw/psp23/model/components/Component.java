@@ -2,12 +2,10 @@ package it.polimi.ingsw.psp23.model.components;
 import it.polimi.ingsw.psp23.exceptions.ComponentStateException;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 
 /* @author Federico */
-public class Component {
+public sealed class Component permits AlienAddOns, BatteryHub, Cannon, Container, Engine, HousingUnit, Shield, StructuralComponent{
 
-    private final ComponentType type;
     private ComponentLocation state;
     private Side up;
     private Side down;
@@ -17,8 +15,7 @@ public class Component {
     private int y;
 
     // lo chiamo sempre tramite super(...) quando istanzio le sottoclassi
-    public Component(ComponentType type, Side up, Side down, Side left, Side right) {
-        this.type = type;
+    public Component(Side up, Side down, Side left, Side right) {
         state = ComponentLocation.PILE;  // inizialmente stanno tutti nel mucchio a faccia in giù
         this.up = up;
         this.down = down;
@@ -77,10 +74,6 @@ public class Component {
     }
     public void setY(int y) {
         this.y = y;
-    }
-
-    public ComponentType getType() {
-        return type;
     }
 
     public Side getUp() {
