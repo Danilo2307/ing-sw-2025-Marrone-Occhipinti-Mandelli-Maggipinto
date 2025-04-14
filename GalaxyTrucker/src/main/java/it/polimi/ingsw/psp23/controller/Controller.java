@@ -8,8 +8,10 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.Player;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Controller {
     private Game game; //inizializzo il model
@@ -27,10 +29,12 @@ public class Controller {
     }
 
     public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
-        if (game.getPlayers().size() < 4)
-            game.addPlayer(nickname);
-        else
-            throw new GameFullException("The game is full");
+        if(game.getGameStatus() == GameStatus.Setup) {
+            if (game.getPlayers().size() < 4)
+                game.addPlayer(nickname);
+            else
+                throw new GameFullException("The game is full");
+        }
     }
 
     public void startBuildingPhase() {
@@ -58,7 +62,6 @@ public class Controller {
         } else {
             startCheckBoard();
         }
-
 
     }
 
@@ -90,6 +93,17 @@ public class Controller {
         game.getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
     }
 
+    public Component getTileFromHeap() throws HeapIsEmptyException {
+        return game.getTileFromHeap();
+    }
+
+    public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
+        return game.getTileUncovered(position);
+    }
+
+    public void releaseTile(Component c) {
+        game.releaseTile(c);
+    }
 
 
 
@@ -122,8 +136,8 @@ public class Controller {
     public void startFlight(){
         game.sortPlayersByPosition();
         game.setGameStatus(GameStatus.Playing);
-
     }
+
 
     public Card getNextCard(){
         return game.getNextCard();
@@ -171,7 +185,16 @@ public class Controller {
         game.releaseVisibleDeck3(game.getPlayerFromNickname(nickname));
     }
 
+    public ArrayList<Player> calculateFinalRanking(){
+        game.sortPlayersByPosition();
+        game.calculateFinalScores();
+        game.getPlayers().sort(Comparator.comparingInt(Player::getMoney).reversed());
+        return game.getPlayers();
+    }
 
+    public void gameOver(){
+        game.setGameStatus(GameStatus.End);
+    }
 
 
 }
