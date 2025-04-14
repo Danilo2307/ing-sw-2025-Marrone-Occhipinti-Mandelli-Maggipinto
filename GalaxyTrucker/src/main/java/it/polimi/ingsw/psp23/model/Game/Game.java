@@ -311,7 +311,7 @@ public class Game {
     public void calculateFinalScores() {
 
         // lista già ordinata: calcolo ricompense per ordine di arrivo
-        int []arrivalPrize = {4, 3, 2, 1};
+        int []arrivalPrize = {8, 6, 4, 2};
         for (int i = 0; i < players.size(); i++) {
             players.get(i).updateMoney(arrivalPrize[i]);
         }
@@ -326,7 +326,7 @@ public class Game {
             int lostComponents = player.getTruck().getGarbage();
             player.updateMoney(-lostComponents);
             if (player.getTruck().calculateExposedConnectors() == minExposedConnectors)
-                player.updateMoney(2);
+                player.updateMoney(4);
         }
 
         // considero giocatori che hanno abbandonato la corsa: non partecipano all'ordine di arrivo e alla nave più bella.
