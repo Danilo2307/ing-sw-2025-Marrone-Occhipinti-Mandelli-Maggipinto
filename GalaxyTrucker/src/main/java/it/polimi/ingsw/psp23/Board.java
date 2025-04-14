@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +51,7 @@ public class Board {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
                 if(!isFree(i, j)) {
-                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getType() == (ComponentType.ENGINE))) {
+                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getDown() == Side.ENGINE)) {
                         // il componente i,j sta sotto al motore di posizione i-1,j
                         return false;
                     }
@@ -98,7 +97,7 @@ public class Board {
                         if((ship[i][j].getLeft() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j-1].getRight() == Side.EMPTY)){
                             return false;
                         }
-                        if(ship[i][j-1].getRight() == Side.ENGINE){
+                        if(ship[i][j-1].getRight() == Side.ENGINE){     // engine rivolto verso il componente i,j
                             return false;
                         }
                     }
@@ -244,7 +243,9 @@ public class Board {
 
     // elimina elemento in posizione i,j della ship e lo rimuove dalla rispettiva lista
     // funziona perchè ship[i][j] e l'elemento della rispettiva lista puntano allo stesso oggetto in memoria:
-    // la prima lo "vede" come Component (sovraclasse), mentre la lista lo vede come oggetto della sottoclasse
+    // la prima lo "vede" come Component (sovraclasse), mentre la lista lo vede come oggetto della sottoclasse.
+    /** Grazie al sealed pattern matching, il compilatore riconosce il tipo effettivo dell'oggetto
+     * e lo assegna alla variabile del case senza bisogno di instanceof o cast manuali. */
     public void delete(int i, int j) {
         boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
         // che JAVA INIZIALIZZERÀ A FALSE
@@ -253,19 +254,20 @@ public class Board {
         } else {
             /* Nelle ArrayList il metodo remove ha due implementazioni: uso quella che riceve un oggetto e rimuove il primo elemento
                su cui equals restituisce true: non serve override perchè equals confronta i riferimenti (in questo caso sono gli stessi). Controllo che esista lo stesso oggetto e venga rimosso correttamente.  */
-            boolean removed = switch (ship[i][j].getType()) {
-                case ALIENADDONS -> alienAddOns.remove(ship[i][j]);
-                case BATTERYHUB -> batteryHubs.remove(ship[i][j]);
-                case CONTAINER -> containers.remove(ship[i][j]);
-                case HOUSINGUNIT -> housingUnits.remove(ship[i][j]);
-                case CANNON -> cannons.remove(ship[i][j]);
-                case ENGINE -> engines.remove(ship[i][j]);
-                case SHIELD -> shields.remove(ship[i][j]);
-                case STRUCTURAL_COMPONENT -> structuralComponents.remove(ship[i][j]);
+            boolean removed = switch (ship[i][j]) {
+                case AlienAddOns a -> alienAddOns.remove(a);
+                case BatteryHub batteryHub -> batteryHubs.remove(batteryHub);
+                case Container container -> containers.remove(container);
+                case HousingUnit cabin -> housingUnits.remove(cabin);
+                case Cannon cannon -> cannons.remove(cannon);
+                case Engine engine -> engines.remove(engine);
+                case Shield shield -> shields.remove(shield);
+                case StructuralComponent tube -> structuralComponents.remove(tube);
+                default -> false;
             };
 
             if (!removed) {
-                throw new ComponentMismatchException("Componente di tipo " + ship[i][j].getType() +
+                throw new ComponentMismatchException("Componente" +
                         " non trovato nella rispettiva lista: errore in delete() di Board alla cella [" + i + "][" + j + "]");
             }
 
@@ -300,15 +302,16 @@ public class Board {
 
         // aggiungo nella rispettiva lista in base al tipo. I due oggetti (in ship e nella lista) avranno
         // lo stesso riferimento, ma verranno visti da "due punti di vista diversi"
-        switch (c.getType()) {
-            case ALIENADDONS -> alienAddOns.add((AlienAddOns) c);
-            case CANNON -> cannons.add((Cannon) c);
-            case BATTERYHUB -> batteryHubs.add((BatteryHub) c);
-            case CONTAINER -> containers.add((Container) c);
-            case HOUSINGUNIT -> housingUnits.add((HousingUnit) c);
-            case ENGINE -> engines.add((Engine) c);
-            case STRUCTURAL_COMPONENT -> structuralComponents.add((StructuralComponent) c);
-            case SHIELD -> shields.add((Shield) c);
+        switch (c) {
+            case AlienAddOns a -> alienAddOns.add(a);
+            case Cannon cannon -> cannons.add(cannon);
+            case BatteryHub batteryHub -> batteryHubs.add(batteryHub);
+            case Container container -> containers.add(container);
+            case HousingUnit cabin -> housingUnits.add(cabin);
+            case Engine engine -> engines.add(engine);
+            case StructuralComponent tube -> structuralComponents.add(tube);
+            case Shield shield -> shields.add(shield);
+            default -> {}
         }
     }
 
@@ -623,25 +626,30 @@ public class Board {
     Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
     */
     public void loadGoods(List<Item> items, int i, int j) {
-        if (!isValid(i, j) || isFree(i,j) || ship[i][j].getType() != ComponentType.CONTAINER) {
-            throw new InvalidCoordinatesException("This is not a container: error in loadGoods of Board");
-        }
+        if (!isValid(i, j) || isFree(i,j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
 
-        int index = containers.indexOf(ship[i][j]);
-        if (index == -1) {
-            throw new ComponentMismatchException("Container not found in 'containers' list: error in loadGoods of Board");
-        }
+        Component tile = ship[i][j];
+        switch (tile) {
+            case Container container -> {
+                int index = containers.indexOf(container);
+                if (index == -1) {
+                    throw new ComponentMismatchException("Container not found in 'containers' list: error in loadGoods of Board");
+                }
 
-        int scorr = 0;
-        while (scorr < items.size()) {
-            try {
-                // loadItem controlla anche se l'item può essere caricato in quello specifico container
-                containers.get(index).loadItem(items.get(scorr));
-                scorr++;
-            } catch (ContainerException c) {
-                // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
-                throw new ContainerException("Item at index " + scorr + " cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
+                int scorr = 0;
+                while (scorr < items.size()) {
+                    try {
+                        // loadItem controlla anche se l'item può essere caricato in quello specifico container
+                        containers.get(index).loadItem(items.get(scorr));
+                        scorr++;
+                    } catch (ContainerException c) {
+                        // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
+                        throw new ContainerException("Item at index " + scorr + " cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
+                    }
+                }
             }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");
         }
     }
 
@@ -660,39 +668,51 @@ public class Board {
     }
 
     public void reduceBatteries(int i, int j, int num) {
-        if ((!isValid(i, j)) || isFree(i, j) || !ship[i][j].getType().equals(ComponentType.BATTERYHUB)) {
-            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid BatteryHub.");
+        if ((!isValid(i, j)) || isFree(i, j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case BatteryHub batteryHub -> {
+                int index = batteryHubs.indexOf(batteryHub);
+                if (index == -1) {
+                    throw new ComponentMismatchException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
+                }
+                try {
+                    // controllo su numero batterie è gestito in removeBatteries
+                    batteryHubs.get(index).removeBatteries(num);
+                } catch (IllegalArgumentException e) {
+                    throw new BatteryOperationException("BatteryHub at Ship["+i+"]["+j+"]" + e.getMessage());
+                }
+            }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a battery hub");
         }
 
-        int index = batteryHubs.indexOf(ship[i][j]);
-        if (index == -1) {
-            throw new ComponentMismatchException("BatteryHub did not found in batteryHubs for Ship[" + i + "][" + j + "]");
-        }
-        try {
-            // controllo su numero batterie è gestito in removeBatteries
-            batteryHubs.get(index).removeBatteries(num);
-        } catch (IllegalArgumentException e) {
-            throw new BatteryOperationException("BatteryHub at Ship["+i+"]["+j+"]" + e.getMessage());
-        }
+
     }
 
 
     public void reduceCrew(int i, int j, int num) {
-        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.HOUSINGUNIT)) {
-            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
-        } else {
-            int index = housingUnits.indexOf(ship[i][j]);
-            if (index == -1) {
-                throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
-            } else {
-                try {
-                    // controllo rimozione implementato in reduceOccupants
-                    housingUnits.get(index).reduceOccupants(num);
-                }
-                catch (IllegalArgumentException e) {
-                    throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+        if ((!isValid(i, j)) || isFree(i,j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case HousingUnit cabin -> {
+                int index = housingUnits.indexOf(cabin);
+                if (index == -1) {
+                    throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+                } else {
+                    try {
+                        // controllo rimozione implementato in reduceOccupants
+                        housingUnits.get(index).reduceOccupants(num);
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+                    }
                 }
             }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a housing unit");
         }
     }
 
@@ -750,31 +770,40 @@ public class Board {
     }
 
     public void activeCannon(int i, int j) {
-        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.CANNON)) {
-            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Cannon");
-        } else {
-            int index = cannons.indexOf(ship[i][j]);
-            if (index == -1)
-                throw new ComponentMismatchException("Cannons list does not contain the cannon at Ship["+i+"]["+j+"]");
-            if(!cannons.get(index).isDouble())
-                throw new InvalidComponentActionException("The cannon at Ship["+i+"]["+j+"] is not a double cannon!");
-            else
-                cannons.get(index).activeCannon();
+        if ((!isValid(i, j)) || isFree(i,j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case Cannon cannon -> {
+                int index = cannons.indexOf(cannon);
+                if (index == -1)
+                    throw new ComponentMismatchException("Cannons list does not contain the cannon at Ship["+i+"]["+j+"]");
+                if(!cannons.get(index).isDouble())
+                    throw new InvalidComponentActionException("The cannon at Ship["+i+"]["+j+"] is not a double cannon!");
+                else
+                    cannons.get(index).activeCannon();
+            }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a cannon");
         }
     }
 
     public void activeEngine(int i, int j) {
-        if ((!isValid(i, j)) || isFree(i,j) || !ship[i][j].getType().equals(ComponentType.ENGINE)) {
+        if ((!isValid(i, j)) || isFree(i,j))
             throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
-        } else {
-            int index = engines.indexOf(ship[i][j]);
-            if (index == -1)
-                throw new ComponentMismatchException("Engines list does not contain the engine at Ship["+i+"]["+j+"]");
-            if(!engines.get(index).isDouble())
-                throw new InvalidComponentActionException("The engine at Ship["+i+"]["+j+"] is  not a double engine!");
-            else{
-                engines.get(index).activeEngine();
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case Engine engine -> {
+                int index = engines.indexOf(engine);
+                if (index == -1)
+                    throw new ComponentMismatchException("Engines list does not contain the engine at Ship["+i+"]["+j+"]");
+                if(!engines.get(index).isDouble())
+                    throw new InvalidComponentActionException("The engine at Ship["+i+"]["+j+"] is  not a double engine!");
+                else
+                    engines.get(index).activeEngine();
             }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not an engine");
         }
     }
 

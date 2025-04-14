@@ -1,16 +1,15 @@
 package it.polimi.ingsw.psp23.model.components;
 
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
-public class Engine extends Component{
+public final class Engine extends Component{
 
     private final boolean isDouble;
     // necessario per gestire attivazione motori doppi
     private boolean isActive;
 
     public Engine (Side up, Side down, Side left, Side right, boolean isDouble) {
-        super(ComponentType.ENGINE, up, down, left, right);
+        super(up, down, left, right);
         this.isDouble = isDouble;
     }
 

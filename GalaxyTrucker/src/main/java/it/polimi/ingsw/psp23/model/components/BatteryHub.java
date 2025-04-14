@@ -1,14 +1,13 @@
 package it.polimi.ingsw.psp23.model.components;
 
-import it.polimi.ingsw.psp23.model.enumeration.ComponentType;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
-public class BatteryHub extends Component {
+public final class BatteryHub extends Component {
     // Alberto
     private int numBatteries;
 
     public BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
-        super(ComponentType.BATTERYHUB, up, down, left, right);
+        super(up, down, left, right);
         this.numBatteries = numBatteries;
     }
 
