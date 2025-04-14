@@ -107,3 +107,5 @@ public interface RMIServerInterface extends Remote {
      */
     Boolean exitLobbyRMI() throws RemoteException;
 }
+
+//TODO: inserire i metodi da controller
