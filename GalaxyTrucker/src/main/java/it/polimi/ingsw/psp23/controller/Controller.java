@@ -93,11 +93,11 @@ public class Controller {
         game.getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
     }
 
-    public Component getTileFromHeap() throws HeapIsEmptyException {
+    public Component getTileFromHeap() {
         return game.getTileFromHeap();
     }
 
-    public Component getTileUncovered(int position) throws UncoveredIsEmptyException {
+    public Component getTileUncovered(int position) {
         return game.getTileUncovered(position);
     }
 
