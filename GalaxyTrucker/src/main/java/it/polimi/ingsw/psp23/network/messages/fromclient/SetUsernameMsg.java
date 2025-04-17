@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp23.network.messages.fromclient;
 
-import it.polimi.ingsw.psp23.model.enumeration.MessageType;
+import it.polimi.ingsw.psp23.network.messages.Message;
 
-public class SetUsernameMsg {
+public final class SetUsernameMsg extends Message {
     private final String username;
 
     public SetUsernameMsg(String username) {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp23.network;
 
 import it.polimi.ingsw.psp23.network.rmi.*;
+import it.polimi.ingsw.psp23.network.state.State;
+import it.polimi.ingsw.psp23.network.state.WaitingForUsernameState;
 
 /**
  * Holds minimal information about a connected client.
@@ -9,6 +11,7 @@ import it.polimi.ingsw.psp23.network.rmi.*;
 public class ClientInfo {
     private final String connectionUUID;
     private final boolean isRMI;
+    private String username;
     private State state;
     private RMIServer serverRMI;
 
@@ -29,6 +32,8 @@ public class ClientInfo {
         } else {
             // TODO: Handle TCP/IP or other protocols in future
         }
+        this.username = null;
+        this.state = new WaitingForUsernameState(this);
     }
 
     /**
@@ -67,6 +72,26 @@ public class ClientInfo {
      */
     public RMIServer getServerRMI() {
         return serverRMI;
+    }
+
+    /**
+     * Sets the username of the User.
+     * @param username The username to set.
+     * @throws UserException If the username is invalid.
+     */
+    public void setUsername(String username) throws UserException {
+        // Checks for the validity of the username
+        Pattern pattern = Pattern.compile(TextValidator.usernameValidator);
+        Matcher matcher = pattern.matcher(username);
+        if (!matcher.matches()) {
+            throw new UserException("Username is invalid.", UserException.Reason.INVALID_USERNAME);
+        }
+
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return this.username;
     }
 
 }

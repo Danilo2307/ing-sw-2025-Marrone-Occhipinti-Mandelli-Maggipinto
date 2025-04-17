@@ -4,5 +4,6 @@ public enum MessageType {
     SELECT_CANNONS,
     SELECT_ENGINES,
     UPDATE_STATE,
-    USERNAME
+    USERNAME,
+    CREATE_LOBBY
 }
