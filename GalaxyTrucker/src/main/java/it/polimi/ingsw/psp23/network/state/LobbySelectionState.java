@@ -3,6 +3,8 @@ package it.polimi.ingsw.psp23.network.state;
 import it.polimi.ingsw.psp23.logger.FlightRecorder;
 import it.polimi.ingsw.psp23.network.ClientInfo;
 import it.polimi.ingsw.psp23.network.messages.fromclient.*;
+import it.polimi.ingsw.psp23.network.messages.fromserver.GenericServerMsg;
+import it.polimi.ingsw.psp23.network.messages.fromserver.LobbyJoinOKMsg;
 
 /**
  * State where the client can create or join existing lobbies.
@@ -42,19 +44,19 @@ public class LobbySelectionState extends State {
             user.send(new LobbyJoinOKMsg());
             if (alreadyStarted) {
                 // lobby already started, reconnecting to ongoing match
-                user.setState(new InGameState(user));
+                user.setState(new ActiveGameState(user));
                 user.getGameController().reconnect(user.getUsername());
             } else {
-                user.setState(new InLobbyState(user));
+                user.setState(new InsideLobbyState(user));
             }
         } catch (GameLobbyException gle) {
             if (gle.getReason() == GameLobbyException.Reason.LOBBY_ALREADY_FULL_EXCEPTION) {
                 user.send(new LobbyFullMsg());
             } else {
-                user.send(new ServerErrorMsg());
+                user.send(new GenericServerMsg());
             }
         } catch (MatchControllerException mce) {
-            user.send(new ServerErrorMsg());
+            user.send(new GenericServerMsg());
         }
     }
 
@@ -63,7 +65,7 @@ public class LobbySelectionState extends State {
         try {
             user.send(new ListLobbyMsg(MatchController.getInstance().getAvailableLobbies()));
         } catch (MatchControllerException mce) {
-            user.send(new ServerErrorMsg());
+            user.send(new GenericServerMsg());
         }
     }
 }

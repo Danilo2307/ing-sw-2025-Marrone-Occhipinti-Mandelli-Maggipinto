@@ -19,22 +19,20 @@ import java.util.stream.Collectors;
  * before the match has started.
  */
 public class InsideLobbyState extends State {
-    private final ClientInfo participant;
 
-    public InsideLobbyState(ClientInfo participant) {
-        super(participant, StateType.INSIDE_LOBBY);
-        this.participant = participant;
-        FlightRecorder.info("Client [" + participant.getUsername() + "] transitioned to InsideLobbyState");
+    public InsideLobbyState(ClientInfo user) {
+        super(user, StateType.INSIDE_LOBBY);
+        FlightRecorder.info("Client [" + user.getUsername() + "] transitioned to InsideLobbyState");
     }
 
     @Override
     public void handleLobbyDetailsRequest(LobbyDetailsMsg request) {
         try {
             LobbyInfo info = MatchController.getInstance()
-                    .getLobbyInfoByPlayerUsername(participant.getUsername());
-            participant.send(new LobbyDetailsMsg(info, participant.getUsername()));
+                    .getLobbyInfoByPlayerUsername(user.getUsername());
+            user.send(new LobbyDetailsMsg(info, user.getUsername()));
         } catch (MatchControllerException e) {
-            participant.send(new GenericServerMsg());
+            user.send(new GenericServerMsg());
         }
     }
 
@@ -42,31 +40,31 @@ public class InsideLobbyState extends State {
     public void handleStartLobbyCommand(InitiateLobbyMsg request) {
         // Centralized handling of controller actions with known error reasons
         executeControllerAction(
-                () -> MatchController.getInstance().startLobby(participant.getUsername()),
+                () -> MatchController.getInstance().startLobby(user.getUsername()),
                 () -> {
-                    participant.send(new InitiateLobbyOkMsg());
-                    participant.setState(new InGameState(participant));
+                    user.send(new InitiateLobbyOkMsg());
+                    user.setState(new InGameState(user));
                 },
                 Arrays.asList(
                         MatchControllerException.Reason.NO_MORE_SPACE_FOR_NEW_MATCHES,
                         MatchControllerException.Reason.START_ATTEMPT_FROM_NON_MASTER,
                         MatchControllerException.Reason.BAD_STATE_FOR_START
                 ),
-                () -> participant.send(new InitiateLobbyKoMsg())
+                () -> user.send(new InitiateLobbyKoMsg())
         );
     }
 
     @Override
     public void handleLobbyExit(ExitLobbyMsg request) {
         try {
-            MatchController.getInstance().exitLobby(participant);
-            participant.send(new ExitLobbyOkMsg());
+            MatchController.getInstance().exitLobby(user);
+            user.send(new ExitLobbyOkMsg());
 
-            participant.setGameController(null);
+            user.setGameController(null);
 
-            participant.setState(new ChooseCreateJoinState(participant));
+            user.setState(new ChooseCreateJoinState(user));
         } catch (MatchControllerException e) {
-            participant.send(new GenericServerMsg());
+            user.send(new GenericServerMsg());
         }
     }
 
@@ -90,7 +88,7 @@ public class InsideLobbyState extends State {
             if (knownErrors.contains(e.getReason())) {
                 onKnownError.run();
             } else {
-                participant.send(new GenericServerMsg());
+                user.send(new GenericServerMsg());
             }
         }
     }
