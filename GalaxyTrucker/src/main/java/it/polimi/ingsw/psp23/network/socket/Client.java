@@ -1,10 +1,12 @@
-package it.polimi.ingsw.psp23.network;
+package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.messages.SelectCannonsMessage;
 import it.polimi.ingsw.psp23.network.messages.UpdateStateMessage;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketAddress;
 
@@ -13,8 +15,6 @@ public class Client implements Runnable {
     private Socket socket;
     private ObjectInputStream inputStream;
     private ObjectOutputStream outputStream;
-    private BufferedOutputStream bufferedOutputStream;
-    private BufferedInputStream bufferedInputStream;
 
 
     // Nel costruttore verrà eseguita la connessione tra client e server
@@ -24,21 +24,15 @@ public class Client implements Runnable {
             socket = new Socket(serverIP, port);
             System.out.println("Connected to the server " + serverIP + " at port " + port);
 
-            // Metto lo stream di uscita in un BufferedOutputStream per usare i buffer ed ottimizzare eventuali
-            // scritture multiple. La creazione di uno stream sempre nuovo potrebbe essere rischiosa da un punto
-            // di vista di risorse usate però
-            bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
-
             // Metto il buffer in un ObjectOutputStream per poter trattare meglio gli oggetti serializzati
-            outputStream = new ObjectOutputStream(bufferedOutputStream);
+            outputStream = new ObjectOutputStream(socket.getOutputStream());
 
-            // Ragionamento analogo fatto per outputStream
-            bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+            outputStream.flush();
 
-            inputStream = new ObjectInputStream(bufferedInputStream);
+            inputStream = new ObjectInputStream(socket.getInputStream());
 
         } catch (IOException e) {
-            throw new RuntimeException("Could not connect to the server: error in constructor of class Client" + e.getMessage()+")");
+            throw new RuntimeException("Could not connect to the server: error in constructor of class Client " + e.getMessage()+")");
         }
     }
 
