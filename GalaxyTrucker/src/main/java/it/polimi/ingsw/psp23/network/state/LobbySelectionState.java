@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.logger.FlightRecorder;
 import it.polimi.ingsw.psp23.network.ClientInfo;
 import it.polimi.ingsw.psp23.network.messages.fromclient.*;
 import it.polimi.ingsw.psp23.network.messages.fromserver.GenericServerMsg;
+import it.polimi.ingsw.psp23.network.messages.fromserver.LobbyFullMsg;
 import it.polimi.ingsw.psp23.network.messages.fromserver.LobbyJoinOKMsg;
 
 /**
