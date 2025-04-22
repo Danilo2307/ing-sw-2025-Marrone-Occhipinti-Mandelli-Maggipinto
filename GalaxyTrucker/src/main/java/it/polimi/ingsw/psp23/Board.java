@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.ConnectorType;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
@@ -41,117 +42,86 @@ public class Board {
         structuralComponents = new ArrayList<>();
     }
 
-    // controllo legalità della nave
-    public boolean check() {
-        //empty space va solo con empty space nei componenti
-        // double connector va o con universal o con double
-        // single va o con single o con universal
+    /**
+     * Verifica se due lati sono compatibili ai fini del check().
+     * A differenza di canConnect, considera anche EMPTY/SHIELD come compatibili tra loro.
+     * @return true se i lati sono compatibili, false altrimenti
+     */
+    private boolean areSidesCompatible(Side a, Side b) {
+        if (canConnect(a, b))
+            return true;
 
-        //scorro tutti componenti della plancia
+        // EMPTY o SHIELD (ConnectorType.NONE) sono compatibili tra loro nel check.
+        // Non saranno mai GUN/ENGINE perchè li controllo prima
+        return a.connectorType() == ConnectorType.NONE && b.connectorType() == ConnectorType.NONE;
+    }
+
+    /**
+     * Controlla la legalità della nave secondo le regole del gioco:
+     * - Ogni modulo deve avere connessioni valide ai lati adiacenti
+     * - Nessun motore o cannone deve essere puntato contro un altro modulo
+     * - Tutte le tile devono essere raggiungibili dalla cabina centrale (2,3)
+     * @return true se la nave è legalmente costruita, false altrimenti
+     */
+    public boolean check() {
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLS; j++) {
-                if(!isFree(i, j)) {
-                    if(isValid(i-1,j )&& !isFree(i-1,j) && (ship[i-1][j].getDown() == Side.ENGINE)) {
-                        // il componente i,j sta sotto al motore di posizione i-1,j
+                if (!isFree(i, j)) {
+                    if (isValid(i - 1, j) && !isFree(i - 1, j) && ship[i - 1][j].getDown() == Side.ENGINE) {
                         return false;
                     }
 
-                    // valuto componente alla destra del corrente i,j
-                    if(isValid(i,j+1 ) && !isFree(i,j+1)){
-                        if(ship[i][j+1].getLeft() == Side.GUN) {
-                            return false;  // gun rivolta verso il mio componente
-                        }
-                        // controllo connettori
-                        if((ship[i][j].getRight() == Side.EMPTY || ship[i][j].getRight() == Side.SHIELD )&& !(ship[i][j+1].getLeft() == Side.EMPTY)) { // empty con qualcosa di non empty
+                    Component curr = ship[i][j];
+
+                    // Un motore può essere orientato solo verso il basso
+                    if (curr.getUp() == Side.ENGINE || curr.getLeft() == Side.ENGINE || curr.getRight() == Side.ENGINE)
+                        return false;
+
+                    // RIGHT
+                    if (isValid(i, j + 1) && !isFree(i, j + 1)) {
+                        Component right = ship[i][j + 1];
+                        if (right.getLeft() == Side.GUN || right.getLeft() == Side.ENGINE)
                             return false;
-                        }
-                        if((ship[i][j].getRight() == Side.SINGLE_CONNECTOR || ship[i][j].getRight() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i][j+1].getLeft() == Side.SINGLE_CONNECTOR || ship[i][j+1].getLeft() == Side.UNIVERSAL_CONNECTOR || ship[i][j+1].getLeft() == Side.SHIELD_SINGLE_CONNECTOR)) {
+                        if (!areSidesCompatible(curr.getRight(), right.getLeft()))
                             return false;
-                        }
-                        if((ship[i][j].getRight() == Side.DOUBLE_CONNECTOR || ship[i][j].getRight() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i][j+1].getLeft() == Side.DOUBLE_CONNECTOR || ship[i][j+1].getLeft() == Side.UNIVERSAL_CONNECTOR || ship[i][j+1].getLeft() == Side.SHIELD_DOUBLE_CONNECTOR)){
-                            return false;
-                        }
-                        if((ship[i][j].getRight() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j+1].getLeft() == Side.EMPTY)){
-                            return false;
-                        }
-                        if(ship[i][j+1].getLeft() == Side.ENGINE){
-                            return false;
-                        }
                     }
 
-                    // valuto componente alla sinistra del corrente i,j
-                    if(isValid(i,j-1 ) && !isFree(i,j-1)){
-                        if(ship[i][j-1].getRight() == Side.GUN) { // gun rivolta verso il mio componente
+                    // LEFT
+                    if (isValid(i, j - 1) && !isFree(i, j - 1)) {
+                        Component left = ship[i][j - 1];
+                        if (left.getRight() == Side.GUN || left.getRight() == Side.ENGINE)
                             return false;
-                        }
-                        // controllo connettori
-                        if((ship[i][j].getLeft() == Side.EMPTY || ship[i][j].getLeft() == Side.SHIELD )&& !(ship[i][j-1].getRight() == Side.EMPTY)) { // empty con qualcosa di non empty
+                        if (!areSidesCompatible(curr.getLeft(), left.getRight()))
                             return false;
-                        }
-                        if((ship[i][j].getLeft() == Side.SINGLE_CONNECTOR || ship[i][j].getLeft() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i][j-1].getRight() == Side.SINGLE_CONNECTOR || ship[i][j-1].getRight() == Side.UNIVERSAL_CONNECTOR || ship[i][j-1].getRight() == Side.SHIELD_SINGLE_CONNECTOR)) {
-                            return false;
-                        }
-                        if((ship[i][j].getLeft() == Side.DOUBLE_CONNECTOR || ship[i][j].getLeft() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i][j-1].getRight() == Side.DOUBLE_CONNECTOR || ship[i][j-1].getRight() == Side.UNIVERSAL_CONNECTOR || ship[i][j-1].getRight() == Side.SHIELD_DOUBLE_CONNECTOR)){
-                            return false;
-                        }
-                        if((ship[i][j].getLeft() == Side.UNIVERSAL_CONNECTOR) && (ship[i][j-1].getRight() == Side.EMPTY)){
-                            return false;
-                        }
-                        if(ship[i][j-1].getRight() == Side.ENGINE){     // engine rivolto verso il componente i,j
-                            return false;
-                        }
                     }
 
-                    // valuto componente al di sotto del corrente i,j
-                    if(isValid(i+1,j ) && !isFree(i+1,j)){ //componente di sotto
-                        if(ship[i+1][j].getUp() == Side.GUN) { // gun rivolta verso il mio componente
+                    // DOWN
+                    if (isValid(i + 1, j) && !isFree(i + 1, j)) {
+                        Component down = ship[i + 1][j];
+                        if (down.getUp() == Side.GUN || down.getUp() == Side.ENGINE)
                             return false;
-                        }
-                        // controllo connettori
-                        if((ship[i][j].getDown() == Side.EMPTY || ship[i][j].getDown() == Side.SHIELD )&& !(ship[i+1][j].getUp() == Side.EMPTY)) { // empty con qualcosa di non empty
+                        if (!areSidesCompatible(curr.getDown(), down.getUp()))
                             return false;
-                        }
-                        if((ship[i][j].getDown() == Side.SINGLE_CONNECTOR || ship[i][j].getDown() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i+1][j].getUp() == Side.SINGLE_CONNECTOR || ship[i+1][j].getUp() == Side.UNIVERSAL_CONNECTOR || ship[i+1][j].getUp() == Side.SHIELD_SINGLE_CONNECTOR)) {
-                            return false;
-                        }
-                        if((ship[i][j].getDown() == Side.DOUBLE_CONNECTOR || ship[i][j].getDown() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i+1][j].getUp() == Side.DOUBLE_CONNECTOR || ship[i+1][j].getUp() == Side.UNIVERSAL_CONNECTOR || ship[i+1][j].getUp() == Side.SHIELD_DOUBLE_CONNECTOR)){
-                            return false;
-                        }
-                        if((ship[i][j].getDown() == Side.UNIVERSAL_CONNECTOR) && (ship[i+1][j].getUp() == Side.EMPTY)){
-                            return false;
-                        }
-                        if(ship[i+1][j].getUp() == Side.ENGINE){
-                            return false;
-                        }
                     }
 
-                    // valuto componente che sta sopra al corrente i,j
-                    if(isValid(i+1,j ) && !isFree(i+1,j)){
-                        if(ship[i-1][j].getDown() == Side.GUN) { // gun rivolta verso il mio componente
+                    // UP
+                    if (isValid(i - 1, j) && !isFree(i - 1, j)) {
+                        Component up = ship[i - 1][j];
+                        if (up.getDown() == Side.GUN || up.getDown() == Side.ENGINE)
                             return false;
-                        }
-                        if((ship[i][j].getUp() == Side.EMPTY || ship[i][j].getUp() == Side.SHIELD )&& !(ship[i-1][j].getDown() == Side.EMPTY)) { // empty con qualcosa di non empty
+                        if (!areSidesCompatible(curr.getUp(), up.getDown()))
                             return false;
-                        }
-                        if((ship[i][j].getUp() == Side.SINGLE_CONNECTOR || ship[i][j].getUp() == Side.SHIELD_SINGLE_CONNECTOR) && !(ship[i-1][j].getDown() == Side.SINGLE_CONNECTOR || ship[i-1][j].getDown() == Side.UNIVERSAL_CONNECTOR || ship[i-1][j].getDown() == Side.SHIELD_SINGLE_CONNECTOR)) {
-                            return false;
-                        }
-                        if((ship[i][j].getUp() == Side.DOUBLE_CONNECTOR || ship[i][j].getUp() == Side.SHIELD_DOUBLE_CONNECTOR) && !(ship[i-1][j].getDown() == Side.DOUBLE_CONNECTOR || ship[i-1][j].getDown() == Side.UNIVERSAL_CONNECTOR || ship[i-1][j].getDown() == Side.SHIELD_DOUBLE_CONNECTOR)){
-                            return false;
-                        }
-                        if((ship[i][j].getUp() == Side.UNIVERSAL_CONNECTOR) && (ship[i-1][j].getDown() == Side.EMPTY)){
-                            return false;
-                        }
-                        if(ship[i-1][j].getDown() == Side.ENGINE){
-                            return false;
-                        }
                     }
+
+                    // Verifica raggiungibilità dalla cabina centrale
+                    if (!isReachable(new boolean[5][7], 2, 3, i, j))
+                        return false;
                 }
             }
         }
-        // se non ho fatto return false prima significa che è legale
         return true;
     }
+
 
     // indica se nella posizione i,j può starci un componente oppure no: la plancia non ha una forma perfettamente matriciale
     public boolean isValid(int i, int j) {
@@ -179,65 +149,103 @@ public class Board {
         return ship[i][j] == null;
     }
 
-    public void setTrue(boolean[][] m, int i, int j) {
+    private void setTrue(boolean[][] m, int i, int j) {
         m[i][j] = true;
     }
 
-    /* Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
-       che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
+    /**
+     * Verifica se due connettori sono compatibili ai fini della raggiungibilità.
+     * Viene usato da isReachable, quindi considera solo i veri connettori (esclude EMPTY, SHIELD, ENGINE, GUN).
+     * @return true se i due connettori sono compatibili, false altrimenti
      */
-    // modCentrX e modCentrY mi servono come parametri per creare la funzione ricorsiva, altrimenti non riuscirei
-    // a confrontare mano a mano tutti i componenti con il loro adiacente (se mettessimo questo metodo in component
-    // per sapere se è raggiungibile potremmo risparmiarci i parametri i e j, in modo da semplificare l'etichetta del
-    // metodo ma a queste "sottigliezze" ci penseremo più avanti)
+    private boolean canConnect(Side a, Side b) {
+        ConnectorType ca = a.connectorType();
+        ConnectorType cb = b.connectorType();
 
-    public boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
+        // Nessuna connessione possibile se uno dei due lati non è un connettore
+        if (ca == ConnectorType.NONE || cb == ConnectorType.NONE)
+            return false;
+
+        // UNIVERSAL può connettersi a qualsiasi tipo, tranne NONE
+        if (ca == ConnectorType.UNIVERSAL || cb == ConnectorType.UNIVERSAL)
+            return true;
+
+        // entrambi SINGLE o entrambi DOUBLE
+        return ca == cb;
+    }
+
+
+    /** verifica se le due tile (x,y) e (nx,ny) sono unite da connettori compatibili */
+    private boolean areTilesConnected(int x,int y,int nx,int ny){
+        Component from = ship[x][y];
+        Component to   = ship[nx][ny];
+
+        if (from==null || to==null) return false;    // sicurezza
+
+        if (nx == x+1 && ny == y)      // giù
+            return canConnect(from.getDown(), to.getUp());
+        if (nx == x-1 && ny == y)      // su
+            return canConnect(from.getUp(),   to.getDown());
+        if (nx == x && ny == y+1)    // destra
+            return canConnect(from.getRight(),to.getLeft());
+        if (nx == x && ny == y-1)    // sinistra
+            return canConnect(from.getLeft(), to.getRight());
+
+        return false;
+    }
+
+    /** Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
+     che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
+     * @param alreadyChecked matrice che indica le celle già visitate
+     * @param modCentrX coordinata X da cui parte la ricerca
+     * @param modCentrY coordinata Y da cui parte la ricerca
+     * @param i coordinata X da raggiungere
+     * @param j coordinata Y da raggiungere
+     * @return True se la tile in ship[i][j] è raggiungibile da ship[modCentrX][modCentrY]
+     */
+    private boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
         // inizializzo scorrX e scorrY alle coordinate del modulo centrale del livello due
         int scorrX = modCentrX;
         int scorrY = modCentrY;
         boolean check1 = false, check2 = false, check3 = false, check4 = false;
 
+        // segno la cella come visitata
         setTrue(alreadyChecked, scorrX, scorrY);
 
+        // la cella raggiunta è quella di interesse -> è raggiungibile
         if (i == scorrX && j == scorrY) {
             return true;
         }
-        if (isValid(scorrX + 1, scorrY) && !alreadyChecked[scorrX + 1][scorrY]) {
-            if (scorrX + 1 == i && scorrY == j) {
+        // condizione di visita al nodo adiacente
+        if (isValid(scorrX + 1, scorrY) && !isFree(scorrX+1, scorrY) && !alreadyChecked[scorrX + 1][scorrY] && areTilesConnected(scorrX, scorrY, scorrX+1, scorrY)) {
+            if (scorrX + 1 == i && scorrY == j)
                 return true;
-            } else {
-                // setTrue(alreadyChecked, scorrX + 1, scorrY);
+            else
                 check1 = isReachable(alreadyChecked, scorrX + 1, scorrY, i, j);
-            }
         }
-        if (isValid(scorrX - 1, scorrY) && !alreadyChecked[scorrX - 1][scorrY]) {
-            if (scorrX - 1 == i && scorrY == j) {
+
+        if (isValid(scorrX - 1, scorrY) && !isFree(scorrX-1, scorrY)  && !alreadyChecked[scorrX - 1][scorrY] && areTilesConnected(scorrX, scorrY, scorrX-1, scorrY)) {
+            if (scorrX - 1 == i && scorrY == j)
                 return true;
-            } else {
-                // setTrue(alreadyChecked, scorrX - 1, scorrY);
+            else
                 check2 = isReachable(alreadyChecked, scorrX - 1, scorrY, i, j);
-            }
         }
 
-        if (isValid(scorrX, scorrY + 1) && !alreadyChecked[scorrX][scorrY + 1]) {
-            if (scorrX == i && scorrY + 1 == j) {
+        if (isValid(scorrX, scorrY + 1) && !isFree(scorrX, scorrY+1) && !alreadyChecked[scorrX][scorrY + 1] && areTilesConnected(scorrX, scorrY, scorrX, scorrY+1)) {
+            if (scorrX == i && scorrY + 1 == j)
                 return true;
-            } else {
-                // setTrue(alreadyChecked, scorrX, scorrY + 1);
+            else
                 check3 = isReachable(alreadyChecked, scorrX, scorrY + 1, i, j);
-            }
         }
 
-        if (isValid(scorrX, scorrY - 1) && !alreadyChecked[scorrX][scorrY - 1]) {
-            if (scorrX == i && scorrY - 1 == j) {
+        if (isValid(scorrX, scorrY - 1) && !isFree(scorrX, scorrY-1) && !alreadyChecked[scorrX][scorrY - 1] && areTilesConnected(scorrX, scorrY, scorrX, scorrY-1)) {
+            if (scorrX == i && scorrY - 1 == j)
                 return true;
-            } else {
-                // setTrue(alreadyChecked, scorrX, scorrY - 1);
+            else
                 check4 = isReachable(alreadyChecked, scorrX, scorrY - 1, i, j);
-            }
         }
-        return (check1 || check2 || check3 || check4);
 
+        return (check1 || check2 || check3 || check4);
     }
 
 
@@ -247,41 +255,43 @@ public class Board {
     /** Grazie al sealed pattern matching, il compilatore riconosce il tipo effettivo dell'oggetto
      * e lo assegna alla variabile del case senza bisogno di instanceof o cast manuali. */
     public void delete(int i, int j) {
-        boolean[][] alreadyChecked = new boolean[ROWS][COLS]; // scritto in questo modo sto inizializzando una matrice di booleani
-        // che JAVA INIZIALIZZERÀ A FALSE
-        if (!isValid(i, j) || isFree(i, j)) {
+        if (!isValid(i, j) || isFree(i, j))
             throw new InvalidCoordinatesException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
-        } else {
-            /* Nelle ArrayList il metodo remove ha due implementazioni: uso quella che riceve un oggetto e rimuove il primo elemento
-               su cui equals restituisce true: non serve override perchè equals confronta i riferimenti (in questo caso sono gli stessi). Controllo che esista lo stesso oggetto e venga rimosso correttamente.  */
-            boolean removed = switch (ship[i][j]) {
-                case AlienAddOns a -> alienAddOns.remove(a);
-                case BatteryHub batteryHub -> batteryHubs.remove(batteryHub);
-                case Container container -> containers.remove(container);
-                case HousingUnit cabin -> housingUnits.remove(cabin);
-                case Cannon cannon -> cannons.remove(cannon);
-                case Engine engine -> engines.remove(engine);
-                case Shield shield -> shields.remove(shield);
-                case StructuralComponent tube -> structuralComponents.remove(tube);
-                default -> false;
-            };
 
-            if (!removed) {
-                throw new ComponentMismatchException("Componente" +
-                        " non trovato nella rispettiva lista: errore in delete() di Board alla cella [" + i + "][" + j + "]");
-            }
+        /* Nelle ArrayList il metodo remove ha due implementazioni: uso quella che riceve un oggetto e rimuove il primo elemento
+           su cui equals restituisce true: non serve override perchè equals confronta i riferimenti (in questo caso sono gli stessi). Controllo che esista lo stesso oggetto e venga rimosso correttamente.  */
+        boolean removed = switch (ship[i][j]) {
+            case AlienAddOns a -> alienAddOns.remove(a);
+            case BatteryHub batteryHub -> batteryHubs.remove(batteryHub);
+            case Container container -> containers.remove(container);
+            case HousingUnit cabin -> housingUnits.remove(cabin);
+            case Cannon cannon -> cannons.remove(cannon);
+            case Engine engine -> engines.remove(engine);
+            case Shield shield -> shields.remove(shield);
+            case StructuralComponent tube -> structuralComponents.remove(tube);
+            default -> false;
+        };
 
-            // elimino component e aggiorno la pila degli scarti
-            ship[i][j] = null;
-            garbage++;
+        if (!removed) {
+            throw new ComponentMismatchException("Componente" +
+                    " non trovato nella rispettiva lista: errore in delete() di Board alla cella [" + i + "][" + j + "]");
+        }
 
-            // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
-            // perchè potrebbe essere importante per collegare altri componenti
-            // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
-            for (int row = 0; row < ship.length; row++) {
-                for (int col = 0; col < ship[row].length; col++) {
-                    // analizzando la matrice, 2 e 3 sono le coordinate del centro
-                    if (!isReachable(alreadyChecked, 2, 3, row, col)) {
+        // elimino component e aggiorno la pila degli scarti
+        ship[i][j] = null;
+        garbage++;
+
+        // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
+        // perchè potrebbe essere importante per collegare altri componenti
+        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
+        for (int row = 0; row < ship.length; row++) {
+            for (int col = 0; col < ship[row].length; col++) {
+                // 2,3 sono le coordinate della cabina centrale
+                if (isValid(row,col) && !isFree(row,col)) {
+                    // ogni ricerca di raggiungibilità deve avere matrice dei visitati "pulita" (non "sporca da ricerche precedenti)
+                    boolean[][] visited = new boolean[ROWS][COLS];
+
+                    if (!isReachable(visited, 2, 3, row, col)) {
                         delete(row, col);
                         row = 0;
                         col = 0;
@@ -291,15 +301,24 @@ public class Board {
         }
     }
 
+    private boolean hasAdjacentTile(int i, int j) {
+        // verifico se vi sia almeno un componente adiacente in una posizione valida (controllo necessario per saldatura tile)
+        return (isValid(i - 1, j) && !isFree(i - 1, j)) ||
+                (isValid(i + 1, j) && !isFree(i + 1, j)) ||
+                (isValid(i, j - 1) && !isFree(i, j - 1)) ||
+                (isValid(i, j + 1) && !isFree(i, j + 1));
+    }
+
     public void addComponent(Component c, int i, int j) {
-        if (isValid(i,j) && isFree(i, j)) {
-            ship[i][j] = c;
-            c.setX(i);
-            c.setY(j);
-            c.placeOnTruck();
-        } else
+        // solo la cabina centrale non avrà tile adiacenti al momento dell'inserimento; tutte le altre avranno questo vincolo.
+        // Inoltre, la posizione deve essere valida e libera
+        if ( !isValid(i, j) || !isFree(i, j) || (!hasAdjacentTile(i, j) && !c.isStartingCabin()))
             throw new InvalidCoordinatesException("You can't add this component: invalid parameters i and j");
 
+        ship[i][j] = c;
+        c.setX(i);
+        c.setY(j);
+        c.placeOnTruck();
         // aggiungo nella rispettiva lista in base al tipo. I due oggetti (in ship e nella lista) avranno
         // lo stesso riferimento, ma verranno visti da "due punti di vista diversi"
         switch (c) {
@@ -349,23 +368,28 @@ public class Board {
     public void removePreciousItemFromContainer(int i, int j, Item itemToRemove) {
 
         // Controllo che l'item sia tra i più preziosi attualmente a bordo
-        if (!isMostPrecious(itemToRemove)) {
+        if (!isMostPrecious(itemToRemove))
             throw new IllegalArgumentException("Item" + itemToRemove.getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
-        }
 
-        // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
-        // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
-        int index = containers.indexOf(ship[i][j]);
-        // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
-        if (index == -1) {
-            throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
-        }
-        // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
-        try {
-            containers.get(index).loseItem(itemToRemove);
-        }
-        catch (ContainerException e) {
-            throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
+        Component tile = ship[i][j];
+        switch (tile) {
+            case Container c -> {
+                // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
+                // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
+                int index = containers.indexOf(ship[i][j]);
+                // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
+                if (index == -1) {
+                    throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
+                }
+                // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
+                try {
+                    containers.get(index).loseItem(itemToRemove);
+                }
+                catch (ContainerException e) {
+                    throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
+                }
+            }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");
         }
     }
 
@@ -497,13 +521,13 @@ public class Board {
 
             // Utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da meteora piccola.
             // Appena trovo un componente valido sulla colonna/linea di impatto:
-            // - Se ha lato EMPTY nella direzione d'impatto, la meteora rimbalza → esco subito (break)
+            // - Se ha connettore NONE (quindi non un connettore) nella direzione d'impatto, la meteora rimbalza → esco subito (break)
             // - Altrimenti il modulo ha un connettore esposto → lo elimino
             if (shieldUsed == null || !isCovered) {
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
-                            if (ship[i][realImpactLine].getUp() != Side.EMPTY) {
+                            if (ship[i][realImpactLine].getUp().connectorType() != ConnectorType.NONE) {
                                 delete(i, realImpactLine);
                             }
                             break;
@@ -512,7 +536,7 @@ public class Board {
                 } else if (meteor.getDirection() == Direction.DOWN) {
                     for (int i = ship.length - 1; i >= 0; i--) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
-                            if (ship[i][realImpactLine].getDown() != Side.EMPTY) {
+                            if (ship[i][realImpactLine].getDown().connectorType() != ConnectorType.NONE) {
                                 delete(i, realImpactLine);
                             }
                             break;
@@ -521,7 +545,7 @@ public class Board {
                 } else if (meteor.getDirection() == Direction.RIGHT) {
                     for (int j = ship[realImpactLine].length - 1; j >= 0; j--) {
                         if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
-                            if (ship[realImpactLine][j].getRight() != Side.EMPTY) {
+                            if (ship[realImpactLine][j].getRight().connectorType() != ConnectorType.NONE) {
                                 delete(realImpactLine, j);
                             }
                             break;
@@ -530,7 +554,7 @@ public class Board {
                 } else {
                     for (int j = 0; j < ship[realImpactLine].length; j++) {
                         if (isValid(realImpactLine, j) && !isFree(realImpactLine, j)) {
-                            if (ship[realImpactLine][j].getLeft() != Side.EMPTY) {
+                            if (ship[realImpactLine][j].getLeft().connectorType() != ConnectorType.NONE) {
                                 delete(realImpactLine, j);
                             }
                             break;
@@ -550,9 +574,8 @@ public class Board {
             for (Cannon s : cannons) {
                 // Determino se il cannone si trova in una posizione adatta a colpire la meteora
                 boolean matchesPosition = switch (meteor.getDirection()) {
-                    // Per meteore verticali (UP/DOWN), servono cannoni nella stessa colonna
-                    case UP, DOWN -> s.getY() == realImpactLine;
-                    // Per meteore orizzontali (RIGHT/LEFT), bastano cannoni nella stessa riga o nelle righe adiacenti
+                    case UP -> s.getY() == realImpactLine;
+                    case DOWN -> s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1;
                     case RIGHT, LEFT ->
                             s.getX() == realImpactLine || s.getX() == realImpactLine + 1 || s.getX() == realImpactLine - 1;
                 };
@@ -618,13 +641,13 @@ public class Board {
         }
     }
 
-    /*
-    Il metodo loadGoods carica una lista di item in un singolo container in posizione (i,j).
-    Si assume che la lista sia stata già validata dal Controller come carico destinato a quel container specifico.
-    Il metodo prova a caricare ogni item e, se anche uno solo non rispetta le regole (colore o spazio disponibile),
-    viene lanciata un'eccezione (presente in loadItem) e nessun item successivo viene caricato.
-    Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
-    */
+    /**
+     Il metodo loadGoods carica una lista di item in un singolo container in posizione (i,j).
+     Si assume che la lista sia stata già validata dal Controller come carico destinato a quel container specifico.
+     Il metodo prova a caricare ogni item e, se anche uno solo non rispetta le regole (colore o spazio disponibile),
+     viene lanciata un'eccezione (presente in loadItem) e nessun item successivo viene caricato (ma i preceedenti si!).
+     Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
+     */
     public void loadGoods(List<Item> items, int i, int j) {
         if (!isValid(i, j) || isFree(i,j))
             throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
@@ -654,18 +677,34 @@ public class Board {
     }
 
 
-    public void checkHousingUnits() {
+    public void updateAllowedAliens() {
         /* per ogni housingunit faccio un ciclo che controlli eventuali addons adiacenti, per poi aggiungere
            il colore dell'alienaddon corrispondente; non ho messo un break nel for
            quando trovo un addon perchè potrei avere più addons e quindi avere a disposizione più colori*/
         for (HousingUnit h : housingUnits) {
             for (AlienAddOns a : alienAddOns) {
+                // se trovo un AddOns adiacente lo aggiungo alla lista dei supporti vitali adiacenti alla HousingUnit
                 if ((a.getX() == h.getX() + 1 && a.getY() == h.getY()) || (a.getX() == h.getX() - 1 && a.getY() == h.getY()) || (a.getY() == h.getY() + 1 && a.getX() == h.getX()) || (a.getY() == h.getY() - 1 && a.getX() == h.getX())) {
                     h.addConnectedAddon(a.getColor());
                 }
             }
         }
     }
+
+    /**
+     * Checks if the board already contains an alien of the specified color.
+     * According to the rules, each ship can have at most one alien per color.
+     * @param color the color of the alien to check
+     * @return true if an alien of the same color is already present, false otherwise
+     */
+    public boolean containsSameAlien(Color color) {
+        for (HousingUnit h : housingUnits) {
+            if (h.getAlien() == color)
+                return true;
+        }
+        return false;
+    }
+
 
     public void reduceBatteries(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i, j))
@@ -687,8 +726,6 @@ public class Board {
             }
             default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a battery hub");
         }
-
-
     }
 
 
@@ -838,7 +875,7 @@ public class Board {
         // L’alieno viola conta +2, ma solo se la potenza di fuoco è già superiore a 0.
         if (strength > 0) {
             for (HousingUnit housing : housingUnits) {
-                if (housing.getAlien().equals(Color.Purple)) {
+                if (housing.getAlien() != null && housing.getAlien().equals(Color.Purple)) {
                     strength += 2;
                     break;  // esco perchè può esserci solo un alieno viola
                 }
@@ -866,7 +903,7 @@ public class Board {
         // L’alieno marrone conta +2, ma solo se la potenza motrice è già superiore a 0.
         if (strength > 0) {
             for (HousingUnit housing : housingUnits) {
-                if (housing.getAlien().equals(Color.Brown)) {
+                if (housing.getAlien() != null && housing.getAlien().equals(Color.Brown)) {
                     strength += 2;
                     break;   // esco perchè può esserci solo un alieno marrone
                 }
@@ -912,8 +949,8 @@ public class Board {
 
 
     /**
-    * @return somma totale in crediti ricavati dalle merci.
-    * */
+     * @return somma totale in crediti ricavati dalle merci.
+     * */
     public int calculateGoodsSales() {
         int money = 0;
         for (Container c : containers) {
@@ -945,5 +982,31 @@ public class Board {
 
     public int getGarbage() {
         return garbage;
+    }
+
+    /** Di seguito metto metodi necessari per il testing (BoardTest) */
+    public List<Cannon> getCannons() {
+        // ritorno copia immutabile così è solo read-only ed evito side-effects esterni
+        return List.copyOf(cannons);
+    }
+
+    public List<Container> getContainers() {
+        return List.copyOf(containers);
+    }
+
+    public List<Engine> getEngines() {
+        return List.copyOf(engines);
+    }
+
+    public List<AlienAddOns> getAlienAddOns() {
+        return List.copyOf(alienAddOns);
+    }
+
+    public List<HousingUnit> getHousingUnits() {
+        return List.copyOf(housingUnits);
+    }
+
+    public Component getTile(int i, int j) {
+        return ship[i][j];
     }
 }

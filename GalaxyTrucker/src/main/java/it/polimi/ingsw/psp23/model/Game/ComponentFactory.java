@@ -64,13 +64,7 @@ public class ComponentFactory {
     private static ArrayList<Component> generateHousingUnits() {
         ArrayList<Component> subComponents = new ArrayList<>();
         // ordine Side: up, down, left, right
-        // cabine speciali : ???VALUTO INTRODUZIONE ATTRIBUTO COLOR???
-        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
-
-        // cabine normali
+        // cabine normali (quelle speciali le istanzio da un'altra parte perchè non finiranno nel "mucchio" heap
         subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
         subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
         subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));

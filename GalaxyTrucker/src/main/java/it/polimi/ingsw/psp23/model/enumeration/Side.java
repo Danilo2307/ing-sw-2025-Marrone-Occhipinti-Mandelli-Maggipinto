@@ -11,9 +11,18 @@ public enum Side {
     SHIELD_SINGLE_CONNECTOR,
     SHIELD_DOUBLE_CONNECTOR;
 
-    // determino se la Side this è uno scudo
+
     public boolean isShield() {
         return (this == SHIELD || this == SHIELD_SINGLE_CONNECTOR || this == SHIELD_DOUBLE_CONNECTOR);
+    }
+
+    public ConnectorType connectorType() {
+        return switch (this) {
+            case SINGLE_CONNECTOR, SHIELD_SINGLE_CONNECTOR -> ConnectorType.SINGLE;
+            case DOUBLE_CONNECTOR, SHIELD_DOUBLE_CONNECTOR -> ConnectorType.DOUBLE;
+            case UNIVERSAL_CONNECTOR -> ConnectorType.UNIVERSAL;
+            default -> ConnectorType.NONE;
+        };
     }
 }
 

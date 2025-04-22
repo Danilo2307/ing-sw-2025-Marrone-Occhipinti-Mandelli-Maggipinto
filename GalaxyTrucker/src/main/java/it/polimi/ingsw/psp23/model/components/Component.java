@@ -88,4 +88,9 @@ public sealed class Component permits AlienAddOns, BatteryHub, Cannon, Container
     public Side getRight() {
         return right;
     }
+
+    // necessario per gestire l'aggiunta della cabina centrale
+    public boolean isStartingCabin() {
+        return false;
+    }
 }
