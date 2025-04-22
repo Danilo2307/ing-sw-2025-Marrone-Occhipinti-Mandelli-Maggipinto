@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.network;
 
+import it.polimi.ingsw.psp23.logger.FlightRecorder;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.*;
 import it.polimi.ingsw.psp23.network.state.State;
 import it.polimi.ingsw.psp23.network.state.WaitingForUsernameState;
@@ -51,6 +53,36 @@ public class ClientInfo {
      *
      * @return the current state
      */
+
+    /**
+     * Dispatches the given message object to the client over the network.
+     *
+     * @param message the payload to transmit to the user
+     */
+    public void send(Message message) {
+        try {
+            // Attempt to serialize and send the message via the server
+            Server.getInstance().sendSerializableObject(this.connectionUUID, message);
+        } catch (ServerException | InvalidTCPConnectionException ex) {
+            // An error here indicates that the underlying connection is no longer active.
+            // At this point, we should clean up any resources tied to this user.
+
+            // The exception may result from a closed or broken TCP link (graceful or abrupt).
+            // Initiate user removal without notifying the client.
+            Profiles.getInstance().silentPruneUser(this.connectionUUID, false);
+
+            // Any other components referencing this user will likewise encounter errors
+            // and will trigger the same cleanup procedure (cascading prune pattern).
+        }
+
+        // Log the fact that we attempted to respond to the user
+        FlightRecorder.info(String.format(
+                "Sent response to user %s: %s",
+                this.connectionUUID.substring(0, 3),
+                message.getClass().getSimpleName()
+        ));
+    }
+
     public State getState() {
         return state;
     }
@@ -74,20 +106,21 @@ public class ClientInfo {
         return serverRMI;
     }
 
-    /**
-     * Sets the username of the User.
-     * @param username The username to set.
-     * @throws UserException If the username is invalid.
-     */
-    public void setUsername(String username) throws UserException {
-        // Checks for the validity of the username
-        Pattern pattern = Pattern.compile(TextValidator.usernameValidator);
-        Matcher matcher = pattern.matcher(username);
-        if (!matcher.matches()) {
-            throw new UserException("Username is invalid.", UserException.Reason.INVALID_USERNAME);
-        }
-
-        this.username = username;
+    //TODO: verificare la vilidità dell'username inserito
+//    /**
+//     * Sets the username of the User.
+//     * @param username The username to set.
+//     * @throws UserException If the username is invalid.
+//     */
+    public void setUsername(String username) throws RuntimeException {
+//        // Checks for the validity of the username
+//        Pattern pattern = Pattern.compile(TextValidator.usernameValidator);
+//        Matcher matcher = pattern.matcher(username);
+//        if (!matcher.matches()) {
+//            throw new RuntimeException("Username is invalid.", UserException.Reason.INVALID_USERNAME);
+//        }
+//
+//        this.username = username;
     }
 
     public String getUsername() {

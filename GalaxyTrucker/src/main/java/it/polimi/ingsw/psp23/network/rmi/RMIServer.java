@@ -3,10 +3,11 @@ package it.polimi.ingsw.psp23.network.rmi;
 import it.polimi.ingsw.psp23.network.*;
 import it.polimi.ingsw.psp23.network.client.*;
 import it.polimi.ingsw.psp23.network.common.*;
+import it.polimi.ingsw.psp23.network.state.LobbySelectionState;
+import it.polimi.ingsw.psp23.network.state.StateType;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.ServerError;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
@@ -120,12 +121,12 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public Boolean setUsernameRMI(String username) throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.SETTINGUSERNAME) return false;
+        if (this.user.getState().getStateType() != StateType.WAITING_FOR_USERNAME) return false;
 
         if (!Profiles.getInstance().isUsernameTaken(username)) {
             try {
                 Profiles.getInstance().setUserUsername(this.user.getConnectionUUID(), username);
-                this.user.setState(new ChooseCreateJoinState(this.user));
+                this.user.setState(new LobbySelectionState(this.user));
                 return true;
             } catch (ProfilesException | UserException e) {
                 return false;
@@ -145,7 +146,7 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public Boolean createLobbyRMI(String name, Integer maxPlayers) throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return false;
+        if (this.user.getState().getStateType() != StateType.LOBBY_SELECTION) return false;
 
         try {
             MatchController.getInstance().createLobbyRMI(name, maxPlayers, this.user);
@@ -164,7 +165,7 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public Boolean joinLobbyRMI(String lobbyUUID) throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return false;
+        if (this.user.getState().getStateType() != StateType.LOBBY_SELECTION) return false;
 
         try {
             MatchController.getInstance().joinLobbyRMI(lobbyUUID, this.user);
@@ -182,7 +183,7 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public List<ListOfLobbyToJoinMessage.LobbyInfo> getListOfLobbyToJoinRMI() throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.CHOOSECREATEJOIN) return null;
+        if (this.user.getState().getStateType() != StateType.LOBBY_SELECTION) return null;
 
         try {
             return MatchController.getInstance().getListOfLobbyToJoinRMI(this.user);
@@ -199,8 +200,8 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public LobbyInfo getLobbyInfoRMI() throws RemoteException {
-        if (this.user.getState().getStateType() == StateType.INLOBBY ||
-                this.user.getState().getStateType() == StateType.INGAME) {
+        if (this.user.getState().getStateType() == StateType.INSIDE_LOBBY ||
+                this.user.getState().getStateType() == StateType.ACTIVE_GAME) {
             try {
                 return MatchController.getInstance().getLobbyInfoRMI(this.user);
             } catch (MatchControllerException e) {
@@ -219,7 +220,7 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public Boolean startLobbyRMI() throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.INLOBBY) return false;
+        if (this.user.getState().getStateType() != StateType.INSIDE_LOBBY) return false;
 
         try {
             MatchController.getInstance().startLobbyRMI(this);
@@ -237,7 +238,7 @@ public class RMIServer implements RMIServerInterface {
      */
     @Override
     public Boolean exitLobbyRMI() throws RemoteException {
-        if (this.user.getState().getStateType() != StateType.INLOBBY) return false;
+        if (this.user.getState().getStateType() != StateType.INSIDE_LOBBY) return false;
 
         try {
             MatchController.getInstance().exitLobbyRMI(this.user);
