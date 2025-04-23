@@ -50,5 +50,9 @@ public final class Container extends Component {
 
     // NOTA: il ribilanciamento delle merci sarà gestito nel controller tramite continui loadItem e loseItem a scelta dell'utente
 
+    public Color getColor(){
+        return colorContainer;
+    }
+
 }
 

@@ -4,11 +4,17 @@ import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public final class BatteryHub extends Component {
     // Alberto
+    private final int capacity;
     private int numBatteries;
 
     public BatteryHub(Side up, Side down, Side left, Side right, int numBatteries) {
         super(up, down, left, right);
-        this.numBatteries = numBatteries;
+        capacity = numBatteries;
+        this.numBatteries = capacity;
+    }
+
+    public int getCapacity() {
+        return capacity;
     }
 
     public int getNumBatteries() {
