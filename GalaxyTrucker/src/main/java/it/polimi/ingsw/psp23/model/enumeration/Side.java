@@ -24,6 +24,21 @@ public enum Side {
             default -> ConnectorType.NONE;
         };
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case SINGLE_CONNECTOR -> "singolo";
+            case DOUBLE_CONNECTOR -> "doppio";
+            case UNIVERSAL_CONNECTOR -> "universale";
+            case EMPTY -> "lato liscio";
+            case GUN -> "cannone";
+            case ENGINE -> "motore";
+            case SHIELD -> "scudo";
+            case SHIELD_SINGLE_CONNECTOR -> "scudo e connettore singolo";
+            case SHIELD_DOUBLE_CONNECTOR -> "scudo e connettore doppio";
+        };
+    }
 }
 
 // alcune Side come GUN, SHIELD ecc. sono necessarie perchè quando chiamo component.rotate() devo far ruotare anche il cannone/lo scudo.

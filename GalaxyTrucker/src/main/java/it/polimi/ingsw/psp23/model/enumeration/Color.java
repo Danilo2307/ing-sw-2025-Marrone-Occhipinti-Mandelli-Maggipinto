@@ -10,23 +10,13 @@ public enum Color {
 
     @Override
     public String toString() {
-        if(Color.Brown.equals(this)) {
-            return "Brown";
-        }
-        else if(Color.Purple.equals(this)) {
-            return "Purple";
-        }
-        else if(Color.Green.equals(this)) {
-            return "Green";
-        }
-        else if(Color.Yellow.equals(this)) {
-            return "Yellow";
-        }
-        else if(Color.Red.equals(this)) {
-            return "Red";
-        }
-        else{
-            return "Blue";
-        }
+        return switch (this) {
+            case Brown -> "marrone";
+            case Purple -> "viola";
+            case Green -> "verde";
+            case Yellow -> "gialla";
+            case Red -> "rossa";
+            case Blue -> "blu";
+        };
     }
 }
