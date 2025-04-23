@@ -139,10 +139,6 @@ public class Controller {
     }
 
 
-    public Card getNextCard(){
-        return game.getNextCard();
-    }
-
     public ArrayList<Card> getVisibleDeck1(String nickname){
         ArrayList<Card> deck;
         deck = game.getVisibleDeck1(game.getPlayerFromNickname(nickname));
@@ -194,6 +190,15 @@ public class Controller {
 
     public void gameOver(){
         game.setGameStatus(GameStatus.End);
+    }
+
+    public void nextCard(){
+        Card c = game.getNextCard();
+        if(c == null){
+            gameOver();
+        }else{
+            //qui chiamo il metodo nel model che aggiorna lo stato in base a cosa serve
+        }
     }
 
 
