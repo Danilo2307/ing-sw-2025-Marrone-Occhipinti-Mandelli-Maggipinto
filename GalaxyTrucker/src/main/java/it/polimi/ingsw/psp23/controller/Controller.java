@@ -197,7 +197,7 @@ public class Controller {
         if(c == null){
             gameOver();
         }else{
-            //qui chiamo il metodo nel model che aggiorna lo stato in base a cosa serve
+            cardHandler.play(c);
         }
     }
 
