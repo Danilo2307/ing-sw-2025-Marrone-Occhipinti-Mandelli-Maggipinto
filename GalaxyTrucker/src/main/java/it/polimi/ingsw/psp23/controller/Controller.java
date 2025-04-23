@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
+import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -19,6 +20,7 @@ public class Controller {
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
+    private Card currentCard;
 
     public Controller(int gameId) {
         game = new Game(gameId);
@@ -26,6 +28,7 @@ public class Controller {
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
         currentPosition = 1;
+        game.setEventListener(this::onGameEvent);
     }
 
     public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
@@ -193,13 +196,35 @@ public class Controller {
     }
 
     public void nextCard(){
-        Card c = game.getNextCard();
-        if(c == null){
+        currentCard = game.getNextCard();
+        if(currentCard == null){
             gameOver();
         }else{
-            cardHandler.play(c);
+            // qui ci andrà l'handleCard method, ovvero quel metodo presente nel model per ogni carta
+            // che creerà l'evento, cambierà stato e metterà nell'evento le informazioni della carta.
+            // Dopo la chiamata a questo evento di inizializzazione ci sarà la chiamata dell'effettivo metodo Play
+            // al quale saranno già passati gli input richiesti nella precedente chiamata grazie all'evento
+            // (nota bene che nella chiamata al primo metodo, l'handleCard vuole l'istanza del model in  ingresso ovvero game
+            // perchè deve poter chiamare la funzione fireEvent dichiarata nel model per compattezza);
         }
     }
+
+    //arriva un input dalla view
+    public void handleInput(Object input) {
+        currentCard.play(game.getCurrentPlayer(),input);
+    }
+
+    public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
+        game.setGameStatus(event.getNewStatus());
+        //qui serve tutta la gestione della chiamata alla view poichè giunti a questo punto
+        //avremo l'evento pronto con le informazioni della carta e lo stato già aggiornato dal model con una ripetizione
+        // del suo cambiamento all'interno dell'evento (si può anche togliere in futuro)
+        // quindi da qui chiamiamo la view e dopo la view chiamerà un altro metodo per mandarci l'input da mandare a play
+
+        // Invia i dati alla View (come JSON, socket, ecc.)
+        network.sendToAllClients("game_event", event);
+    }
+
 
 
 }

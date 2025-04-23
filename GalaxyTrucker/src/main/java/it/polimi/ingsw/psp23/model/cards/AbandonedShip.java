@@ -1,10 +1,17 @@
 package it.polimi.ingsw.psp23.model.cards;
+
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+
 public class AbandonedShip extends Card {
     //Danilo
 
     private final int days;
     private final int cosmicCredits;
     private final int numMembers;
+    private boolean isSold = false;
 
     public AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
         super(level);
@@ -28,5 +35,31 @@ public class AbandonedShip extends Card {
     @Override
     public Object call(Visitor visitor){
         return visitor.visitForAbandonedShip(this);
+    }
+
+    public void initPlay(Game game){
+        game.setGameStatus(GameStatus.BooleanRequest);
+        game.fireEvent(new Event(game.getGameStatus(),days, cosmicCredits,numMembers));
+    }
+
+    public void play(Player player, InputObject input){
+        if(!player.isInGame())
+            throw new RuntimeException("Player is not in a game");
+        if(isSold)
+            throw new RuntimeException("Ship is already sold");
+       if(input.getDecision()){
+            /*if(!isSold && player.getTruck().calculateCrew() > numMembers && player.isInGame() && input == true) {
+                isSold = true;
+
+                    //verrà anche deciso da quali hub togliere i membri da eliminare
+                    players.get(i).getTruck().reduceCrew(numMembers,1,1);
+                    players.get(i).updateMoney(cosmicCredits);
+                    Utility.updatePosition(players,i,-days);
+                    i = size; //al pari di un break
+
+                i++;
+            }*/
+
+    }
     }
 }

@@ -5,6 +5,10 @@ public enum GameStatus {
     Building,
     CheckBoards,
     Playing,
-    End
+    End,
+    BooleanRequest,
+    IntegerRequest,
+    Epidemic,
+    MeteorSwarm
     //aggiungere altri stati
 }
