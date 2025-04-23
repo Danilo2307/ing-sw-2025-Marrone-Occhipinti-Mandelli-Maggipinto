@@ -8,4 +8,10 @@ public class OpenSpace extends Card{
         super(level);
     }
 
+
+
+    public void play() {
+
+    }
+
 }
