@@ -36,5 +36,39 @@ public class IOManager {
         };
     }
 
+    public void printInfoTile(Component c) {
+        if (c == null) {
+            System.out.println("Tile vuota");
+            return;
+        }
+
+        switch (c) {
+            case Cannon cannon -> System.out.println("Cannone " + (cannon.isDouble() ? "doppio":"singolo"));
+            case Engine engine -> System.out.println("Motore " + (engine.isDouble() ? "doppio":"singolo"));
+            case HousingUnit cabin -> {
+                if (cabin.getAlien() == null)
+                    System.out.println("Cabina contiene " + cabin.getNumAstronaut() + " astronauti");
+                else
+                    System.out.println("Cabina contiene un alieno di colore " + cabin.getAlien());
+            }
+            case AlienAddOns a -> System.out.println("Supporto vitale di colore "+ a.getColor());
+            case StructuralComponent t -> System.out.println("Tubi");
+            case Container container -> System.out.println("Container di colore "+ container.getColor() + "e capacità " + container.getSize()
+                    + ". Contiene le seguenti merci: " + container.getItems());
+            case BatteryHub b -> System.out.println("Il pacco batterie ha capacità " + b.getCapacity() +
+                    "e attualmente contiene " + b.getNumBatteries() + "batterie");
+            case Shield s -> System.out.println("Scudo");
+            default -> System.out.println();
+        }
+
+        System.out.println("Connettori:");
+        System.out.println("  ↑ Up     : " + c.getUp());
+        System.out.println("  ↓ Down   : " + c.getDown());
+        System.out.println("  ← Left   : " + c.getLeft());
+        System.out.println("  → Right  : " + c.getRight());
+    }
+
+
+
 
 }

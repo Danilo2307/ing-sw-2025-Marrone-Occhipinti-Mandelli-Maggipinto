@@ -54,5 +54,9 @@ public final class Container extends Component {
         return colorContainer;
     }
 
+    public int getSize(){
+        return size;
+    }
+
 }
 
