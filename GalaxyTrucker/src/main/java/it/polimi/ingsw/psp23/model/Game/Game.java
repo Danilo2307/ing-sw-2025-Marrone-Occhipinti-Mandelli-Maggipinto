@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
+import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class Game {
     private final ArrayList<Player> players;
@@ -27,6 +29,7 @@ public class Game {
     private String deck1Owner;
     private String deck2Owner;
     private String deck3Owner;
+    private Consumer<Event> eventListener;
 
     public Game(int gameId) {
         this.players = new ArrayList<>();
@@ -340,6 +343,16 @@ public class Game {
 
             int lostComponents = player.getTruck().getGarbage();
             player.updateMoney(-lostComponents);
+        }
+    }
+
+    public void setEventListener(Consumer<Event> listener) {
+        this.eventListener = listener;
+    }
+
+    public void fireEvent(Event event) {
+        if (eventListener != null) {
+            eventListener.accept(event);
         }
     }
 

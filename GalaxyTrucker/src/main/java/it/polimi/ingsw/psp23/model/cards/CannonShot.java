@@ -17,4 +17,12 @@ public class CannonShot {
     public Direction getDirection() {
         return direction;
     }
+
+    public String toString() {
+        if(big == true){
+            return "Big shot from" + direction;
+        }else{
+            return "Small shot from" + direction;
+        }
+    }
 }
