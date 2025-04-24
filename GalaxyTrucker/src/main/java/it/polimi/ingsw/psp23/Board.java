@@ -1010,4 +1010,8 @@ public class Board {
     public Component getTile(int i, int j) {
         return ship[i][j];
     }
+
+    public Component[][] getShip() {
+        return ship;
+    }
 }
