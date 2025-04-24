@@ -6,9 +6,9 @@ public enum GameStatus {
     CheckBoards,
     Playing,
     End,
-    BooleanRequest,
+    BooleanRequestForAbandonedShip,
     IntegerRequest,
-    Epidemic,
+    RunningEpidemic,
     MeteorSwarm,
     ChooseCabins,
     //aggiungere altri stati
