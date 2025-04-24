@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 public class AbandonedShip extends Card {
@@ -42,7 +41,7 @@ public class AbandonedShip extends Card {
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
+        Game.getInstance().setGameStatus(GameStatus.BooleanRequestForAbandonedShip);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(),days, cosmicCredits,numMembers));
     }
 

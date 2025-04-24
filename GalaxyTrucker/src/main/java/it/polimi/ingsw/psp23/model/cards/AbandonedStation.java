@@ -45,7 +45,7 @@ public class AbandonedStation extends Card {
 
 
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
+        Game.getInstance().setGameStatus(GameStatus.BooleanRequestForAbandonedShip);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), days, numMembers, prize ));
     }
 
