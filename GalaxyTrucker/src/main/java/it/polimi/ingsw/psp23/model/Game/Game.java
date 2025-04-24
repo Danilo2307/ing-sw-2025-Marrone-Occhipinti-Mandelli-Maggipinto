@@ -124,9 +124,6 @@ public class Game {
     }
 
 
-    public int getGameId(){
-        return gameId;
-    }
 
     public ArrayList<Player> getPlayers(){
         return players;
