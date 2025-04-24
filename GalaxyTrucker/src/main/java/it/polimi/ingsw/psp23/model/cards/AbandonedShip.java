@@ -1,9 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 public class AbandonedShip extends Card {
@@ -44,13 +46,13 @@ public class AbandonedShip extends Card {
     }
 
     public void play(InputObject input){
+
         Player player = Game.getInstance().getCurrentPlayer();
-        if(!player.isInGame())
-            throw new RuntimeException("Player is not in a game");
+
         if(isSold)
             throw new RuntimeException("Ship is already sold");
        if(input.getDecision()){
-            if(player.getTruck().calculateCrew() > numMembers) {
+            if(player.getTruck().calculateCrew() > numMembers && inputValidity(input)) {
                 isSold = true;
 
                     //verrà anche deciso da quali hub togliere i membri da eliminare
@@ -65,5 +67,35 @@ public class AbandonedShip extends Card {
             }
 
     }
+    }
+
+    public boolean inputValidity(InputObject input) {
+        Board board = Game.getInstance().getCurrentPlayer().getTruck();
+        boolean valid = true;
+        int i = 0;
+        int sum = 0;
+        while(valid && i < input.getLista().size()){
+
+            int coordX = input.getLista().get(i)[0];
+
+            int coordY = input.getLista().get(i)[1];
+
+            Component analizedComponent = board.getTile(coordX, coordY);
+
+            if(!board.isValid(coordX, coordY) || !board.getHousingUnits().contains(analizedComponent)){
+                valid = false;
+            }
+            sum += input.getLista().get(i)[3];
+            i++;
+        }
+
+        if(sum != numMembers){
+            valid = false;
+        }
+
+
+
+
+        return valid;
     }
 }
