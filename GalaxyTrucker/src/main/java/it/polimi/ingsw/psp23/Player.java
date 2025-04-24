@@ -10,6 +10,7 @@ public class Player {
     private int position ;
     private final Board truck;
     private int money;
+    private Component currentTileInHand;
     private boolean inGame;
     private boolean isConnected;
     private Game game;
@@ -19,8 +20,10 @@ public class Player {
         this.position = 0;
         this.truck = new Board();
         this.money = 0;
+        this.currentTileInHand = null;
         this.inGame = true;
         this.isConnected = true;
+
     }
 
     /**
@@ -84,16 +87,37 @@ public class Player {
      */
     public Component chooseTileFromHeap() {
         // eventuale eccezione verrà propagata e gestita dal controller
-        return game.getTileFromHeap();
+        if (currentTileInHand != null)
+            throw new InvalidComponentActionException("Per pescare non devi avere niente già in mano!");
+        currentTileInHand = game.getTileFromHeap();
+        return currentTileInHand;
     }
 
     public Component chooseCardUncovered(int position) {
         // eventuale eccezione verrà propagata e gestita dal controller
-        return game.getTileUncovered(position);
+        if (currentTileInHand != null)
+            throw new InvalidComponentActionException("Per pescare non devi avere niente già in mano!");
+        currentTileInHand = game.getTileUncovered(position);
+        return currentTileInHand;
     }
 
-    public void discardComponent(Component component){
-        game.releaseTile(component);
+    public void discardComponent(){
+        if (currentTileInHand == null)
+            throw new InvalidComponentActionException("Non puoi rilasciare nulla perchè non hai niente in mano!");
+        game.releaseTile(currentTileInHand);
+        currentTileInHand = null;
+    }
+
+    public void rotateTileInHand() {
+        if (currentTileInHand == null)
+            throw new InvalidComponentActionException("Puoi ruotare solo se hai qualcosa in mano!");
+        currentTileInHand.rotate();
+    }
+
+    public void addTile(int x, int y) {
+        if (currentTileInHand == null)
+            throw new InvalidComponentActionException("Non hai in mano nulla --> non puoi saldare nulla sulla nave!");
+        getTruck().addComponent(currentTileInHand, x, y);
     }
 
 }
