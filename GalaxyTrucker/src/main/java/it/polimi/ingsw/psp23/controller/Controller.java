@@ -211,7 +211,7 @@ public class Controller {
 
     //arriva un input dalla view
     public void handleInput(Object input) {
-        currentCard.play(game.getCurrentPlayer(),input);
+        currentCard.play(game,input);
     }
 
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
