@@ -5,15 +5,9 @@ package it.polimi.ingsw.psp23.model.enumeration;
         Members,
         EngineStrength;
 
-        public String toString() {
-            if(this == EngineStrength){
-                return "EngineStrength";
-            }
-            else if(this == CannonStrength){
-                return "CannonStrength";
-            }
-            else{
-                return "Members";
-            }
-        }
+        /*
+         * L'Override di toString() non serve perchè quando ho un enum il toString restituisce già i nomi dell'enum
+         * sotto forma di stringa
+         */
+
     }
