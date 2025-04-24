@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 public class AbandonedShip extends Card {
@@ -69,23 +70,105 @@ public class AbandonedShip extends Card {
     }
     }
 
-    public boolean inputValidity(InputObject input) {
+    public boolean hasEnoughUmansLeft(InputObject input) {
         Board board = Game.getInstance().getCurrentPlayer().getTruck();
+
         boolean valid = true;
+
         int i = 0;
+
         int sum = 0;
+
+        int coordX;
+
+        int coordY;
+
+        int quantity;
+
+        Component analizedComponent;
+
+        int indiceCabina;
+
+        int umaniNecessari = 0;
+
+        // Devo trovare il numero di umani sottratti, senza considerare gli alieni perchè una nave senza alieni può
+        // continuare a giocare, mentre una nave senza umani non può giocare
+        while(i < input.getLista().size()){
+
+            coordX = input.getLista().get(i)[0];
+
+            coordY = input.getLista().get(i)[1];
+
+            quantity = input.getLista().get(i)[3];
+
+            analizedComponent = board.getTile(coordX, coordY);
+
+            indiceCabina = board.getHousingUnits().indexOf(analizedComponent);
+
+            if(board.getHousingUnits().get(indiceCabina).getAlien() == null){
+                umaniNecessari += quantity;
+            }
+            i++;
+
+        }
+
+        if(umaniNecessari >= board.calculateHumanCrew()){
+            valid = false;
+        }
+
+        return valid;
+    }
+
+    public boolean areCabinSelectionValid(InputObject input){
+
+        Board board = Game.getInstance().getCurrentPlayer().getTruck();
+
+        boolean valid = true;
+
+        int i = 0;
+
+        int sum = 0;
+
+        int coordX;
+
+        int coordY;
+
+        int quantity;
+
+        Component analizedComponent;
+
+        int indiceCabina;
+
         while(valid && i < input.getLista().size()){
 
-            int coordX = input.getLista().get(i)[0];
+            coordX = input.getLista().get(i)[0];
 
-            int coordY = input.getLista().get(i)[1];
+            coordY = input.getLista().get(i)[1];
 
-            Component analizedComponent = board.getTile(coordX, coordY);
+            quantity = input.getLista().get(i)[3];
 
-            if(!board.isValid(coordX, coordY) || !board.getHousingUnits().contains(analizedComponent)){
+            analizedComponent = board.getTile(coordX, coordY);
+
+            indiceCabina = board.getHousingUnits().indexOf(analizedComponent);
+
+            int numAstronautInCabin = board.getHousingUnits().get(indiceCabina).getNumAstronaut();
+
+            boolean thereIsAlien = false;
+
+            if(board.getHousingUnits().get(indiceCabina).getAlien() != null){
+                thereIsAlien = true;
+            }
+
+
+
+            /*
+             * Questo if controlla che la casella sia valida, che questa casella contenga una housing unit e che
+             * questa housing unit abbia un numero di astronauti maggiore o uguale a quello che vogliamo togliere
+             */
+            if(!board.isValid(coordX, coordY) || !board.getHousingUnits().contains(analizedComponent) || numAstronautInCabin < input.getLista().get(i)[3] || (quantity == 1 && numAstronautInCabin == 0 && !thereIsAlien)){
                 valid = false;
             }
-            sum += input.getLista().get(i)[3];
+            sum += quantity;
             i++;
         }
 
@@ -93,9 +176,12 @@ public class AbandonedShip extends Card {
             valid = false;
         }
 
-
-
-
         return valid;
+    }
+
+    public boolean inputValidity(InputObject input) {
+
+        return hasEnoughUmansLeft(input) && areCabinSelectionValid(input);
+
     }
 }
