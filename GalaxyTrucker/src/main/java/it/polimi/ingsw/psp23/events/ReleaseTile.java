@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp23.model.components.Component;
 
 /**
  * Event triggered when the user wants to release the tile currently held in hand.
- * The client is designed so that a player can hold at most one tile at a time.
  * After drawing a tile (e.g., from the heap or from the uncovered components), the server stores it
  * in the player's internal field (currentTileInHand).
  * When the user types a command like "rilascia", the client sends this event to indicate

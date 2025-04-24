@@ -108,4 +108,16 @@ public class Player {
         currentTileInHand = null;
     }
 
+    public void rotateTileInHand() {
+        if (currentTileInHand == null)
+            throw new InvalidComponentActionException("Puoi ruotare solo se hai qualcosa in mano!");
+        currentTileInHand.rotate();
+    }
+
+    public void addTile(int x, int y) {
+        if (currentTileInHand == null)
+            throw new InvalidComponentActionException("Non hai in mano nulla --> non puoi saldare nulla sulla nave!");
+        getTruck().addComponent(currentTileInHand, x, y);
+    }
+
 }
