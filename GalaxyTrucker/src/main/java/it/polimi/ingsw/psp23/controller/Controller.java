@@ -15,26 +15,24 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Controller {
-    private Game game; //inizializzo il model
     private CardHandler cardHandler;
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
     private Card currentCard;
 
-    public Controller(int gameId) {
-        game = new Game(gameId);
+    public Controller() {
         cardHandler = new CardHandler();
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
         currentPosition = 1;
-        game.setEventListener(this::onGameEvent);
+        Game.getInstance().setEventListener(this::onGameEvent);
     }
 
     public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
-        if(game.getGameStatus() == GameStatus.Setup) {
-            if (game.getPlayers().size() < 4)
-                game.addPlayer(nickname);
+        if(Game.getInstance().getGameStatus() == GameStatus.Setup) {
+            if (Game.getInstance().getPlayers().size() < 4)
+                Game.getInstance().addPlayer(nickname);
             else
                 throw new GameFullException("The game is full");
         }
@@ -42,11 +40,11 @@ public class Controller {
 
     public void startBuildingPhase() {
 
-        for (Player player : game.getPlayers()) {
+        for (Player player : Game.getInstance().getPlayers()) {
             player.getTruck().addComponent(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true), 2, 3);
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
-        game.setGameStatus(GameStatus.Building);
+        Game.getInstance().setGameStatus(GameStatus.Building);
 
         startTimer();
     }
@@ -72,12 +70,12 @@ public class Controller {
 
     public void startCheckBoard() throws IllegalTruckException {
 
-        if (game.getGameStatus() == GameStatus.Building) {
+        if (Game.getInstance().getGameStatus() == GameStatus.Building) {
             timer.shutdown();
-            game.setGameStatus(GameStatus.CheckBoards);
+            Game.getInstance().setGameStatus(GameStatus.CheckBoards);
         }
 
-        for (Player player : game.getPlayers()) {
+        for (Player player : Game.getInstance().getPlayers()) {
             if (!player.getTruck().check()) {
                 System.out.println("Player " + player.getNickname() + " has an illegal truck\n");
                 throw new IllegalTruckException(player.getNickname() + " has an illegal truck");
@@ -87,25 +85,25 @@ public class Controller {
     }
 
     public void removeComponent(String nickname,int i, int j){
-        game.getPlayerFromNickname(nickname).getTruck().delete(i,j);
+        Game.getInstance().getPlayerFromNickname(nickname).getTruck().delete(i,j);
     }
 
 
 
     public void addComponent(String nickname, Component c, int x, int y) {
-        game.getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
+        Game.getInstance().getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
     }
 
     public Component getTileFromHeap() {
-        return game.getTileFromHeap();
+        return Game.getInstance().getTileFromHeap();
     }
 
     public Component getTileUncovered(int position) {
-        return game.getTileUncovered(position);
+        return Game.getInstance().getTileUncovered(position);
     }
 
     public void releaseTile(Component c) {
-        game.releaseTile(c);
+        Game.getInstance().releaseTile(c);
     }
 
 
@@ -113,23 +111,23 @@ public class Controller {
     public void playerFinishedBuilding(String nickname) {
         switch (currentPosition) {
             case 1: {
-                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
-                game.getPlayerFromNickname(nickname).setPosition(8);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
+                Game.getInstance().getPlayerFromNickname(nickname).setPosition(8);
                 break;
             }
             case 2: {
-                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
-                game.getPlayerFromNickname(nickname).setPosition(5);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
+                Game.getInstance().getPlayerFromNickname(nickname).setPosition(5);
                 break;
             }
             case 3: {
-                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
-                game.getPlayerFromNickname(nickname).setPosition(3);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
+                Game.getInstance().getPlayerFromNickname(nickname).setPosition(3);
                 break;
             }
             case 4: {
-                game.setCurrentPlayer(game.getPlayerFromNickname(nickname));
-                game.getPlayerFromNickname(nickname).setPosition(2);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
+                Game.getInstance().getPlayerFromNickname(nickname).setPosition(2);
                 break;
             }
         }
@@ -137,14 +135,14 @@ public class Controller {
     }
 
     public void startFlight(){
-        game.sortPlayersByPosition();
-        game.setGameStatus(GameStatus.Playing);
+        Game.getInstance().sortPlayersByPosition();
+        Game.getInstance().setGameStatus(GameStatus.Playing);
     }
 
 
     public ArrayList<Card> getVisibleDeck1(String nickname){
         ArrayList<Card> deck;
-        deck = game.getVisibleDeck1(game.getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck1(Game.getInstance().getPlayerFromNickname(nickname));
         if(deck != null){
             return deck;
         }else{
@@ -154,7 +152,7 @@ public class Controller {
 
     public ArrayList<Card> getVisibleDeck2(String nickname){
         ArrayList<Card> deck;
-        deck = game.getVisibleDeck2(game.getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck2(Game.getInstance().getPlayerFromNickname(nickname));
         if(deck != null){
             return deck;
         }else{
@@ -164,7 +162,7 @@ public class Controller {
 
     public ArrayList<Card> getVisibleDeck3(String nickname){
         ArrayList<Card> deck;
-        deck = game.getVisibleDeck3(game.getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck3(Game.getInstance().getPlayerFromNickname(nickname));
         if(deck != null){
             return deck;
         }else{
@@ -173,30 +171,30 @@ public class Controller {
     }
 
     public void releaseDeck1(String nickname){
-        game.releaseVisibleDeck1(game.getPlayerFromNickname(nickname));
+        Game.getInstance().releaseVisibleDeck1(Game.getInstance().getPlayerFromNickname(nickname));
     }
 
     public void releaseDeck2(String nickname){
-        game.releaseVisibleDeck2(game.getPlayerFromNickname(nickname));
+        Game.getInstance().releaseVisibleDeck2(Game.getInstance().getPlayerFromNickname(nickname));
     }
 
     public void releaseDeck3(String nickname){
-        game.releaseVisibleDeck3(game.getPlayerFromNickname(nickname));
+        Game.getInstance().releaseVisibleDeck3(Game.getInstance().getPlayerFromNickname(nickname));
     }
 
     public ArrayList<Player> calculateFinalRanking(){
-        game.sortPlayersByPosition();
-        game.calculateFinalScores();
-        game.getPlayers().sort(Comparator.comparingInt(Player::getMoney).reversed());
-        return game.getPlayers();
+        Game.getInstance().sortPlayersByPosition();
+        Game.getInstance().calculateFinalScores();
+        Game.getInstance().getPlayers().sort(Comparator.comparingInt(Player::getMoney).reversed());
+        return Game.getInstance().getPlayers();
     }
 
     public void gameOver(){
-        game.setGameStatus(GameStatus.End);
+        Game.getInstance().setGameStatus(GameStatus.End);
     }
 
     public void nextCard(){
-        currentCard = game.getNextCard();
+        currentCard = Game.getInstance().getNextCard();
         if(currentCard == null){
             gameOver();
         }else{
@@ -211,11 +209,11 @@ public class Controller {
 
     //arriva un input dalla view
     public void handleInput(Object input) {
-        currentCard.play(game,input);
+        currentCard.play(Game.getInstance(),input);
     }
 
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
-        game.setGameStatus(event.getNewStatus());
+        Game.getInstance().setGameStatus(event.getNewStatus());
         //qui serve tutta la gestione della chiamata alla view poichè giunti a questo punto
         //avremo l'evento pronto con le informazioni della carta e lo stato già aggiornato dal model con una ripetizione
         // del suo cambiamento all'interno dell'evento (si può anche togliere in futuro)
