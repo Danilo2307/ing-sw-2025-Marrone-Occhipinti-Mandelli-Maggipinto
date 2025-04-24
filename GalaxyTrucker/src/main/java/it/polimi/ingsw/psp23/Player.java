@@ -114,10 +114,12 @@ public class Player {
         currentTileInHand.rotate();
     }
 
+    // utile solo per evitare di fare player.getBoard().addComponent....
     public void addTile(int x, int y) {
         if (currentTileInHand == null)
             throw new InvalidComponentActionException("Non hai in mano nulla --> non puoi saldare nulla sulla nave!");
         getTruck().addComponent(currentTileInHand, x, y);
+        currentTileInHand = null;
     }
 
 }
