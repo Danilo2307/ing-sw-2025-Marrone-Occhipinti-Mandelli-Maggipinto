@@ -38,13 +38,13 @@ public class AbandonedShip extends Card {
         return visitor.visitForAbandonedShip(this);
     }
 
-    public void initPlay(Game game){
-        game.setGameStatus(GameStatus.BooleanRequest);
-        game.fireEvent(new Event(game.getGameStatus(),days, cosmicCredits,numMembers));
+    public void initPlay(){
+        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
+        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(),days, cosmicCredits,numMembers));
     }
 
-    public void play(Game game, InputObject input){
-        Player player = game.getCurrentPlayer();
+    public void play(InputObject input){
+        Player player = Game.getInstance().getCurrentPlayer();
         if(!player.isInGame())
             throw new RuntimeException("Player is not in a game");
         if(isSold)
@@ -58,7 +58,7 @@ public class AbandonedShip extends Card {
                     //qui posso o supporre che in input ci siano già le cabine da dove togliere i membri dell'equipaggio
                     //oppure devo inserire un altro stato per chiedere all'utente di rimuovere gli umani dalle cabine desiderate
                     player.updateMoney(cosmicCredits);
-                    Utility.updatePosition(game.getPlayers(),game.getPlayers().indexOf(player),-days);
+                    Utility.updatePosition(Game.getInstance().getPlayers(),Game.getInstance().getPlayers().indexOf(player),-days);
 
             }else{
                 throw new RuntimeException("Not enough members");

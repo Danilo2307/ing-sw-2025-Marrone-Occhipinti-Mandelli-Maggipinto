@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,7 +14,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
+/*
+ * Game è una classe singleton in modo da poterci accedere ovunque tramite getInstance()
+ */
+
 public class Game {
+
+    public static Game instance = null;
+
     private final ArrayList<Player> players;
     private final ArrayList<Player> playersNotOnFlight;
     private final ArrayList<Card> deck;
@@ -22,7 +30,6 @@ public class Game {
     private final ArrayList<Card> visibleCards3;
     private final ArrayList<Component> heap;
     private final ArrayList<Component> uncovered;
-    private final int gameId;
     private Player currentPlayer;
     private GameStatus gameStatus;
     private Card currentCard;
@@ -31,13 +38,12 @@ public class Game {
     private String deck3Owner;
     private Consumer<Event> eventListener;
 
-    public Game(int gameId) {
+    public Game() {
         this.players = new ArrayList<>();
         this.playersNotOnFlight = new ArrayList<>();
         this.deck = new ArrayList<>();
         this.heap = new ArrayList<>();
         this.uncovered = new ArrayList<>();
-        this.gameId = gameId;
         this.currentPlayer = null;
         this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
@@ -66,6 +72,13 @@ public class Game {
         // istanzio tutti i componenti e li metto nell'heap
         this.heap.addAll(ComponentFactory.generateAllComponents());
         Collections.shuffle(this.heap);
+    }
+
+    public static Game getInstance(){
+        if(instance == null){
+            instance = new Game();
+        }
+        return instance;
     }
 
     /** Player per rimanere in partita deve avere almeno un umano e non essere stato doppiato */
@@ -111,9 +124,6 @@ public class Game {
     }
 
 
-    public int getGameId(){
-        return gameId;
-    }
 
     public ArrayList<Player> getPlayers(){
         return players;
