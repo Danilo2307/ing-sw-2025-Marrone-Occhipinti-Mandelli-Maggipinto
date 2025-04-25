@@ -6,7 +6,10 @@ import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+
+import java.util.List;
 
 public class AbandonedShip extends Card {
     //Danilo
@@ -72,6 +75,8 @@ public class AbandonedShip extends Card {
     public boolean hasEnoughUmansLeft(InputObject input) {
         Board board = Game.getInstance().getCurrentPlayer().getTruck();
 
+        List<HousingUnit> housingUnits = board.getHousingUnits();
+
         boolean valid = true;
 
         int i = 0;
@@ -90,6 +95,8 @@ public class AbandonedShip extends Card {
 
         int umaniNecessari = 0;
 
+        int[] rimozioni = new int[housingUnits.size()];
+
         // Devo trovare il numero di umani sottratti, senza considerare gli alieni perchè una nave senza alieni può
         // continuare a giocare, mentre una nave senza umani non può giocare
         while(i < input.getLista().size()){
@@ -102,20 +109,47 @@ public class AbandonedShip extends Card {
 
             analizedComponent = board.getTile(coordX, coordY);
 
-            indiceCabina = board.getHousingUnits().indexOf(analizedComponent);
+            indiceCabina = housingUnits.indexOf(analizedComponent);
 
-            if(board.getHousingUnits().get(indiceCabina).getAlien() == null){
-                umaniNecessari += quantity;
+            // Se indiceCabina è meno uno vuol dire che non sto analizzando una HousingUnit
+            if(indiceCabina == -1){
+                return false;
             }
+
+            rimozioni[indiceCabina] += quantity;
+
             i++;
 
         }
 
-        if(umaniNecessari >= board.calculateHumanCrew()){
-            valid = false;
+        int umaniRimossi = 0;
+
+        for (i = 0; i < housingUnits.size(); i++) {
+            HousingUnit h = housingUnits.get(i);
+            int totOccupanti = h.getNumAstronaut() + (h.getAlien() != null ? 1 : 0);
+            int daRimuovere = rimozioni[i];
+
+            // Se voglio togliere più di quanto ho a bordo non posso farlo ed è un errore
+            if (daRimuovere > totOccupanti) return false;
+
+            // Calcolo solo umani da rimuovere
+            if (h.getAlien() == null) {
+                umaniRimossi += daRimuovere;
+            } else {
+                // Posso togliere solo 1 alieno, altrimenti devono essere tutti umani
+                int umaniPresenti = h.getNumAstronaut();
+                if (daRimuovere > 1 && daRimuovere > umaniPresenti)
+                    return false;
+                // In questo caso sto rimuovendo un alieno
+                if (daRimuovere == 1 && umaniPresenti == 0)
+                    umaniRimossi += 0;
+                else
+                    umaniRimossi += Math.min(daRimuovere, umaniPresenti);
+            }
         }
 
-        return valid;
+        return umaniRimossi < board.calculateHumanCrew();
+
     }
 
     public boolean areCabinSelectionValid(InputObject input){
@@ -179,6 +213,8 @@ public class AbandonedShip extends Card {
     }
 
     public boolean inputValidity(InputObject input) {
+
+        if(input == null || input.getLista() == null || input.getLista().isEmpty()) return false;
 
         return hasEnoughUmansLeft(input) && areCabinSelectionValid(input);
 

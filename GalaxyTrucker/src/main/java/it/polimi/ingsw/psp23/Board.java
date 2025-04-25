@@ -177,7 +177,7 @@ public class Board {
 
 
     /** verifica se le due tile (x,y) e (nx,ny) sono unite da connettori compatibili */
-    private boolean areTilesConnected(int x,int y,int nx,int ny){
+    public boolean areTilesConnected(int x,int y,int nx,int ny){
         Component from = ship[x][y];
         Component to   = ship[nx][ny];
 
