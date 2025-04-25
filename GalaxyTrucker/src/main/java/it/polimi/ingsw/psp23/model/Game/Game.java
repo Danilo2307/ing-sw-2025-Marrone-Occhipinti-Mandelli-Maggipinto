@@ -354,6 +354,8 @@ public class Game {
             int lostComponents = player.getTruck().getGarbage();
             player.updateMoney(-lostComponents);
         }
+        players.sort(Comparator.comparingInt(Player::getMoney).reversed());
+
     }
 
     public void setEventListener(Consumer<Event> listener) {
