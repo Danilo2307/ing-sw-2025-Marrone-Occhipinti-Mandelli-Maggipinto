@@ -10,7 +10,13 @@ public class InputObject {
 
     private boolean decision;
 
-    private int numBatteries;
+    private boolean decisionCannon;
+
+    private boolean decisionEngine;
+
+    private int numBatteriesCannon;
+
+    private int numBatteriesEngine;
 
     /*
      * Questa lista servirà in AbandonedShip per sapere le coordinate della cabina da cui togliere il/i membri e
