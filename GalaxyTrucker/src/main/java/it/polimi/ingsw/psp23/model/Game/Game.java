@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +29,7 @@ public class Game {
     private final ArrayList<Card> visibleCards3;
     private final ArrayList<Component> heap;
     private final ArrayList<Component> uncovered;
+    private int lastUncoveredVersion;
     private Player currentPlayer;
     private GameStatus gameStatus;
     private Card currentCard;
@@ -44,6 +44,7 @@ public class Game {
         this.deck = new ArrayList<>();
         this.heap = new ArrayList<>();
         this.uncovered = new ArrayList<>();
+        this.lastUncoveredVersion = 0;
         this.currentPlayer = null;
         this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
@@ -123,7 +124,17 @@ public class Game {
         players.add(new Player(nickname));
     }
 
+    public ArrayList<Component> getUncovered() {
+        synchronized (uncovered) {
+            return uncovered;
+        }
+    }
 
+    public int getLastUncoveredVersion() {
+        synchronized (uncovered) {
+            return lastUncoveredVersion;
+        }
+    }
 
     public ArrayList<Player> getPlayers(){
         return players;
@@ -160,11 +171,12 @@ public class Game {
     /**
      * Takes a face-up component from the uncovered list at the position chosen by the player, removing it from that list.
      * @param position index of the tile to be taken
+     * @param version of the uncoveredList that the user was seeing when he decided to draw the 'position' tile
      * @return the selected face-up component
      * @throws NoTileException if the uncovered list is empty
      * @throws IndexOutOfBoundsException if position is invalid
      */
-    public Component getTileUncovered(int position)  {
+    public Component getTileUncovered(int position, int version)  {
         // Synchronize on the uncovered list to avoid race conditions
         synchronized (uncovered) {
             if (uncovered.isEmpty()) {
@@ -173,8 +185,12 @@ public class Game {
             if (position < 0 || position >= uncovered.size()) {
                 throw new IndexOutOfBoundsException("Position invalid: " + position);
             }
+            // qualche altro player ha pescato dalla lista --> quella che stava vedendo il giocatore noon era aggiornata
+            if (version != lastUncoveredVersion)
+                throw new NoTileException("La lista di tessere scoperte che vedi non è aggiornata. Scrivi 'mostra scoperte' per aggiornarla");
             Component c = uncovered.get(position);
             uncovered.remove(c);
+            lastUncoveredVersion++;
             // Mark the component as "in hand"
             c.moveToHand();
             return c;

@@ -4,16 +4,34 @@ import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
 import it.polimi.ingsw.psp23.network.socket.Client;
 
+/** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
+ *  cambio stato. */
 public class TuiApplication {
     private String username;
     private ClientController cc;
+    private int lastUncoveredVersion;
+    private IOManager io;
 
+    /// TODO: costruttore: capire bene cosa mettere
 
-    /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
-     *  cambio stato.
-     *
-     */
+    /** ciclo infinito che rimane in ascolto degli input dell'utente */
+    public void runGame() {
+        while (true) {
+            try {
+                String command = io.read();
+                executeCommand(command);
+            }
+            catch (TuiInputException e) {
+                io.error(e.getMessage());
+            }
+        }
+    }
 
+    public void setLastUncoveredVersion(int lastUncoveredVersion) {
+        this.lastUncoveredVersion = lastUncoveredVersion;
+    }
+
+    /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
     public void executeCommand(String command) {
         String[] words = command.split(" ");
 
@@ -26,10 +44,13 @@ public class TuiApplication {
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    cc.sendEvent(new DrawFromFaceUp(username, index));
+                    cc.sendEvent(new DrawFromFaceUp(username, index, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
+            }
+            case "scoperte" -> {
+                cc.sendEvent(new RequestUncovered(username));
             }
             case "salda" -> {
                 // TODO: inserire controlli eccezioni eccetera
