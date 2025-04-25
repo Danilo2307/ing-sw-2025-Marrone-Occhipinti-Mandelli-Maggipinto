@@ -3,7 +3,10 @@ package it.polimi.ingsw.psp23.controller;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.events.server.ShipResponse;
+import it.polimi.ingsw.psp23.events.server.StringResponse;
 import it.polimi.ingsw.psp23.events.server.TileResponse;
+import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
+import it.polimi.ingsw.psp23.exceptions.NoTileException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 
@@ -20,8 +23,16 @@ public class ServerEventHandler {
             }
             case DrawFromFaceUp draw -> {
                 Player p = game.getPlayerFromNickname(draw.username());
-                Component drawn = p.chooseCardUncovered(draw.x());
-                connection.sendToCLient(new TileResponse(drawn));
+                try {
+                    Component drawn = p.chooseCardUncovered(draw.x(), draw.version());
+                    connection.sendToCLient(new TileResponse(drawn));
+                }
+                catch (NoTileException | IndexOutOfBoundsException exception) {
+                    connection.sendToCLient(new StringResponse(exception.getMessage()));
+                }
+            }
+            case RequestUncovered uncovered -> {
+                connection.sendToClient(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));
             }
             case AddTile add -> {
                 Player p = game.getPlayerFromNickname(add.username());

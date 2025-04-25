@@ -105,9 +105,9 @@ public class Controller {
         return Game.getInstance().getTileFromHeap();
     }
 
-    public Component getTileUncovered(int position) {
+    /*public Component getTileUncovered(int position) {
         return Game.getInstance().getTileUncovered(position);
-    }
+    }*/
 
     public void releaseTile(Component c) {
         Game.getInstance().releaseTile(c);

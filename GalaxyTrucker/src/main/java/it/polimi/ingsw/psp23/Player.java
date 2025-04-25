@@ -93,11 +93,11 @@ public class Player {
         return currentTileInHand;
     }
 
-    public Component chooseCardUncovered(int position) {
+    public Component chooseCardUncovered(int position, int version) {
         // eventuale eccezione verrà propagata e gestita dal controller
         if (currentTileInHand != null)
             throw new InvalidComponentActionException("Per pescare non devi avere niente già in mano!");
-        currentTileInHand = game.getTileUncovered(position);
+        currentTileInHand = game.getTileUncovered(position, version);
         return currentTileInHand;
     }
 

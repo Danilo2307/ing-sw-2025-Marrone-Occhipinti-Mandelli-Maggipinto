@@ -9,12 +9,13 @@ import it.polimi.ingsw.psp23.network.socket.Client;
 public class TuiApplication {
     private String username;
     private ClientController cc;
+    private int lastUncoveredVersion;
     private IOManager io;
 
     /// TODO: costruttore: capire bene cosa mettere
 
     /** ciclo infinito che rimane in ascolto degli input dell'utente */
-    public void run() {
+    public void runGame() {
         while (true) {
             try {
                 String command = io.read();
@@ -24,6 +25,10 @@ public class TuiApplication {
                 io.error(e.getMessage());
             }
         }
+    }
+
+    public void setLastUncoveredVersion(int lastUncoveredVersion) {
+        this.lastUncoveredVersion = lastUncoveredVersion;
     }
 
     /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
@@ -39,10 +44,13 @@ public class TuiApplication {
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    cc.sendEvent(new DrawFromFaceUp(username, index));
+                    cc.sendEvent(new DrawFromFaceUp(username, index, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
+            }
+            case "scoperte" -> {
+                cc.sendEvent(new RequestUncovered(username));
             }
             case "salda" -> {
                 // TODO: inserire controlli eccezioni eccetera
