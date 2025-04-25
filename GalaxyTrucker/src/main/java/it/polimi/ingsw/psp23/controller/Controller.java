@@ -60,8 +60,13 @@ public class Controller {
         if (!isFirstBuildingPhaseEnded) {
             isFirstBuildingPhaseEnded = true;
             System.out.println("First building phase ended\n");
-        } else {
-            startCheckBoard();
+        } else { //TODO: in questo else controllo se i player hanno finito tutti, in caso contrario assegno posizioni in ordine di entrata e in case 4 dello switch chiamo startcheckboards
+            try {
+                startCheckBoard();
+            }catch (IllegalStateException e) {
+                handleTimeout();
+            }
+
         }
 
     }
@@ -81,6 +86,8 @@ public class Controller {
                 throw new IllegalTruckException(player.getNickname() + " has an illegal truck");
             }
         }
+
+        startFlight();
 
     }
 
@@ -106,7 +113,11 @@ public class Controller {
         Game.getInstance().releaseTile(c);
     }
 
+    public void rotate(Component c) {
+        c.rotate();
+    }
 
+//TODO: va gestita la possibilità del player di attaccare ancora pezzi una volta che dichiara di aver terminato ovvero dovremmo mettere una lista temporanea per dire chi ha finito
 
     public void playerFinishedBuilding(String nickname) {
         switch (currentPosition) {

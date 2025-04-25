@@ -44,7 +44,7 @@ public class AbandonedShip extends Card {
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequestForAbandonedShip);
+        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(),days, cosmicCredits,numMembers));
     }
 
