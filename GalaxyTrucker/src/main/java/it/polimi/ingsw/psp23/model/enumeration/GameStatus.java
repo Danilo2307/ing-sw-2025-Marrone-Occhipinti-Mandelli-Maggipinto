@@ -6,7 +6,7 @@ public enum GameStatus {
     CheckBoards,
     Playing,
     End,
-    BooleanRequestForAbandonedShip,
+    BooleanRequest,
     IntegerRequest,
     RunningEpidemic,
     MeteorSwarm,
