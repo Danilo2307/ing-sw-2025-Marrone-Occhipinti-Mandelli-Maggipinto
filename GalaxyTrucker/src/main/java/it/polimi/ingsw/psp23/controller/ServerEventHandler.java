@@ -2,6 +2,8 @@ package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.events.*;
+import it.polimi.ingsw.psp23.events.server.ShipResponse;
+import it.polimi.ingsw.psp23.events.server.TileResponse;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 
@@ -13,6 +15,7 @@ public class ServerEventHandler {
             case DrawFromHeap draw -> {
                 Player p = game.getPlayerFromNickname(draw.username());
                 Component drawn = p.chooseTileFromHeap();
+                /// non includo username nell'evento perchè la scelta del canale di comunicazione preciso per quel client lo gestirò prima
                 connection.sendToClient(new TileResponse(drawn));
             }
             case DrawFromFaceUp draw -> {

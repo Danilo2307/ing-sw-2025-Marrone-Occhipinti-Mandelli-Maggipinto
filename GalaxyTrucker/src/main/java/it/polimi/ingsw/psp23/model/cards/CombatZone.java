@@ -87,75 +87,95 @@ public class CombatZone extends Card{
     }
 
     public void play(InputObject inputObject) {
-            int impactLine;
-            int pos;
-            int size = Game.getInstance().getPlayers().size();
-            Player player = Game.getInstance().getCurrentPlayer();
-            int tmp = -1;
-            Player playerTmp;
+        int impactLine;
+        int pos;
+        int size = Game.getInstance().getPlayers().size();
+        Player player = Game.getInstance().getCurrentPlayer();
+        List<Player> players = Game.getInstance().getPlayers();
+        int tmp = -1;
+        Player playerTmp;
 
-    //inizio prima sfida
+        //inizio prima sfida
 
-            if(penalty1 == Challenge.Members){
-                playerTmp = findMinMembers();
+        if (penalty1 == Challenge.Members) {
+            playerTmp = findMinMembers();
 
-                System.out.println(players.get(pos).getNickname() +" has less crew members!");
-                Utility.updatePosition(players, pos, -daysLost);
-            }else if(penalty1 == Challenge.Cannon_strength){
-                pos = findMinCannonStrength(players);
-                System.out.println(players.get(pos).getNickname()+" has less cannon strength!");
-                Utility.updatePosition(players,pos,-daysLost);
-            }else{
-                throw new IllegalArgumentException("Eccezione in combatzone ");
-            }
-
-    //inizio seconda sfida
-            pos = findMinEngineStrength(players);
-
-            System.out.println(players.get(pos).getNickname() + " has less engine strength!");
-
-            if(penalty2 == Challenge.Members) {
-                // dobbiamo sapere da che cabina togliere l'equipaggio
-                players.get(pos).getTruck().reduceCrew(membersLost,1,1);
-            } else if(penalty2 == Challenge.Goods){
-                players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
-            }else{
-                throw new IllegalArgumentException("Eccezione in combatzone ");
-            }
-
-    //inizio terza sfida
-            if(penalty3 == Challenge.Members){
-                pos = findMinMembers(players);
-
-                System.out.println(players.get(pos).getNickname() + " has less crew members!");
-                for(CannonShot c: cannonShot){
-                    impactLine = Utility.roll2to12();
-                    players.get(pos).getTruck().handleCannonShot(c,impactLine);
-                }
-
-
-
-            }else if(penalty3 == Challenge.Cannon_strength){
-                pos = findMinCannonStrength(players);
-                System.out.println(players.get(pos).getNickname() + " has less cannon strength!");
-                for(CannonShot c: cannonShot){
-                    impactLine = Utility.roll2to12();
-                    players.get(pos).getTruck().handleCannonShot(c,impactLine);
-                }
-            }else{
-                throw new IllegalArgumentException("Eccezione in combatzone");
-            }
-
-
+            System.out.println(playerTmp.getNickname() + " has less crew members!");
+            Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
+        } else if (penalty1 == Challenge.CannonStrength) {
+            playerTmp = findMinCannonStrength();
+            System.out.println(playerTmp.getNickname() + " has less cannon strength!");
+            Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
+        } else {
+            throw new IllegalArgumentException("Eccezione in combatzone ");
         }
 
-        private Player findMinMembers() {
+        //inizio seconda sfida
+        playerTmp = findMinEngineStrength();
+
+        System.out.println(players.get(pos).getNickname() + " has less engine strength!");
+
+        if (penalty2 == Challenge.Members) {
+            // dobbiamo sapere da che cabina togliere l'equipaggio
+            players.get(pos).getTruck().reduceCrew(membersLost, 1, 1);
+        } else if (penalty2 == Challenge.Goods) {
+            players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
+        } else {
+            throw new IllegalArgumentException("Eccezione in combatzone ");
+        }
+
+        //inizio terza sfida
+        if (penalty3 == Challenge.Members) {
+            pos = findMinMembers(players);
+
+            System.out.println(players.get(pos).getNickname() + " has less crew members!");
+            for (CannonShot c : cannonShot) {
+                impactLine = Utility.roll2to12();
+                players.get(pos).getTruck().handleCannonShot(c, impactLine);
+            }
+
+
+        } else if (penalty3 == Challenge.Cannon_strength) {
+            pos = findMinCannonStrength(players);
+            System.out.println(players.get(pos).getNickname() + " has less cannon strength!");
+            for (CannonShot c : cannonShot) {
+                impactLine = Utility.roll2to12();
+                players.get(pos).getTruck().handleCannonShot(c, impactLine);
+            }
+        } else {
+            throw new IllegalArgumentException("Eccezione in combatzone");
+        }
+
+    }
+
+
+
+        private Player findMinMembers(){
             List<Player> players = Game.getInstance().getPlayers();
-            int tmp = -1;
-            for(Player p: players){
-
+            int tmp = players.get(0).getTruck().calculateCrew();
+            Player playerTmp = players.get(0);
+            for (Player p : players) {
+                if (p.getTruck().calculateCrew() < tmp) {
+                    playerTmp = p;
+                    tmp = p.getTruck().calculateCrew();
+                }
             }
+            return playerTmp;
         }
+
+        private Player findMinCannonStrength(){
+            List<Player> players = Game.getInstance().getPlayers();
+            int tmp = players.get(0).getTruck().calculateCrew();
+            Player playerTmp = players.get(0);
+            for (Player p : players) {
+                if (p.getTruck().calculateCrew() < tmp) {
+                    playerTmp = p;
+                    tmp = p.getTruck().calculateCrew();
+                }
+            }
+            return playerTmp;
+        }
+
 
 
 
