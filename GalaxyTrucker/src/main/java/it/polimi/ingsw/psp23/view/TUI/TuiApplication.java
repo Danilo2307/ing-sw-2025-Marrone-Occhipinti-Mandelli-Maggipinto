@@ -4,16 +4,29 @@ import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
 import it.polimi.ingsw.psp23.network.socket.Client;
 
+/** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
+ *  cambio stato. */
 public class TuiApplication {
     private String username;
     private ClientController cc;
+    private IOManager io;
 
+    /// TODO: costruttore: capire bene cosa mettere
 
-    /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
-     *  cambio stato.
-     *
-     */
+    /** ciclo infinito che rimane in ascolto degli input dell'utente */
+    public void run() {
+        while (true) {
+            try {
+                String command = io.read();
+                executeCommand(command);
+            }
+            catch (TuiInputException e) {
+                io.error(e.getMessage());
+            }
+        }
+    }
 
+    /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
     public void executeCommand(String command) {
         String[] words = command.split(" ");
 

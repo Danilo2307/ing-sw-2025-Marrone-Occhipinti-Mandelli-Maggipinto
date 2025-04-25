@@ -4,11 +4,26 @@ import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 
-public class IOManager {
+import java.util.Scanner;
 
-    /** classe che si occupa della gestione di output (formattazione nave, stampa messaggi)
-     *  e gestione degli input "grezzi"
-     */
+/** classe che si occupa della gestione di output (formattazione nave, stampa messaggi)
+ *  e gestione degli input "grezzi"
+ */
+public class IOManager {
+    private final Scanner scanner;
+
+    public IOManager() {
+        this.scanner = new Scanner(System.in);
+    }
+
+    public String read() {
+        return scanner.nextLine();
+    }
+
+    public void error(String message) {
+        // printo su stderr (e non stdout) così compaiono in rosso
+        System.err.println("Errore: " + message);
+    }
 
     public void printShip(Component[][] ship) {
         for (int i = 0; i < ship.length; i++) {
