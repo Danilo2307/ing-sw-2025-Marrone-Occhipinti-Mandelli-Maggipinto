@@ -10,7 +10,7 @@ import java.net.Socket;
 /*
  * Questa classe serve per far sì che il server invochi i metodi di sendMessage e readMessage specifici per le istanze
  * di socketHandler che gestiscono le socket specifiche dei vari client(in pratica ci sarà un socketHandler specifico
- * per ogni client)
+ * per ogni client). Questa classe sarà usata anche nel client perchè, come dice il nome, permette di gestire le socket
  */
 
 public class SocketHandler {

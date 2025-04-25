@@ -26,7 +26,7 @@ public class ClientHandler {
     public void handleMessage(Message message) {
         switch(message){
             case SelectCannonsMessage m -> System.out.println("è un select cannon");
-            default -> System.out.println("<UNK> un select cannon");
+            default -> System.out.println("<UNK_MESS>");
         }
     }
 

@@ -2,7 +2,8 @@ package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
 
-/*Thread necessario al server per stare sempre in attesa dei messaggi in arrivo da un client, quindi ci saranno tante
+/*
+ * Thread necessario AL SERVER per stare sempre in attesa dei messaggi in arrivo da un client, quindi ci saranno tante
  * istanze di StartListeningForClientThread quanti saranno i client. In questa classe chiameremo la risposta
  * specifica di ogni ClientHandler in base all'id della connessione
  */
