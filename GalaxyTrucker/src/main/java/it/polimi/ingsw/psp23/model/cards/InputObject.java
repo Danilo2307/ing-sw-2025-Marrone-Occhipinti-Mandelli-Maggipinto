@@ -17,7 +17,15 @@ public class InputObject {
      * quanti se ne vogliono togliere(la lista contiene array di interi perchè ogni array conterrà due integer per le
      * coordinate ed un integer per il numero di membri da togliere)
     */
-    private List<Integer[]> lista = new ArrayList<Integer[]>();
+    private List<Integer[]> housingUnit = new ArrayList<Integer[]>();
+
+    private List<Integer[]> shields = new ArrayList<Integer[]>();
+
+    private List<Integer[]> cannons = new ArrayList<Integer[]>();
+
+    private List<Integer[]> engines = new ArrayList<Integer[]>();
+
+    private
 
     public void setDecision(boolean decision) {
         this.decision = decision;
@@ -35,11 +43,26 @@ public class InputObject {
         return decision;
     }
 
-    public void addLista(int x, int y, int quantity) {
-        lista.add(new Integer[]{x, y, quantity});
+    public void addShield(int x, int y) {shields.add(new Integer[]{x, y});
     }
 
-    public List<Integer[]> getLista() {
-        return new ArrayList<>(lista);
+    public List<Integer[]> getShields() {
+        return new ArrayList<>(shields);
     }
+
+    public void addCannon(int x, int y) {cannons.add(new Integer[]{x, y});
+    }
+
+    public List<Integer[]> getCannons() {
+        return new ArrayList<>(cannons);
+    }
+
+    public void addEngine(int x, int y) {engines.add(new Integer[]{x, y});
+    }
+
+    public List<Integer[]> getEngines() {
+        return new ArrayList<>(engines);
+    }
+
+
 }
