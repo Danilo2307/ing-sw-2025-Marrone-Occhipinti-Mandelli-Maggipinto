@@ -3,8 +3,10 @@ import it.polimi.ingsw.psp23.exceptions.ComponentStateException;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
+import java.io.Serializable;
+
 /* @author Federico */
-public sealed class Component permits AlienAddOns, BatteryHub, Cannon, Container, Engine, HousingUnit, Shield, StructuralComponent{
+public sealed class Component implements Serializable permits AlienAddOns, BatteryHub, Cannon, Container, Engine, HousingUnit, Shield, StructuralComponent{
 
     private ComponentLocation state;
     private Side up;
