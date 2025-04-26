@@ -65,6 +65,15 @@ public class Planets extends Card {
     }
 
     public void play(InputObject inputObject){
+        boolean isAvailable = false;
+        for(boolean tmp : planetsOccupied){
+            if(tmp == false){
+                isAvailable = true;
+            }
+        }
+        if(!isAvailable){
+            return; //se i pianeti sono stati tutti occupati allora termino l'esecuzione del play
+        }
         Player player = Game.getInstance().getCurrentPlayer();
         if(inputObject.getNumPlanet() == 1){
             if(planetsOccupied[0]){
