@@ -10,6 +10,14 @@ import java.io.Serializable;
 // Non dovrebbe essere necessario fare l'override dei metodi perchè quelli di default vanno bene
 public sealed abstract class Message implements Serializable permits SelectCannonsMessage, UpdateStateMessage, CreateLobbyMsg, SetUsernameMsg {
 
-    public Message() {}
+    String text;
+
+    public Message(String text) {
+        this.text = text;
+    }
+
+    public String getText() {
+        return text;
+    }
 
 }

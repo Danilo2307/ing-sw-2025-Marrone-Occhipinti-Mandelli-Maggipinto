@@ -22,7 +22,6 @@ public class Client{
         try {
             Socket socket = new Socket(serverIP, port);
             socketHandler = new SocketHandler(socket);
-            Message usernameMsg = new SetUsernameMsg(username);
             socketHandler.sendMessage(message);
             startListeningForServerThread = new StartListeningForServerThread(socketHandler, messageObserver);
             startListeningForServerThread.start();
@@ -43,7 +42,7 @@ public class Client{
     // Avremmo potuto anche usare i try-with-resources negli altri blocchi, ma fare chiusure esplicite rende più robusto
     // il codice
     public void close() {
-
+        socketHandler.close();
     }
 
 }

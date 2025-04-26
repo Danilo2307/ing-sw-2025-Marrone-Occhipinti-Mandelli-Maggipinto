@@ -63,6 +63,9 @@ public class Server {
 
                 SocketHandler socketHandler = new SocketHandler(socket);
 
+                // Adesso mi occupo di ricevere lo username del player
+                socketHandler.setUsername(socketHandler.readMessage().getText());
+
                 synchronized (clients) {
 
                     clients.put(nameConnection, socketHandler);
@@ -77,6 +80,7 @@ public class Server {
         }
     }
 
+
     // Questo metodo ci fornirà l'indirizzo ip del server
     public InetAddress getInetAddress() {
 
@@ -85,7 +89,6 @@ public class Server {
         return serverSocket.getInetAddress();
 
     }
-
 
 
     // Metodo incaricato dell'invio dei messaggi ai client. Il parametro indice ci dice quale elemento della lista di
@@ -103,6 +106,28 @@ public class Server {
         }
         else{
             throw new RuntimeException("No client with name " + nameConnection);
+        }
+    }
+
+    /* Questo metodo permette di inviare messaggi conoscendo lo username e non il connectionID
+       TODO: bisogna gestire il caso in cui ci siano client con username uguali, magari si potrebbe mettere un controllo
+        al momento dell'inserimento
+    */
+    public void sendMessage(String username, Message message) {
+        if(username != null && message != null) {
+            String connectionID = null;
+            synchronized (clients) {
+                for (String connection : clients.keySet()) {
+                    if (clients.get(connection).getUsername().equals(username)) {
+                        connectionID = connection;
+                        break;
+                    }
+                }
+            }
+            sendMessage(message, connectionID);
+        }
+        else{
+            throw new RuntimeException("message or username in Server.sendMessage(username, message) are null (tried to send: " + message.toString() + ")" );
         }
     }
 
@@ -153,5 +178,21 @@ public class Server {
     }
 
 
+    public String getNameConnection(SocketHandler socketHandler){
+        for(String key : clients.keySet()){
+            if(clients.get(key) == socketHandler){
+                return key;
+            }
+        }
+        return null;
+    }
+
+    public HashMap<String,SocketHandler> getClients(){
+        return new HashMap<>(clients);
+    }
+
+    public String getUsernameForConnection(String connectionID){
+        return clients.get(connectionID).getUsername();
+    }
 
 }

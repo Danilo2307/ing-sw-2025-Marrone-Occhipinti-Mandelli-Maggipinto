@@ -10,12 +10,13 @@ import it.polimi.ingsw.psp23.network.messages.SelectCannonsMessage;
 public class ClientHandler {
     private StartListeningForClientThread clientThread = null;
     private final String connectionID;
-    private String username = null;
+    private String username;
 
     ClientHandler(String connectionID) {
         this.connectionID = connectionID;
         clientThread = new StartListeningForClientThread(connectionID);
         clientThread.start();
+        username = Server.getInstance().getUsernameForConnection(connectionID);
     }
 
     public void send(Message message) {
@@ -25,7 +26,7 @@ public class ClientHandler {
 
     public void handleMessage(Message message) {
         switch(message){
-            case SelectCannonsMessage m -> System.out.println("è un select cannon");
+            case SelectCannonsMessage m -> System.out.println("Il server deve gestire l'arrivo di un select cannon da " + username);
             default -> System.out.println("<UNK_MESS>");
         }
     }

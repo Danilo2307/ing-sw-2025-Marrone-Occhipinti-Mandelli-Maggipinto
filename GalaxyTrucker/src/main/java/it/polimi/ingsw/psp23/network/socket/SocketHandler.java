@@ -26,6 +26,7 @@ public class SocketHandler {
 
     final Object lockScrittura = new Object();
 
+    String username = null;
 
     public SocketHandler(Socket socket){
 
@@ -61,11 +62,6 @@ public class SocketHandler {
             try {
 
                 received = (Message)in.readObject();
-
-            /*
-            Da qui in poi ci saranno i vari case per discriminare il tipo di messaggio che mi è arrivato e gestirli
-            correttamente
-            */
 
                 return received;
 
@@ -131,6 +127,14 @@ public class SocketHandler {
         } finally {
             this.socket = null;
         }
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
 }
