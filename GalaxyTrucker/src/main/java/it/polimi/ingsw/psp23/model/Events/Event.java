@@ -104,6 +104,11 @@ public class Event {
     public Event(GameStatus newStatus, List<Meteor> meteors, int impactLine){
 
     }
+
+    //costruttore per Smugglers
+    public Event(GameStatus newStatus, int firePower, int numItemsStolen, int days, List<Item> prize) {
+
+    }
     //mancano le altre carte da fare
     //
      //

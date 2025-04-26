@@ -10,41 +10,77 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a Meteor Swarm adventure card.
+ * <p>
+ * Upon initialization, rolls two dice for each meteor to determine its impact line,
+ * stores the result in the meteor, and fires an event for each meteor.
+ * During play, applies each meteor's impact to every player's truck.
+ * </p>
+ */
 public class MeteorSwarm extends Card {
-    //Federico
-    // lista di meteore già ordinata secondo l'ordine di impatto: from up-down and from left-right
+    /**
+     * List of meteors in the order they will impact (top-to-bottom, left-to-right).
+     */
     private final List<Meteor> meteors;
-    private int impactLine = -1;
 
+    /**
+     * Constructs a MeteorSwarm card with the specified difficulty level and meteors.
+     *
+     * @param level   the difficulty level of this card
+     * @param meteors the list of meteors, ordered by impact sequence
+     */
     public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
         this.meteors = meteors;
     }
 
+    /**
+     * Returns a defensive copy of the meteor list.
+     *
+     * @return a new list containing all meteors
+     */
     public List<Meteor> getMeteors() {
         return new ArrayList<>(meteors);
     }
 
     @Override
-    public Object call(Visitor visitor){
+    public Object call(Visitor visitor) {
         return visitor.visitForMeteorSwarm(this);
     }
 
+    /**
+     * Initializes the play phase for the Meteor Swarm.
+     * Rolls two dice for each meteor to set its impact line,
+     * stores the result in the meteor, and fires an event to notify listeners.
+     */
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.INIT_PLAY);
-        for (Meteor m : meteors) {
-            impactLine = Utility.roll2to12();
-            m.setImpactLine(impactLine);
-            Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), Collections.singletonList(m), impactLine));
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_PLAY);
+
+        for (Meteor meteor : meteors) {
+            int impactLine = Utility.roll2to12();
+            meteor.setImpactLine(impactLine);
+            game.fireEvent(new Event(
+                    game.getGameStatus(),
+                    Collections.singletonList(meteor),
+                    impactLine
+            ));
         }
     }
 
+    /**
+     * Executes the Meteor Swarm effect.
+     * Applies each stored meteor impact line to every player's truck.
+     *
+     * @param inputObject placeholder for user input (not utilized)
+     */
     public void play(InputObject inputObject) {
         List<Player> players = Game.getInstance().getPlayers();
-        for (Meteor m : meteors) {
-            int impactLine = m.getImpactLine();
-            for(Player p : players){
-                p.getTruck().handleMeteor(m, impactLine);
+        for (Meteor meteor : meteors) {
+            int impactLine = meteor.getImpactLine();
+            for (Player player : players) {
+                player.getTruck().handleMeteor(meteor, impactLine);
             }
         }
     }
