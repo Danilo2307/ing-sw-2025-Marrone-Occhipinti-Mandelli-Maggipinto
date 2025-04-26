@@ -4,10 +4,8 @@ import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
-import it.polimi.ingsw.psp23.model.enumeration.EventType;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 //classe che definisce la struttura dell'evento
@@ -103,7 +101,7 @@ public class Event {
     }
 
     //costruttore per OpenSpace
-    public Event(GameStatus newStatus){
+    public Event(GameStatus newStatus, List<Meteor> meteors, int impactLine){
 
     }
     //mancano le altre carte da fare

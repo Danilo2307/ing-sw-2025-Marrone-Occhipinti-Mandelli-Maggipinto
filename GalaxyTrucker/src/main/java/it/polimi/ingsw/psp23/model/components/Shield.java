@@ -7,8 +7,23 @@ public final class Shield extends Component{
     // VALUTO ATTRIBUTI COVERED per indicare Direction coperta; verranno settati quando lo Shield è stato saldato. REMOVE COMMENT??
     // Costruttore rimane invariato in ogni caso perchè all'istanziazione non posso sapere lato coperto (a causa di possibili rotazioni del player).
 
+    // necessario per gestire attivazione cannoni doppi
+    private boolean isActive = false;
+
     public Shield(Side up, Side down, Side left, Side right) {
         super(up, down, left, right);
+    }
+
+    public void activeShield(){
+        isActive = true;
+    }
+
+    public void disactiveShield(){
+        isActive = false;
+    }
+
+    public boolean isActive(){
+        return isActive;
     }
 
 }

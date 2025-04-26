@@ -7,18 +7,18 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MeteorSwarm extends Card {
     //Federico
     // lista di meteore già ordinata secondo l'ordine di impatto: from up-down and from left-right
     private final List<Meteor> meteors;
-    private boolean isLeader;
+    private int impactLine = -1;
 
     public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
         this.meteors = meteors;
-        isLeader = true;
     }
 
     public List<Meteor> getMeteors() {
@@ -31,26 +31,21 @@ public class MeteorSwarm extends Card {
     }
 
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors));
+        Game.getInstance().setGameStatus(GameStatus.INIT_PLAY);
+        for (Meteor m : meteors) {
+            impactLine = Utility.roll2to12();
+            m.setImpactLine(impactLine);
+            Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), Collections.singletonList(m), impactLine));
+        }
     }
 
     public void play(InputObject inputObject) {
-        Player player = Game.getInstance().getCurrentPlayer();
-        int impactLine = -1;
-
-        // VANNO MESSI GLI INPUT SU CANNONI E SCUDI
-
-        if(isLeader){
-            isLeader = false;
-            impactLine = Utility.roll2to12();
-        }
+        List<Player> players = Game.getInstance().getPlayers();
         for (Meteor m : meteors) {
-            player.getTruck().handleMeteor(m, impactLine, shield);
+            int impactLine = m.getImpactLine();
+            for(Player p : players){
+                p.getTruck().handleMeteor(m, impactLine);
+            }
         }
-    }
-
-    public void inputValidity(InputObject inputObject){
-
     }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Direction;
 public class Meteor{
     private final boolean big;
     private final Direction direction;
+    private int impactLine;
 
     public Meteor(boolean big, Direction direction) {
         this.big = big;
@@ -18,4 +19,8 @@ public class Meteor{
     public Direction getDirection(){
         return direction;
     }
+
+    public void setImpactLine(int line) { impactLine = line; }
+
+    public int getImpactLine() {return impactLine;}
 }
