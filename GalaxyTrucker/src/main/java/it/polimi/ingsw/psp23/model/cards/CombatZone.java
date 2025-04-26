@@ -95,6 +95,7 @@ public class CombatZone extends Card{
         int tmp = -1;
         Player playerTmp;
 
+
         //inizio prima sfida
 
         if (penalty1 == Challenge.Members) {
@@ -113,34 +114,49 @@ public class CombatZone extends Card{
         //inizio seconda sfida
         playerTmp = findMinEngineStrength();
 
-        System.out.println(players.get(pos).getNickname() + " has less engine strength!");
+        System.out.println(playerTmp.getNickname() + " has less engine strength!");
 
         if (penalty2 == Challenge.Members) {
             // dobbiamo sapere da che cabina togliere l'equipaggio
-            players.get(pos).getTruck().reduceCrew(membersLost, 1, 1);
+            housingUnitsValidity(inputObject);
+            if(inputObject.getNumHousingUnits() == 1){
+                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , membersLost);
+            }else{
+                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , 1);
+                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(1)[0],inputObject.getHousingUnits().get(1)[1] , 1);
+            }
         } else if (penalty2 == Challenge.Goods) {
-            players.get(pos).getTruck().pickMostImportantGoods(goodsLost);
+
+            for(int i = 0; i < inputObject.getContainers().size(); i++){
+                playerTmp.getTruck().removePreciousItemFromContainer(inputObject.getContainers().get(i)[0],inputObject.getContainers().get(i)[1],inputObject.getToRemove().get(i));
+            }
+
+
         } else {
             throw new IllegalArgumentException("Eccezione in combatzone ");
         }
 
         //inizio terza sfida
         if (penalty3 == Challenge.Members) {
-            pos = findMinMembers(players);
+            playerTmp = findMinMembers();
 
-            System.out.println(players.get(pos).getNickname() + " has less crew members!");
+            System.out.println(playerTmp.getNickname() + " has less crew members!");
+            int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
-                players.get(pos).getTruck().handleCannonShot(c, impactLine);
+                playerTmp.getTruck().handleCannonShot(c, impactLine,inputObject.getActivatedShields().get(i));
+                i++;
             }
 
 
-        } else if (penalty3 == Challenge.Cannon_strength) {
-            pos = findMinCannonStrength(players);
-            System.out.println(players.get(pos).getNickname() + " has less cannon strength!");
+        } else if (penalty3 == Challenge.CannonStrength) {
+            playerTmp = findMinCannonStrength();
+            System.out.println(playerTmp.getNickname() + " has less cannon strength!");
+            int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
-                players.get(pos).getTruck().handleCannonShot(c, impactLine);
+                playerTmp.getTruck().handleCannonShot(c, impactLine,inputObject.getActivatedShields().get(i));
+                i++;
             }
         } else {
             throw new IllegalArgumentException("Eccezione in combatzone");
@@ -163,22 +179,42 @@ public class CombatZone extends Card{
             return playerTmp;
         }
 
+        //prima di questo metodo il player deve chiamare activate cannon in modo da aumentare la sua potenza di fuoco
         private Player findMinCannonStrength(){
             List<Player> players = Game.getInstance().getPlayers();
-            int tmp = players.get(0).getTruck().calculateCrew();
+            double tmp = players.get(0).getTruck().calculateCannonStrength();
             Player playerTmp = players.get(0);
             for (Player p : players) {
-                if (p.getTruck().calculateCrew() < tmp) {
+                if (p.getTruck().calculateCannonStrength() < tmp) {
                     playerTmp = p;
-                    tmp = p.getTruck().calculateCrew();
+                    tmp = p.getTruck().calculateCannonStrength();
                 }
             }
             return playerTmp;
         }
 
+    private Player findMinEngineStrength(){
+        List<Player> players = Game.getInstance().getPlayers();
+        int tmp = players.get(0).getTruck().calculateEngineStrength();
+        Player playerTmp = players.get(0);
+        for (Player p : players) {
+            if (p.getTruck().calculateEngineStrength() < tmp) {
+                playerTmp = p;
+                tmp = p.getTruck().calculateEngineStrength();
+            }
+        }
+        return playerTmp;
+    }
+
+    //da finire la validità
+
+    private void housingUnitsValidity(InputObject inputObject) {
+        int count = 0;
+        if (inputObject.getHousingUnits().size() == 2) {
+            count += inputObject.getHousingUnits().get(i)[0];
+
+        }
 
 
-
-
-
+    }
 }

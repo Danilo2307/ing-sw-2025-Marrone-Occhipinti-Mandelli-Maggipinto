@@ -61,9 +61,9 @@ public class AbandonedStation extends Card {
 
                     //SUPPONGO CHE NELL'INPUT LE POSIZIONI DEI CONTAINER SIANO MESSI IN ORDINE RISPETTO ALLE MERCI DA DISTRIBUIRE
 
-                    int coordX = inputObject.getLista().get(i)[0];
+                    int coordX = inputObject.getContainers().get(i)[0];
 
-                    int coordY = inputObject.getLista().get(i)[1];
+                    int coordY = inputObject.getContainers().get(i)[1];
 
                     Component analizedComponent = player.getTruck().getTile(coordX, coordY);
 
@@ -80,7 +80,7 @@ public class AbandonedStation extends Card {
     public void inputValidity(InputObject inputObject){
         Player player = Game.getInstance().getCurrentPlayer();
 
-        if (inputObject.getLista().size() != prize.size()) {
+        if (inputObject.getContainers().size() != prize.size()) {
             throw new RuntimeException("Input non valido");
         }
 
@@ -92,10 +92,10 @@ public class AbandonedStation extends Card {
 
         int counter;
 
-        for(Integer[] pos : inputObject.getLista()){
+        for(Integer[] pos : inputObject.getContainers()){
             counter = 0;
 
-           for(Integer[] pos2 : inputObject.getLista()){
+           for(Integer[] pos2 : inputObject.getContainers()){
                 if(pos2[0] == pos[0] && pos2[1] == pos[1]){
                     counter++;
                 }

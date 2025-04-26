@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.model.Events;
 
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.EventType;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -97,6 +98,11 @@ public class Event {
     }
 
     //costruttore per MeteorSwarm
+    public Event(GameStatus newStatus, Meteor meteor){
+
+    }
+
+    //costruttore per OpenSpace
     public Event(GameStatus newStatus){
 
     }

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.Item;
+import it.polimi.ingsw.psp23.model.components.Shield;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,10 @@ public class InputObject {
 
     private int numBatteriesEngine;
 
+    private int numHousingUnits;
+
+    private int numPlanet;
+
     /*
      * Questa lista servirà in AbandonedShip per sapere le coordinate della cabina da cui togliere il/i membri e
      * quanti se ne vogliono togliere(la lista contiene array di interi perchè ogni array conterrà due integer per le
@@ -31,7 +38,43 @@ public class InputObject {
 
     private List<Integer[]> engines = new ArrayList<Integer[]>();
 
-    private
+    private List<Integer[]> housingUnits = new ArrayList<Integer[]>();
+
+    private List<Integer[]> containers = new ArrayList<Integer[]>();
+
+    private List<Item> toRemove = new ArrayList<Item>(); //lista di item da rimuovere combinati con le posizioni del vettore containers
+
+    private List<Shield> activatedShields = new ArrayList<Shield>(); //posizione degli scudi attivati, null se non attivati
+
+
+
+    public List<Shield> getActivatedShields(){
+        return activatedShields;
+    }
+
+    public int getNumPlanet(){
+        return numPlanet;
+    }
+
+    public void setNumPlanet(int numPlanet){
+        this.numPlanet = numPlanet;
+    }
+
+    public int getNumHousingUnits(){
+        return numHousingUnits;
+    }
+
+    public List<Item> getToRemove(){
+        return toRemove;
+    }
+
+    public List<Integer[]> getHousingUnits(){
+        return housingUnits;
+    }
+
+    public List<Integer[]> getContainers(){
+        return containers;
+    }
 
     public void setDecision(boolean decision) {
         this.decision = decision;

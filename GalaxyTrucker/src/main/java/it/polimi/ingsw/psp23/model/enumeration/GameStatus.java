@@ -9,7 +9,9 @@ public enum GameStatus {
     BooleanRequest,
     IntegerRequest,
     RunningEpidemic,
-    MeteorSwarm,
+    RunningMeteorSwarm,
     ChooseCabins,
+    RunningOpenSpace,
+    RunningPlanets,
     //aggiungere altri stati
 }
