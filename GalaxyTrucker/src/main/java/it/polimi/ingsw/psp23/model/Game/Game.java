@@ -31,6 +31,7 @@ public class Game {
     private final ArrayList<Component> uncovered;
     private int lastUncoveredVersion;
     private Player currentPlayer;
+    private int currentPlayerIndex; // Questa variabile sarà inizializzata a -1
     private GameStatus gameStatus;
     private Card currentCard;
     private String deck1Owner;
@@ -46,6 +47,7 @@ public class Game {
         this.uncovered = new ArrayList<>();
         this.lastUncoveredVersion = 0;
         this.currentPlayer = null;
+        this.currentPlayerIndex = -1;
         this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
         this.visibleCards1 = new ArrayList<>(); //questi sono i tre mazzetti visibili ad inizio game, vanno staccati
@@ -214,9 +216,17 @@ public class Game {
         return currentPlayer;
     }
 
+    public int getCurrentPlayerIndex(){
+        return currentPlayerIndex;
+    }
+
     /** @param player the player to set as current */
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
+    }
+
+    public void setCurrentPlayerIndex(int index){
+        currentPlayerIndex = index;
     }
 
     /** @return the next player in the round, or null if the round is over        */
@@ -225,6 +235,7 @@ public class Game {
         int pos = players.indexOf(currentPlayer);
         if(pos+1 < size){
             setCurrentPlayer(players.get(pos+1));
+            setCurrentPlayerIndex(pos+1);
             return currentPlayer;
         } else{
             return null;
