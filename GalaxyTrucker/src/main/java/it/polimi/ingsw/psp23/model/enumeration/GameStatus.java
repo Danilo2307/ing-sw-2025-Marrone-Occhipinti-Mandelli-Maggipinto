@@ -13,5 +13,6 @@ public enum GameStatus {
     ChooseCabins,
     RunningOpenSpace,
     RunningPlanets,
+    RunningSlavers,
     //aggiungere altri stati
 }
