@@ -144,7 +144,7 @@ public class CombatZone extends Card{
             int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
-                playerTmp.getTruck().handleCannonShot(c, impactLine,inputObject.getActivatedShields().get(i));
+                playerTmp.getTruck().handleCannonShot(c, impactLine);
                 i++;
             }
 
@@ -155,7 +155,7 @@ public class CombatZone extends Card{
             int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
-                playerTmp.getTruck().handleCannonShot(c, impactLine,inputObject.getActivatedShields().get(i));
+                playerTmp.getTruck().handleCannonShot(c, impactLine);
                 i++;
             }
         } else {

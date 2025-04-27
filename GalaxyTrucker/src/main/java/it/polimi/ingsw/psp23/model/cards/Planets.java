@@ -61,7 +61,7 @@ public class Planets extends Card {
 
     public void initPlay(){
         Game.getInstance().setGameStatus(GameStatus.RunningPlanets);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus()));
+        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
     }
 
     public void play(InputObject inputObject){

@@ -6,6 +6,7 @@ public enum GameStatus {
     CheckBoards,
     Playing,
     End,
+    INIT_PLAY,
     BooleanRequest,
     IntegerRequest,
     RunningEpidemic,

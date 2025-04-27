@@ -7,50 +7,81 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * Represents a Meteor Swarm adventure card.
+ * <p>
+ * Upon initialization, rolls two dice for each meteor to determine its impact line,
+ * stores the result in the meteor, and fires an event for each meteor.
+ * During play, applies each meteor's impact to every player's truck.
+ * </p>
+ */
 public class MeteorSwarm extends Card {
-    //Federico
-    // lista di meteore già ordinata secondo l'ordine di impatto: from up-down and from left-right
+    /**
+     * List of meteors in the order they will impact (top-to-bottom, left-to-right).
+     */
     private final List<Meteor> meteors;
-    private boolean isLeader;
 
+    /**
+     * Constructs a MeteorSwarm card with the specified difficulty level and meteors.
+     *
+     * @param level   the difficulty level of this card
+     * @param meteors the list of meteors, ordered by impact sequence
+     */
     public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
         this.meteors = meteors;
-        isLeader = true;
     }
 
+    /**
+     * Returns a defensive copy of the meteor list.
+     *
+     * @return a new list containing all meteors
+     */
     public List<Meteor> getMeteors() {
         return new ArrayList<>(meteors);
     }
 
     @Override
-    public Object call(Visitor visitor){
+    public Object call(Visitor visitor) {
         return visitor.visitForMeteorSwarm(this);
     }
 
+    /**
+     * Initializes the play phase for the Meteor Swarm.
+     * Rolls two dice for each meteor to set its impact line,
+     * stores the result in the meteor, and fires an event to notify listeners.
+     */
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors));
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_PLAY);
+
+        for (Meteor meteor : meteors) {
+            int impactLine = Utility.roll2to12();
+            meteor.setImpactLine(impactLine);
+            game.fireEvent(new Event(
+                    game.getGameStatus(),
+                    Collections.singletonList(meteor),
+                    impactLine
+            ));
+        }
     }
 
+    /**
+     * Executes the Meteor Swarm effect.
+     * Applies each stored meteor impact line to every player's truck.
+     *
+     * @param inputObject placeholder for user input (not utilized)
+     */
     public void play(InputObject inputObject) {
-        Player player = Game.getInstance().getCurrentPlayer();
-        int impactLine = -1;
-
-        // VANNO MESSI GLI INPUT SU CANNONI E SCUDI
-
-        if(isLeader){
-            isLeader = false;
-            impactLine = Utility.roll2to12();
+        List<Player> players = Game.getInstance().getPlayers();
+        for (Meteor meteor : meteors) {
+            int impactLine = meteor.getImpactLine();
+            for (Player player : players) {
+                player.getTruck().handleMeteor(meteor, impactLine);
+            }
         }
-        for (Meteor m : meteors) {
-            player.getTruck().handleMeteor(m, impactLine, shield);
-        }
-    }
-
-    public void inputValidity(InputObject inputObject){
-
     }
 }

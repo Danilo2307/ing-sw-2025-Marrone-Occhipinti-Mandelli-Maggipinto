@@ -395,7 +395,7 @@ public class Board {
     }
 
 
-    public void handleCannonShot(CannonShot cannonShot, int impactLine, Shield shieldUsed) {
+    public void handleCannonShot(CannonShot cannonShot, int impactLine) {
 
         /* Se la cannonata è grande, distrugge sempre il primo componente colpito.
         La plancia del livello 2 ha coordinate di gioco diverse dalla matrice interna,
@@ -444,22 +444,27 @@ public class Board {
             // cannonata piccola
             boolean isCovered = false;
             // Se lo scudo è stato attivato, controllo se copre la direzione da cui arriva la cannonata
-            if (shieldUsed != null) {
-                Direction dir = cannonShot.getDirection();
-                // In base alla direzione da cui arriva la cannonata, seleziono il lato dello scudo corrispondente
-                Side sideDir = switch (dir) {
-                    case UP -> shieldUsed.getUp();
-                    case DOWN -> shieldUsed.getDown();
-                    case LEFT -> shieldUsed.getLeft();
-                    case RIGHT -> shieldUsed.getRight();
-                };
-                // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
-                if (sideDir.isShield())
-                    isCovered = true;
+            for (Shield s : shields) {
+                if(s.isActive()) {
+                    s.disactiveShield();
+                    Direction dir = cannonShot.getDirection();
+                    // In base alla direzione da cui arriva la cannonata, seleziono il lato dello scudo corrispondente
+                    Side sideDir = switch (dir) {
+                        case UP -> s.getUp();
+                        case DOWN -> s.getDown();
+                        case LEFT -> s.getLeft();
+                        case RIGHT -> s.getRight();
+                    };
+                    // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
+                    if (sideDir.isShield()) {
+                        isCovered = true;
+                        break;
+                    }
+                }
             }
 
             // utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da cannonata piccola
-            if (shieldUsed == null || !isCovered) {
+            if (!isCovered) {
                 if (cannonShot.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
@@ -493,7 +498,7 @@ public class Board {
         }
     }
 
-    public void handleMeteor(Meteor meteor, int impactLine, Shield shieldUsed) {
+    public void handleMeteor(Meteor meteor, int impactLine) {
 
         //prima di tutto converto la impactLine per far sì che rientri nei limiti della mia matrice
         int realImpactLine;
@@ -506,25 +511,30 @@ public class Board {
         if (!meteor.isBig()) {
             boolean isCovered = false;
             // se lo scudo è stato attivato, controllo se copre la direzione da cui arriva la meteora
-            if (shieldUsed != null) {
-                Direction dir = meteor.getDirection();
-                // In base alla direzione da cui arriva la meteora, seleziono il lato dello scudo corrispondente
-                Side sideDir = switch (dir) {
-                    case UP -> shieldUsed.getUp();
-                    case DOWN -> shieldUsed.getDown();
-                    case LEFT -> shieldUsed.getLeft();
-                    case RIGHT -> shieldUsed.getRight();
-                };
-                // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
-                if (sideDir.isShield())
-                    isCovered = true;
+            for (Shield s : shields) {
+                if(s.isActive()){
+                    s.disactiveShield();
+                    Direction dir = meteor.getDirection();
+                    // In base alla direzione da cui arriva la meteora, seleziono il lato dello scudo corrispondente
+                    Side sideDir = switch (dir) {
+                        case UP -> s.getUp();
+                        case DOWN -> s.getDown();
+                        case LEFT -> s.getLeft();
+                        case RIGHT -> s.getRight();
+                    };
+                    // Se quel lato dello scudo è effettivamente uno scudo (e non un connettore), allora siamo coperti
+                    if (sideDir.isShield()) {
+                        isCovered = true;
+                        break;
+                    }
+                }
             }
 
             // Utente ha scelto di non coprirsi (o ha sbagliato a coprirsi) da meteora piccola.
             // Appena trovo un componente valido sulla colonna/linea di impatto:
             // - Se ha connettore NONE (quindi non un connettore) nella direzione d'impatto, la meteora rimbalza → esco subito (break)
             // - Altrimenti il modulo ha un connettore esposto → lo elimino
-            if (shieldUsed == null || !isCovered) {
+            if (!isCovered) {
                 if (meteor.getDirection() == Direction.UP) {
                     for (int i = 0; i < ship.length; i++) {
                         if (isValid(i, realImpactLine) && !isFree(i, realImpactLine)) {
@@ -823,6 +833,22 @@ public class Board {
                     cannons.get(index).activeCannon();
             }
             default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a cannon");
+        }
+    }
+
+    public void activeShield(int i, int j) {
+        if ((!isValid(i, j)) || isFree(i,j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") shield contain a tile or don't contain one");
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case Shield shield -> {
+                int index = shields.indexOf(shield);
+                if (index == -1)
+                    throw new ComponentMismatchException("Shields list does not contain the shield at Ship[" + i + "][" + j + "]");
+                shields.get(index).activeShield();
+            }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a shield");
         }
     }
 
