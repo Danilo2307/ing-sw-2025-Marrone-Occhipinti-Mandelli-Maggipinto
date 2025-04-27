@@ -5,16 +5,19 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.messages.UpdateStateMessage;
 
 
 public class StartListeningForServerThread extends Thread {
 
     private final SocketHandler socketHandler;
     private final MessageObserver messageObserver;
+    private final Client client;
 
-    public StartListeningForServerThread(SocketHandler socketHandler, MessageObserver messageObserver) {
+    public StartListeningForServerThread(SocketHandler socketHandler, MessageObserver messageObserver, Client client) {
         this.socketHandler = socketHandler;
         this.messageObserver = messageObserver;
+        this.client = client;
     }
 
     // TODO: il seguente metodo potrebbe essere migliorato aggiungendo ad esempio un timeout nel caso in cui la
@@ -25,7 +28,15 @@ public class StartListeningForServerThread extends Thread {
             while(true){
                 Message message = socketHandler.readMessage();
                 if(message != null) {
-                    messageObserver.messageReceived(message);
+
+                    // Dopo che ci arriva un messaggio dobbiamo interpretarlo. Se è un messaggio di tipo "observer"
+                    // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
+                    // handleMessage presente nel client
+                    switch(message){
+                        case UpdateStateMessage m -> messageObserver.messageReceived(message);
+                        default -> client.handleMessage(message);
+                    }
+
                 }
             }
         }

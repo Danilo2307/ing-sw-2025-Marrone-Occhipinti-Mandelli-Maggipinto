@@ -145,6 +145,12 @@ public class Server {
         return null;
     }
 
+    public void notifyAllObservers(Message message) {
+        for (String connection : clients.keySet()) {
+            sendMessage(message, connection);
+        }
+    }
+
     // Metodo per chiudere la connessione con un solo client specifico
     public void closeConnection(String nameConnection) {
         synchronized(clients){

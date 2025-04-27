@@ -2,6 +2,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.messages.SelectCannonsMessage;
 import it.polimi.ingsw.psp23.network.messages.fromclient.SetUsernameMsg;
 
 import java.io.*;
@@ -23,7 +24,7 @@ public class Client{
             Socket socket = new Socket(serverIP, port);
             socketHandler = new SocketHandler(socket);
             socketHandler.sendMessage(message);
-            startListeningForServerThread = new StartListeningForServerThread(socketHandler, messageObserver);
+            startListeningForServerThread = new StartListeningForServerThread(socketHandler, messageObserver, this);
             startListeningForServerThread.start();
         }
         catch (IOException e) {
@@ -38,6 +39,12 @@ public class Client{
         socketHandler.sendMessage(message);
     }
 
+    public void handleMessage(Message message) {
+        switch(message){
+            case SelectCannonsMessage m -> System.out.println("Cannon selected");
+            default -> System.out.println("Unknown message");
+        }
+    }
 
     // Avremmo potuto anche usare i try-with-resources negli altri blocchi, ma fare chiusure esplicite rende più robusto
     // il codice
