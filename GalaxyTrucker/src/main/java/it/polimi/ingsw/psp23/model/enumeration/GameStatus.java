@@ -7,6 +7,7 @@ public enum GameStatus {
     Playing,
     End,
     INIT_PLAY,
+    END_SMUGGLERS,
     BooleanRequest,
     IntegerRequest,
     RunningEpidemic,

@@ -109,6 +109,10 @@ public class Event {
     public Event(GameStatus newStatus, int firePower, int numItemsStolen, int days, List<Item> prize) {
 
     }
+
+    //costruttore per Stardust
+    public Event(GameStatus newStatus) {
+    }
     //mancano le altre carte da fare
     //
      //
