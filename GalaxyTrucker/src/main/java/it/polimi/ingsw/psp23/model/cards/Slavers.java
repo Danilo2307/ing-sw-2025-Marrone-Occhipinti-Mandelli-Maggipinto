@@ -2,9 +2,13 @@ package it.polimi.ingsw.psp23.model.cards;
 
 
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Slavers extends Card {
     //Federico
@@ -14,6 +18,8 @@ public class Slavers extends Card {
     private final int prize;
     private final int days;
     private boolean defeated;
+    private String winner = null;
+    private List<String> losers = new ArrayList<>();
 
     public Slavers(int level, int cannonStrength, int membersStolen, int prize, int days){
         super(level);
@@ -40,6 +46,18 @@ public class Slavers extends Card {
         return days;
     }
 
+    public String getWinner() {
+        return winner;
+    }
+
+    public void setWinner(String winner) {
+        this.winner = winner;
+    }
+
+    public List<String> getLosers() {
+        return losers;
+    }
+
     @Override
     public Object call(Visitor visitor){
         return visitor.visitForSlavers(this);
@@ -49,7 +67,7 @@ public class Slavers extends Card {
         Game.getInstance().setGameStatus(GameStatus.RunningSlavers);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus()));
     }
-
+/*
     public void play(InputObject inputObject){
         int i = 0;
         Player player = Game.getInstance().getCurrentPlayer();
@@ -77,5 +95,23 @@ public class Slavers extends Card {
             i++;
         }
     }
+    }*/
+
+    public void play(InputObject inputObject) {
+        List<Player> players = Game.getInstance().getPlayers();
+        for (Player p : players) {
+            if (p.getTruck().calculateCannonStrength() > cannonStrength) {
+                setWinner(p.getNickname());
+                break;
+            } else if (p.getTruck().calculateCannonStrength() < cannonStrength) {
+                losers.add(p.getNickname());
+            }
+        }
+        Game.getInstance().getPlayerFromNickname(winner).updateMoney(prize);
+        Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getPlayers().indexOf((Game.getInstance().getPlayerFromNickname(winner))),-days);
+        Game.getInstance().setGameStatus(GameStatus.END_SLAVERS);
     }
+
+
+    // TODO: Handle flight day loss if the winner chooses the prize (update position in loadGoods?)
 }
