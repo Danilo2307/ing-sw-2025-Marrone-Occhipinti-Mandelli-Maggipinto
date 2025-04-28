@@ -2,17 +2,23 @@ package it.polimi.ingsw.psp23.view.TUI;
 
 import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
+import it.polimi.ingsw.psp23.network.messages.EventMessage;
 import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.MessageObserver;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication {
-    private String username;
+    private Client client;
     private ClientController cc;
     private int lastUncoveredVersion;
     private IOManager io;
 
-    /// TODO: costruttore: capire bene cosa mettere
+    /// TODO: capire costruttore (client=null)
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
 
     /** ciclo infinito che rimane in ascolto degli input dell'utente */
     public void runGame() {
@@ -24,6 +30,13 @@ public class TuiApplication {
             catch (TuiInputException e) {
                 io.error(e.getMessage());
             }
+        }
+    }
+
+    public void sendEvent(Event event) {
+        EventMessage eventMessage = new EventMessage(event);
+        if (client != null) {
+            client.sendMessage(eventMessage);
         }
     }
 
@@ -40,17 +53,17 @@ public class TuiApplication {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
                 if (words[1].equals("mucchio")) {
-                    cc.sendEvent(new DrawFromHeap(username));
+                    sendEvent(new DrawFromHeap(username));
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    cc.sendEvent(new DrawFromFaceUp(username, index, lastUncoveredVersion));
+                    sendEvent(new DrawFromFaceUp(username, index, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
             }
             case "scoperte" -> {
-                cc.sendEvent(new RequestUncovered(username));
+                sendEvent(new RequestUncovered(username));
             }
             case "salda" -> {
                 // TODO: inserire controlli eccezioni eccetera
@@ -77,5 +90,4 @@ public class TuiApplication {
             }
         }
     }
-
 }

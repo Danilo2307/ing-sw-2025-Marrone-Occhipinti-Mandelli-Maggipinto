@@ -20,6 +20,10 @@ public class IOManager {
         return scanner.nextLine();
     }
 
+    public void print(String s) {
+        System.out.print(s);
+    }
+
     public void error(String message) {
         // printo su stderr (e non stdout) così compaiono in rosso
         System.err.println("Errore: " + message);
@@ -35,7 +39,7 @@ public class IOManager {
         }
     }
 
-    private String getSymbol(Component c) {
+    public String getSymbol(Component c) {
         if (c == null) return "_";
 
         return switch (c) {

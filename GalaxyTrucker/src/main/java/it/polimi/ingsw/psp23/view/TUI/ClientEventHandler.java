@@ -5,8 +5,10 @@ import it.polimi.ingsw.psp23.events.server.ShipResponse;
 import it.polimi.ingsw.psp23.events.server.TileResponse;
 import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.socket.MessageObserver;
 
-public class ClientEventHandler {
+public class ClientEventHandler implements MessageObserver {
     private final IOManager io;
     private TuiApplication tui;
 
@@ -23,10 +25,16 @@ public class ClientEventHandler {
             case UncoveredListResponse ur -> {
                 tui.setLastUncoveredVersion(ur.lastVersion());
                 for (Component c: ur.uncovered()) {
-                    io.printInfoTile(c);
+                    io.print(io.getSymbol(c));
                 }
             }
             default -> {}
         }
     }
+
+    @Override
+    public void messageReceived(Message message) {
+        /** qui arrivranno i messaggi diretti a tutti i client */
+    }
+
 }
