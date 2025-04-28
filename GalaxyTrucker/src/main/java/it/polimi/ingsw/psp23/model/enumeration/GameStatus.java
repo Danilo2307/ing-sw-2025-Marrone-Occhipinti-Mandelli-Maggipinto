@@ -16,5 +16,6 @@ public enum GameStatus {
     RunningOpenSpace,
     RunningPlanets,
     RunningSlavers,
+    END_SLAVERS,
     //aggiungere altri stati
 }
