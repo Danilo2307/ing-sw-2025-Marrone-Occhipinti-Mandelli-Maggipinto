@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.messages.SelectCannonsMessage;
 
 /*
  * Questa classe è responsabile della gestione lato Server del client, è come se nel server ci fosse una

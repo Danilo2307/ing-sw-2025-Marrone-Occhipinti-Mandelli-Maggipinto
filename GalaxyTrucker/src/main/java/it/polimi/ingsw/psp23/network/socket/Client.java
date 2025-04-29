@@ -2,12 +2,11 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.messages.SelectCannonsMessage;
 import it.polimi.ingsw.psp23.network.messages.fromclient.SetUsernameMsg;
+import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketAddress;
 
 public class Client{
 
@@ -16,7 +15,7 @@ public class Client{
 
 
     // Nel costruttore verrà eseguita la connessione tra client e server
-    Client(String serverIP, int port, String username, MessageObserver messageObserver) {
+    Client(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
 
         Message message = new SetUsernameMsg(username);
 
@@ -24,7 +23,7 @@ public class Client{
             Socket socket = new Socket(serverIP, port);
             socketHandler = new SocketHandler(socket);
             socketHandler.sendMessage(message);
-            startListeningForServerThread = new StartListeningForServerThread(socketHandler, messageObserver, this);
+            startListeningForServerThread = new StartListeningForServerThread(socketHandler, clientEventHandler, this);
             startListeningForServerThread.start();
         }
         catch (IOException e) {

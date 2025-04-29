@@ -4,19 +4,22 @@
 
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.events.Event;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.messages.UpdateStateMessage;
+import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
 
 public class StartListeningForServerThread extends Thread {
 
     private final SocketHandler socketHandler;
-    private final MessageObserver messageObserver;
+    private final ClientEventHandler clientEventHandler;
     private final Client client;
 
-    public StartListeningForServerThread(SocketHandler socketHandler, MessageObserver messageObserver, Client client) {
+    public StartListeningForServerThread(SocketHandler socketHandler, ClientEventHandler clientEventHandler, Client client) {
         this.socketHandler = socketHandler;
-        this.messageObserver = messageObserver;
+        this.clientEventHandler = clientEventHandler;
         this.client = client;
     }
 
@@ -33,8 +36,12 @@ public class StartListeningForServerThread extends Thread {
                     // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
                     // handleMessage presente nel client
                     switch(message){
-                        case UpdateStateMessage m -> messageObserver.messageReceived(message);
-                        default -> client.handleMessage(message);
+                        case BroadcastMessage m -> clientEventHandler.messageReceived(message);
+                        case DirectMessage m -> {
+                            Event event = m.getEvent();
+                            clientEventHandler.handle(event);
+                        }
+                        default -> System.out.println("not handled message");
                     }
 
                 }

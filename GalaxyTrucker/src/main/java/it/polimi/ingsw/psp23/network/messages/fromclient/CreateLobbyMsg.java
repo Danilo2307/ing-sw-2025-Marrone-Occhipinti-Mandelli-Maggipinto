@@ -6,7 +6,7 @@ import it.polimi.ingsw.psp23.network.messages.Message;
 /**
  * Client request to establish a new game lobby with specified parameters.
  */
-public final class CreateLobbyMsg extends Message {
+public final class CreateLobbyMsg {
     private final String lobbyTitle;
     private final int playerLimit;
 

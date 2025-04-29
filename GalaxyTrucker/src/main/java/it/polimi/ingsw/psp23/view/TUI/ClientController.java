@@ -1,11 +1,6 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
-import it.polimi.ingsw.psp23.events.Event;
-import it.polimi.ingsw.psp23.network.messages.EventMessage;
-
-import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.rmi.RemoteException;
 
 public class ClientController {
     private final boolean useRMI;
