@@ -1,9 +1,9 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
-import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.protocol.request.*;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */

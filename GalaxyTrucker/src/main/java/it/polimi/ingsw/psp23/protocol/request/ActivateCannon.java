@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.events;
+package it.polimi.ingsw.psp23.protocol.request;
 
 /**
  * Event triggered when the user wants to activate a double cannon during the action phase.

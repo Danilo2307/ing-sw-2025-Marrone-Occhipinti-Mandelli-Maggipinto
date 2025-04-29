@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.events.server;
+package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;

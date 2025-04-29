@@ -2,7 +2,7 @@
 
 package it.polimi.ingsw.psp23.network.messages;
 
-import it.polimi.ingsw.psp23.events.server.Event;
+import it.polimi.ingsw.psp23.protocol.response.Event;
 
 public final class DirectMessage extends Message{
 

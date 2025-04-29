@@ -1,9 +1,6 @@
-package it.polimi.ingsw.psp23.view.TUI;
+package it.polimi.ingsw.psp23.protocol.response;
 
-import it.polimi.ingsw.psp23.events.server.ShipResponse;
-import it.polimi.ingsw.psp23.events.server.StringResponse;
-import it.polimi.ingsw.psp23.events.server.TileResponse;
-import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
+import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
 public interface HandleEventVisitor<T> {
 

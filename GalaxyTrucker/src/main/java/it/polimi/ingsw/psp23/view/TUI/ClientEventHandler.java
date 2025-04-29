@@ -1,12 +1,11 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
 
-import it.polimi.ingsw.psp23.events.server.Event;
-import it.polimi.ingsw.psp23.events.server.ShipResponse;
-import it.polimi.ingsw.psp23.events.server.TileResponse;
-import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
+import it.polimi.ingsw.psp23.protocol.response.Event;
+import it.polimi.ingsw.psp23.protocol.response.ShipResponse;
+import it.polimi.ingsw.psp23.protocol.response.TileResponse;
+import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
 import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.MessageObserver;
 
 public class ClientEventHandler implements MessageObserver {

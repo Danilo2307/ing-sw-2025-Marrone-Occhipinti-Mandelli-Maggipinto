@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.events;
+package it.polimi.ingsw.psp23.protocol.request;
 
 import java.io.Serializable;
 

@@ -2,7 +2,7 @@
 
 package it.polimi.ingsw.psp23.network.messages;
 
-import it.polimi.ingsw.psp23.events.Action;
+import it.polimi.ingsw.psp23.protocol.request.Action;
 
 public final class ActionMessage extends Message{
 

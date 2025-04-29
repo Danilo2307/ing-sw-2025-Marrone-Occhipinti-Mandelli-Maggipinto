@@ -4,7 +4,7 @@
 
 package it.polimi.ingsw.psp23.network.socket;
 
-import it.polimi.ingsw.psp23.events.server.Event;
+import it.polimi.ingsw.psp23.protocol.response.Event;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;

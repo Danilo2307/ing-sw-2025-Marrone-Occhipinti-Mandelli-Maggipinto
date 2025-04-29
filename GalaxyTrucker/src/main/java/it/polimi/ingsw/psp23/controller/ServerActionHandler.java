@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.events.*;
-import it.polimi.ingsw.psp23.events.server.ShipResponse;
-import it.polimi.ingsw.psp23.events.server.StringResponse;
-import it.polimi.ingsw.psp23.events.server.TileResponse;
-import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
+import it.polimi.ingsw.psp23.protocol.request.*;
+import it.polimi.ingsw.psp23.protocol.response.ShipResponse;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
+import it.polimi.ingsw.psp23.protocol.response.TileResponse;
+import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
 import it.polimi.ingsw.psp23.exceptions.NoTileException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;

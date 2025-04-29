@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.events.server;
+package it.polimi.ingsw.psp23.protocol.response;
 
 
 /* evento usato da server per inviare info testuali di qualsiasi genere al client (conferme, esiti operazioni)*/

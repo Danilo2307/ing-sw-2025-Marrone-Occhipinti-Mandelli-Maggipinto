@@ -1,8 +1,7 @@
 // Questa classe rappresenta il player lato client
 package it.polimi.ingsw.psp23.network.socket;
 
-import it.polimi.ingsw.psp23.events.Action;
-import it.polimi.ingsw.psp23.events.SetUsername;
+import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.messages.fromclient.SetUsernameMsg;
