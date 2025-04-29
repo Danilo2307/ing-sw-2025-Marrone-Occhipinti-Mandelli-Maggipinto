@@ -11,9 +11,13 @@ public class TuiApplication {
     private Client client;
     // private ClientController cc;  ora useless perchè sendAction è in questa classe
     private int lastUncoveredVersion;
-    private IOManager io;
+    private final IOManager io;
 
     /// TODO: capire costruttore (client=null)
+    public TuiApplication() {
+        io = new IOManager();
+        lastUncoveredVersion = 0;
+    }
 
     public void setClient(Client client) {
         this.client = client;

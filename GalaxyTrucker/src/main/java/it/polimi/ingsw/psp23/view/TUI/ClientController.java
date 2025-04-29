@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
 import java.io.ObjectOutputStream;
-
+/// USELESS FOR NOW
 public class ClientController {
     private final boolean useRMI;
 
