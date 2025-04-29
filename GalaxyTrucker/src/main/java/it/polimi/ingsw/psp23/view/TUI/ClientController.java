@@ -19,7 +19,7 @@ public class ClientController {
         this.serverStub = stub;
     }
 
-    public void sendEvent(Event e) {
+    /* public void sendEvent(Event e) {
         try {
             if (useRMI) {
                 serverStub.receiveEvent(e); // metodo remoto RMI
@@ -31,6 +31,6 @@ public class ClientController {
         } catch (IOException ex) {
             System.err.println("Errore nell'invio dell'evento: " + ex.getMessage());
         }
-    }
+    } */
 }
 

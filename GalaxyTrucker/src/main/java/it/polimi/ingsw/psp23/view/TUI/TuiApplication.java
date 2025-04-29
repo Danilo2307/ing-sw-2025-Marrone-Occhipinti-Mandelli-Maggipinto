@@ -10,7 +10,7 @@ import it.polimi.ingsw.psp23.network.socket.MessageObserver;
  *  cambio stato. */
 public class TuiApplication {
     private Client client;
-    private ClientController cc;
+    // private ClientController cc;  ora useless perchè sendEvent è in questa classe
     private int lastUncoveredVersion;
     private IOManager io;
 
@@ -53,40 +53,40 @@ public class TuiApplication {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
                 if (words[1].equals("mucchio")) {
-                    sendEvent(new DrawFromHeap(username));
+                    sendEvent(new DrawFromHeap());
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    sendEvent(new DrawFromFaceUp(username, index, lastUncoveredVersion));
+                    sendEvent(new DrawFromFaceUp(index, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
             }
             case "scoperte" -> {
-                sendEvent(new RequestUncovered(username));
+                sendEvent(new RequestUncovered());
             }
             case "salda" -> {
                 // TODO: inserire controlli eccezioni eccetera
                 int x = Integer.parseInt(words[1]);
                 int y = Integer.parseInt(words[2]);
-                cc.sendEvent(new AddTile(username, x, y));
+                sendEvent(new AddTile(x, y));
             }
             case "rilascia" -> {
-                cc.sendEvent(new ReleaseTile(username));
+                sendEvent(new ReleaseTile());
             }
             case "ruota" -> {
-                cc.sendEvent(new RotateTile(username));
+                sendEvent(new RotateTile());
             }
             case "gira" -> {
-                cc.sendEvent(new TurnHourglass(username));
+                sendEvent(new TurnHourglass());
             }
             case "mostra" -> {
-                cc.sendEvent(new RequestShip(username));
+                sendEvent(new RequestShip());
             }
             case "info" -> {
                 int x = Integer.parseInt(words[1]);
                 int y = Integer.parseInt(words[2]);
-                cc.sendEvent(new RequestTileInfo(username, x, y));
+                sendEvent(new RequestTileInfo(x, y));
             }
         }
     }

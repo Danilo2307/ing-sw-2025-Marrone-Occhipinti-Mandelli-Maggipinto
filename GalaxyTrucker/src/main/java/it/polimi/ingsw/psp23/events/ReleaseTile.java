@@ -12,4 +12,4 @@ import it.polimi.ingsw.psp23.model.components.Component;
  * The server will verify that the player is actually holding a tile and, if so,
  * remove it from their hand and place it back into the uncovered area.
  */
-public record ReleaseTile(String username) implements Event { }
+public record ReleaseTile() implements Event { }

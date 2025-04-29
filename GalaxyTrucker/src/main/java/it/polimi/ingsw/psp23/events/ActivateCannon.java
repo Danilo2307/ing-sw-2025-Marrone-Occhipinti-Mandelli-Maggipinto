@@ -5,4 +5,4 @@ package it.polimi.ingsw.psp23.events;
  * The client specifies the position of the cannon to activate (cx, cy) and the battery hub (bx, by)
  * from which one battery will be consumed.
  * */
-public record ActivateCannon(String username, int cx, int cy, int bx, int by) implements Event { }
+public record ActivateCannon(int cx, int cy, int bx, int by) implements Event { }
