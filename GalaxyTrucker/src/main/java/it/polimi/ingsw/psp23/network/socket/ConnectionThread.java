@@ -10,7 +10,7 @@ public class ConnectionThread extends Thread{
 
     public static ConnectionThread instance = null;
 
-    ConnectionThread(){}
+    public ConnectionThread(){}
 
     public static ConnectionThread getInstance(){
         if(instance == null){

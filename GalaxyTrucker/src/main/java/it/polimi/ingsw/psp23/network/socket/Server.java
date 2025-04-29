@@ -12,7 +12,7 @@ public class Server {
 
     private static Server instance;
     private ServerSocket serverSocket;
-    private HashMap<String,SocketHandler> clients = null;
+    private HashMap<String, SocketHandler> clients = null;
 
 
     // Qui creo il server
@@ -25,34 +25,54 @@ public class Server {
 
             System.out.println("Server started at port " + port + " and with address " + serverSocket.getInetAddress());
 
-        }
-        catch (IOException e) {
-            throw new RuntimeException("Could not load the server: error in constructor of class Server" + e.getMessage()+")");
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load the server: error in constructor of class Server" + e.getMessage() + ")");
         }
     }
 
-    public static Server getInstance(){
-        if(instance == null){
-            throw new RuntimeException("The server has not been initialized yet(from getInstance in class Server)");
+    Server(int port, String host) {
+        try {
+
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
+
+            clients = new HashMap<>();
+
+            System.out.println("Server started at port " + port + " and with address " + serverSocket.getInetAddress());
+
+        } catch (IOException e) {
+            throw new RuntimeException("Could not load the server: error in constructor of class Server" + e.getMessage() + ")");
         }
-        else{
+    }
+
+    public static synchronized Server getInstance() {
+
+        if (instance == null) {
+            throw new RuntimeException("The server has not been initialized yet(from getInstance in class Server)");
+        } else {
             return instance;
         }
     }
 
-    public static Server getInstance(int port){
-        if(instance == null){
+    public static synchronized Server getInstance(int port) {
+        if (instance == null) {
             instance = new Server(port);
         }
 
         return instance;
     }
 
-    public void connectClients(String nameConnection){
-        if(clients.containsKey(nameConnection)){
+    public static synchronized Server getInstance(String host, int port) {
+        if (instance == null) {
+            instance = new Server(port, host);
+        }
+        return instance;
+    }
+
+    public void connectClients(String nameConnection) {
+        if (clients.containsKey(nameConnection)) {
             throw new RuntimeException("La connessione è già presente!!");
         }
-        synchronized (serverSocket){
+        synchronized (serverSocket) {
             try {
 
                 Socket socket = serverSocket.accept();
@@ -64,7 +84,7 @@ public class Server {
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Adesso mi occupo di ricevere lo username del player
-                socketHandler.setUsername(socketHandler.readMessage().getText());
+                socketHandler.setUsername(socketHandler.readMessage());
 
                 synchronized (clients) {
 
@@ -101,10 +121,9 @@ public class Server {
             socketHandler = clients.get(nameConnection);
         }
 
-        if(socketHandler != null){
+        if (socketHandler != null) {
             System.out.println("Messaggio inviato con esito: " + socketHandler.sendMessage(message));
-        }
-        else{
+        } else {
             throw new RuntimeException("No client with name " + nameConnection);
         }
     }
@@ -114,7 +133,7 @@ public class Server {
         al momento dell'inserimento
     */
     public void sendMessage(String username, Message message) {
-        if(username != null && message != null) {
+        if (username != null && message != null) {
             String connectionID = null;
             synchronized (clients) {
                 for (String connection : clients.keySet()) {
@@ -125,9 +144,8 @@ public class Server {
                 }
             }
             sendMessage(message, connectionID);
-        }
-        else{
-            throw new RuntimeException("message or username in Server.sendMessage(username, message) are null (tried to send: " + message.toString() + ")" );
+        } else {
+            throw new RuntimeException("message or username in Server.sendMessage(username, message) are null (tried to send: " + message.toString() + ")");
         }
     }
 
@@ -139,7 +157,7 @@ public class Server {
             socketHandler = clients.get(nameConnection);
         }
 
-        if(socketHandler != null) {
+        if (socketHandler != null) {
             return socketHandler.readMessage();
         }
         return null;
@@ -153,21 +171,20 @@ public class Server {
 
     // Metodo per chiudere la connessione con un solo client specifico
     public void closeConnection(String nameConnection) {
-        synchronized(clients){
+        synchronized (clients) {
             SocketHandler socketHandler = clients.get(nameConnection);
 
-            if(socketHandler != null){
+            if (socketHandler != null) {
                 socketHandler.close();
                 clients.remove(nameConnection);
             }
         }
     }
 
-    public void stampa(){
-        if(clients.isEmpty()){
+    public void stampa() {
+        if (clients.isEmpty()) {
             System.out.println("No client connected");
-        }
-        else {
+        } else {
             for (HashMap.Entry<String, SocketHandler> entry : clients.entrySet()) {
                 String connectionId = entry.getKey();
                 SocketHandler handler = entry.getValue();
@@ -179,25 +196,25 @@ public class Server {
         }
     }
 
-    public int getSize(){
+    public int getSize() {
         return clients.size();
     }
 
 
-    public String getNameConnection(SocketHandler socketHandler){
-        for(String key : clients.keySet()){
-            if(clients.get(key) == socketHandler){
+    public String getNameConnection(SocketHandler socketHandler) {
+        for (String key : clients.keySet()) {
+            if (clients.get(key) == socketHandler) {
                 return key;
             }
         }
         return null;
     }
 
-    public HashMap<String,SocketHandler> getClients(){
+    public HashMap<String, SocketHandler> getClients() {
         return new HashMap<>(clients);
     }
 
-    public String getUsernameForConnection(String connectionID){
+    public String getUsernameForConnection(String connectionID) {
         return clients.get(connectionID).getUsername();
     }
 
