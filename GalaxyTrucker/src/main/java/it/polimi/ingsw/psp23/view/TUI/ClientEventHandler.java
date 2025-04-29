@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
-import it.polimi.ingsw.psp23.events.Event;
+
+import it.polimi.ingsw.psp23.events.server.Event;
 import it.polimi.ingsw.psp23.events.server.ShipResponse;
 import it.polimi.ingsw.psp23.events.server.TileResponse;
 import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;

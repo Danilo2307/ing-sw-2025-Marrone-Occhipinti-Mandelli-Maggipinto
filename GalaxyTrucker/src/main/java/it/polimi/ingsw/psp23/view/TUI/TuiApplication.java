@@ -31,8 +31,8 @@ public class TuiApplication {
         }
     }
 
-    public void sendEvent(Event event) {
-        EventMessage eventMessage = new EventMessage(event);
+    public void sendEvent(Action action) {
+        EventMessage eventMessage = new EventMessage(action);
         if (client != null) {
             client.sendMessage(eventMessage);
         }

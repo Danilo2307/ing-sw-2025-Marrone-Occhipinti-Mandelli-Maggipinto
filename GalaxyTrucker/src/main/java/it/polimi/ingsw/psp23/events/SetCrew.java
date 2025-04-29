@@ -11,4 +11,4 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
  * and modifying its internal state accordingly.
  * Note: the Color enum used here must be serializable (which is true by default in Java).
  */
-public record SetCrew(int x, int y, boolean alien, Color color) implements Event{ }
+public record SetCrew(int x, int y, boolean alien, Color color) implements Action { }

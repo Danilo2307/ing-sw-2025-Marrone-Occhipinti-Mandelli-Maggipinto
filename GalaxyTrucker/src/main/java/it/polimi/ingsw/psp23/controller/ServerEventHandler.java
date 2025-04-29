@@ -12,7 +12,7 @@ import it.polimi.ingsw.psp23.model.components.Component;
 
 public class ServerEventHandler {
 
-    public void handleEvent(Event e) {
+    public void handleEvent(Action e) {
         Game game = Game.getInstance();
         switch (e) {
             case DrawFromHeap draw -> {

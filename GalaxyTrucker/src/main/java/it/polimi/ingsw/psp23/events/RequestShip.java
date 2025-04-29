@@ -8,5 +8,5 @@ package it.polimi.ingsw.psp23.events;
  * and sending back a response event (e.g. ShipStateResponse) containing the full ship matrix.
  * The client will then use this data to display the ship in the TUI.
  */
-public record RequestShip() implements Event {
+public record RequestShip() implements Action {
 }

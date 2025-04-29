@@ -1,8 +1,6 @@
 package it.polimi.ingsw.psp23.events;
 
 
-import it.polimi.ingsw.psp23.model.components.Component;
-
 /**
  * Event triggered when the user wants to release the tile currently held in hand.
  * After drawing a tile (e.g., from the heap or from the uncovered components), the server stores it
@@ -12,4 +10,4 @@ import it.polimi.ingsw.psp23.model.components.Component;
  * The server will verify that the player is actually holding a tile and, if so,
  * remove it from their hand and place it back into the uncovered area.
  */
-public record ReleaseTile() implements Event { }
+public record ReleaseTile() implements Action { }
