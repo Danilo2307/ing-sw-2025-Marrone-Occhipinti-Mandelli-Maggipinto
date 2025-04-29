@@ -15,7 +15,7 @@ public class Client{
 
 
     // Nel costruttore verrà eseguita la connessione tra client e server
-    Client(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
+    public Client(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
 
         Message message = new SetUsernameMsg(username);
 

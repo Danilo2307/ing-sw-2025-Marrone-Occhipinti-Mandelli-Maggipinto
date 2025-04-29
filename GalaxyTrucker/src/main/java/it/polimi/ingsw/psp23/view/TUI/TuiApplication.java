@@ -23,6 +23,10 @@ public class TuiApplication {
         this.client = client;
     }
 
+    public IOManager getIOManager() {
+        return io;
+    }
+
     /** ciclo infinito che rimane in ascolto degli input dell'utente */
     public void runGame() {
         while (true) {
