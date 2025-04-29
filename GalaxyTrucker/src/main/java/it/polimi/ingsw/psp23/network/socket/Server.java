@@ -84,7 +84,7 @@ public class Server {
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Adesso mi occupo di ricevere lo username del player
-                socketHandler.setUsername(socketHandler.readMessage());
+                socketHandler.setUsername(socketHandler.readMessage().getAction().username());
 
                 synchronized (clients) {
 

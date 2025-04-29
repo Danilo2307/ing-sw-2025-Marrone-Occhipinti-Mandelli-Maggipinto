@@ -1,6 +1,9 @@
 // Questa classe rappresenta il player lato client
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.events.Action;
+import it.polimi.ingsw.psp23.events.SetUsername;
+import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.messages.fromclient.SetUsernameMsg;
 import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
@@ -17,7 +20,7 @@ public class Client{
     // Nel costruttore verrà eseguita la connessione tra client e server
     public Client(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
 
-        Message message = new SetUsernameMsg(username);
+        Message message = new ActionMessage(new SetUsername(username));
 
         try {
             Socket socket = new Socket(serverIP, port);
