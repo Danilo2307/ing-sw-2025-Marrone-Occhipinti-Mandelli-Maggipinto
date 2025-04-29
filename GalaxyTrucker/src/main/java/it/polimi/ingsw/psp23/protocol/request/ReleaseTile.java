@@ -1,6 +1,9 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
 
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Game.Game;
+
 /**
  * Event triggered when the user wants to release the tile currently held in hand.
  * After drawing a tile (e.g., from the heap or from the uncovered components), the server stores it
@@ -10,4 +13,11 @@ package it.polimi.ingsw.psp23.protocol.request;
  * The server will verify that the player is actually holding a tile and, if so,
  * remove it from their hand and place it back into the uncovered area.
  */
-public record ReleaseTile() implements Action { }
+public record ReleaseTile() implements Action {
+
+    public void handle(String username) {
+        Game game = Game.getInstance();
+        Player p = game.getPlayerFromNickname(username);
+        p.discardComponent();
+    }
+}
