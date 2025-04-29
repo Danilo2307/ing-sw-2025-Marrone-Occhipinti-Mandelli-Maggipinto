@@ -36,7 +36,10 @@ public class StartListeningForServerThread extends Thread {
                     // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
                     // handleMessage presente nel client
                     switch(message){
-                        case BroadcastMessage m -> clientEventHandler.messageReceived(message);
+                        case BroadcastMessage m -> {
+                            Event event = m.getEvent();
+                            clientEventHandler.messageReceived(event);
+                        }
                         case DirectMessage m -> {
                             Event event = m.getEvent();
                             clientEventHandler.handle(event);

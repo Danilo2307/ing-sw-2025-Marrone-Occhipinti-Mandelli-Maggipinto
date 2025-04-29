@@ -14,7 +14,7 @@ public class ClientController {
         this.serverStub = stub;
     }
 
-    /* public void sendEvent(Event e) {
+    /* public void sendAction(Event e) {
         try {
             if (useRMI) {
                 serverStub.receiveEvent(e); // metodo remoto RMI

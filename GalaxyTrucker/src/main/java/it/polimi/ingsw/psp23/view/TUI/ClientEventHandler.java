@@ -34,7 +34,7 @@ public class ClientEventHandler implements MessageObserver {
     }
 
     @Override
-    public void messageReceived(Message message) {
+    public void messageReceived(Event event) {
         /** qui arrivranno i messaggi diretti a tutti i client */
     }
 

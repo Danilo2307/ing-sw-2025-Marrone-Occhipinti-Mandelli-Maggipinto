@@ -2,13 +2,14 @@ package it.polimi.ingsw.psp23.view.TUI;
 
 import it.polimi.ingsw.psp23.events.*;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
+import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.socket.Client;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication {
     private Client client;
-    // private ClientController cc;  ora useless perchè sendEvent è in questa classe
+    // private ClientController cc;  ora useless perchè sendAction è in questa classe
     private int lastUncoveredVersion;
     private IOManager io;
 
@@ -31,10 +32,10 @@ public class TuiApplication {
         }
     }
 
-    public void sendEvent(Action action) {
-        EventMessage eventMessage = new EventMessage(action);
+    public void sendAction(Action action) {
+        ActionMessage actionMessage = new ActionMessage(action);
         if (client != null) {
-            client.sendMessage(eventMessage);
+            client.sendMessage(actionMessage);
         }
     }
 
@@ -51,40 +52,40 @@ public class TuiApplication {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
                 if (words[1].equals("mucchio")) {
-                    sendEvent(new DrawFromHeap());
+                    sendAction(new DrawFromHeap());
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    sendEvent(new DrawFromFaceUp(index, lastUncoveredVersion));
+                    sendAction(new DrawFromFaceUp(index, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
             }
             case "scoperte" -> {
-                sendEvent(new RequestUncovered());
+                sendAction(new RequestUncovered());
             }
             case "salda" -> {
                 // TODO: inserire controlli eccezioni eccetera
                 int x = Integer.parseInt(words[1]);
                 int y = Integer.parseInt(words[2]);
-                sendEvent(new AddTile(x, y));
+                sendAction(new AddTile(x, y));
             }
             case "rilascia" -> {
-                sendEvent(new ReleaseTile());
+                sendAction(new ReleaseTile());
             }
             case "ruota" -> {
-                sendEvent(new RotateTile());
+                sendAction(new RotateTile());
             }
             case "gira" -> {
-                sendEvent(new TurnHourglass());
+                sendAction(new TurnHourglass());
             }
             case "mostra" -> {
-                sendEvent(new RequestShip());
+                sendAction(new RequestShip());
             }
             case "info" -> {
                 int x = Integer.parseInt(words[1]);
                 int y = Integer.parseInt(words[2]);
-                sendEvent(new RequestTileInfo(x, y));
+                sendAction(new RequestTileInfo(x, y));
             }
         }
     }
