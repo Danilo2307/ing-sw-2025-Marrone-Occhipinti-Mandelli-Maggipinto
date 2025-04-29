@@ -9,56 +9,71 @@ import it.polimi.ingsw.psp23.events.server.UncoveredListResponse;
 import it.polimi.ingsw.psp23.exceptions.NoTileException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
 
-public class ServerEventHandler {
+public class ServerActionHandler {
+    String username;
 
-    public void handleEvent(Action e) {
+    public ServerActionHandler(String username) {
+        this.username = username;
+    }
+
+    public void handleAction(Action a) {
         Game game = Game.getInstance();
-        switch (e) {
+
+        switch (a) {
             case DrawFromHeap draw -> {
-                Player p = game.getPlayerFromNickname(draw.username());
+                Player p = game.getPlayerFromNickname(username);
                 Component drawn = p.chooseTileFromHeap();
                 /// non includo username nell'evento perchè la scelta del canale di comunicazione preciso per quel client lo gestirò prima
-                connection.sendToClient(new TileResponse(drawn));
+                DirectMessage dm = new DirectMessage(new TileResponse(drawn));
+                Server.getInstance().sendMessage(username, dm);
             }
             case DrawFromFaceUp draw -> {
-                Player p = game.getPlayerFromNickname(draw.username());
+                Player p = game.getPlayerFromNickname(username);
                 try {
                     Component drawn = p.chooseCardUncovered(draw.x(), draw.version());
-                    connection.sendToCLient(new TileResponse(drawn));
+                    DirectMessage dm = new DirectMessage(new TileResponse(drawn));
+                    Server.getInstance().sendMessage(username, dm);
                 }
                 catch (NoTileException | IndexOutOfBoundsException exception) {
-                    connection.sendToCLient(new StringResponse(exception.getMessage()));
+                    DirectMessage dm = new DirectMessage(new StringResponse(exception.getMessage()));
+                    Server.getInstance().sendMessage(username, dm);
                 }
             }
             case RequestUncovered uncovered -> {
-                connection.sendToClient(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));
+                DirectMessage dm = new DirectMessage(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));
+                Server.getInstance().sendMessage(username, dm);
             }
             case AddTile add -> {
-                Player p = game.getPlayerFromNickname(add.username());
+                Player p = game.getPlayerFromNickname(username);
                 p.addTile(add.x(), add.y());
             }
             case ReleaseTile release -> {
-                Player p = game.getPlayerFromNickname(release.username());
+                Player p = game.getPlayerFromNickname(username);
                 p.discardComponent();
             }
             case RotateTile rotate -> {
-                Player p = game.getPlayerFromNickname(rotate.username());
+                Player p = game.getPlayerFromNickname(username);
                 p.rotateTileInHand();
             }
             case TurnHourglass turn -> {
                 /// ASK DANILO METODO GIRA CLESSIDRA
             }
             case RequestShip requestShip -> {
-                Player p = game.getPlayerFromNickname(requestShip.username());
+                Player p = game.getPlayerFromNickname(username);
                 Component[][] ship = p.getTruck().getShip();
-                connection.sendToClient(new ShipResponse(ship));
+                DirectMessage dm = new DirectMessage(new ShipResponse(ship));
+                Server.getInstance().sendMessage(username, dm);
             }
             case RequestTileInfo targetTile -> {
-                Player p = game.getPlayerFromNickname(targetTile.username());
+                Player p = game.getPlayerFromNickname(username);
                 Component target = p.getTruck().getTile(targetTile.x(), targetTile.y());
-                connection.sendToClient(new TileResponse(target));
+                DirectMessage dm = new DirectMessage(new TileResponse(target));
+                Server.getInstance().sendMessage(username, dm);
             }
+            default -> System.out.println("Unknown action");
         }
     }
 }

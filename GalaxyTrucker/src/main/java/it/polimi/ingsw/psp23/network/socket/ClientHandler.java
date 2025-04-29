@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.controller.ServerActionHandler;
+import it.polimi.ingsw.psp23.events.Action;
 import it.polimi.ingsw.psp23.network.messages.Message;
 
 /*
@@ -10,12 +12,14 @@ public class ClientHandler {
     private StartListeningForClientThread clientThread = null;
     private final String connectionID;
     private String username;
+    private ServerActionHandler serverActionHandler;
 
     ClientHandler(String connectionID) {
         this.connectionID = connectionID;
         clientThread = new StartListeningForClientThread(connectionID);
         clientThread.start();
         username = Server.getInstance().getUsernameForConnection(connectionID);
+        serverActionHandler = new ServerActionHandler(username);
     }
 
     public void send(Message message) {
@@ -24,10 +28,8 @@ public class ClientHandler {
     }
 
     public void handleMessage(Message message) {
-        switch(message){
-            case SelectCannonsMessage m -> System.out.println("Il server deve gestire l'arrivo di un select cannon da " + username);
-            default -> System.out.println("<UNK_MESS>");
-        }
+        Action action = message.getAction();
+        serverActionHandler.handleAction(action);
     }
 
     public String getConnectionID() {
