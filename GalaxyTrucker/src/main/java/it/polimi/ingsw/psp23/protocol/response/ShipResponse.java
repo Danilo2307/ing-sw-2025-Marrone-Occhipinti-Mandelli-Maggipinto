@@ -7,4 +7,10 @@ public record ShipResponse(Component[][] ship) implements Event {
     public void handle(TuiApplication tui) {
         tui.getIOManager().printShip(ship);
     }
+
+    @Override
+    public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
+        return eventVisitor.visitForShipResponse(this, tuiApplication);
+    }
+
 }

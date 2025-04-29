@@ -12,4 +12,10 @@ public record RemoveTile(int x, int y) implements Action {
         Player p = game.getPlayerFromNickname(username);
         p.getTruck().delete(x,y);
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForRemoveTile(this, username);
+    }
+
 }

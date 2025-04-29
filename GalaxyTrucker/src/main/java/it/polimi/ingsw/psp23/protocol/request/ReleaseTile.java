@@ -20,4 +20,10 @@ public record ReleaseTile() implements Action {
         Player p = game.getPlayerFromNickname(username);
         p.discardComponent();
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForReleaseTile(this, username);
+    }
+
 }

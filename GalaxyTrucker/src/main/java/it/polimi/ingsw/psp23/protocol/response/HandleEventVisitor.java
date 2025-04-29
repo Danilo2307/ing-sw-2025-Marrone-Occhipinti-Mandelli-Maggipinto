@@ -2,14 +2,30 @@ package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
-public interface HandleEventVisitor<T> {
+public class HandleEventVisitor implements EventVisitor<Void>{
 
-    public T visitForShipResponse(ShipResponse shipResponse, TuiApplication TUIApplication);
+    @Override
+    public Void visitForShipResponse(ShipResponse shipResponse, TuiApplication tuiApplication){
+        shipResponse.handle(tuiApplication);
+        return null;
+    }
 
-    public T visitForTileResponse(TileResponse tileResponse, TuiApplication TUIApplication);
+    @Override
+    public Void visitForTileResponse(TileResponse tileResponse, TuiApplication tuiApplication){
+        tileResponse.handle(tuiApplication);
+        return null;
+    }
 
-    public T visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, TuiApplication TUIApplication);
+    @Override
+    public Void visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, TuiApplication tuiApplication){
+        uncoveredListResponse.handle(tuiApplication);
+        return null;
+    }
 
-    public T visitForStringResponse(StringResponse stringResponse, TuiApplication TUIApplication);
+    @Override
+    public Void visitForStringResponse(StringResponse stringResponse, TuiApplication tuiApplication){
+        stringResponse.handle(tuiApplication);
+        return null;
+    }
 
 }

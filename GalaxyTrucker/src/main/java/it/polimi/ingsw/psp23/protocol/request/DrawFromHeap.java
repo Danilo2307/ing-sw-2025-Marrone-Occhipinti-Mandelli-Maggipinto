@@ -17,4 +17,10 @@ public record DrawFromHeap() implements Action {
         DirectMessage dm = new DirectMessage(new TileResponse(drawn));
         Server.getInstance().sendMessage(username, dm);
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForDrawFromHeap(this, username);
+    }
+
 }

@@ -17,4 +17,10 @@ public record RequestTileInfo(int x, int y) implements Action {
         DirectMessage dm = new DirectMessage(new TileResponse(target));
         Server.getInstance().sendMessage(username, dm);
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForRequestTileInfo(this, username);
+    }
+
 }

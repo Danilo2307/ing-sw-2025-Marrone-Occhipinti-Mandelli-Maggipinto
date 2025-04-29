@@ -12,4 +12,10 @@ public record RequestUncovered() implements Action {
         DirectMessage dm = new DirectMessage(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));
         Server.getInstance().sendMessage(username, dm);
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForRequestUncovered(this, username);
+    }
+
 }

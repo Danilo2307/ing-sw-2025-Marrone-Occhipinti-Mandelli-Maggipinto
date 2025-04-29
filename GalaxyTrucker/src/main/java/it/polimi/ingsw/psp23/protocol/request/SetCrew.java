@@ -16,4 +16,10 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
     public void handle(String username) {
 
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForSetCrew(this, username);
+    }
+
 }

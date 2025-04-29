@@ -25,4 +25,10 @@ public record DrawFromFaceUp (int x, int version) implements Action {
             Server.getInstance().sendMessage(username, dm);
         }
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForDrawFromFaceUp(this, username);
+    }
+
 }

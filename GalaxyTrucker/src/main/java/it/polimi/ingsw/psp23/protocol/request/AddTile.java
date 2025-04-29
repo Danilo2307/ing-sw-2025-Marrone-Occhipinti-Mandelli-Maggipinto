@@ -11,4 +11,10 @@ public record AddTile(int x, int y) implements Action {
         Player p = game.getPlayerFromNickname(username);
         p.addTile(x, y);
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForAddTile(this, username);
+    }
+
 }

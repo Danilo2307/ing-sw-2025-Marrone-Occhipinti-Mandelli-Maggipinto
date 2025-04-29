@@ -12,4 +12,10 @@ public record RotateTile() implements Action {
         Player p = game.getPlayerFromNickname(username);
         p.rotateTileInHand();
     }
+
+    @Override
+    public <T> T call(ActionVisitor<T> actionVisitor, String username){
+        return actionVisitor.visitForRotateTile(this, username);
+    }
+
 }

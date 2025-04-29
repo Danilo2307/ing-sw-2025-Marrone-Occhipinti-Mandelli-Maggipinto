@@ -9,4 +9,10 @@ public record TileResponse(Component requested) implements Event {
     public void handle(TuiApplication tui) {
         tui.getIOManager().printInfoTile(requested);
     }
+
+    @Override
+    public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
+        return eventVisitor.visitForTileResponse(this, tuiApplication);
+    }
+
 }
