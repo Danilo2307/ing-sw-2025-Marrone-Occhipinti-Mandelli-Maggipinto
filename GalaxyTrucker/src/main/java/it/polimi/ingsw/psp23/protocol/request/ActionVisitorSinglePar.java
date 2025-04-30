@@ -46,4 +46,10 @@ public interface ActionVisitorSinglePar<T> {
 
     public Void visitForTurnHourGlass(TurnHourglass turnHourglass);
 
+
+    public Void visitForTakeReservedTile(TakeReservedTile takeReservedTile);
+
+
+    public Void visitForReserveTile(ReserveTile reserveTile);
+
 }

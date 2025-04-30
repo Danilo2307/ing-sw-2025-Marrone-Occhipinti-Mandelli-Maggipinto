@@ -77,4 +77,14 @@ public class SetUsernameActionVisitor implements ActionVisitorSinglePar<String>{
         return null;
     }
 
+    @Override
+    public Void visitForTakeReservedTile(TakeReservedTile takeReservedTile) {
+        return null;
+    }
+
+    @Override
+    public Void visitForReserveTile(ReserveTile reserveTile) {
+        return null;
+    }
+
 }
