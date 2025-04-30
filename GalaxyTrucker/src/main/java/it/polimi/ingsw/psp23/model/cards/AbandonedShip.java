@@ -17,7 +17,7 @@ public class AbandonedShip extends Card {
     private final int days;
     private final int cosmicCredits;
     private final int numMembers;
-    private boolean isSold = false;
+    private String isSold = null;
 
     public AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
         super(level);
@@ -44,35 +44,40 @@ public class AbandonedShip extends Card {
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
+        Game.getInstance().setGameStatus(GameStatus.INIT_ABANDONEDSHIP);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(),days, cosmicCredits,numMembers));
     }
 
-    public void play(InputObject input){
+    public void play(){
 
-        Player player = Game.getInstance().getCurrentPlayer();
-
-        if(isSold)
-            throw new RuntimeException("Ship is already sold");
-       if(input.getDecision()){
-            if(player.getTruck().calculateCrew() > numMembers && inputValidity(input)) {
-                isSold = true;
-
-                    //verrà anche deciso da quali hub togliere i membri da eliminare
-
-                    //qui posso o supporre che in input ci siano già le cabine da dove togliere i membri dell'equipaggio
-                    //oppure devo inserire un altro stato per chiedere all'utente di rimuovere gli umani dalle cabine desiderate
-                    player.updateMoney(cosmicCredits);
-                    Utility.updatePosition(Game.getInstance().getPlayers(),Game.getInstance().getPlayers().indexOf(player),-days);
-
-            }else{
-                throw new RuntimeException("Not enough members");
+        for(Player p : Game.getInstance().getPlayers()){
+            if(p.getNickname().equals(isSold)){
+                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getPlayers().indexOf(p),-days);
+                p.updateMoney(cosmicCredits);
+                break;
             }
-
+        }
+        endPlay();
     }
+
+
+    public void endPlay(){
+        Game.getInstance().setGameStatus(GameStatus.END_ABANDONEDSHIP);
     }
 
-    public boolean hasEnoughUmansLeft(InputObject input) {
+    public void setIsSold(String nickname){
+        isSold = nickname;
+    }
+
+    public String getIsSold(){
+        return isSold;
+    }
+
+    //TODO: visitor per il setIsSold ed il getIsSold per controllare che il player a cui è stata venduta la nave tolga gli umani
+
+
+
+   /* public boolean hasEnoughUmansLeft(InputObject input) {
         Board board = Game.getInstance().getCurrentPlayer().getTruck();
 
         List<HousingUnit> housingUnits = board.getHousingUnits();
@@ -150,9 +155,9 @@ public class AbandonedShip extends Card {
 
         return umaniRimossi < board.calculateHumanCrew();
 
-    }
+    }*/
 
-    public boolean areCabinSelectionValid(InputObject input){
+    /*public boolean areCabinSelectionValid(InputObject input){
 
         Board board = Game.getInstance().getCurrentPlayer().getTruck();
 
@@ -198,7 +203,7 @@ public class AbandonedShip extends Card {
              * Questo if controlla che la casella sia valida, che questa casella contenga una housing unit e che
              * questa housing unit abbia un numero di astronauti maggiore o uguale a quello che vogliamo togliere
              */
-            if(!board.isValid(coordX, coordY) || !board.getHousingUnits().contains(analizedComponent) || numAstronautInCabin < input.getLista().get(i)[3] || (quantity == 1 && numAstronautInCabin == 0 && !thereIsAlien)){
+        /*    if(!board.isValid(coordX, coordY) || !board.getHousingUnits().contains(analizedComponent) || numAstronautInCabin < input.getLista().get(i)[3] || (quantity == 1 && numAstronautInCabin == 0 && !thereIsAlien)){
                 valid = false;
             }
             sum += quantity;
@@ -210,13 +215,13 @@ public class AbandonedShip extends Card {
         }
 
         return valid;
-    }
+    } */
 
-    public boolean inputValidity(InputObject input) {
+    /*public boolean inputValidity(InputObject input) {
 
         if(input == null || input.getLista() == null || input.getLista().isEmpty()) return false;
 
         return hasEnoughUmansLeft(input) && areCabinSelectionValid(input);
 
-    }
+    }*/
 }
