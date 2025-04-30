@@ -15,6 +15,12 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
     }
 
     @Override
+    public Void visitForActivateShield(ActivateShield activateShield, String username) {
+        activateShield.handle(username);
+        return null;
+    }
+
+    @Override
     public Void visitForAddTile(AddTile addTile, String username) {
         addTile.handle(username);
         return null;
