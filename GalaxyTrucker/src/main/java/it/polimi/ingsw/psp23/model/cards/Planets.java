@@ -38,14 +38,14 @@ public class Planets extends Card {
         return planetsOccupied.toArray(new String[0]);
     }
 
-    public void setPlanetOccupation(int i, String username) throws CardException{
+    public void setPlanetOccupation(int i) throws CardException{
         // 1) Controllo che l’indice sia valido
         if (i < 0 || i >= planetsOccupied.size()) {
             throw new CardException("Planet index out of bounds: " + i);
         }
         // 2) Se non è occupato, occupalo
         if (planetsOccupied.get(i) == null) {
-            planetsOccupied.set(i, username);
+            planetsOccupied.set(i, Game.getInstance().getCurrentPlayer());
         }
         // 3) Altrimenti lancia l’eccezione generica
         else {
@@ -54,8 +54,15 @@ public class Planets extends Card {
         }
     }
 
+    public void loadGoods(int x, int y){
+        int index = 0;
+        int p = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer());
+        List<Item> items = planetGoods.get(p);
+
+    }
+
     @Override
-    public Object call(VisitorParametrico visitorParametrico, int index, String player){
+    public Object call(VisitorParametrico visitorParametrico, int index){
 
         if(index < 0 || index >= planetGoods.size()){
             throw new IllegalArgumentException("Planets index out of bounds in method call of Planets card");
