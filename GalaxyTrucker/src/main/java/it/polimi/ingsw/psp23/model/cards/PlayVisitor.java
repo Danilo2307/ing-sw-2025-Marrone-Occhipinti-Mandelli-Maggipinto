@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-public class PlayVisitor implements VisitorInput{
+public class PlayVisitor implements VisitorInput<Void> {
 
     public Void visitForPlanets(Planets planets, InputObject inputObject){
         planets.play(inputObject);
