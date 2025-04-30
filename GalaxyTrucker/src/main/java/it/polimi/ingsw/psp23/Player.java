@@ -101,9 +101,12 @@ public class Player {
         return currentTileInHand;
     }
 
+    /** Di seguito, tutte le azioni che l'utente può fare con la tile che ha in mano */
     public void discardComponent(){
         if (currentTileInHand == null)
             throw new InvalidComponentActionException("Non puoi rilasciare nulla perchè non hai niente in mano!");
+        if (getTruck().getReservedTiles().contains(currentTileInHand))
+            throw new InvalidComponentActionException("Non puoi rilasciare una carta prenotata!");
         game.releaseTile(currentTileInHand);
         currentTileInHand = null;
     }
@@ -122,5 +125,15 @@ public class Player {
         currentTileInHand = null;
     }
 
+    public void reserve() {
+        getTruck().reserveTile(currentTileInHand);
+        currentTileInHand = null;
+    }
+
+    public void takeReservedTile(int index) {
+        Component c = getTruck().getReservedTiles().get(index);
+        currentTileInHand = c;
+        c.moveToHand();
+    }
 
 }

@@ -49,6 +49,13 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
             throw new ComponentStateException("Puoi scartare il component solo se lo hai in mano. Metodo discardFaceUp in Component");
     }
 
+    public void reserve() {
+        if (state == ComponentLocation.IN_HAND)
+            this.state = ComponentLocation.RESERVED;
+        else
+            throw new ComponentStateException("Puoi prenotare il component solo se lo hai in mano. Metodo reserve in Component");
+    }
+
     // rotazione di 90 gradi verso destra. Se player vuole ruotarlo di più si applica più volte il metodo
     public void rotate() {
         Side support = this.up;
