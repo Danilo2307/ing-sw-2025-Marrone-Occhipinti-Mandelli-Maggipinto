@@ -12,7 +12,6 @@ public final class ActionMessage extends Message{
         this.a = a;
     }
 
-    @Override
     public Action getAction() {
         return a;
     }

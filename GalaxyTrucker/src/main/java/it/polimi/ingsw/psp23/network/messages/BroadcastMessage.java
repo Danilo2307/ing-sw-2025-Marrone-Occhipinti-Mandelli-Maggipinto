@@ -12,7 +12,6 @@ public final class BroadcastMessage extends Message{
         this.e = e;
     }
 
-    @Override
     public Event getEvent() {
         return e;
     }

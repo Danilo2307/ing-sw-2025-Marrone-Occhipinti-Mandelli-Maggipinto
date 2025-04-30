@@ -15,14 +15,6 @@ public sealed abstract class Message implements Serializable, MessageInterface p
 
     }
 
-    public Event getEvent() {
-        return null;
-    }
-
-    public Action getAction() {
-        return null;
-    }
-
     @Override
     public <T> T call(MessageVisitor<T> messageVisitor){
         return null;
