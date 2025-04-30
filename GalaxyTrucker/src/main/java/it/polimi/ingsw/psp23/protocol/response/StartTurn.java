@@ -2,17 +2,15 @@ package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
-import javax.swing.plaf.nimbus.State;
-
-public record StateChanged(State newState) implements Event {
+public record StartTurn(String username) implements Event {
 
     public void handle(TuiApplication tuiApplication) {
-        tuiApplication.getIOManager().print("Stato modificato a: " + newState);
+        tuiApplication.getIOManager().print("Turno di " + username + " iniziato");
     }
 
     @Override
     public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
-        return eventVisitor.visitForStateChanged(this, tuiApplication);
+        return eventVisitor.visitForStartTurn(this, tuiApplication);
     }
 
 }

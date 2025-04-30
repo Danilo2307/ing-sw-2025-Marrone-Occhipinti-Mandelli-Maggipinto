@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 public record StartGame() implements Event {
 
     public void handle(TuiApplication tui) {
-        tui.getIOManager().print("Starting game event");
+        tui.getIOManager().print("Partita iniziata");
     }
 
     @Override
