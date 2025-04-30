@@ -4,7 +4,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 
 public class GetPenaltyVisitor implements VisitorParametrico{
 
-    public Void visitForPlanets(Planets planets, int index) {
+    public Void visitForPlanets(Planets planets, int index, String player) {
         return null;
     }
 

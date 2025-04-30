@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.Item;
 // uso la list in maniera RAW perchè voglio avere più tipi di array
 public class GetArrayVisitor implements Visitor {
 
-    public boolean[] visitForPlanets(Planets planets){
+    public String[] visitForPlanets(Planets planets){
         return planets.getPlanetsOccupied();
     }
 

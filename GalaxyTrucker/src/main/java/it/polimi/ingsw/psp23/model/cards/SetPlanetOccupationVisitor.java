@@ -5,8 +5,8 @@ import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 
 public class SetPlanetOccupationVisitor implements VisitorParametrico {
 
-    public Void visitForPlanets(Planets planets, int index) {
-        planets.setPlanetOccupation(index);
+    public Void visitForPlanets(Planets planets, int index, String player) {
+        planets.setPlanetOccupation(index, player);
         return null;
     }
 

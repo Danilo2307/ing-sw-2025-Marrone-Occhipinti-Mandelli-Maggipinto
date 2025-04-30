@@ -32,7 +32,7 @@ public class Card implements CardInterface, CardInterfaceParametrica {
     }
 
     @Override
-    public <T> T call(VisitorParametrico<T> visitorParametrico, int index){
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index, String player){
         return null;
     }
 }

@@ -5,6 +5,7 @@ module it.polimi.ingsw.psp23 {
     requires org.controlsfx.controls;
     requires java.desktop;
     requires java.rmi;
+    requires jdk.jfr;
 
     opens it.polimi.ingsw.psp23 to javafx.fxml;
     exports it.polimi.ingsw.psp23;
