@@ -1,5 +1,10 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.Board;
+import it.polimi.ingsw.psp23.exceptions.InvalidComponentActionException;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 
 /**
@@ -14,7 +19,26 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 public record SetCrew(int x, int y, boolean alien, Color color) implements Action {
 
     public void handle(String username) {
+        Game game = Game.getInstance();
+        Board truck = game.getPlayerFromNickname(username).getTruck();
+        Component tile = truck.getTile(x, y);
+        int index = truck.getHousingUnits().indexOf(tile);
+        HousingUnit housingUnit = truck.getHousingUnits().get(index);
 
+        if (alien) {
+            if (!truck.containsSameAlien(color)) {
+                if (housingUnit.canContainAlien(color))
+                    housingUnit.setAlien(color);
+                else
+                    throw new InvalidComponentActionException("Error: non puoi inserire un alieno di colore "+color+ " nella cabina "+x+" "+y);
+            }
+            else {
+                throw new InvalidComponentActionException("Error: esiste già un alieno di quel colore nella tua nave!");
+            }
+        }
+        else {
+            housingUnit.setAstronaut();
+        }
     }
 
     @Override

@@ -23,7 +23,7 @@ public final class HousingUnit extends Component {
     }
 
     // Entrambi i set verranno chiamati dal controller solo prima del primo turno, non vengono più utilizzati
-    // TODO: verifica prima che la lista di housing unit presente in board non contenga già alieni di questo colore (per ogni board solo un alieno viola e solo uno marrone al massimo)
+    // verifica prima che la lista di housing unit presente in board non contenga già alieni di questo colore (per ogni board solo un alieno viola e solo uno marrone al massimo)
     public void setAlien(Color color) {
         if (numAstronaut == 0 && canContainAlien(color) && !isStartingCabin)
             this.alien = color;
@@ -33,6 +33,7 @@ public final class HousingUnit extends Component {
 
     public void setAstronaut() {
         if (alien == null) this.numAstronaut = 2;
+        else throw new InvalidComponentActionException("Error: cabina già occupata da un alieno! ");
     }
 
     // Servirà a reduceCrew() per la eliminazione di membri dal Component

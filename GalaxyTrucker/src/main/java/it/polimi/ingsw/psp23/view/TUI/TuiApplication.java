@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.request.*;
@@ -73,16 +74,26 @@ public class TuiApplication {
                 sendAction(new RequestUncovered());
             }
             case "salda" -> {
-                // TODO: inserire controlli eccezioni eccetera
-                int x = Integer.parseInt(words[1]);
-                int y = Integer.parseInt(words[2]);
-                sendAction(new AddTile(x, y));
+                // TODO: inserire controlli interi ovunque
+                try {
+                    int x = Integer.parseInt(words[1]);
+                    int y = Integer.parseInt(words[2]);
+                    sendAction(new AddTile(x, y));
+                }
+                catch (NumberFormatException e) {
+                    throw new TuiInputException("Devi inserire 2 interi!");
+                }
             }
             case "rilascia" -> {
                 sendAction(new ReleaseTile());
             }
             case "ruota" -> {
                 sendAction(new RotateTile());
+            }
+            case "rimuovi" -> {
+                int x = Integer.parseInt(words[1]);
+                int y = Integer.parseInt(words[2]);
+                sendAction(new RemoveTile(x, y));
             }
             case "gira" -> {
                 sendAction(new TurnHourglass());
@@ -120,6 +131,31 @@ public class TuiApplication {
                     }
                 }
             }
+            case "equipaggio" -> {
+                // astronauta: equipaggio <x> <y>
+                if (words.length == 3) {
+                    int x = Integer.parseInt(words[1]);
+                    int y = Integer.parseInt(words[2]);
+                    sendAction(new SetCrew(x, y, false, null));
+                }
+                // alieno: equipaggio alieno <colore> <x> <y>
+                else if (words.length == 5 && words[1].equalsIgnoreCase("alieno")) {
+                    Color color = Color.parse(words[2]);
+                    if (color == null || !(color.equals(Color.Brown) || color.equals(Color.Purple)))
+                        throw new TuiInputException("Alieno può essere solo viola o marrone!");
+                    int x = Integer.parseInt(words[3]);
+                    int y = Integer.parseInt(words[4]);
+                    sendAction(new SetCrew(x, y, true, color));
+                }
+                else {
+                    throw new TuiInputException(
+                            "Uso corretto:\n" +
+                                    "  equipaggio <x> <y>  -> aggiungi i 2 astronauti\n" +
+                                    "  equipaggio alieno <colore> <x> <y> -> aggiungi alieno"
+                    );
+                }
+            }
+
         }
     }
 }
