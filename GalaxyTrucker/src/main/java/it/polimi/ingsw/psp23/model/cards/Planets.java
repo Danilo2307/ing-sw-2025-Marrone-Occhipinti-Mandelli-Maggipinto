@@ -1,30 +1,29 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.PlanetAlreadyTakenException;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import jdk.jfr.FlightRecorder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Planets extends Card {
     private final int daysLost;
     private final List<List<Item>> planetGoods;
-    private boolean[] planetsOccupied;
+    private List<String> planetsOccupied;
 
     public Planets (int level, int daysLost, List<List<Item>> planetGoods) {
         super(level);
         this.daysLost = daysLost;
         this.planetGoods = planetGoods;
-        planetsOccupied = new boolean[planetGoods.size()];
-        for(int i = 0; i < planetGoods.size(); i++){
-            planetsOccupied[i] = false;
-        }
+        this.planetsOccupied = new ArrayList<>(Collections.nCopies(planetGoods.size(), null));
     }
 
     public int getDaysLost() {
@@ -35,12 +34,31 @@ public class Planets extends Card {
         return new ArrayList<>(planetGoods);
     }
 
-    public boolean[] getPlanetsOccupied() {
-        return Arrays.copyOf(planetsOccupied, planetsOccupied.length);
+    public String[] getPlanetsOccupied() {
+        return planetsOccupied.toArray(new String[0]);
     }
 
-    public void setPlanetOccupation(int i){
-        planetsOccupied[i] = true;
+    public void setPlanetOccupation(int i) throws CardException{
+        // 1) Controllo che l’indice sia valido
+        if (i < 0 || i >= planetsOccupied.size()) {
+            throw new CardException("Planet index out of bounds: " + i);
+        }
+        // 2) Se non è occupato, occupalo
+        if (planetsOccupied.get(i) == null) {
+            planetsOccupied.set(i, Game.getInstance().getCurrentPlayer());
+        }
+        // 3) Altrimenti lancia l’eccezione generica
+        else {
+            throw new CardException("Planet " + (i + 1)
+                    + " is already occupied by " + planetsOccupied.get(i));
+        }
+    }
+
+    public void loadGoods(int x, int y){
+        int index = 0;
+        int p = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer());
+        List<Item> items = planetGoods.get(p);
+
     }
 
     @Override
@@ -50,7 +68,7 @@ public class Planets extends Card {
             throw new IllegalArgumentException("Planets index out of bounds in method call of Planets card");
         }
 
-        return visitorParametrico.visitForPlanets(this, index);
+        return visitorParametrico.visitForPlanets(this, index, player);
 
     }
 
@@ -60,119 +78,17 @@ public class Planets extends Card {
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.RunningPlanets);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
+        Game.getInstance().setGameStatus(GameStatus.INIT_PLANETS);
+        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), daysLost, planetGoods));
     }
 
-    public void play(InputObject inputObject){
-        boolean isAvailable = false;
-        for(boolean tmp : planetsOccupied){
-            if(tmp == false){
-                isAvailable = true;
-            }
-        }
-        if(!isAvailable){
-            return; //se i pianeti sono stati tutti occupati allora termino l'esecuzione del play
-        }
-        Player player = Game.getInstance().getCurrentPlayer();
-        if(inputObject.getNumPlanet() == 1){
-            if(planetsOccupied[0]){
-                throw new PlanetAlreadyTakenException("Planet already occupied");
-            }else{
-                //il caricamento avviene mettendo tante posizioni di container quante sono le merci da caricare, anche se più merci vanno messe nello stesso container
-                planetsOccupied[0] = true;
-
-                for(int i = 0; i < planetGoods.get(0).size(); i++) {
-
-                    int coordX = inputObject.getContainers().get(i)[0];
-
-                    int coordY = inputObject.getContainers().get(i)[1];
-
-                    Component analizedComponent = player.getTruck().getTile(coordX, coordY);
-
-                    Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-                    container.loadItem(planetGoods.get(0).get(i)); //lancia un eccezione in caso di carico non valido per quel container o di container pieno
-
-
-                }
-            }
-        }else if(inputObject.getNumPlanet() == 2){
-            if(planetsOccupied[1]){
-                throw new PlanetAlreadyTakenException("Planet already occupied");
-            }else{
-                //il caricamento avviene mettendo tante posizioni di container quante sono le merci da caricare, anche se più merci vanno messe nello stesso container
-                planetsOccupied[1] = true;
-
-                for(int i = 0; i < planetGoods.get(1).size(); i++) {
-
-                    int coordX = inputObject.getContainers().get(i)[0];
-
-                    int coordY = inputObject.getContainers().get(i)[1];
-
-                    Component analizedComponent = player.getTruck().getTile(coordX, coordY);
-
-                    Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-                    container.loadItem(planetGoods.get(1).get(i)); //lancia un eccezione in caso di carico non valido per quel container o di container pieno
-
-
-                }
-        }
-    }else if(inputObject.getNumPlanet() == 3) {
-            if (planetGoods.size() < 3)
-                throw new RuntimeException("Planet number not valid");
-            else {
-                if (planetsOccupied[2]) {
-                    throw new PlanetAlreadyTakenException("Planet already occupied");
-                } else {
-                    //il caricamento avviene mettendo tante posizioni di container quante sono le merci da caricare, anche se più merci vanno messe nello stesso container
-                    planetsOccupied[2] = true;
-
-                    for (int i = 0; i < planetGoods.get(2).size(); i++) {
-
-                        int coordX = inputObject.getContainers().get(i)[0];
-
-                        int coordY = inputObject.getContainers().get(i)[1];
-
-                        Component analizedComponent = player.getTruck().getTile(coordX, coordY);
-
-                        Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-                        container.loadItem(planetGoods.get(2).get(i)); //lancia un eccezione in caso di carico non valido per quel container o di container pieno
-
-                    }
-                }
-            }
-        }else if(inputObject.getNumPlanet() == 4) {
-            if (planetGoods.size() < 4)
-                throw new RuntimeException("Planet number not valid");
-            else {
-                if (planetsOccupied[3]) {
-                    throw new PlanetAlreadyTakenException("Planet already occupied");
-                } else {
-                    //il caricamento avviene mettendo tante posizioni di container quante sono le merci da caricare, anche se più merci vanno messe nello stesso container
-                    planetsOccupied[3] = true;
-
-                    for (int i = 0; i < planetGoods.get(3).size(); i++) {
-
-                        int coordX = inputObject.getContainers().get(i)[0];
-
-                        int coordY = inputObject.getContainers().get(i)[1];
-
-                        Component analizedComponent = player.getTruck().getTile(coordX, coordY);
-
-                        Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-                        container.loadItem(planetGoods.get(3).get(i)); //lancia un eccezione in caso di carico non valido per quel container o di container pieno
-
-                    }
-                }
-            }
-        }else{
-            throw new RuntimeException("Planet number not valid");
-        }
+    public void play(){
+        endPlay();
     }
+
+    public void endPlay(){
+    }
+
 }
 
 
