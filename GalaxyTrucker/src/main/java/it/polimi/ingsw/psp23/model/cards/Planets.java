@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
+import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.exceptions.PlanetAlreadyTakenException;
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -45,7 +45,7 @@ public class Planets extends Card {
         }
         // 2) Se non è occupato, occupalo
         if (planetsOccupied.get(i) == null) {
-            planetsOccupied.set(i, Game.getInstance().getCurrentPlayer());
+            planetsOccupied.set(i, Game.getInstance().getCurrentPlayer().getNickname());
         }
         // 3) Altrimenti lancia l’eccezione generica
         else {
@@ -54,11 +54,37 @@ public class Planets extends Card {
         }
     }
 
-    public void loadGoods(int x, int y){
-        int index = 0;
-        int p = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer());
+    public void loadGoods(int i, int j) throws CardException{
+        int y = 0;
+        int p = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer().getNickname());
         List<Item> items = planetGoods.get(p);
+        if(y < items.size()){
+            Board board = Game.getInstance().getCurrentPlayer().getTruck();
+            Component[][] ship = board.getShip();
+            Component tile = ship[i][j];
+            switch (tile) {
+                case Container container -> {
+                    int index = board.getContainers().indexOf(container);
+                    if (index == -1) {
+                        throw new CardException("Container not found in 'containers' list: error in loadGoods of Board");
+                    }
 
+                        try {
+                            // loadItem controlla anche se l'item può essere caricato in quello specifico container
+                            board.getContainers().get(index).loadItem(items.get(index));
+
+                        } catch (CardException c) {
+                            // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
+                            throw new CardException("Item at index cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
+                        }
+
+                }
+                default -> throw new CardException("Component at ["+i+"]["+j+"] is not a container");
+            }
+        }
+        else{
+            throw new CardException("Merci esaurite");
+        }
     }
 
     @Override
@@ -68,7 +94,7 @@ public class Planets extends Card {
             throw new IllegalArgumentException("Planets index out of bounds in method call of Planets card");
         }
 
-        return visitorParametrico.visitForPlanets(this, index, player);
+        return visitorParametrico.visitForPlanets(this, index);
 
     }
 
