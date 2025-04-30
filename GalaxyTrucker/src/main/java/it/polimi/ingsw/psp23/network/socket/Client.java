@@ -41,10 +41,7 @@ public class Client{
     }
 
     public void handleMessage(Message message) {
-        switch(message){
-            case SelectCannonsMessage m -> System.out.println("Cannon selected");
-            default -> System.out.println("Unknown message");
-        }
+
     }
 
     // Avremmo potuto anche usare i try-with-resources negli altri blocchi, ma fare chiusure esplicite rende più robusto
