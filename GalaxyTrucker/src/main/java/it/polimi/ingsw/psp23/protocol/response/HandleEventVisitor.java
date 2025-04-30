@@ -46,4 +46,15 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    public Void visitForEndTurn(EndTurn endTurn, TuiApplication tuiApplication){
+        endTurn.handle(tuiApplication);
+        return null;
+
+    }
+
+    public Void visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication){
+        stateChanged.handle(tuiApplication);
+        return null;
+    }
+
 }

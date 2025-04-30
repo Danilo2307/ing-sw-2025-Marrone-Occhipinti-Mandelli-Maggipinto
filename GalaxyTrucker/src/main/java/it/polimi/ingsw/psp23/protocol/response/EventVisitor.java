@@ -18,4 +18,8 @@ public interface EventVisitor<T> {
 
     public T visitForTimeExpired(TimeExpired timeExpired, TuiApplication tuiApplication);
 
+    public T visitForEndTurn(EndTurn endTurn, TuiApplication tuiApplication);
+
+    public T visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication);
+
 }
