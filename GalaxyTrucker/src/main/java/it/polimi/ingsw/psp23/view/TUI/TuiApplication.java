@@ -84,11 +84,19 @@ public class TuiApplication {
                     throw new TuiInputException("Devi inserire 2 interi!");
                 }
             }
+            case "prendi" -> {
+                // prendi prenotata x
+                int index = Integer.parseInt(words[2]);
+                sendAction(new TakeReservedTile(index));
+            }
             case "rilascia" -> {
                 sendAction(new ReleaseTile());
             }
             case "ruota" -> {
                 sendAction(new RotateTile());
+            }
+            case "prenota" -> {
+                sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
                 int x = Integer.parseInt(words[1]);

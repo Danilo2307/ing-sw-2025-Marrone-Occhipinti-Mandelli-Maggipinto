@@ -31,4 +31,9 @@ public interface ActionVisitor<T> {
     public T visitForSetUsername(SetUsername setUsername, String username);
 
     public T visitForTurnHourGlass(TurnHourglass turnHourglass, String username);
+
+    public T visitForTakeReservedTile(TakeReservedTile takeReservedTile, String username);
+
+    public T visitForReserveTile(ReserveTile reserveTile, String username);
+
 }

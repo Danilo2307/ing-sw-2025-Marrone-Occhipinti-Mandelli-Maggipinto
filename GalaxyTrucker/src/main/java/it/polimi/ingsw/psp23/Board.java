@@ -26,6 +26,7 @@ public class Board {
     private final ArrayList<HousingUnit> housingUnits;
     private final ArrayList<StructuralComponent> structuralComponents;
     // TODO: gestione prenotazione tiles
+    private final ArrayList<Component> reservedTiles;
     private final int ROWS = 5;
     private final int COLS = 7;
 
@@ -41,6 +42,7 @@ public class Board {
         containers = new ArrayList<>();
         housingUnits = new ArrayList<>();
         structuralComponents = new ArrayList<>();
+        reservedTiles = new ArrayList<>();
     }
 
     /**
@@ -302,6 +304,17 @@ public class Board {
         }
     }
 
+    public void reserveTile(Component c) {
+        if (reservedTiles.size() >= 2)
+            throw new InvalidComponentActionException("Puoi prenotare al massimo due tiles!");
+        c.reserve();
+        reservedTiles.add(c);
+    }
+
+    public ArrayList<Component> getReservedTiles() {
+        return reservedTiles;
+    }
+
     private boolean hasAdjacentTile(int i, int j) {
         // verifico se vi sia almeno un componente adiacente in una posizione valida (controllo necessario per saldatura tile)
         return (isValid(i - 1, j) && !isFree(i - 1, j)) ||
@@ -315,6 +328,9 @@ public class Board {
         // Inoltre, la posizione deve essere valida e libera
         if ( !isValid(i, j) || !isFree(i, j) || (!hasAdjacentTile(i, j) && !c.isStartingCabin()))
             throw new InvalidCoordinatesException("You can't add this component: invalid parameters i and j");
+
+        if (getReservedTiles().contains(c))
+            reservedTiles.remove(c);
 
         ship[i][j] = c;
         c.setX(i);
