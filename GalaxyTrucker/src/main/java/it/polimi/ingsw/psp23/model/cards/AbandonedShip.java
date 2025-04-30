@@ -51,6 +51,9 @@ public class AbandonedShip extends Card {
     public void play(){
 
         for(Player p : Game.getInstance().getPlayers()){
+            if(isSold == null){
+                break;
+            }
             if(p.getNickname().equals(isSold)){
                 Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getPlayers().indexOf(p),-days);
                 p.updateMoney(cosmicCredits);

@@ -18,6 +18,8 @@ public class AbandonedStation extends Card {
     private final int days;
     private final int numMembers;
     private final List<Item> prize;
+    private String isSold = null;
+    private int indexItem = 0;
 
     public AbandonedStation(int level, int days, int numMembers, List<Item> prize) {
         super(level);
@@ -49,35 +51,47 @@ public class AbandonedStation extends Card {
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), days, numMembers, prize ));
     }
 
-    public void play(InputObject inputObject) {
-        Player player = Game.getInstance().getCurrentPlayer();
+    public void play() {
 
-            if (inputObject.getDecision()) {
-                int i = 0;
-
-                inputValidity(inputObject);
-
-                for (Item item : prize) {
-
-                    //SUPPONGO CHE NELL'INPUT LE POSIZIONI DEI CONTAINER SIANO MESSI IN ORDINE RISPETTO ALLE MERCI DA DISTRIBUIRE
-
-                    int coordX = inputObject.getContainers().get(i)[0];
-
-                    int coordY = inputObject.getContainers().get(i)[1];
-
-                    Component analizedComponent = player.getTruck().getTile(coordX, coordY);
-
-                    Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-                    container.loadItem(item); //lancia un eccezione in caso di carico non valido per quel container o di container pieno
-
-                    i++;
-                }
-                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getPlayers().indexOf(player), -days);
+        List<Player> players = Game.getInstance().getPlayers();
+        for (Player player : players) {
+            if(isSold == null){
+                break;
             }
+            if (player.getTruck().calculateCrew() >= numMembers && isSold.equals(player.getNickname()) ){
+                    Utility.updatePosition(players, players.indexOf(player), -days);
+                    break;
+            }
+        }
     }
 
-    public void inputValidity(InputObject inputObject){
+
+    public void endPlay() {
+        Game.getInstance().setGameStatus(GameStatus.END_ABANDONEDSTATION);
+    }
+
+    public void loadItem(int x, int y) {
+        if(indexItem < prize.size() && Game.getInstance().getGameStatus().equals(GameStatus.END_ABANDONEDSTATION)) {
+            List<Item> items = new ArrayList<>();
+            items.add(prize.get(indexItem));
+            Game.getInstance().getPlayerFromNickname(isSold).getTruck().loadGoods(items, x, y);
+            indexItem++;
+        }else{
+            throw new RuntimeException("Le merci sono terminate");
+        }
+    }
+
+    public String getIsSold() {
+        return isSold;
+    }
+
+    public void setIsSold(String nickname) {
+        this.isSold = nickname;
+    }
+
+    //TODO: i metodi set e get isSold e loaditem andranno implementati con i visitor (loaditem seguirà l'ordine stampato delle merci)
+
+  /*  public void inputValidity(InputObject inputObject){
         Player player = Game.getInstance().getCurrentPlayer();
 
         if (inputObject.getContainers().size() != prize.size()) {
@@ -124,6 +138,6 @@ public class AbandonedStation extends Card {
         }
 
     }
-
+*/
 
 }
