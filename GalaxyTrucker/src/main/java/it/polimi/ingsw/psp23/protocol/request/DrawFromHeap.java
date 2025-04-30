@@ -23,4 +23,9 @@ public record DrawFromHeap() implements Action {
         return actionVisitor.visitForDrawFromHeap(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

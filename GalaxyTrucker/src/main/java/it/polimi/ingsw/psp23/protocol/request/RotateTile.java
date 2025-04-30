@@ -18,4 +18,9 @@ public record RotateTile() implements Action {
         return actionVisitor.visitForRotateTile(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

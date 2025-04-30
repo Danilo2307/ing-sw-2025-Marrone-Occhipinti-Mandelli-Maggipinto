@@ -17,4 +17,9 @@ public record AddTile(int x, int y) implements Action {
         return actionVisitor.visitForAddTile(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

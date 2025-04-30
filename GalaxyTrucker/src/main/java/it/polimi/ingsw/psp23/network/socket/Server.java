@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -84,7 +86,7 @@ public class Server {
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Adesso mi occupo di ricevere lo username del player
-                socketHandler.setUsername(socketHandler.readMessage().getAction().username());
+                socketHandler.setUsername(socketHandler.readMessage().call(new GetActionVisitor()).call(new SetUsernameActionVisitor()));
 
                 synchronized (clients) {
 

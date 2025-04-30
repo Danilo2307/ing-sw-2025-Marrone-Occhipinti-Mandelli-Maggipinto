@@ -17,4 +17,9 @@ public final class ActionMessage extends Message{
         return a;
     }
 
+    @Override
+    public <T> T call(MessageVisitor<T> messageVisitor){
+        return messageVisitor.visitForActionMessage(this);
+    }
+
 }

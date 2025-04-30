@@ -16,4 +16,10 @@ public final class DirectMessage extends Message{
     public Event getEvent() {
         return e;
     }
+
+    @Override
+    public <T> T call(MessageVisitor<T> messageVisitor){
+        return messageVisitor.visitForDirectMessage(this);
+    }
+
 }

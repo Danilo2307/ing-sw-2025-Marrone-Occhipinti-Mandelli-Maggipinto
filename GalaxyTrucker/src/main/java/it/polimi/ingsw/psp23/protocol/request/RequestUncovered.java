@@ -18,4 +18,9 @@ public record RequestUncovered() implements Action {
         return actionVisitor.visitForRequestUncovered(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

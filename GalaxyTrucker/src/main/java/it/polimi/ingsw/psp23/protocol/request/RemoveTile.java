@@ -18,4 +18,9 @@ public record RemoveTile(int x, int y) implements Action {
         return actionVisitor.visitForRemoveTile(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

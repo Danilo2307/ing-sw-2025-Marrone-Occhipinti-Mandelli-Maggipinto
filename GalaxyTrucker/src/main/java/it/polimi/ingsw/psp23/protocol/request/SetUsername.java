@@ -25,4 +25,9 @@ public record SetUsername(String username) implements Action {
         return actionVisitor.visitForSetUsername(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

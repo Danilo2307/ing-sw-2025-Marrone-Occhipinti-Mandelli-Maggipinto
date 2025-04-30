@@ -30,4 +30,9 @@ public record RequestShip() implements Action {
         return actionVisitor.visitForRequestShip(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }
