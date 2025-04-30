@@ -25,7 +25,6 @@ public class Board {
     private final ArrayList<Container> containers;
     private final ArrayList<HousingUnit> housingUnits;
     private final ArrayList<StructuralComponent> structuralComponents;
-    // TODO: gestione prenotazione tiles
     private final ArrayList<Component> reservedTiles;
     private final int ROWS = 5;
     private final int COLS = 7;
