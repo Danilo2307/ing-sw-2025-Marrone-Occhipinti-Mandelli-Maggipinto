@@ -30,4 +30,6 @@ public interface EventVisitor<T> {
 
     public T visitForMeteorIncoming(MeteorIncoming meteorIncoming, TuiApplication tuiApplication);
 
+    public T visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication);
+
 }

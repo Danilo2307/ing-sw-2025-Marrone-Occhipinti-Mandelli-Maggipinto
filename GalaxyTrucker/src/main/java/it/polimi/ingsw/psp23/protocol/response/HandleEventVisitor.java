@@ -83,6 +83,12 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication){
+        playerLanded.handle(tuiApplication);
+        return null;
+    }
+
 
 
 }
