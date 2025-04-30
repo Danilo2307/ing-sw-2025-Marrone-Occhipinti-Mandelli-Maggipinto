@@ -12,4 +12,10 @@ public interface EventVisitor<T> {
 
     public T visitForStringResponse(StringResponse stringResponse, TuiApplication tuiApplication);
 
+    public T visitForStartGame(StartGame startGame, TuiApplication tuiApplication);
+
+    public T visitForEndGame(EndGame endGame, TuiApplication tuiApplication);
+
+    public T visitForTimeExpired(TimeExpired timeExpired, TuiApplication tuiApplication);
+
 }
