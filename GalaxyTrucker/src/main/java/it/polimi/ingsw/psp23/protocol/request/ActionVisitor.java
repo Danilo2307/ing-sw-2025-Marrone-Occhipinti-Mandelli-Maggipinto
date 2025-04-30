@@ -6,6 +6,8 @@ public interface ActionVisitor<T> {
 
     public T visitForActivateEngine(ActivateEngine activateEngine, String username);
 
+    public T visitForActivateShield(ActivateShield activateShield, String username);
+
     public T visitForAddTile(AddTile addTile, String username);
 
     public T visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp, String username);

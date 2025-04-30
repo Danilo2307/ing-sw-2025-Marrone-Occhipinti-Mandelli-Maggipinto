@@ -6,11 +6,9 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.socket.MessageObserver;
 
 public class ClientEventHandler implements MessageObserver {
-    private final IOManager io;
     private TuiApplication tui;
 
-    public ClientEventHandler(IOManager io, TuiApplication tui) {
-        this.io = io;
+    public ClientEventHandler(TuiApplication tui) {
         this.tui = tui;
     }
 

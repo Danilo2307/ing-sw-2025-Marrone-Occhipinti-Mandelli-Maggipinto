@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.Board;
+import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.protocol.response.EventVisitor;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
@@ -11,7 +14,10 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 public record ActivateCannon(int cx, int cy, int bx, int by) implements Action {
 
     public void handle(String username){
-
+        Game game = Game.getInstance();
+        Board truck = game.getPlayerFromNickname(username).getTruck();
+        truck.activeCannon(cx, cy);
+        truck.reduceBatteries(bx, by, 1);
     }
 
     @Override

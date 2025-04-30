@@ -11,7 +11,7 @@ public class MainClient {
     public static void main(String[] args) {
         try {
             TuiApplication tui = new TuiApplication();
-            ClientEventHandler clientEventHandler = new ClientEventHandler(tui.getIOManager(), tui);
+            ClientEventHandler clientEventHandler = new ClientEventHandler(tui);
             System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
             Scanner scanner = new Scanner(System.in);
             String username = scanner.nextLine();

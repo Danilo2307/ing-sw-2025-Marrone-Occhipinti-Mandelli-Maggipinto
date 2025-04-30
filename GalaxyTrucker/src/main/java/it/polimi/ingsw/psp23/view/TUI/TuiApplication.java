@@ -95,6 +95,31 @@ public class TuiApplication {
                 int y = Integer.parseInt(words[2]);
                 sendAction(new RequestTileInfo(x, y));
             }
+            case "attiva" -> {
+                switch (words[1]) {
+                    case "cannone" -> {
+                        int cx = Integer.parseInt(words[2]);
+                        int cy = Integer.parseInt(words[3]);
+                        int bx = Integer.parseInt(words[4]);
+                        int by = Integer.parseInt(words[5]);
+                        sendAction(new ActivateCannon(cx, cy, bx, by));
+                    }
+                    case "engine" -> {
+                        int ex = Integer.parseInt(words[2]);
+                        int ey = Integer.parseInt(words[3]);
+                        int bx = Integer.parseInt(words[4]);
+                        int by = Integer.parseInt(words[5]);
+                        sendAction(new ActivateEngine(ex, ey, bx, by));
+                    }
+                    case "scudo" -> {
+                        int sx = Integer.parseInt(words[2]);
+                        int sy = Integer.parseInt(words[3]);
+                        int bx = Integer.parseInt(words[4]);
+                        int by = Integer.parseInt(words[5]);
+                        sendAction(new ActivateShield(sx, sy, bx, by));
+                    }
+                }
+            }
         }
     }
 }
