@@ -9,7 +9,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * Indica un errore logico nel flusso del gioco, non una violazione strutturale del modello.
  */
 
-public class InvalidComponentActionException extends RuntimeException {
+public class InvalidComponentActionException extends GameException {
     public InvalidComponentActionException(String message) {
         super(message);
     }

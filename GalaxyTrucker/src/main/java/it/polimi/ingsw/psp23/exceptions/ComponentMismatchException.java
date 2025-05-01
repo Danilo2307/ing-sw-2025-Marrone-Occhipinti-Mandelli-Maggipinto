@@ -8,7 +8,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * dovuta a errore di costruzione o rimozione non correttamente tracciata.
  */
 
-public class ComponentMismatchException extends RuntimeException {
+public class ComponentMismatchException extends GameException {
     public ComponentMismatchException(String message) {
         super(message);
     }

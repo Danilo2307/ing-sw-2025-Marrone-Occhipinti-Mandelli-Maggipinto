@@ -9,7 +9,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * come caricare merci, attivare moduli, ridurre risorse, ecc.
  */
 
-public class InvalidCoordinatesException extends RuntimeException {
+public class InvalidCoordinatesException extends GameException {
     public InvalidCoordinatesException(String message) {
         super(message);
     }

@@ -8,7 +8,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * dalle eccezioni interne sollevate da HousingUnit.
  */
 
-public class CrewOperationException extends RuntimeException {
+public class CrewOperationException extends GameException {
     public CrewOperationException(String message) {
         super(message);
     }

@@ -12,7 +12,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * It is usually thrown in the {@code default} branch of a {@code switch} expression
  * when the component type does not match any of the expected cases.
  * */
-public class TypeMismatchException extends RuntimeException {
+public class TypeMismatchException extends GameException {
     public TypeMismatchException(String message) {
         super(message);
     }

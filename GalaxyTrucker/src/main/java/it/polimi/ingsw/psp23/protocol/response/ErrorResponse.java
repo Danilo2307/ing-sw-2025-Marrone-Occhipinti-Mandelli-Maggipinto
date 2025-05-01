@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 public record ErrorResponse(String message) implements Event {
 
     public void handle(TuiApplication tui) {
-        tui.getIOManager().print(message);
+        tui.getIOManager().error(message);
     }
 
     @Override

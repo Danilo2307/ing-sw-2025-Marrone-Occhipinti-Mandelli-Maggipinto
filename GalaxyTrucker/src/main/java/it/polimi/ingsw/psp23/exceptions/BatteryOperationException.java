@@ -10,7 +10,7 @@ package it.polimi.ingsw.psp23.exceptions;
  * permettendo al Controller di gestire in modo mirato i problemi legati alla gestione delle batterie.
  */
 
-public class BatteryOperationException extends RuntimeException {
+public class BatteryOperationException extends GameException {
     public BatteryOperationException(String message) {
         super(message);
     }
