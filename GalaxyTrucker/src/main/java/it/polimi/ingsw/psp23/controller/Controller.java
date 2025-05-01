@@ -15,14 +15,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Controller {
-    private CardHandler cardHandler;
+    // private CardHandler cardHandler;
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
     private Card currentCard;
 
     public Controller() {
-        cardHandler = new CardHandler();
+        // cardHandler = new CardHandler();
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
         currentPosition = 1;

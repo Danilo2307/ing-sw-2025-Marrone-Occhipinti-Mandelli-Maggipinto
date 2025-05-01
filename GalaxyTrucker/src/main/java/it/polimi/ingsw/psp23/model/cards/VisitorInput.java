@@ -8,8 +8,6 @@ public interface VisitorInput<T> {
 
     public T visitForAbandonedStation(AbandonedStation abandonedStation, InputObject inputObject);
 
-    public T visitForCannonShot(CannonShot cannonShot, InputObject inputObject);
-
     public T visitForCombatZone(CombatZone combatZone, InputObject inputObject);
 
     public T visitForEpidemic(Epidemic epidemic, InputObject inputObject);

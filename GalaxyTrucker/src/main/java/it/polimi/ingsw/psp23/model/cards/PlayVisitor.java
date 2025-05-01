@@ -3,22 +3,17 @@ package it.polimi.ingsw.psp23.model.cards;
 public class PlayVisitor implements VisitorInput<Void> {
 
     public Void visitForPlanets(Planets planets, InputObject inputObject){
-        planets.play(inputObject);
+        planets.play();
         return null;
     }
 
     public Void visitForAbandonedShip(AbandonedShip abandonedShip, InputObject inputObject){
-        abandonedShip.play(inputObject);
+        abandonedShip.play();
         return null;
     }
 
     public Void visitForAbandonedStation(AbandonedStation abandonedStation, InputObject inputObject){
-        abandonedStation.play(inputObject);
-        return null;
-    }
-
-    public Void visitForCannonShot(CannonShot cannonShot, InputObject inputObject){
-        cannonShot.play(inputObject);
+        abandonedStation.play();
         return null;
     }
 
