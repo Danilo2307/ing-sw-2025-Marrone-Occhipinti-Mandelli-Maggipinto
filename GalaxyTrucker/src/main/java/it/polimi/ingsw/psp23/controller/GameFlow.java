@@ -32,6 +32,7 @@ public class GameFlow implements Serializable {
             Game.getInstance().setGameStatus(GameStatus.End);
             Game.getInstance().calculateFinalScores();
         }
+        return null;
     }
 
     public Player nextTurn(){
