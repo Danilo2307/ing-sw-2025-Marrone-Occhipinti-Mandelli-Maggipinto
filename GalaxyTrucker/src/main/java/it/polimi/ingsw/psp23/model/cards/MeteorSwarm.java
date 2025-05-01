@@ -56,7 +56,7 @@ public class MeteorSwarm extends Card {
      */
     public void initPlay() {
         Game game = Game.getInstance();
-        game.setGameStatus(GameStatus.INIT_PLAY);
+        game.setGameStatus(GameStatus.INIT_METEORSWARM);
 
         for (Meteor meteor : meteors) {
             int impactLine = Utility.roll2to12();
@@ -73,9 +73,8 @@ public class MeteorSwarm extends Card {
      * Executes the Meteor Swarm effect.
      * Applies each stored meteor impact line to every player's truck.
      *
-     * @param inputObject placeholder for user input (not utilized)
      */
-    public void play(InputObject inputObject) {
+    public void play() {
         List<Player> players = Game.getInstance().getPlayers();
         for (Meteor meteor : meteors) {
             int impactLine = meteor.getImpactLine();
