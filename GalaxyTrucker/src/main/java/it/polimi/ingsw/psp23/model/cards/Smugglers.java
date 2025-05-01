@@ -104,7 +104,7 @@ public class Smugglers extends Card {
      */
     public void initPlay() {
         Game game = Game.getInstance();
-        game.setGameStatus(GameStatus.INIT_PLAY);
+        game.setGameStatus(GameStatus.INIT_SMUGGLERS);
         game.fireEvent(new Event(
                 game.getGameStatus(),
                 firePower, numItemsStolen, days, prize

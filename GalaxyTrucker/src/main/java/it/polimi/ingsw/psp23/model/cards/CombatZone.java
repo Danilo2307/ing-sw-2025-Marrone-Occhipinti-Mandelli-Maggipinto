@@ -82,15 +82,14 @@ public class CombatZone extends Card{
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.BooleanRequest);
+        Game.getInstance().setGameStatus(GameStatus.INIT_COMBATZONE);
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), daysLost, goodsLost, membersLost, penalty1, penalty2, penalty3, cannonShot));
     }
 
-    public void play(InputObject inputObject) {
+  /*  public void play() {
         int impactLine;
         int pos;
         int size = Game.getInstance().getPlayers().size();
-        Player player = Game.getInstance().getCurrentPlayer();
         List<Player> players = Game.getInstance().getPlayers();
         int tmp = -1;
         Player playerTmp;
@@ -118,7 +117,6 @@ public class CombatZone extends Card{
 
         if (penalty2 == Challenge.Members) {
             // dobbiamo sapere da che cabina togliere l'equipaggio
-            housingUnitsValidity(inputObject);
             if(inputObject.getNumHousingUnits() == 1){
                 playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , membersLost);
             }else{
@@ -208,7 +206,7 @@ public class CombatZone extends Card{
 
     //da finire la validità
 
-    private void housingUnitsValidity(InputObject inputObject) {
+    /*private void housingUnitsValidity(InputObject inputObject) {
         int count = 0;
         if (inputObject.getHousingUnits().size() == 2) {
             count += inputObject.getHousingUnits().get(i)[0];
@@ -216,5 +214,5 @@ public class CombatZone extends Card{
         }
 
 
-    }
+    }*/
 }
