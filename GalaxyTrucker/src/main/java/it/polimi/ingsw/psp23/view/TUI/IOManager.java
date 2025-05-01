@@ -33,7 +33,7 @@ public class IOManager {
         for (int i = 0; i < ship.length; i++) {
             for (int j = 0; j < ship[i].length; j++) {
                 Component c = ship[i][j];
-                System.out.print(getSymbol(c) + " ");  // lascio spazio tra una tile e l'altra
+                System.out.print(getSymbol(c) + "\t");  // lascio spazio tra una tile e l'altra
             }
             System.out.println();
         }

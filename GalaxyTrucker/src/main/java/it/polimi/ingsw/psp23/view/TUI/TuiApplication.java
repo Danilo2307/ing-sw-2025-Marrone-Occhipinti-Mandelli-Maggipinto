@@ -65,7 +65,7 @@ public class TuiApplication {
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    sendAction(new DrawFromFaceUp(index, lastUncoveredVersion));
+                    sendAction(new DrawFromFaceUp(index - 1, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
@@ -87,7 +87,7 @@ public class TuiApplication {
             case "prendi" -> {
                 // prendi prenotata x
                 int index = Integer.parseInt(words[2]);
-                sendAction(new TakeReservedTile(index));
+                sendAction(new TakeReservedTile(index - 1));
             }
             case "rilascia" -> {
                 sendAction(new ReleaseTile());

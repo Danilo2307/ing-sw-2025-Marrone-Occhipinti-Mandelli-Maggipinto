@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
@@ -12,6 +13,9 @@ public record SetUsername(String username) implements Action {
         Game game = Game.getInstance();
         try {
             game.addPlayer(username);
+            // TODO: DA LEVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            Controller contr = new Controller();
+            contr.startBuildingPhase();
         }
         catch(PlayerExistsException e){
             /// TODO: manda indietro al client...però va gestito...come???

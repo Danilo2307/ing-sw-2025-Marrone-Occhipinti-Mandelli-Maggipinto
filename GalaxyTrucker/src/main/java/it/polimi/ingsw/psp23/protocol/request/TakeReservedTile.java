@@ -9,7 +9,7 @@ public record TakeReservedTile(int index) implements Action{
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         // suppongo utente inserisca 1-based
-        p.takeReservedTile(index-1);
+        p.takeReservedTile(index);
     }
 
     @Override

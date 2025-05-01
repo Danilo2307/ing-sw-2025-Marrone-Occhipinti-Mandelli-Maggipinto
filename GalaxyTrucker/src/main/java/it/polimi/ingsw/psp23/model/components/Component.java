@@ -29,14 +29,14 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
 
     // player prende in mano il component
     public void moveToHand() {
-        if (state == ComponentLocation.PILE || state == ComponentLocation.FACE_UP)
+        if (state == ComponentLocation.PILE || state == ComponentLocation.FACE_UP || state == ComponentLocation.RESERVED)
             this.state = ComponentLocation.IN_HAND;
         else
             throw new ComponentStateException("Puoi prendere in mano il component solo se è nel mucchio o scoperto. Metodo moveToHand in Component");
     }
 
     public void placeOnTruck() {
-        if (state == ComponentLocation.IN_HAND)
+        if (state == ComponentLocation.IN_HAND || this.isStartingCabin())
             this.state = ComponentLocation.ON_TRUCK;
         else
             throw new ComponentStateException("Puoi saldare il component sulla nave solo se lo hai in mano. Metodo placeOnTruck in Component");

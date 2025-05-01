@@ -11,10 +11,12 @@ public record UncoveredListResponse(ArrayList<Component> uncovered, int lastVers
 
     public void handle(TuiApplication tui) {
         tui.setLastUncoveredVersion(lastVersion);
+        IOManager ioManager = tui.getIOManager();
         for (Component component : uncovered) {
-            IOManager ioManager = tui.getIOManager();
             ioManager.print(ioManager.getSymbol(component));
+            ioManager.print("\t");
         }
+        ioManager.print("\n");
     }
 
     @Override
