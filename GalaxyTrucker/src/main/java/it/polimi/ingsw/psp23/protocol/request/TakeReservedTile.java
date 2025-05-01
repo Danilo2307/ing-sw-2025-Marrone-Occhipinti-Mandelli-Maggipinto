@@ -16,4 +16,10 @@ public record TakeReservedTile(int index) implements Action{
     public <T> T call(ActionVisitor<T> actionVisitor, String username){
         return actionVisitor.visitForTakeReservedTile(this, username);
     }
+
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }
