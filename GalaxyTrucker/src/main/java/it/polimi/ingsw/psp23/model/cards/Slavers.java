@@ -97,7 +97,7 @@ public class Slavers extends Card {
     }
     }*/
 
-    public void play(InputObject inputObject) {
+    public void play() {
         List<Player> players = Game.getInstance().getPlayers();
         for (Player p : players) {
             if (p.getTruck().calculateCannonStrength() > cannonStrength) {

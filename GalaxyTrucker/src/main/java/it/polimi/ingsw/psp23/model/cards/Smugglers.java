@@ -117,9 +117,8 @@ public class Smugglers extends Card {
      * player to exceed the firepower wins; all who fail are recorded
      * as losers. Ties allow the smugglers to advance to the next player.
      *
-     * @param inputObject placeholder for user decisions (e.g., battery use)
      */
-    public void play(InputObject inputObject) {
+    public void play() {
         List<Player> players = Game.getInstance().getPlayers();
         for (Player p : players) {
             if (p.getTruck().calculateCannonStrength() > firePower) {

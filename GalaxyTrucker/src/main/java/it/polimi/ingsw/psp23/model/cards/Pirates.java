@@ -42,7 +42,7 @@ public class Pirates extends Card {
         return visitor.visitForPirates(this);
     }
 
-    public void play(InputObject input){
+   /* public void play(InputObject input){
 
         // Devo prima attivare tutti i cannoni che mi sono passati nell'inputObject tramite il metodo activateCannon
         // così che poi il metodo calculateCannonStrength calcoli correttamente la potenza di fuoco
@@ -78,6 +78,6 @@ public class Pirates extends Card {
             // i nemici o dopo avere perso e, quando tutti i player sono in quello stato allora si comincia a gestire
             // le cannonate
         }
-    }
+    }*/
 
 }

@@ -21,7 +21,7 @@ public class OpenSpace extends Card{
     }
 //TODO: si presume il player abbia già attivato i motori che voleva attivare e che abbia già rimosso le batterie da dove voleva rimuoverle
 
-    public void play(InputObject inputObject) {
+    public void play() {
         Player player = Game.getInstance().getCurrentPlayer();
         int potenzaMotrice = player.getTruck().calculateEngineStrength();
         Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getPlayers().indexOf(player) , potenzaMotrice);
