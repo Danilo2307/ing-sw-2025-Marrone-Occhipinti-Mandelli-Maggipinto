@@ -3,67 +3,67 @@ package it.polimi.ingsw.psp23.protocol.request;
 public class SetUsernameActionVisitor implements ActionVisitorSinglePar<String>{
 
     @Override
-    public Void visitForActivateCannon(ActivateCannon activateCannon) {
+    public String visitForActivateCannon(ActivateCannon activateCannon) {
         return null;
     }
 
     @Override
-    public Void visitForActivateEngine(ActivateEngine activateEngine) {
+    public String visitForActivateEngine(ActivateEngine activateEngine) {
         return null;
     }
 
     @Override
-    public Void visitForActivateShield(ActivateShield activateShield) {
+    public String visitForActivateShield(ActivateShield activateShield) {
         return null;
     }
 
     @Override
-    public Void visitForAddTile(AddTile addTile, String username) {
+    public String visitForAddTile(AddTile addTile, String username) {
         return null;
     }
 
     @Override
-    public Void visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp) {
+    public String visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp) {
         return null;
     }
 
     @Override
-    public Void visitForDrawFromHeap(DrawFromHeap drawFromHeap) {
+    public String visitForDrawFromHeap(DrawFromHeap drawFromHeap) {
         return null;
     }
 
     @Override
-    public Void visitForReleaseTile(ReleaseTile releaseTile) {
+    public String visitForReleaseTile(ReleaseTile releaseTile) {
         return null;
     }
 
     @Override
-    public Void visitForRemoveTile(RemoveTile removeTile) {
+    public String visitForRemoveTile(RemoveTile removeTile) {
         return null;
     }
 
     @Override
-    public Void visitForRequestShip(RequestShip requestShip) {
+    public String visitForRequestShip(RequestShip requestShip) {
         return null;
     }
 
     @Override
-    public Void visitForRequestTileInfo(RequestTileInfo requestTileInfo) {
+    public String visitForRequestTileInfo(RequestTileInfo requestTileInfo) {
         return null;
     }
 
     @Override
-    public Void visitForRequestUncovered(RequestUncovered requestUncovered) {
+    public String visitForRequestUncovered(RequestUncovered requestUncovered) {
         return null;
     }
 
     @Override
-    public Void visitForRotateTile(RotateTile rotateTile) {
+    public String visitForRotateTile(RotateTile rotateTile) {
         return null;
     }
 
     @Override
-    public Void visitForSetCrew(SetCrew setCrew) {
+    public String visitForSetCrew(SetCrew setCrew) {
         return null;
     }
 
@@ -73,17 +73,17 @@ public class SetUsernameActionVisitor implements ActionVisitorSinglePar<String>{
     }
 
     @Override
-    public Void visitForTurnHourGlass(TurnHourglass turnHourglass) {
+    public String visitForTurnHourGlass(TurnHourglass turnHourglass) {
         return null;
     }
 
     @Override
-    public Void visitForTakeReservedTile(TakeReservedTile takeReservedTile) {
+    public String visitForTakeReservedTile(TakeReservedTile takeReservedTile) {
         return null;
     }
 
     @Override
-    public Void visitForReserveTile(ReserveTile reserveTile) {
+    public String visitForReserveTile(ReserveTile reserveTile) {
         return null;
     }
 

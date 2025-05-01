@@ -2,54 +2,54 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 public interface ActionVisitorSinglePar<T> {
 
-    public Void visitForActivateCannon(ActivateCannon activateCannon);
+    public T visitForActivateCannon(ActivateCannon activateCannon);
 
 
-    public Void visitForActivateEngine(ActivateEngine activateEngine);
+    public T visitForActivateEngine(ActivateEngine activateEngine);
 
 
-    public Void visitForActivateShield(ActivateShield activateShield);
+    public T visitForActivateShield(ActivateShield activateShield);
 
 
-    public Void visitForAddTile(AddTile addTile, String username);
+    public T visitForAddTile(AddTile addTile, String username);
 
 
-    public Void visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp);
+    public T visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp);
 
 
-    public Void visitForDrawFromHeap(DrawFromHeap drawFromHeap);
+    public T visitForDrawFromHeap(DrawFromHeap drawFromHeap);
 
 
-    public Void visitForReleaseTile(ReleaseTile releaseTile);
+    public T visitForReleaseTile(ReleaseTile releaseTile);
 
 
-    public Void visitForRemoveTile(RemoveTile removeTile);
+    public T visitForRemoveTile(RemoveTile removeTile);
 
 
-    public Void visitForRequestShip(RequestShip requestShip);
+    public T visitForRequestShip(RequestShip requestShip);
 
 
-    public Void visitForRequestTileInfo(RequestTileInfo requestTileInfo);
+    public T visitForRequestTileInfo(RequestTileInfo requestTileInfo);
 
 
-    public Void visitForRequestUncovered(RequestUncovered requestUncovered);
+    public T visitForRequestUncovered(RequestUncovered requestUncovered);
 
 
-    public Void visitForRotateTile(RotateTile rotateTile);
+    public T visitForRotateTile(RotateTile rotateTile);
 
 
-    public Void visitForSetCrew(SetCrew setCrew);
+    public T visitForSetCrew(SetCrew setCrew);
 
 
-    public String visitForSetUsername(SetUsername setUsername);
+    public T visitForSetUsername(SetUsername setUsername);
 
 
-    public Void visitForTurnHourGlass(TurnHourglass turnHourglass);
+    public T visitForTurnHourGlass(TurnHourglass turnHourglass);
 
 
-    public Void visitForTakeReservedTile(TakeReservedTile takeReservedTile);
+    public T visitForTakeReservedTile(TakeReservedTile takeReservedTile);
 
 
-    public Void visitForReserveTile(ReserveTile reserveTile);
+    public T visitForReserveTile(ReserveTile reserveTile);
 
 }

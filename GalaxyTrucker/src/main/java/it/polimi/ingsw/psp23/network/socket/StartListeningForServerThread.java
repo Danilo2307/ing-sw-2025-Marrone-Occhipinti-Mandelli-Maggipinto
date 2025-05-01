@@ -35,6 +35,7 @@ public class StartListeningForServerThread extends Thread {
                     // Dopo che ci arriva un messaggio dobbiamo interpretarlo. Se è un messaggio di tipo "observer"
                     // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
                     // handleMessage presente nel client
+                    // TODO: cambia switch con visitor
                     switch(message){
                         case BroadcastMessage m -> {
                             Event event = m.getEvent();

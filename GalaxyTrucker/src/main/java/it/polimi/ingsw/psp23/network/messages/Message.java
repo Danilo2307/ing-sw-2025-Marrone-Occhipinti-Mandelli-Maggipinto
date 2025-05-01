@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.network.messages;
 
 
 import it.polimi.ingsw.psp23.protocol.request.Action;
+import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.Event;
 
 import java.io.Serializable;
@@ -17,6 +18,11 @@ public sealed abstract class Message implements Serializable, MessageInterface p
 
     @Override
     public <T> T call(MessageVisitor<T> messageVisitor){
+        return null;
+    }
+
+    @Override
+    public String toString() {
         return null;
     }
 

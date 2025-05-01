@@ -163,6 +163,7 @@ public class TuiApplication {
                     );
                 }
             }
+            default -> throw new TuiInputException("Comando non valido");
 
         }
     }

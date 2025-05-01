@@ -23,6 +23,7 @@ public class Player {
         this.currentTileInHand = null;
         this.inGame = true;
         this.isConnected = true;
+        this.game = Game.getInstance();
 
     }
 

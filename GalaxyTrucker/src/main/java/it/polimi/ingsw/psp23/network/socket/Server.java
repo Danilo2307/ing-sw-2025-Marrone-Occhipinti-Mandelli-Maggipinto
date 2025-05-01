@@ -2,6 +2,8 @@ package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.protocol.request.Action;
+import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 
 import java.io.IOException;
@@ -81,17 +83,30 @@ public class Server {
 
                 // Questa istruzione serve per non andare avanti all'infinito ma, nel caso in cui dopo aver stabilito
                 // la connessione il client non dovesse mandare niente per 5 sec, questa istruzione lancerà un'eccezione
-                socket.setSoTimeout(5000);
+
+                // socket.setSoTimeout(60000);
 
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Adesso mi occupo di ricevere lo username del player
-                socketHandler.setUsername(socketHandler.readMessage().call(new GetActionVisitor()).call(new SetUsernameActionVisitor()));
+
+                //socketHandler.setUsername("alberto");
+
+                // Queste sono le istruzioni necessarie per ricevere lo username dal client, ELABORARLO e permettere
+                // al game di aggiungere il player alla lista di player tramite l'handle delle action
+
+                Action a = socketHandler.readMessage().call(new GetActionVisitor());
+
+                String username = a.call(new SetUsernameActionVisitor());
+
+                socketHandler.setUsername(username);
+
+                a.call(new HandleActionVisitor(), username);
 
                 synchronized (clients) {
 
                     clients.put(nameConnection, socketHandler);
-                    System.out.println("Client connected: " + nameConnection);
+                    System.out.println("Client connected: " + nameConnection + " with username " + socketHandler.getUsername());
 
                 }
 

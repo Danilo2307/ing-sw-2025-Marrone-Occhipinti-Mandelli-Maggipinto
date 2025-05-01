@@ -1,6 +1,9 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.protocol.request.SetUsername;
+import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -84,6 +87,7 @@ public class SocketHandler {
                 throw new RuntimeException("Problema(IOException) in reset di 'out' in writeMessage in SocketHandler " + e.getMessage());
             }
             try {
+                System.out.println("Sending " + message);
                 out.writeObject(message);
             } catch (IOException e) {
                 throw new RuntimeException("Problema(IOException) in writeObject di 'out' in writeMessage in SocketHandler " + e.getMessage());

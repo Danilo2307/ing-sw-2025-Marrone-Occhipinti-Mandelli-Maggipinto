@@ -5,6 +5,7 @@ import java.util.UUID;
 /*
  * Thread used to connect players to my game. When the game starts, we have to call "ConnectionThread.getInstance().start();"
  * so that the server starts listening for new clients
+ * ConnectionThread È SINGLETON!!!!
  */
 public class ConnectionThread extends Thread{
 

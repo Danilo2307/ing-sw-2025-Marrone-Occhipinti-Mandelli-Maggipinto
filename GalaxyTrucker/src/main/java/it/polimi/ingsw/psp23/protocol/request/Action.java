@@ -8,4 +8,7 @@ public interface Action extends Serializable {
 
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar);
 
+    @Override
+    public String toString();
+
 }
