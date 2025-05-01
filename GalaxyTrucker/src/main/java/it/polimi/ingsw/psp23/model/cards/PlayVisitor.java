@@ -2,58 +2,58 @@ package it.polimi.ingsw.psp23.model.cards;
 
 public class PlayVisitor implements VisitorInput<Void> {
 
-    public Void visitForPlanets(Planets planets, InputObject inputObject){
+    public Void visitForPlanets(Planets planets){
         planets.play();
         return null;
     }
 
-    public Void visitForAbandonedShip(AbandonedShip abandonedShip, InputObject inputObject){
+    public Void visitForAbandonedShip(AbandonedShip abandonedShip){
         abandonedShip.play();
         return null;
     }
 
-    public Void visitForAbandonedStation(AbandonedStation abandonedStation, InputObject inputObject){
+    public Void visitForAbandonedStation(AbandonedStation abandonedStation){
         abandonedStation.play();
         return null;
     }
 
-    public Void visitForCombatZone(CombatZone combatZone, InputObject inputObject){
-        combatZone.play(inputObject);
+    public Void visitForCombatZone(CombatZone combatZone){
+        combatZone.play();
         return null;
     }
 
-    public Void visitForEpidemic(Epidemic epidemic, InputObject inputObject){
-        epidemic.play(inputObject);
+    public Void visitForEpidemic(Epidemic epidemic){
+        epidemic.play();
         return null;
     }
 
-    public Void visitForMeteorSwarm(MeteorSwarm meteorSwarm, InputObject inputObject){
-        meteorSwarm.play(inputObject);
+    public Void visitForMeteorSwarm(MeteorSwarm meteorSwarm){
+        meteorSwarm.play();
         return null;
     }
 
-    public Void visitForOpenSpace(OpenSpace openSpace, InputObject inputObject){
-        openSpace.play(inputObject);
+    public Void visitForOpenSpace(OpenSpace openSpace){
+        openSpace.play();
         return null;
     }
 
-    public Void visitForPirates(Pirates pirates, InputObject inputObject){
-        pirates.play(inputObject);
+    public Void visitForPirates(Pirates pirates){
+        pirates.play();
         return null;
     }
 
-    public Void visitForSlavers(Slavers slavers, InputObject inputObject){
-        slavers.play(inputObject);
+    public Void visitForSlavers(Slavers slavers){
+        slavers.play();
         return null;
     }
 
-    public Void visitForSmugglers(Smugglers smugglers, InputObject inputObject){
-        smugglers.play(inputObject);
+    public Void visitForSmugglers(Smugglers smugglers){
+        smugglers.play();
         return null;
     }
 
-    public Void visitForStardust(Stardust stardust, InputObject inputObject){
-        stardust.play(inputObject);
+    public Void visitForStardust(Stardust stardust){
+        stardust.play();
         return null;
     }
 }
