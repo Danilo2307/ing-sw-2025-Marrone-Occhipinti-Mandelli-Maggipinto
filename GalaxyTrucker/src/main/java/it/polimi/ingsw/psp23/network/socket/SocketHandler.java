@@ -61,6 +61,7 @@ public class SocketHandler {
             Message received = null;
             try {
 
+                // TODO: casting da togliere!!!
                 received = (Message)in.readObject();
 
                 return received;

@@ -25,4 +25,9 @@ public record ActivateCannon(int cx, int cy, int bx, int by) implements Action {
         return actionVisitor.visitForActivateCannon(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

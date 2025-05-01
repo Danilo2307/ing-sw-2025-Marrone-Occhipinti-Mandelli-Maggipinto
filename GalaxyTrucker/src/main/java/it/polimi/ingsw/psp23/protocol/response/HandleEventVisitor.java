@@ -46,15 +46,49 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
     public Void visitForEndTurn(EndTurn endTurn, TuiApplication tuiApplication){
         endTurn.handle(tuiApplication);
         return null;
 
     }
 
+    @Override
     public Void visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication){
         stateChanged.handle(tuiApplication);
         return null;
     }
+
+    @Override
+    public Void visitForStartTurn(StartTurn startTurn, TuiApplication tuiApplication){
+        startTurn.handle(tuiApplication);
+        return null;
+    }
+
+    @Override
+    public Void visitForErrorResponse(ErrorResponse errorResponse, TuiApplication tuiApplication){
+        errorResponse.handle(tuiApplication);
+        return null;
+    }
+
+    @Override
+    public Void visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, TuiApplication tuiApplication){
+        cannonShotIncoming.handle(tuiApplication);
+        return null;
+    }
+
+    @Override
+    public Void visitForMeteorIncoming(MeteorIncoming meteorIncoming, TuiApplication tuiApplication){
+        meteorIncoming.handle(tuiApplication);
+        return null;
+    }
+
+    @Override
+    public Void visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication){
+        playerLanded.handle(tuiApplication);
+        return null;
+    }
+
+
 
 }

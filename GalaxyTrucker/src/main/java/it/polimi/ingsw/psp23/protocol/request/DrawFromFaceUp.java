@@ -31,4 +31,9 @@ public record DrawFromFaceUp (int x, int version) implements Action {
         return actionVisitor.visitForDrawFromFaceUp(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

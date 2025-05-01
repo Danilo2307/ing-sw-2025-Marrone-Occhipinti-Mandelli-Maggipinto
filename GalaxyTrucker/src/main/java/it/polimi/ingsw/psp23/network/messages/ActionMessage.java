@@ -12,9 +12,13 @@ public final class ActionMessage extends Message{
         this.a = a;
     }
 
-    @Override
     public Action getAction() {
         return a;
+    }
+
+    @Override
+    public <T> T call(MessageVisitor<T> messageVisitor){
+        return messageVisitor.visitForActionMessage(this);
     }
 
 }

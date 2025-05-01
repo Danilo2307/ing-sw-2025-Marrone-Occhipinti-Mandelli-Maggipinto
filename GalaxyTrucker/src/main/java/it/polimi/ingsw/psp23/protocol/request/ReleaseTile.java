@@ -26,4 +26,9 @@ public record ReleaseTile() implements Action {
         return actionVisitor.visitForReleaseTile(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

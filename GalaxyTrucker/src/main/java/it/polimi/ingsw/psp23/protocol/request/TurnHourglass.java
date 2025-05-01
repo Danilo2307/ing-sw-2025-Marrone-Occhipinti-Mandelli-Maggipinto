@@ -12,4 +12,9 @@ public record TurnHourglass() implements Action {
         return actionVisitor.visitForTurnHourGlass(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

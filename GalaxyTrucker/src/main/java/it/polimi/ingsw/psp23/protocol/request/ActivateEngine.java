@@ -17,5 +17,10 @@ public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
         return actionVisitor.visitForActivateEngine(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }
 

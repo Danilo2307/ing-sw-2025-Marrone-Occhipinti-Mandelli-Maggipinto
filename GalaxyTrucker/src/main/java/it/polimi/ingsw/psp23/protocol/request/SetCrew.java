@@ -46,4 +46,9 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         return actionVisitor.visitForSetCrew(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }
