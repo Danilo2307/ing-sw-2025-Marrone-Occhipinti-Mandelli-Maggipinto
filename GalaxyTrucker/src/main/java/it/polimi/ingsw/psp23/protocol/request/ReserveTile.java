@@ -15,4 +15,10 @@ public record ReserveTile() implements Action {
     public <T> T call(ActionVisitor<T> actionVisitor, String username){
         return actionVisitor.visitForReserveTile(this, username);
     }
+
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }
