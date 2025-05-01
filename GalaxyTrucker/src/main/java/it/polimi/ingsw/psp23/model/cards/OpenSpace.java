@@ -17,7 +17,7 @@ public class OpenSpace extends Card{
 
     public void initPlay(){
         Game.getInstance().setGameStatus(GameStatus.RunningOpenSpace);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
+      //  Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
     }
 //TODO: si presume il player abbia già attivato i motori che voleva attivare e che abbia già rimosso le batterie da dove voleva rimuoverle
 

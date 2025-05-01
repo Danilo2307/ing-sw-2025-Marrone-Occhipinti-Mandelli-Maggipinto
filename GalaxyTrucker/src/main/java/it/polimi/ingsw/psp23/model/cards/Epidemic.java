@@ -18,7 +18,7 @@ public class Epidemic extends Card {
 
     public void initPlay() {
         Game.getInstance().setGameStatus(GameStatus.RunningEpidemic);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
+       // Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
     }
 
     public void play(InputObject input) {

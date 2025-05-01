@@ -33,7 +33,7 @@ public class Stardust extends Card {
      */
     public void initPlay() {
         Game game = Game.getInstance();
-        game.setGameStatus(GameStatus.INIT_PLAY);
+        game.setGameStatus(GameStatus.INIT_STARDUST);
         game.fireEvent(new Event(game.getGameStatus()));
     }
 
