@@ -1,10 +1,17 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.components.Container;
+import it.polimi.ingsw.psp23.model.components.HousingUnit;
+import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
@@ -28,6 +35,8 @@ public class Smugglers extends Card {
     private String winner = null;
     /** Nicknames of the losing players. */
     private List<String> losers = new ArrayList<>();
+    private int loadedCount;
+    private int losedCount;
 
     /**
      * Constructs a Smugglers card with specified level and parameters.
@@ -44,6 +53,8 @@ public class Smugglers extends Card {
         this.numItemsStolen = numItemsStolen;
         this.days = days;
         this.prize = prize;
+        this.loadedCount = 0;
+        this.losedCount = 0;
     }
 
     /** @return the smugglers' firepower threshold */
@@ -70,23 +81,74 @@ public class Smugglers extends Card {
         return new ArrayList<>(prize);
     }
 
-    /** @return the nickname of the winning player, or null if none */
-    public String getWinner() {
-        return winner;
+    public void loadGoods(int i, int j){
+        if(loadedCount < prize.size() && Game.getInstance().getCurrentPlayer().equals(winner)){
+            if(loadedCount == 0){
+                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getCurrentPlayerIndex(), -days);
+            }
+            Board board = Game.getInstance().getCurrentPlayer().getTruck();
+            Component[][] ship = board.getShip();
+            Component tile = ship[i][j];
+            switch (tile) {
+                case Container container -> {
+                    int index = board.getContainers().indexOf(container);
+                    if (index == -1) {
+                        throw new CardException("Container not found in 'containers' list: error in loadGoods of Board");
+                    }
+                    try {
+                        // loadItem controlla anche se l'item può essere caricato in quello specifico container
+                        board.getContainers().get(index).loadItem(prize.get(loadedCount));
+                        loadedCount ++;
+
+                    } catch (CardException c) {
+                        // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
+                        throw new CardException("Item at index cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
+                    }
+
+                }
+                default -> throw new CardException("Component at ["+i+"]["+j+"] is not a container");
+            }
+        }
+        else{
+            throw new CardException("Merci esaurite");
+        }
     }
 
-    /**
-     * Sets the winning player for this encounter.
-     *
-     * @param winner nickname of the winner
-     */
-    public void setWinner(String winner) {
-        this.winner = winner;
-    }
-
-    /** @return list of nicknames of players who lost this encounter */
-    public List<String> getLosers() {
-        return losers;
+    public void removePreciousItem(int i, int j, int item) {
+        if(losedCount < numItemsStolen && losers.contains(Game.getInstance().getCurrentPlayer())){
+            Board board = Game.getInstance().getCurrentPlayer().getTruck();
+            Component[][] ship = board.getShip();
+            Component tile = ship[i][j];
+            switch (tile) {
+                case Container c -> {
+                    // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
+                    // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
+                    int index = board.getContainers().indexOf(ship[i][j]);
+                    // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
+                    if (index == -1) {
+                        throw new CardException("Invalid coordinates: ship[i][j] does not contain a container.");
+                    }
+                    // Controllo che l'item sia tra i più preziosi attualmente a bordo
+                    else if (!board.isMostPrecious(board.getContainers().get(index).getItems().get(item))) {
+                        throw new CardException("Item" + board.getContainers().get(index).getItems().get(item).getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
+                    }
+                    // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
+                    try {
+                        board.getContainers().get(index).loseItem(board.getContainers().get(index).getItems().get(item));
+                        losedCount ++;
+                    } catch (ContainerException e) {
+                        throw new CardException("Cannon remove precious item in Container at Ship[" + i + "][" + j + "]:" + e.getMessage());
+                    }
+                }
+                default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
+            }
+        }
+        else if(losedCount == numItemsStolen){
+            throw new CardException("Le merci da perdere sono esaurite!");
+        }
+        else if(!losers.contains(Game.getInstance().getCurrentPlayer())){
+            throw new CardException("Il player non è tra i perdenti");
+        }
     }
 
     /**
@@ -95,6 +157,7 @@ public class Smugglers extends Card {
      * @param visitor the visitor handling Smugglers card
      * @return result from the visitor
      */
+
     public Object call(Visitor visitor) {
         return visitor.visitForSmugglers(this);
     }
@@ -122,7 +185,7 @@ public class Smugglers extends Card {
         List<Player> players = Game.getInstance().getPlayers();
         for (Player p : players) {
             if (p.getTruck().calculateCannonStrength() > firePower) {
-                setWinner(p.getNickname());
+                winner = p.getNickname();
                 break;
             } else if (p.getTruck().calculateCannonStrength() < firePower) {
                 losers.add(p.getNickname());
@@ -140,5 +203,4 @@ public class Smugglers extends Card {
         game.setGameStatus(GameStatus.END_SMUGGLERS);
     }
 
-    // TODO: Handle flight day loss if the winner chooses the prize (update position in loadGoods?)
 }

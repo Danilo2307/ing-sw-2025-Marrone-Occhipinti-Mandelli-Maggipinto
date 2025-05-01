@@ -354,7 +354,7 @@ public class Board {
      * @param item è l'oggetto che l'utente desidera rimuovere
      * @return true se l'item è tra i più preziosi disponibili, false altrimenti
      */
-    private boolean isMostPrecious(Item item) {
+    public boolean isMostPrecious(Item item) {
         Color[] preciousness = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
 
         for (Color priority_color : preciousness) {
@@ -375,39 +375,39 @@ public class Board {
         return true;
     }
 
-    /**
-     * Rimuove una merce da un container in posizione (i,j), solo se risulta tra le più preziose ancora presenti a bordo.
-     * @param i coordinata riga del container
-     * @param j coordinata colonna del container
-     * @param itemToRemove oggetto Item che il giocatore ha scelto di rimuovere
-     */
-    public void removePreciousItemFromContainer(int i, int j, Item itemToRemove) {
-
-        // Controllo che l'item sia tra i più preziosi attualmente a bordo
-        if (!isMostPrecious(itemToRemove))
-            throw new IllegalArgumentException("Item" + itemToRemove.getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
-
-        Component tile = ship[i][j];
-        switch (tile) {
-            case Container c -> {
-                // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
-                // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
-                int index = containers.indexOf(ship[i][j]);
-                // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
-                if (index == -1) {
-                    throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
-                }
-                // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
-                try {
-                    containers.get(index).loseItem(itemToRemove);
-                }
-                catch (ContainerException e) {
-                    throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
-                }
-            }
-            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");
-        }
-    }
+//    /**
+//     * Rimuove una merce da un container in posizione (i,j), solo se risulta tra le più preziose ancora presenti a bordo.
+//     * @param i coordinata riga del container
+//     * @param j coordinata colonna del container
+//     * @param itemToRemove oggetto Item che il giocatore ha scelto di rimuovere
+//     */
+//    public void removePreciousItemFromContainer(int i, int j, Item itemToRemove) {
+//
+//        // Controllo che l'item sia tra i più preziosi attualmente a bordo
+//        if (!isMostPrecious(itemToRemove))
+//            throw new IllegalArgumentException("Item" + itemToRemove.getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
+//
+//        Component tile = ship[i][j];
+//        switch (tile) {
+//            case Container c -> {
+//                // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
+//                // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
+//                int index = containers.indexOf(ship[i][j]);
+//                // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
+//                if (index == -1) {
+//                    throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
+//                }
+//                // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
+//                try {
+//                    containers.get(index).loseItem(itemToRemove);
+//                }
+//                catch (ContainerException e) {
+//                    throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
+//                }
+//            }
+//            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");
+//        }
+//    }
 
 
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
@@ -755,29 +755,29 @@ public class Board {
     }
 
 
-    public void reduceCrew(int i, int j, int num) {
-        if ((!isValid(i, j)) || isFree(i,j))
-            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
-
-        Component tile = ship[i][j];
-        switch (tile) {
-            case HousingUnit cabin -> {
-                int index = housingUnits.indexOf(cabin);
-                if (index == -1) {
-                    throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
-                } else {
-                    try {
-                        // controllo rimozione implementato in reduceOccupants
-                        housingUnits.get(index).reduceOccupants(num);
-                    }
-                    catch (IllegalArgumentException e) {
-                        throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
-                    }
-                }
-            }
-            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a housing unit");
-        }
-    }
+//    public void reduceCrew(int i, int j, int num) {
+//        if ((!isValid(i, j)) || isFree(i,j))
+//            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+//
+//        Component tile = ship[i][j];
+//        switch (tile) {
+//            case HousingUnit cabin -> {
+//                int index = housingUnits.indexOf(cabin);
+//                if (index == -1) {
+//                    throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+//                } else {
+//                    try {
+//                        // controllo rimozione implementato in reduceOccupants
+//                        housingUnits.get(index).reduceOccupants(num);
+//                    }
+//                    catch (IllegalArgumentException e) {
+//                        throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+//                    }
+//                }
+//            }
+//            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a housing unit");
+//        }
+//    }
 
     public int calculateExposedConnectors() {
         /* Fa dei controlli lato per lato, analizzando esclusivamente i component che definiscono il bordo della nave,

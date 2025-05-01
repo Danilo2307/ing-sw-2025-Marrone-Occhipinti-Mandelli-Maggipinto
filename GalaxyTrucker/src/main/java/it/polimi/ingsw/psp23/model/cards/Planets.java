@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
@@ -56,13 +57,16 @@ public class Planets extends Card {
         }
     }
 
-    public void loadGoods(int i, int j) throws CardException{
+    public void loadGoods(int i, int j){
         int player = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer().getNickname());
         if (player == -1) {
             throw new CardException("Nessun pianeta ancora occupato da " + Game.getInstance().getCurrentPlayer().getNickname());
         }
         List<Item> items = planetGoods.get(player);
         if(loadedCount.get(player) < items.size()){
+            if(loadedCount.get(player) == 0){
+                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getCurrentPlayerIndex(), -daysLost);
+            }
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
             Component tile = ship[i][j];
