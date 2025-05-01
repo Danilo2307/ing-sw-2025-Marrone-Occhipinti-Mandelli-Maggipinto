@@ -105,8 +105,8 @@ public class CombatZone extends Card{
             throw new CardException("Eccezione in combatzone ");
         }
 
-//        //inizio seconda sfida
-//        playerTmp = findMinEngineStrength();
+        //inizio seconda sfida
+        String playerMin = findMinEngineStrength().getNickname();
 //
 //        if (penalty2 == Challenge.Members) {
 //            // dobbiamo sapere da che cabina togliere l'equipaggio
