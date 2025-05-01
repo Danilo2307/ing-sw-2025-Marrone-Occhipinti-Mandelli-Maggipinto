@@ -21,7 +21,7 @@ public class Epidemic extends Card {
        // Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), meteors, impactLine));
     }
 
-    public void play(InputObject input) {
+    public void play() {
 
         Board board = Game.getInstance().getCurrentPlayer().getTruck();
 
