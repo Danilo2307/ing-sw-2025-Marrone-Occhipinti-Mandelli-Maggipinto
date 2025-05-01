@@ -22,4 +22,14 @@ public interface EventVisitor<T> {
 
     public T visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication);
 
+    public T visitForStartTurn(StartTurn startTurn, TuiApplication tuiApplication);
+
+    public T visitForErrorResponse(ErrorResponse errorResponse, TuiApplication tuiApplication);
+
+    public T visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, TuiApplication tuiApplication);
+
+    public T visitForMeteorIncoming(MeteorIncoming meteorIncoming, TuiApplication tuiApplication);
+
+    public T visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication);
+
 }

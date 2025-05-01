@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 public record TimeExpired() implements Event {
 
     public void handle(TuiApplication tui){
-        tui.getIOManager().print("TimeExpired");
+        tui.getIOManager().print("Tempo scaduto");
     }
 
     @Override

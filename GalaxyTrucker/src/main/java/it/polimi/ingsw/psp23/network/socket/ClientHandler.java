@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.controller.ServerActionHandler;
+import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.network.messages.Message;
 
@@ -28,7 +29,7 @@ public class ClientHandler {
     }
 
     public void handleMessage(Message message) {
-        Action action = message.getAction();
+        Action action = message.call(new GetActionVisitor());
         serverActionHandler.handleAction(action);
     }
 

@@ -21,8 +21,6 @@ public interface Visitor<T> {
 
     public T visitForAbandonedStation(AbandonedStation abandonedStation);
 
-    public T visitForCannonShot(CannonShot cannonShot);
-
     public T visitForCombatZone(CombatZone combatZone);
 
     public T visitForEpidemic(Epidemic epidemic);

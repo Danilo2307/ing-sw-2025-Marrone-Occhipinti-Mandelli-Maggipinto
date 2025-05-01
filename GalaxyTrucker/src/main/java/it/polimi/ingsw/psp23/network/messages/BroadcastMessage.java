@@ -12,8 +12,13 @@ public final class BroadcastMessage extends Message{
         this.e = e;
     }
 
-    @Override
     public Event getEvent() {
         return e;
     }
+
+    @Override
+    public <T> T call(MessageVisitor<T> messageVisitor){
+        return messageVisitor.visitForBroadcastMessage(this);
+    }
+
 }

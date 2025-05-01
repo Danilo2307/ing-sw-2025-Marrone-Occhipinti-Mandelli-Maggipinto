@@ -16,4 +16,10 @@ public record ActivateShield(int sx, int sy, int bx, int by) implements Action{
     public <T> T call(ActionVisitor<T> actionVisitor, String username){
         return actionVisitor.visitForActivateShield(this, username);
     }
+
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

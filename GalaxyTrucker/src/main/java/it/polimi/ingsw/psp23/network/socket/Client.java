@@ -4,7 +4,6 @@ package it.polimi.ingsw.psp23.network.socket;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.messages.fromclient.SetUsernameMsg;
 import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
 import java.io.*;

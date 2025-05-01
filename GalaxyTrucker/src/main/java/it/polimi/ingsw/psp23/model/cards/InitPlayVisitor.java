@@ -17,11 +17,6 @@ public class InitPlayVisitor implements Visitor{
         return null;
     }
 
-    public Void visitForCannonShot(CannonShot cannonShot){
-        cannonShot.initPlay();
-        return null;
-    }
-
     public Void visitForCombatZone(CombatZone combatZone){
         combatZone.initPlay();
         return null;
@@ -43,7 +38,7 @@ public class InitPlayVisitor implements Visitor{
     }
 
     public Void visitForPirates(Pirates pirates){
-        pirates.initPlay();
+        // pirates.initPlay();
         return null;
     }
 

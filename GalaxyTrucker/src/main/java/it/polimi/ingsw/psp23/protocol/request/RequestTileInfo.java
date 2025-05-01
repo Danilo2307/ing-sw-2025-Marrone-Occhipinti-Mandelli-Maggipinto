@@ -23,4 +23,9 @@ public record RequestTileInfo(int x, int y) implements Action {
         return actionVisitor.visitForRequestTileInfo(this, username);
     }
 
+    @Override
+    public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
 }

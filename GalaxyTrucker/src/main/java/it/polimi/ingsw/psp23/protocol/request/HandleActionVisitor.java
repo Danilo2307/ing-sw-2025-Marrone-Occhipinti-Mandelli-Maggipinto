@@ -91,4 +91,16 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         turnHourglass.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForTakeReservedTile(TakeReservedTile takeReservedTile, String username) {
+        takeReservedTile.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForReserveTile(ReserveTile reserveTile, String username) {
+        reserveTile.handle(username);
+        return null;
+    }
 }

@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 public record EndGame() implements Event {
 
     public void handle(TuiApplication tui) {
-        tui.getIOManager().print("Game ended");
+        tui.getIOManager().print("Partita terminata");
     }
 
     @Override

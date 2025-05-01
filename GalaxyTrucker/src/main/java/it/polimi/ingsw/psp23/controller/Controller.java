@@ -10,19 +10,23 @@ import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
 public class Controller {
-    private CardHandler cardHandler;
+    // private CardHandler cardHandler;
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
     private Card currentCard;
 
     public Controller() {
-        cardHandler = new CardHandler();
+        // cardHandler = new CardHandler();
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
         currentPosition = 1;
@@ -220,7 +224,7 @@ public class Controller {
 
     //arriva un input dalla view
     public void handleInput(Object input) {
-        currentCard.play(Game.getInstance(),input);
+        //currentCard.play(Game.getInstance(),input);
     }
 
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
@@ -231,7 +235,12 @@ public class Controller {
         // quindi da qui chiamiamo la view e dopo la view chiamerà un altro metodo per mandarci l'input da mandare a play
 
         // Invia i dati alla View (come JSON, socket, ecc.)
-        network.sendToAllClients("game_event", event);
+
+        //network.sendToAllClients("game_event", event);
+
+        // TODO: capire quale evento effettivo bisogna inviare
+        Message message = new BroadcastMessage(new StringResponse("evento generico in play"));
+        Server.getInstance().notifyAllObservers(message);
     }
 
 
