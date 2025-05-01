@@ -11,17 +11,10 @@ public record SetUsername(String username) implements Action {
 
     public void handle(String username){
         Game game = Game.getInstance();
-        try {
-            game.addPlayer(username);
-            // TODO: DA LEVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-            Controller contr = new Controller();
-            contr.startBuildingPhase();
-        }
-        catch(PlayerExistsException e){
-            /// TODO: manda indietro al client...però va gestito...come???
-            DirectMessage dm = new DirectMessage(new StringResponse(e.getMessage()));
-            Server.getInstance().sendMessage(username, dm);
-        }
+        game.addPlayer(username);   // THROWS PLAYEREXISTSEXCEPTION
+        // TODO: DA LEVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        Controller contr = new Controller();
+        contr.startBuildingPhase();
     }
 
     @Override

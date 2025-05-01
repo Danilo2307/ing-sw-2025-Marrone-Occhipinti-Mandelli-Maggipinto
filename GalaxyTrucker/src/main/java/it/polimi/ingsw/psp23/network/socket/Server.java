@@ -87,32 +87,23 @@ public class Server {
 
                 // Questa istruzione serve per non andare avanti all'infinito ma, nel caso in cui dopo aver stabilito
                 // la connessione il client non dovesse mandare niente per 5 sec, questa istruzione lancerà un'eccezione
-
                 // socket.setSoTimeout(60000);
 
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Adesso mi occupo di ricevere lo username del player
-
-                //socketHandler.setUsername("alberto");
-
                 // Queste sono le istruzioni necessarie per ricevere lo username dal client, ELABORARLO e permettere
                 // al game di aggiungere il player alla lista di player tramite l'handle delle action
 
                 Action a = null;
-
                 String username = null;
 
-                a = socketHandler.readMessage().call(new GetActionVisitor());
-
-                username = a.call(new SetUsernameActionVisitor());
-
-                /*boolean error = false;
-
+                boolean error;
                 do {
                     try {
                         a = socketHandler.readMessage().call(new GetActionVisitor());
                         username = a.call(new SetUsernameActionVisitor());
+                        a.call(new HandleActionVisitor(), username);
                         error = false;
                     }
                     catch(PlayerExistsException e){
@@ -122,17 +113,11 @@ public class Server {
                 } while(error);
 
                 socketHandler.sendMessage(new DirectMessage(new AppropriateUsername()));
-                */
-
                 socketHandler.setUsername(username);
 
-                a.call(new HandleActionVisitor(), username);
-
                 synchronized (clients) {
-
                     clients.put(nameConnection, socketHandler);
                     System.out.println("Client connected: " + nameConnection + " with username " + socketHandler.getUsername());
-
                 }
 
             } catch (IOException e) {

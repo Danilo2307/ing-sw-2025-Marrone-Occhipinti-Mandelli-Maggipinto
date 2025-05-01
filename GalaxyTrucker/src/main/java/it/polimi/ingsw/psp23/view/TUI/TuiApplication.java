@@ -163,6 +163,10 @@ public class TuiApplication {
                     );
                 }
             }
+            case "user" -> {
+                String username = words[1];
+                sendAction(new SetUsername(username));
+            }
             default -> throw new TuiInputException("Comando non valido");
 
         }

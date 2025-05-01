@@ -10,7 +10,7 @@ public class MainServer {
         Server.getInstance("localhost", 8000);
         ConnectionThread.getInstance().start();
         try {
-            ConnectionThread.getInstance().join(10000);
+            ConnectionThread.getInstance().join(40000);
         }
         catch (InterruptedException e) {
             e.printStackTrace();
