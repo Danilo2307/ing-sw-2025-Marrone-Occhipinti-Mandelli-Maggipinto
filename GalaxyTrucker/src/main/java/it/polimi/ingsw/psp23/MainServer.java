@@ -7,7 +7,7 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 
 public class MainServer {
     public static void main(String[] args) {
-        Server.getInstance(8000);
+        Server.getInstance("localhost", 8000);
         ConnectionThread.getInstance().start();
         try {
             ConnectionThread.getInstance().join(10000);

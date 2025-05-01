@@ -32,4 +32,8 @@ public interface EventVisitor<T> {
 
     public T visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication);
 
+    public T visitForWrongUsername(WrongUsername wrongUsername, TuiApplication tuiApplication);
+
+    public T visitForAppropriateUsername(AppropriateUsername appropriateUsername, TuiApplication tuiApplication);
+
 }

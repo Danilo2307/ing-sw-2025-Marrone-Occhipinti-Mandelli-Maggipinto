@@ -16,6 +16,7 @@ public class StartListeningForServerThread extends Thread {
     private final SocketHandler socketHandler;
     private final ClientEventHandler clientEventHandler;
     private final Client client;
+    private boolean running = true;
 
     public StartListeningForServerThread(SocketHandler socketHandler, ClientEventHandler clientEventHandler, Client client) {
         this.socketHandler = socketHandler;
@@ -28,7 +29,7 @@ public class StartListeningForServerThread extends Thread {
     @Override
     public void run() {
         try{
-            while(true){
+            while(running){
                 Message message = socketHandler.readMessage();
                 if(message != null) {
 
@@ -55,4 +56,9 @@ public class StartListeningForServerThread extends Thread {
             throw new RuntimeException("Errore in run di StartListeningForServerThread: " + e.getMessage());
         }
     }
+
+    public void stopThread(){
+        running = false;
+    }
+
 }

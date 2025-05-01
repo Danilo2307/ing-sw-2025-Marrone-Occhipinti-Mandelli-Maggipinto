@@ -89,6 +89,16 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForWrongUsername(WrongUsername wrongUsername, TuiApplication tuiApplication){
+        wrongUsername.handle(tuiApplication);
+        return null;
+    }
 
+    @Override
+    public Void visitForAppropriateUsername(AppropriateUsername appropriateUsername, TuiApplication tuiApplication){
+        appropriateUsername.handle(tuiApplication);
+        return null;
+    }
 
 }

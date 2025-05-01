@@ -1,6 +1,9 @@
 // Questa classe rappresenta il player lato client
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -9,7 +12,7 @@ import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 import java.io.*;
 import java.net.Socket;
 
-public class Client{
+public class Client {
 
     SocketHandler socketHandler;
     StartListeningForServerThread startListeningForServerThread;
@@ -24,10 +27,14 @@ public class Client{
             Socket socket = new Socket(serverIP, port);
             socketHandler = new SocketHandler(socket);
             socketHandler.sendMessage(message);
+            //message = socketHandler.readMessage();
             startListeningForServerThread = new StartListeningForServerThread(socketHandler, clientEventHandler, this);
             startListeningForServerThread.start();
-        }
-        catch (IOException e) {
+            //if (!message.call(new GetEventVisitor()).toString().equals("Appropriate Username")) {
+                // this.close();
+                //throw new PlayerExistsException("Lanciata dal costruttore di client");
+            //}
+        } catch (IOException e) {
             throw new RuntimeException("Errore class Client constructor: " + e.getMessage());
         }
 
@@ -47,6 +54,7 @@ public class Client{
     // il codice
     public void close() {
         socketHandler.close();
+        startListeningForServerThread.stopThread();
     }
 
 }

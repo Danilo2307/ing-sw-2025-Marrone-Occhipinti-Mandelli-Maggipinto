@@ -1,10 +1,14 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
+import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
+import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -95,9 +99,30 @@ public class Server {
                 // Queste sono le istruzioni necessarie per ricevere lo username dal client, ELABORARLO e permettere
                 // al game di aggiungere il player alla lista di player tramite l'handle delle action
 
-                Action a = socketHandler.readMessage().call(new GetActionVisitor());
+                Action a = null;
 
-                String username = a.call(new SetUsernameActionVisitor());
+                String username = null;
+
+                a = socketHandler.readMessage().call(new GetActionVisitor());
+
+                username = a.call(new SetUsernameActionVisitor());
+
+                /*boolean error = false;
+
+                do {
+                    try {
+                        a = socketHandler.readMessage().call(new GetActionVisitor());
+                        username = a.call(new SetUsernameActionVisitor());
+                        error = false;
+                    }
+                    catch(PlayerExistsException e){
+                        socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
+                        error = true;
+                    }
+                } while(error);
+
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername()));
+                */
 
                 socketHandler.setUsername(username);
 
