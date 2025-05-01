@@ -46,9 +46,8 @@ public class Stardust extends Card {
      *   <li>Finally, re-sorts all players by their updated positions.</li>
      * </ol>
      *
-     * @param inputObject an unused placeholder for input parameters
      */
-    public void play(InputObject inputObject) {
+    public void play() {
         List<Player> playersInverted = new ArrayList<>(Game.getInstance().getPlayers());
         Collections.reverse(playersInverted);
         for (Player p : playersInverted) {
