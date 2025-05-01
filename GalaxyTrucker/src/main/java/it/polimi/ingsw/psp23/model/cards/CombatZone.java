@@ -86,8 +86,8 @@ public class CombatZone extends Card{
         Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), daysLost, goodsLost, membersLost, penalty1, penalty2, penalty3, cannonShot));
     }
 
-  /*  public void play() {
-        int impactLine;
+   public void play() {
+      /*  int impactLine;
         int pos;
         int size = Game.getInstance().getPlayers().size();
         List<Player> players = Game.getInstance().getPlayers();
@@ -213,6 +213,6 @@ public class CombatZone extends Card{
 
         }
 
-
-    }*/
+*/
+    }
 }
