@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
@@ -87,58 +88,48 @@ public class CombatZone extends Card{
     }
 
    public void play() {
-      /*  int impactLine;
+        int impactLine;
         int pos;
         int size = Game.getInstance().getPlayers().size();
         List<Player> players = Game.getInstance().getPlayers();
         int tmp = -1;
         Player playerTmp;
-
-
         //inizio prima sfida
-
         if (penalty1 == Challenge.Members) {
             playerTmp = findMinMembers();
-
-            System.out.println(playerTmp.getNickname() + " has less crew members!");
             Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
         } else if (penalty1 == Challenge.CannonStrength) {
             playerTmp = findMinCannonStrength();
-            System.out.println(playerTmp.getNickname() + " has less cannon strength!");
             Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
         } else {
-            throw new IllegalArgumentException("Eccezione in combatzone ");
+            throw new CardException("Eccezione in combatzone ");
         }
 
         //inizio seconda sfida
-        playerTmp = findMinEngineStrength();
-
-        System.out.println(playerTmp.getNickname() + " has less engine strength!");
-
-        if (penalty2 == Challenge.Members) {
-            // dobbiamo sapere da che cabina togliere l'equipaggio
-            if(inputObject.getNumHousingUnits() == 1){
-                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , membersLost);
-            }else{
-                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , 1);
-                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(1)[0],inputObject.getHousingUnits().get(1)[1] , 1);
-            }
-        } else if (penalty2 == Challenge.Goods) {
-
-            for(int i = 0; i < inputObject.getContainers().size(); i++){
-                playerTmp.getTruck().removePreciousItemFromContainer(inputObject.getContainers().get(i)[0],inputObject.getContainers().get(i)[1],inputObject.getToRemove().get(i));
-            }
-
-
-        } else {
-            throw new IllegalArgumentException("Eccezione in combatzone ");
-        }
+        String playerMin = findMinEngineStrength().getNickname();
+//
+//        if (penalty2 == Challenge.Members) {
+//            // dobbiamo sapere da che cabina togliere l'equipaggio
+//            if(inputObject.getNumHousingUnits() == 1){
+//                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , membersLost);
+//            }else{
+//                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(0)[0],inputObject.getHousingUnits().get(0)[1] , 1);
+//                playerTmp.getTruck().reduceCrew(inputObject.getHousingUnits().get(1)[0],inputObject.getHousingUnits().get(1)[1] , 1);
+//            }
+//        } else if (penalty2 == Challenge.Goods) {
+//
+//            for(int i = 0; i < inputObject.getContainers().size(); i++){
+//                playerTmp.getTruck().removePreciousItemFromContainer(inputObject.getContainers().get(i)[0],inputObject.getContainers().get(i)[1],inputObject.getToRemove().get(i));
+//            }
+//
+//
+//        } else {
+//            throw new IllegalArgumentException("Eccezione in combatzone ");
+//        }
 
         //inizio terza sfida
         if (penalty3 == Challenge.Members) {
             playerTmp = findMinMembers();
-
-            System.out.println(playerTmp.getNickname() + " has less crew members!");
             int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
@@ -149,7 +140,6 @@ public class CombatZone extends Card{
 
         } else if (penalty3 == Challenge.CannonStrength) {
             playerTmp = findMinCannonStrength();
-            System.out.println(playerTmp.getNickname() + " has less cannon strength!");
             int i = 0;
             for (CannonShot c : cannonShot) {
                 impactLine = Utility.roll2to12();
@@ -157,9 +147,8 @@ public class CombatZone extends Card{
                 i++;
             }
         } else {
-            throw new IllegalArgumentException("Eccezione in combatzone");
+            throw new CardException("Eccezione in combatzone");
         }
-
     }
 
 
@@ -202,17 +191,5 @@ public class CombatZone extends Card{
             }
         }
         return playerTmp;
-    }
-
-    //da finire la validità
-
-    /*private void housingUnitsValidity(InputObject inputObject) {
-        int count = 0;
-        if (inputObject.getHousingUnits().size() == 2) {
-            count += inputObject.getHousingUnits().get(i)[0];
-
-        }
-
-*/
     }
 }
