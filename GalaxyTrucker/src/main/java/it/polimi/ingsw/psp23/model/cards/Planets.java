@@ -18,12 +18,14 @@ public class Planets extends Card {
     private final int daysLost;
     private final List<List<Item>> planetGoods;
     private List<String> planetsOccupied;
+    private List<Integer> loadedCount;
 
     public Planets (int level, int daysLost, List<List<Item>> planetGoods) {
         super(level);
         this.daysLost = daysLost;
         this.planetGoods = planetGoods;
         this.planetsOccupied = new ArrayList<>(Collections.nCopies(planetGoods.size(), null));
+        this.loadedCount = new ArrayList<>(Collections.nCopies(planetGoods.size(), 0));
     }
 
     public int getDaysLost() {
@@ -55,10 +57,12 @@ public class Planets extends Card {
     }
 
     public void loadGoods(int i, int j) throws CardException{
-        int y = 0;
-        int p = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer().getNickname());
-        List<Item> items = planetGoods.get(p);
-        if(y < items.size()){
+        int player = planetsOccupied.indexOf(Game.getInstance().getCurrentPlayer().getNickname());
+        if (player == -1) {
+            throw new CardException("Nessun pianeta ancora occupato da " + Game.getInstance().getCurrentPlayer().getNickname());
+        }
+        List<Item> items = planetGoods.get(player);
+        if(loadedCount.get(player) < items.size()){
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
             Component tile = ship[i][j];
@@ -68,10 +72,10 @@ public class Planets extends Card {
                     if (index == -1) {
                         throw new CardException("Container not found in 'containers' list: error in loadGoods of Board");
                     }
-
                         try {
                             // loadItem controlla anche se l'item può essere caricato in quello specifico container
-                            board.getContainers().get(index).loadItem(items.get(index));
+                            board.getContainers().get(index).loadItem(items.get(loadedCount.get(player)));
+                            loadedCount.set(player, loadedCount.get(player) + 1);
 
                         } catch (CardException c) {
                             // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
