@@ -83,4 +83,7 @@ public class MeteorSwarm extends Card {
             }
         }
     }
+
+    public void endPlay(){
+    }
 }
