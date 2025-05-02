@@ -39,6 +39,7 @@ public class Game {
     private String deck3Owner;
     private Consumer<Event> eventListener;
     private int numRequestedPlayers;
+    private int turn;
 
     public Game() {
         this.players = new ArrayList<>();
@@ -58,6 +59,7 @@ public class Game {
         this.deck2Owner = null;
         this.deck3Owner = null;
         this.numRequestedPlayers = -1;
+        this.turn = 0;
 
         // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
         ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
@@ -247,12 +249,17 @@ public class Game {
         int size = players.size();
         int pos = players.indexOf(currentPlayer);
         if(pos+1 < size){
+            turn ++;
             setCurrentPlayer(players.get(pos+1));
             setCurrentPlayerIndex(pos+1);
             return currentPlayer;
         } else{
             return null;
         }
+    }
+
+    private int getTurn(){
+        return turn;
     }
 
     public Player getPlayerFromNickname(String nickname) throws PlayerNotExistsException {
