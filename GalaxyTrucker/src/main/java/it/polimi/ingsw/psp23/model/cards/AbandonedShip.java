@@ -45,6 +45,20 @@ public class AbandonedShip extends Card {
     }
 
     /**
+     * Allows the current player to pass their decision.
+     * If not the last player, advances to the next player's turn.
+     * If the last player, skips to the next card.
+     */
+    public void pass() {
+        Game game = Game.getInstance();
+        if (game.getTurn() < game.getPlayers().size() - 1) {
+            game.getNextPlayer();
+        } else {
+            game.setGameStatus(GameStatus.Playing);
+        }
+    }
+
+    /**
      * Verifies that the game is in the INIT_ABANDONEDSHIP phase before allowing purchase.
      * Ensures that only the player whose turn it is can buy the ship.
      * Throws a CardException if conditions are not met.
@@ -80,9 +94,6 @@ public class AbandonedShip extends Card {
         if (!username.equals(isSold)) {
             throw new CardException("User '" + username + "' is not the buyer");
         }
-        if (countMember >= numMembers) {
-            throw new CardException("All crew members have already been removed");
-        }
         Board board = game.getPlayerFromNickname(username).getTruck();
         if (!board.isValid(i, j) || board.isFree(i, j)) {
             throw new CardException("Invalid coordinates or empty cell: [" + i + "][" + j + "]");
@@ -98,7 +109,7 @@ public class AbandonedShip extends Card {
                     board.getHousingUnits().get(idx).reduceOccupants(num);
                     countMember += num;
                     if (countMember == numMembers) {
-                        endPlay();
+                        game.setGameStatus(GameStatus.Playing);
                     }
                 } catch (IllegalArgumentException e) {
                     throw new CardException("Failed to remove " + num + " members: " + e.getMessage());
@@ -120,7 +131,6 @@ public class AbandonedShip extends Card {
      * Returns a help string listing available commands depending on current game status.
      * @return help message
      */
-
     public String help() {
         Game game = Game.getInstance();
         GameStatus status = game.getGameStatus();
@@ -129,5 +139,10 @@ public class AbandonedShip extends Card {
             case END_ABANDONEDSHIP -> "Available commands: REDUCECREW";
             default -> "No commands available in current phase.";
         };
+    }
+
+    @Override
+    public Object call(Visitor visitor) {
+        return visitor.visitForAbandonedShip(this);
     }
 }
