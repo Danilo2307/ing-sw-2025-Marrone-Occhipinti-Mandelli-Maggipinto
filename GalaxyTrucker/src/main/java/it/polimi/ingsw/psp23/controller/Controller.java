@@ -21,10 +21,12 @@ import java.util.Comparator;
 
 public class Controller {
     // private CardHandler cardHandler;
+    private static Controller instance = null;
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
     private Card currentCard;
+
 
     public Controller() {
         // cardHandler = new CardHandler();
@@ -34,12 +36,23 @@ public class Controller {
         Game.getInstance().setEventListener(this::onGameEvent);
     }
 
+    public static synchronized Controller getInstance() {
+        if (instance == null) {
+            instance = new Controller();
+        }
+        return instance;
+    }
+
     public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
-        if(Game.getInstance().getGameStatus() == GameStatus.Setup) {
-            if (Game.getInstance().getPlayers().size() < 4)
-                Game.getInstance().addPlayer(nickname);
-            else
-                throw new GameFullException("The game is full");
+        Game game = Game.getInstance();
+
+        if(game.getGameStatus() == GameStatus.Setup) {
+            if (game.getPlayers().size() <= game.getNumRequestedPlayers())
+                game.addPlayer(nickname);
+
+            if (game.getPlayers().size() == game.getNumRequestedPlayers()) {
+                startBuildingPhase();
+            }
         }
     }
 
