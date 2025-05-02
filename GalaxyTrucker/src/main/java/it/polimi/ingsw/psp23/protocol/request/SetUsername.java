@@ -11,8 +11,6 @@ public record SetUsername(String username) implements Action {
 
     public void handle(String username){
         Controller.getInstance().addPlayerToGame(username);
-        // TODO: DA LEVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        Controller.getInstance().startBuildingPhase();
     }
 
     @Override

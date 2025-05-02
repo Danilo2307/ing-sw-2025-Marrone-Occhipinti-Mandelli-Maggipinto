@@ -19,7 +19,7 @@ public class MainClient {
             tui.setClient(client);
             tui.runGame();
         } catch (Exception e) {
-            System.out.println("Errore di connessione: " + e.getMessage());
+            System.out.println("ERRORE in mainClient: " + e.getMessage());
         }
     }
 }
