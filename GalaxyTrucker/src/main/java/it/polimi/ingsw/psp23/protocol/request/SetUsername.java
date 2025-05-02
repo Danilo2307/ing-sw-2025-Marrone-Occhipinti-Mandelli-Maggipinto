@@ -10,11 +10,9 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 public record SetUsername(String username) implements Action {
 
     public void handle(String username){
-        Game game = Game.getInstance();
-        game.addPlayer(username);   // THROWS PLAYEREXISTSEXCEPTION
+        Controller.getInstance().addPlayerToGame(username);
         // TODO: DA LEVARE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        Controller contr = new Controller();
-        contr.startBuildingPhase();
+        Controller.getInstance().startBuildingPhase();
     }
 
     @Override

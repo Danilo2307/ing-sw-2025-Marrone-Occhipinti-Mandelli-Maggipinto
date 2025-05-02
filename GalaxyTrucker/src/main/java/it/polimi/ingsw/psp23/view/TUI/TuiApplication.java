@@ -60,7 +60,8 @@ public class TuiApplication {
 
     private static final Map<TuiState, Set<String>> aliasMap = Map.of(
             TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio"),
-            TuiState.LOBBY, Set.of(),
+            // "accetta" in LOBBY sarà permesso solo per il primo giocatore
+            TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info"),
             TuiState.CHECK, Set.of("rimuovi", "mostra", "info"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio"),
@@ -207,8 +208,16 @@ public class TuiApplication {
                     );
                 }
             }
+            case "accetta" -> {
+                int number;
+                number = Integer.parseInt(words[1]);
+                while (number < 2 || number > 4) {
+                    io.print("Il numero di giocatori deve essere compreso  tra 2 e 4, inseriscine uno valido!\n");
+                    number = Integer.parseInt(io.read());
+                }
+                sendAction(new RegisterNumPlayers(number));
+            }
             default -> throw new TuiInputException("Comando sconosciuto");
-
         }
     }
 }

@@ -38,6 +38,7 @@ public class Game {
     private String deck2Owner;
     private String deck3Owner;
     private Consumer<Event> eventListener;
+    private int numRequestedPlayers;
 
     public Game() {
         this.players = new ArrayList<>();
@@ -56,6 +57,7 @@ public class Game {
         this.deck1Owner = null;
         this.deck2Owner = null;
         this.deck3Owner = null;
+        this.numRequestedPlayers = -1;
 
         // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
         ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
@@ -82,6 +84,17 @@ public class Game {
             instance = new Game();
         }
         return instance;
+    }
+
+    public void setNumRequestedPlayers(int numRequestedPlayers) {
+        if (numRequestedPlayers == -1)
+            this.numRequestedPlayers = numRequestedPlayers;
+        else
+            throw new InvalidActionException("Non puoi modificare il numero di giocatori attesi! Era compito del creatore della partita");
+    }
+
+    public int getNumRequestedPlayers() {
+        return numRequestedPlayers;
     }
 
     /** Player per rimanere in partita deve avere almeno un umano e non essere stato doppiato */
