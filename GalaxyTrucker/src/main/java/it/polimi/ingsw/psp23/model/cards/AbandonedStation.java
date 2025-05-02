@@ -5,6 +5,8 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForAbandonedShip;
+import it.polimi.ingsw.psp23.model.Events.EventForAbandonedStation;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
@@ -48,7 +50,7 @@ public class AbandonedStation extends Card {
 
     public void initPlay() {
         Game.getInstance().setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), days, numMembers, prize ));
+        Game.getInstance().fireEvent(new EventForAbandonedStation(Game.getInstance().getGameStatus(), days, numMembers, prize ));
     }
 
     public void play() {

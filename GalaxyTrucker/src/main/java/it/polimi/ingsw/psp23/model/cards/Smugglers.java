@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
@@ -169,9 +170,9 @@ public class Smugglers extends Card {
     public void initPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
-        game.fireEvent(new Event(
+        game.fireEvent(new EventForSmugglers(
                 game.getGameStatus(),
-                firePower, numItemsStolen, days, prize
+                firePower, numItemsStolen, prize, days
         ));
     }
 

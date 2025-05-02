@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForMeteorSwarm;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
@@ -61,7 +62,7 @@ public class MeteorSwarm extends Card {
         for (Meteor meteor : meteors) {
             int impactLine = Utility.roll2to12();
             meteor.setImpactLine(impactLine);
-            game.fireEvent(new Event(
+            game.fireEvent(new EventForMeteorSwarm(
                     game.getGameStatus(),
                     Collections.singletonList(meteor),
                     impactLine
@@ -84,6 +85,4 @@ public class MeteorSwarm extends Card {
         }
     }
 
-    public void endPlay(){
-    }
 }

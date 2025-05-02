@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForCombatZone;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
@@ -18,41 +19,29 @@ import java.util.ArrayList;
 public class CombatZone extends Card{
     // Danilo
 
-    Challenge penalty1;
-    Challenge penalty2;
-    Challenge penalty3;
     private final int daysLost;
     private final int goodsLost;
     private final int membersLost;
     private final List<CannonShot> cannonShot;
+    private final List<Challenge> penalties;
     private int countMember;
     private int countGood;
     private String playerMin;
 
-    public CombatZone(int level,int daysLost, int goodsLost, int membersLost,Challenge penalty1,Challenge penalty2, Challenge penalty3, List<CannonShot> cannonshot) {
+    public CombatZone(int level,int daysLost, int goodsLost, int membersLost, List<Challenge> penalties, List<CannonShot> cannonshot) {
         super(level);
         this.daysLost = daysLost;
         this.goodsLost = goodsLost;
         this.membersLost = membersLost;
-        this.penalty1 = penalty1;
-        this.penalty2 = penalty2;
-        this.penalty3 = penalty3;
+        this.penalties = penalties;
         this.cannonShot = cannonshot;
         this.countMember = 0;
         this.countGood = 0;
         this.playerMin = null;
     }
 
-    public Challenge getFirstPenalty() {
-        return penalty1;
-    }
-
-    public Challenge getSecondPenalty() {
-        return penalty2;
-    }
-
-    public Challenge getThirdPenalty() {
-        return penalty3;
+    public List<Challenge> getPenalties() {
+        return new ArrayList<Challenge>(penalties);
     }
 
     public int getDaysLost() {
@@ -143,7 +132,7 @@ public class CombatZone extends Card{
         else if(!Game.getInstance().getCurrentPlayer().equals(playerMin)){
             throw new CardException("Il player che ha meno potenza motrice è" + playerMin);
         }
-        else if(penalty2 == Challenge.Goods){
+        else if(penalties.get(1) == Challenge.Goods){
             throw new CardException("La tua penalità è perdere le tue" + getGoodsLost() + "merci più importanti!" );
         }
     }
@@ -183,7 +172,7 @@ public class CombatZone extends Card{
         else if(!Game.getInstance().getCurrentPlayer().equals(playerMin)){
             throw new CardException("Il player che ha meno potenza motrice è" + playerMin);
         }
-        else if(penalty2 == Challenge.Members){
+        else if(penalties.get(1) == Challenge.Members){
             throw new CardException("La tua penalità è perdere" + getMembersLost() + "membri dell'equipaggio!" );
         }
     }
@@ -204,7 +193,7 @@ public class CombatZone extends Card{
 
     public void initPlay(){
         Game.getInstance().setGameStatus(GameStatus.INIT_COMBATZONE);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), daysLost, goodsLost, membersLost, penalty1, penalty2, penalty3, cannonShot));
+        Game.getInstance().fireEvent(new EventForCombatZone(Game.getInstance().getGameStatus(), daysLost, goodsLost, membersLost, penalties, cannonShot));
     }
 
    public void play() {
@@ -215,10 +204,10 @@ public class CombatZone extends Card{
         int tmp = -1;
         Player playerTmp;
         //inizio prima sfida
-        if (penalty1 == Challenge.Members) {
+        if (penalties.get(0) == Challenge.Members) {
             playerTmp = findMinMembers();
             Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
-        } else if (penalty1 == Challenge.CannonStrength) {
+        } else if (penalties.get(0) == Challenge.CannonStrength) {
             playerTmp = findMinCannonStrength();
             Utility.updatePosition(players, players.indexOf(playerTmp), -daysLost);
         } else {
@@ -229,7 +218,7 @@ public class CombatZone extends Card{
         playerMin = findMinEngineStrength().getNickname();
 
         //inizio terza sfida
-        if (penalty3 == Challenge.Members) {
+        if (penalties.get(2) == Challenge.Members) {
             playerTmp = findMinMembers();
             int i = 0;
             for (CannonShot c : cannonShot) {
@@ -239,7 +228,7 @@ public class CombatZone extends Card{
             }
 
 
-        } else if (penalty3 == Challenge.CannonStrength) {
+        } else if (penalties.get(2) == Challenge.CannonStrength) {
             playerTmp = findMinCannonStrength();
             int i = 0;
             for (CannonShot c : cannonShot) {

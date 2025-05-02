@@ -3,8 +3,11 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForPirates;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Cannon;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +43,11 @@ public class Pirates extends Card {
     @Override
     public Object call(Visitor visitor){
         return visitor.visitForPirates(this);
+    }
+
+    public void initPlay(){
+        Game.getInstance().setGameStatus(GameStatus.INIT_PIRATES);
+        Game.getInstance().fireEvent(new EventForPirates(Game.getInstance().getGameStatus(), days, firepower, prize, cannonShot));
     }
 
     public void play(){

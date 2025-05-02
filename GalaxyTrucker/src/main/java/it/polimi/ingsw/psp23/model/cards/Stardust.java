@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForStardust;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
@@ -34,7 +35,7 @@ public class Stardust extends Card {
     public void initPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_STARDUST);
-        game.fireEvent(new Event(game.getGameStatus()));
+        game.fireEvent(new EventForStardust(game.getGameStatus()));
     }
 
     /**

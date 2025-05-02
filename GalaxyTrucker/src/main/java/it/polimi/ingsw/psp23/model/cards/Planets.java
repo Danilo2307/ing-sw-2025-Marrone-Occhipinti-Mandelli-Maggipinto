@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.EventForPlanets;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
@@ -113,14 +114,17 @@ public class Planets extends Card {
 
     public void initPlay(){
         Game.getInstance().setGameStatus(GameStatus.INIT_PLANETS);
-        Game.getInstance().fireEvent(new Event(Game.getInstance().getGameStatus(), daysLost, planetGoods));
+        Game.getInstance().fireEvent(new EventForPlanets(Game.getInstance().getGameStatus(), daysLost, planetGoods));
     }
 
     public void play(){
+        //TODO: catturare degli eventi di atterraggio sul pianeta scelto, in ordine di giocatori
         endPlay();
     }
 
     public void endPlay(){
+        Game.getInstance().setGameStatus(GameStatus.END_PLANETS);
+        //TODO: catturare eventi di carico merci
     }
 
 }

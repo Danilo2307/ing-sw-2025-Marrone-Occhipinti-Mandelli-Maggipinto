@@ -23,4 +23,13 @@ public class Meteor{
     public void setImpactLine(int line) { impactLine = line; }
 
     public int getImpactLine() {return impactLine;}
+
+    @Override
+    public String toString() {
+        return "Meteor{" +
+                "big=" + big +
+                ", direction=" + direction +
+                ", impactLine=" + impactLine +
+                '}';
+    }
 }
