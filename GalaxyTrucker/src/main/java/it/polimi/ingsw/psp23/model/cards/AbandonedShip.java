@@ -3,11 +3,13 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Events.EventForAbandonedShip;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
+import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.List;
@@ -19,12 +21,14 @@ public class AbandonedShip extends Card {
     private final int cosmicCredits;
     private final int numMembers;
     private String isSold = null;
+    private int countMember;
 
     public AbandonedShip(int level,int days, int cosmicCredits, int numMembers) {
         super(level);
         this.days = days;
         this.cosmicCredits = cosmicCredits;
         this.numMembers = numMembers;
+        this.countMember = 0;
     }
 
     public int getDays() {
@@ -37,6 +41,46 @@ public class AbandonedShip extends Card {
 
     public int getNumMembers() {
         return numMembers;
+    }
+
+    public void buyShip(String username){
+        if(username.equals(Game.getInstance().get)){
+
+        }
+        isSold = Game.getInstance().getCurrentPlayer().getNickname(); }
+
+    public void reduceCrew(int i, int j, int num) {
+        if(countMember < numMembers && Game.getInstance().getCurrentPlayer().equals(isSold)){
+            Board board = Game.getInstance().getCurrentPlayer().getTruck();
+            Component[][] ship = board.getShip();
+//        if ((!board.isValid(i, j)) || board.isFree(i,j))
+//            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+            Component tile = ship[i][j];
+            switch (tile) {
+                case HousingUnit cabin -> {
+                    int index = board.getHousingUnits().indexOf(cabin);
+                    if (index == -1) {
+                        throw new CardException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+                    } else {
+                        try {
+                            // controllo rimozione implementato in reduceOccupants
+                            board.getHousingUnits().get(index).reduceOccupants(num);
+                            countMember += num;
+                            if (countMember == numMembers){
+                                Game.getInstance().getNextCard();
+                            }
+                        }
+                        catch (IllegalArgumentException e) {
+                            throw new CardException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+                        }
+                    }
+                }
+                default -> throw new CardException("Component at ["+i+"]["+j+"] is not a housing unit");
+            }
+        }
+        else if(!Game.getInstance().getCurrentPlayer().equals(isSold)){
+            throw new CardException("La nave è stata acquistata da" + isSold);
+        }
     }
 
     @Override
