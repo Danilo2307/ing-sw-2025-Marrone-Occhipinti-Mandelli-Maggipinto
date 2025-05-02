@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Events.EventForPirates;
 import it.polimi.ingsw.psp23.model.Game.Game;
@@ -18,6 +19,8 @@ public class Pirates extends Card {
     private final int days;
     private final int firepower;
     private final List <CannonShot> cannonShot;
+    private Game game;
+    List<Player> losers;
 
     public Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
         super(level);
@@ -25,6 +28,7 @@ public class Pirates extends Card {
         this.days = days;
         this.firepower = firepower;
         this.cannonShot = cannonShot;
+        this.losers = new ArrayList<>();
     }
 
     public int getPrize() {
@@ -46,46 +50,56 @@ public class Pirates extends Card {
     }
 
     public void initPlay(){
-        Game.getInstance().setGameStatus(GameStatus.INIT_PIRATES);
-        Game.getInstance().fireEvent(new EventForPirates(Game.getInstance().getGameStatus(), days, firepower, prize, cannonShot));
+        game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_PIRATES);
+        game.getInstance().fireEvent(new EventForPirates(Game.getInstance().getGameStatus(), days, firepower, prize, cannonShot));
     }
 
-    public void play(){
-/*
-        // Devo prima attivare tutti i cannoni che mi sono passati nell'inputObject tramite il metodo activateCannon
-        // così che poi il metodo calculateCannonStrength calcoli correttamente la potenza di fuoco
-        Player currentPlayer = Game.getInstance().getCurrentPlayer();
-        Board board = currentPlayer.getTruck();
-        List<Cannon> cannoni = board.getCannons();
-        double potenzaDiFuocoPlayer;
-
-        for(Integer[] i : input.getCannons()){
-            for(Cannon c : cannoni){
-                if(c.getX() == i[0] && c.getY() == i[1]){
-                    c.activeCannon();
-                    break;
-                }
-            }
+    public void fightPirates(String username){
+        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+            throw new CardException("User '" + username + "' cannot fight pirates in phase: " + game.getGameStatus());
         }
-        potenzaDiFuocoPlayer = board.calculateCannonStrength();
+
+        if (!username.equals(game.getPlayers().get(game.getTurn()))) {
+            throw new CardException("User '" + username + "' is not the current player");
+        }
+        double potenzaDiFuocoPlayer = game.getPlayerFromNickname(username).getTruck().calculateCannonStrength();
 
         // Adesso faccio il confronto tra la potenza di fuoco del player e quella dei pirates per vedere se vince il player
         if(potenzaDiFuocoPlayer > firepower){
-            if(input.getDecision()){
-                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getCurrentPlayerIndex(), -days);
-                currentPlayer.updateMoney(prize);
-            }
+                Utility.updatePosition(game.getPlayers(), Game.getInstance().getTurn(), -days);
+                game.getPlayerFromNickname(username).updateMoney(prize);
+                endPlay();
         }
         else if(potenzaDiFuocoPlayer == firepower){
             // Qui non bisogna fare niente perchè i pirati attaccano i player presenti dopo
         }
         else{
-            // In questo caso dovremmo aspettare che tutti i giocatori abbiano affrontato i pirati o che questi ultimi
-            // siano stati sconfitti per chiedere al current player di lanciare i dadi e poi fare arrivare le cannonate
-            // a tutti gli altri player. Per fare ciò io metterei uno stato in cui si ci arriva o dopo aver sconfitto
-            // i nemici o dopo avere perso e, quando tutti i player sono in quello stato allora si comincia a gestire
-            // le cannonate
-        }*/
+            losers.add(game.getPlayerFromNickname(username));
+        }
+
+        if(game.getPlayers().size() == (game.getTurn()+1)){
+            endPlay();
+        }
+    }
+
+    public void endPlay(){
+        int impactLine;
+        for(CannonShot c : cannonShot) {
+            impactLine = Utility.roll2to12();
+            for (Player player : losers) {
+                player.getTruck().handleCannonShot(c, impactLine);
+            }
+        }
+        game.setGameStatus(GameStatus.Playing);
+    }
+
+    public String help() {
+        GameStatus status = game.getGameStatus();
+        return switch (status) {
+            case INIT_PIRATES -> "Available commands: FIGHTPIRATES";
+            default -> "No commands available in current phase.";
+        };
     }
 
 
