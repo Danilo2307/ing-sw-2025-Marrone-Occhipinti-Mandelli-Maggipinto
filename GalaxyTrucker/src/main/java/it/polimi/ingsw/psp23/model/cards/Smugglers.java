@@ -115,6 +115,7 @@ public class Smugglers extends Card {
     }
 
     public void removePreciousItem(int i, int j, int item) {
+        /// TODO: capire getCurrentPlayer perchè dovrebbero farlo tutte in parallelo
         if(losedCount < numItemsStolen && losers.contains(Game.getInstance().getCurrentPlayer())){
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
@@ -201,6 +202,8 @@ public class Smugglers extends Card {
     public void endPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.END_SMUGGLERS);
+
+
     }
 
 }

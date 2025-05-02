@@ -123,7 +123,7 @@ public class TuiApplication {
                         int by = Integer.parseInt(words[5]);
                         sendAction(new ActivateCannon(cx, cy, bx, by));
                     }
-                    case "engine" -> {
+                    case "motore" -> {
                         int ex = Integer.parseInt(words[2]);
                         int ey = Integer.parseInt(words[3]);
                         int bx = Integer.parseInt(words[4]);
