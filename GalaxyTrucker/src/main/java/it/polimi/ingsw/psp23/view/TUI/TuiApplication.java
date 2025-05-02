@@ -211,9 +211,19 @@ public class TuiApplication {
             case "accetta" -> {
                 int number;
                 number = Integer.parseInt(words[1]);
-                while (number < 2 || number > 4) {
-                    io.print("Il numero di giocatori deve essere compreso  tra 2 e 4, inseriscine uno valido!\n");
-                    number = Integer.parseInt(io.read());
+                boolean error = false;
+                while (number < 2 || number > 4 || error) {
+
+                    io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
+
+                    try {
+                        number = Integer.parseInt(io.read());
+                        error = false;
+                    }
+                    catch (NumberFormatException e) {
+                        error = true;
+                    }
+
                 }
                 sendAction(new RegisterNumPlayers(number));
             }

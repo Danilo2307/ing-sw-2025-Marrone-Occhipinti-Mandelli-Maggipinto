@@ -36,4 +36,6 @@ public interface ActionVisitor<T> {
 
     public T visitForReserveTile(ReserveTile reserveTile, String username);
 
+    public T visitForRegisterNumPlayers(RegisterNumPlayers registerNumPlayers, String username);
+
 }

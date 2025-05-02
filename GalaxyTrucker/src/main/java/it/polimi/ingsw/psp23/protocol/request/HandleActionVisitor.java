@@ -103,4 +103,10 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         reserveTile.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForRegisterNumPlayers(RegisterNumPlayers registerNumPlayers, String username) {
+        registerNumPlayers.handle(username);
+        return null;
+    }
 }

@@ -88,9 +88,9 @@ public class Game {
         return instance;
     }
 
-    public void setNumRequestedPlayers(int numRequestedPlayers) {
+    public void setNumRequestedPlayers(int number) {
         if (numRequestedPlayers == -1)
-            this.numRequestedPlayers = numRequestedPlayers;
+            this.numRequestedPlayers = number;
         else
             throw new InvalidActionException("Non puoi modificare il numero di giocatori attesi! Era compito del creatore della partita");
     }

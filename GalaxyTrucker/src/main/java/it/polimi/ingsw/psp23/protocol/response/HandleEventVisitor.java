@@ -101,4 +101,10 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, TuiApplication tuiApplication){
+        requestNumPlayers.handle(tuiApplication);
+        return null;
+    }
+
 }
