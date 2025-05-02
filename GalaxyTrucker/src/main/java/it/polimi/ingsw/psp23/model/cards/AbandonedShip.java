@@ -44,7 +44,8 @@ public class AbandonedShip extends Card {
     }
 
     public void buyShip(String username){
-        if(username.equals(Game.getInstance().get)){
+        Game game = Game.getInstance();
+        if(username.equals(game.getPlayers().get(game.getTurn()))){
 
         }
         isSold = Game.getInstance().getCurrentPlayer().getNickname(); }

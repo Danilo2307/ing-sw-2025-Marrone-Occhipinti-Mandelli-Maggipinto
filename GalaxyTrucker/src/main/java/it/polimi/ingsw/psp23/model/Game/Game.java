@@ -258,7 +258,7 @@ public class Game {
         }
     }
 
-    private int getTurn(){
+    public int getTurn(){
         return turn;
     }
 
