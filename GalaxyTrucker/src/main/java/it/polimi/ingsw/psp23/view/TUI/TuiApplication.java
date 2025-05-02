@@ -6,6 +6,10 @@ import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.request.*;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication {
@@ -13,11 +17,13 @@ public class TuiApplication {
     // private ClientController cc;  ora useless perchè sendAction è in questa classe
     private int lastUncoveredVersion;
     private final IOManager io;
+    private TuiState currentTuiState;
 
     /// TODO: capire costruttore (client=null)
     public TuiApplication() {
         io = new IOManager();
         lastUncoveredVersion = 0;
+        currentTuiState = TuiState.PRELOBBY;
     }
 
     public void setClient(Client client) {
@@ -52,11 +58,49 @@ public class TuiApplication {
         this.lastUncoveredVersion = lastUncoveredVersion;
     }
 
+    private static final Map<TuiState, Set<String>> aliasMap = Map.of(
+            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio"),
+            TuiState.LOBBY, Set.of(),
+            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info"),
+            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio"),
+            TuiState.NOTYOURTURN, Set.of(),
+            // TODO: Questi ultimi due stati sono da completare
+            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi"),
+            TuiState.ENDGAME, Set.of()
+    );
+
+    private boolean isCommandLegal(String keyword) {
+        if(currentTuiState == TuiState.PRELOBBY) {
+            return !aliasMap.get(TuiState.PRELOBBY).contains(keyword);
+        }
+        else{
+            return aliasMap.get(currentTuiState).contains(keyword);
+        }
+    }
+
+    public void setState(TuiState state) {
+        currentTuiState = state;
+    }
+
     /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
     public void executeCommand(String command) {
         String[] words = command.split(" ");
 
         String keyword = words[0];
+
+        if(!isCommandLegal(keyword)){
+            throw new TuiInputException("Comando non valido. Sei nello stato di " + currentTuiState + " inserisci uno dei comandi tra: " + aliasMap.get(currentTuiState));
+        }
+
+        // Questo serve nel caso in cui noi dobbiamo gestire username sbagliati, per far sì che ogni parola da noi inserita
+        // durante lo stato di prelobby sia letta come uno username. Tramite la return siamo sicuri di non entrare nello
+        // switch
+        if(currentTuiState == TuiState.PRELOBBY) {
+            sendAction(new SetUsername(keyword));
+            return;
+        }
+
         switch (keyword) {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
@@ -163,11 +207,7 @@ public class TuiApplication {
                     );
                 }
             }
-            case "user" -> {
-                String username = words[1];
-                sendAction(new SetUsername(username));
-            }
-            default -> throw new TuiInputException("Comando non valido");
+            default -> throw new TuiInputException("Comando sconosciuto");
 
         }
     }

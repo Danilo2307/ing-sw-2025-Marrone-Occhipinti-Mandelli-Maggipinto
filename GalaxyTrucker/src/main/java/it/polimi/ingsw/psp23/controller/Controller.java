@@ -13,6 +13,7 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class Controller {
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
         Game.getInstance().setGameStatus(GameStatus.Building);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Building)));
 
         startTimer();
     }
