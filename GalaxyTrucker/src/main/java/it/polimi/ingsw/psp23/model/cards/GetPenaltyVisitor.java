@@ -9,15 +9,7 @@ public class GetPenaltyVisitor implements VisitorParametrico{
     }
 
     public Challenge visitForCombatZone(CombatZone combatZone, int index) {
-        if(index == 1){
-            return combatZone.getFirstPenalty();
-        }
-        else if(index == 2){
-            return combatZone.getSecondPenalty();
-        }
-        else{
-            return combatZone.getThirdPenalty();
-        }
+        return combatZone.getPenalties().get(index - 1);
     }
 
 }

@@ -11,7 +11,7 @@ public interface ActionVisitorSinglePar<T> {
     public T visitForActivateShield(ActivateShield activateShield);
 
 
-    public T visitForAddTile(AddTile addTile, String username);
+    public T visitForAddTile(AddTile addTile);
 
 
     public T visitForDrawFromFaceUp(DrawFromFaceUp drawFromFaceUp);

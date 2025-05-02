@@ -7,4 +7,10 @@ public record RequestNumPlayers() implements Event {
     public void handle(TuiApplication tui) {
         tui.getIOManager().print("Inserisci il numero di giocatori che faranno parte della partita:");
     }
+
+    @Override
+    public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
+        return eventVisitor.visitForRequestNumPlayers(this, tuiApplication);
+    }
+
 }

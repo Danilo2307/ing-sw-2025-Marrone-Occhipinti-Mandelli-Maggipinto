@@ -36,4 +36,6 @@ public interface EventVisitor<T> {
 
     public T visitForAppropriateUsername(AppropriateUsername appropriateUsername, TuiApplication tuiApplication);
 
+    public T visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, TuiApplication tuiApplication);
+
 }

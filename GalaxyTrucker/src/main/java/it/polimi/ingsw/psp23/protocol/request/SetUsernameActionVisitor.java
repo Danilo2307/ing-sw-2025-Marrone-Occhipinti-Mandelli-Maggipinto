@@ -18,7 +18,7 @@ public class SetUsernameActionVisitor implements ActionVisitorSinglePar<String>{
     }
 
     @Override
-    public String visitForAddTile(AddTile addTile, String username) {
+    public String visitForAddTile(AddTile addTile) {
         return null;
     }
 
