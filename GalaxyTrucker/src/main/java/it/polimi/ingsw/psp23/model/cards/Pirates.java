@@ -90,5 +90,13 @@ public class Pirates extends Card {
         game.setGameStatus(GameStatus.Playing);
     }
 
+    public String help() {
+        GameStatus status = game.getGameStatus();
+        return switch (status) {
+            case INIT_PIRATES -> "Available commands: FIGHTPIRATES";
+            default -> "No commands available in current phase.";
+        };
+    }
+
 
 }
