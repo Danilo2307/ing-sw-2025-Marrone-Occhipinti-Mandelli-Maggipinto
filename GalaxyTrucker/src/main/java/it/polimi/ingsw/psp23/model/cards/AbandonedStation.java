@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
-import it.polimi.ingsw.psp23.model.Events.Event;
-import it.polimi.ingsw.psp23.model.Events.EventForAbandonedShip;
 import it.polimi.ingsw.psp23.model.Events.EventForAbandonedStation;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -16,12 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedStation extends Card {
-
     private final int days;
     private final int numMembers;
     private final List<Item> prize;
     private String isSold = null;
-    private int indexItem = 0;
+    private int counterItem = 0;
 
     public AbandonedStation(int level, int days, int numMembers, List<Item> prize) {
         super(level);
@@ -42,104 +41,95 @@ public class AbandonedStation extends Card {
         return new ArrayList<>(prize);
     }
 
-    @Override
-    public Object call(Visitor visitor) {
-        return visitor.visitForAbandonedStation(this);
-    }
-
-
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
-        Game.getInstance().fireEvent(new EventForAbandonedStation(Game.getInstance().getGameStatus(), days, numMembers, prize ));
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
+        game.fireEvent(new EventForAbandonedStation(game.getGameStatus(), days, numMembers, prize));
     }
 
-    public void play() {
-
-        List<Player> players = Game.getInstance().getPlayers();
-        for (Player player : players) {
-            if(isSold == null){
-                break;
-            }
-            if (player.getTruck().calculateCrew() >= numMembers && isSold.equals(player.getNickname()) ){
-                    Utility.updatePosition(players, players.indexOf(player), -days);
-                    break;
-            }
+    /**
+     * Allows the player to dock at the station during INIT_ABANDONEDSTATION.
+     * Throws CardException if called in the wrong phase or by a non-current player, or if crew is insufficient.
+     */
+    public void dockStation(String username) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) {
+            throw new CardException("Cannot dock station in phase: " + game.getGameStatus());
         }
-    }
-
-
-    public void endPlay() {
-        Game.getInstance().setGameStatus(GameStatus.END_ABANDONEDSTATION);
-    }
-
-    public void loadItem(int x, int y) {
-        if(indexItem < prize.size() && Game.getInstance().getGameStatus().equals(GameStatus.END_ABANDONEDSTATION)) {
-            List<Item> items = new ArrayList<>();
-            items.add(prize.get(indexItem));
-            Game.getInstance().getPlayerFromNickname(isSold).getTruck().loadGoods(items, x, y);
-            indexItem++;
-        }else{
-            throw new RuntimeException("Le merci sono terminate");
+        if (!username.equals(game.getPlayers().get(game.getTurn()))) {
+            throw new CardException("User '" + username + "' is not the current player");
         }
-    }
-
-    public String getIsSold() {
-        return isSold;
-    }
-
-    public void setIsSold(String nickname) {
-        this.isSold = nickname;
-    }
-
-    //TODO: i metodi set e get isSold e loaditem andranno implementati con i visitor (loaditem seguirà l'ordine stampato delle merci)
-
-  /*  public void inputValidity(InputObject inputObject){
-        Player player = Game.getInstance().getCurrentPlayer();
-
-        if (inputObject.getContainers().size() != prize.size()) {
-            throw new RuntimeException("Input non valido");
+        Player p = game.getPlayerFromNickname(username);
+        if (p.getTruck().calculateCrew() < numMembers) {
+            throw new CardException("Not enough crew to dock station");
         }
+        isSold = username;
+        Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
+        game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
+    }
 
-        if(Game.getInstance().getCurrentPlayer().getTruck().calculateCrew() < numMembers){
-            throw new RuntimeException("Non hai abbastanza membri dell'equipaggio");
+    /**
+     * Loads prize items into containers during END_ABANDONEDSTATION.
+     * Throws ContainerException for container-specific failures, or CardException if used in wrong phase or by wrong user.
+     */
+    public void loadGoods(String username, int i, int j) throws ContainerException {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
+            throw new CardException("Cannot load goods in phase: " + game.getGameStatus());
         }
-
-        int i = 0;
-
-        int counter;
-
-        for(Integer[] pos : inputObject.getContainers()){
-            counter = 0;
-
-           for(Integer[] pos2 : inputObject.getContainers()){
-                if(pos2[0] == pos[0] && pos2[1] == pos[1]){
-                    counter++;
+        if (!username.equals(isSold)) {
+            throw new CardException("User '" + username + "' did not dock the station");
+        }
+        Board board = game.getPlayerFromNickname(username).getTruck();
+        if (!board.isValid(i, j) || board.isFree(i, j)) {
+            throw new CardException("Invalid coordinates or empty cell: [" + i + "][" + j + "]");
+        }
+        Component tile = board.getShip()[i][j];
+        switch (tile) {
+            case Container container -> {
+                int idx = board.getContainers().indexOf(container);
+                if (idx == -1) {
+                    throw new CardException("Container not found in list");
                 }
-           }
-
-            Component analizedComponent = player.getTruck().getTile(pos[0], pos[1]);
-
-            if(!(player.getTruck().getContainers().contains(analizedComponent))){
-                throw new ContainerException("Input errato, non hai selezionato solo Container");
+                try {
+                    container.loadItem(prize.get(counterItem));
+                    counterItem++;
+                    if (counterItem == prize.size()) {
+                        game.getNextCard();
+                    }
+                } catch (ContainerException e) {
+                    throw new ContainerException(
+                            "Cannot load item " + counterItem + " into container at [" + i + "][" + j + "]: " + e.getMessage()
+                    );
+                }
             }
-
-           Container container = player.getTruck().getContainers().get(player.getTruck().getContainers().indexOf(analizedComponent));
-
-            if(counter > (container.getSize() - container.getItems().size())){
-                throw new ContainerException("Uno dei tuoi container non ha abbastanza spazio");
-            }
-
-            if(!container.canLoadItem(prize.get(i))){
-                throw new ContainerException("Almeno una merce non è compatibile con il container selezionato");
-            }
-
-
-
-            i++;
-
+            default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
         }
-
     }
-*/
 
+    /**
+     * Allows passing during INIT_ABANDONEDSTATION: moves to next player or next card.
+     */
+    public void pass() {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) return;
+        if (game.getTurn() < game.getPlayers().size() - 1) {
+            game.getNextPlayer();
+        } else {
+            game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
+        }
+    }
+
+    /**
+     * Returns available commands based on current AbandonedStation phase.
+     * @return help message
+     */
+    public String help() {
+        GameStatus status = Game.getInstance().getGameStatus();
+        return switch (status) {
+            case INIT_ABANDONEDSTATION -> "Available commands: DOCKSTATION, PASSA";
+            case END_ABANDONEDSTATION -> "Available commands: LOADGOODS";
+            default -> "No commands available in current phase.";
+        };
+    }
 }
