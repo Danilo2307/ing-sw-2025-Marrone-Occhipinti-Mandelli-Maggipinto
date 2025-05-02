@@ -56,6 +56,10 @@ public class Pirates extends Card {
     }
 
     public void fightPirates(String username){
+        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+            throw new CardException("User '" + username + "' cannot fight pirates in phase: " + game.getGameStatus());
+        }
+
         if (!username.equals(game.getPlayers().get(game.getTurn()))) {
             throw new CardException("User '" + username + "' is not the current player");
         }
