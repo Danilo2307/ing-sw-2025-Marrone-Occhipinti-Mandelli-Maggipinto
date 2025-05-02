@@ -120,11 +120,7 @@ public class AbandonedShip extends Card {
      * Returns a help string listing available commands depending on current game status.
      * @return help message
      */
-    /**
-     * Returns a help string listing available commands based on the current game status.
-     * Users can call COMPRANAVE during the INIT phase or PASSA at any time.
-     * @return help message
-     */
+
     public String help() {
         Game game = Game.getInstance();
         GameStatus status = game.getGameStatus();
