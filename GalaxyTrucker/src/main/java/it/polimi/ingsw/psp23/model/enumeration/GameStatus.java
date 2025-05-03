@@ -24,5 +24,6 @@ public enum GameStatus {
     COMBATZONE_GOODS,
     END_SLAVERS,
     END_SMUGGLERS,
-    END_STARDUST
+    END_STARDUST,
+    END_PIRATES,
 }

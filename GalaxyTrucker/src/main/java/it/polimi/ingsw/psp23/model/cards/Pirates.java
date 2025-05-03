@@ -21,6 +21,8 @@ public class Pirates extends Card {
     private final List <CannonShot> cannonShot;
     private Game game;
     List<Player> losers;
+    private int countCannonShot;
+    List<Player> playersReady;
 
     public Pirates(int level, int prize, int days, int firepower, List <CannonShot> cannonShot) {
         super(level);
@@ -29,6 +31,8 @@ public class Pirates extends Card {
         this.firepower = firepower;
         this.cannonShot = cannonShot;
         this.losers = new ArrayList<>();
+        this.countCannonShot = 0;
+        this.playersReady = new ArrayList<>();
     }
 
     public int getPrize() {
@@ -79,25 +83,40 @@ public class Pirates extends Card {
         }
 
         if(game.getPlayers().size() == (game.getTurn()+1)){
+            Game.getInstance().setGameStatus(GameStatus.END_PIRATES);
+        }
+    }
+
+    public void ready(String username){
+        if(Game.getInstance().getGameStatus() != GameStatus.END_PIRATES) {
+            throw new CardException("Not available in the current state");
+        }
+        playersReady.add(game.getPlayerFromNickname(username));
+        if(playersReady.size() == losers.size() && playersReady.containsAll(losers)) {
+            playersReady.clear();
             endPlay();
         }
     }
 
     public void endPlay(){
-        int impactLine;
-        for(CannonShot c : cannonShot) {
+        if(countCannonShot == (cannonShot.size()-1)){
+            game.setGameStatus(GameStatus.Playing);
+        }else {
+            int impactLine;
+            CannonShot c = cannonShot.get(countCannonShot);
             impactLine = Utility.roll2to12();
             for (Player player : losers) {
                 player.getTruck().handleCannonShot(c, impactLine);
             }
+            countCannonShot++;
         }
-        game.setGameStatus(GameStatus.Playing);
     }
 
     public String help() {
         GameStatus status = game.getGameStatus();
         return switch (status) {
             case INIT_PIRATES -> "Available commands: FIGHTPIRATES";
+            case END_PIRATES -> "Available commands: READY, ACTIVESHIELD";
             default -> "No commands available in current phase.";
         };
     }
