@@ -7,9 +7,7 @@ import it.polimi.ingsw.psp23.model.Events.EventForMeteorSwarm;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * Represents a Meteor Swarm adventure card.
@@ -24,6 +22,7 @@ public class MeteorSwarm extends Card {
      * List of meteors in the order they will impact (top-to-bottom, left-to-right).
      */
     private final List<Meteor> meteors;
+    private final Set<String> resolvers = new HashSet<>();
 
     /**
      * Constructs a MeteorSwarm card with the specified difficulty level and meteors.
@@ -75,19 +74,18 @@ public class MeteorSwarm extends Card {
      * Applies each stored meteor impact line to every player's truck.
      *
      */
-    public void play() {
+    public void applyEffect(String username) {
+        resolvers.add(username);
         List<Player> players = Game.getInstance().getPlayers();
-        for (Meteor meteor : meteors) {
-            int impactLine = meteor.getImpactLine();
-            for (Player player : players) {
-                player.getTruck().handleMeteor(meteor, impactLine);
+        if(resolvers.size() == players.size()){
+            for (Meteor meteor : meteors) {
+                int impactLine = meteor.getImpactLine();
+                for (Player player : players) {
+                    player.getTruck().handleMeteor(meteor, impactLine);
+                }
             }
         }
         Game.getInstance().setGameStatus(GameStatus.Playing);
-    }
-
-    public String help() {
-        return "No commands available in current phase.";
     }
 
 }

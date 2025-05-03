@@ -2,13 +2,12 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForEpidemic;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,77 +28,68 @@ public class Epidemic extends Card {
      * Initializes the play of the Epidemic card by setting the game status and firing the corresponding event.
      */
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.INIT_EPIDEMIC);
-        Game.getInstance().fireEvent(new EventForEpidemic(Game.getInstance().getGameStatus()));
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_EPIDEMIC);
+        game.fireEvent(new EventForEpidemic(game.getGameStatus()));
     }
 
     /**
-     * Executes the effect of the Epidemic card: for each pair of connected occupied housing units,
-     * removes one occupant from each involved unit.
+     * Executes the effect of the Epidemic card. Must be called in INIT_EPIDEMIC phase.
+     * For each pair of connected occupied housing units, removes one occupant from each involved unit.
+     * Finally resets the game status to Playing.
+     *
+     * @throws CardException if called outside INIT_EPIDEMIC or removal fails
      */
     public void play() {
-        Game.getInstance().setGameStatus(GameStatus.END_EPIDEMIC);
-        for (Player p : Game.getInstance().getPlayers()) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_EPIDEMIC) {
+            throw new CardException("Cannot apply epidemic now: phase is " + game.getGameStatus());
+        }
+        for (Player p : game.getPlayers()) {
             Board board = p.getTruck();
             List<HousingUnit> housingUnits = board.getHousingUnits();
-            List<Boolean> visited = new ArrayList<>();
             int length = housingUnits.size();
-
-            /**
-             * Initialize the visited list with false for each housing unit.
-             */
+            boolean[] connected = new boolean[length];
+            // Determine connected pairs
             for (int i = 0; i < length; i++) {
-                visited.add(false);
-            }
-
-            /**
-             * Mark units as true in visited if they are occupied and connected to another occupied unit.
-             */
-            for (int i = 0; i < length; i++) {
-                int j = i + 1;
-                HousingUnit unitI = housingUnits.get(i);
-                if (unitI.getNumAstronaut() > 0 || unitI.getAlien() != null) {
-                    while (j < length) {
-                        HousingUnit unitJ = housingUnits.get(j);
-                        if (unitJ.getNumAstronaut() > 0 || unitJ.getAlien() != null) {
-                            int coordXi = unitI.getX();
-                            int coordYi = unitI.getY();
-                            int coordXj = unitJ.getX();
-                            int coordYj = unitJ.getY();
-                            if (board.areTilesConnected(coordXi, coordYi, coordXj, coordYj)) {
-                                if (!visited.get(i)) {
-                                    visited.set(i, true);
-                                }
-                                if (!visited.get(j)) {
-                                    visited.set(j, true);
-                                }
-                            }
+                HousingUnit ui = housingUnits.get(i);
+                if (ui.getNumAstronaut() > 0 || ui.getAlien() != null) {
+                    for (int j = i + 1; j < length; j++) {
+                        HousingUnit uj = housingUnits.get(j);
+                        if ((uj.getNumAstronaut() > 0 || uj.getAlien() != null)
+                                && board.areTilesConnected(ui.getX(), ui.getY(), uj.getX(), uj.getY())) {
+                            connected[i] = true;
+                            connected[j] = true;
                         }
-                        j++;
                     }
                 }
             }
-
-            /**
-             * Reduce one occupant from each housing unit marked in visited and reset the flag.
-             */
+            // Remove occupants
             for (int i = 0; i < length; i++) {
-                if (visited.get(i)) {
-                    housingUnits.get(i).reduceOccupants(1);
-                    visited.set(i, false);
+                if (connected[i]) {
+                    try {
+                        housingUnits.get(i).reduceOccupants(1);
+                    } catch (IllegalArgumentException e) {
+                        throw new CardException("Epidemic removal failed on housing unit at index " + i + ": " + e.getMessage());
+                    }
                 }
             }
         }
+        // finalize
         Game.getInstance().setGameStatus(GameStatus.Playing);
     }
 
+    /**
+     * Provides help text for the Epidemic card. No player commands are available.
+     *
+     * @return help message
+     */
     public String help() {
-        Game game = Game.getInstance();
-        GameStatus status = game.getGameStatus();
-        return switch (status) {
-            case INIT_EPIDEMIC   -> "Available commands: PLAY";
-            default -> "No commands available in current phase.";
-        };
+        return "This card triggers immediately: no commands available.";
     }
 
+    @Override
+    public Object call(Visitor visitor) {
+        return visitor.visitForEpidemic(this);
+    }
 }
