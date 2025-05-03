@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
-import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForMeteorSwarm;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -14,32 +14,21 @@ import java.util.*;
  * <p>
  * Upon initialization, rolls two dice for each meteor to determine its impact line,
  * stores the result in the meteor, and fires an event for each meteor.
- * During play, applies each meteor's impact to every player's truck.
+ * During resolution, players call the same command (e.g., ATTIVACANNONE or ATTIVASCUDO),
+ * which registers them as ready. Once all have called it, one meteor fires and the set resets.
+ * The process repeats until all meteors have impacted.
  * </p>
  */
 public class MeteorSwarm extends Card {
-    /**
-     * List of meteors in the order they will impact (top-to-bottom, left-to-right).
-     */
     private final List<Meteor> meteors;
     private final Set<String> resolvers = new HashSet<>();
+    private int currentIndex;
 
-    /**
-     * Constructs a MeteorSwarm card with the specified difficulty level and meteors.
-     *
-     * @param level   the difficulty level of this card
-     * @param meteors the list of meteors, ordered by impact sequence
-     */
     public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
-        this.meteors = meteors;
+        this.meteors = new ArrayList<>(meteors);
     }
 
-    /**
-     * Returns a defensive copy of the meteor list.
-     *
-     * @return a new list containing all meteors
-     */
     public List<Meteor> getMeteors() {
         return new ArrayList<>(meteors);
     }
@@ -50,42 +39,54 @@ public class MeteorSwarm extends Card {
     }
 
     /**
-     * Initializes the play phase for the Meteor Swarm.
-     * Rolls two dice for each meteor to set its impact line,
-     * stores the result in the meteor, and fires an event to notify listeners.
+     * Rolls dice for each meteor, sets impact lines, fires events, and enters INIT_METEORSWARM.
      */
     public void initPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
-
-        for (Meteor meteor : meteors) {
-            int impactLine = Utility.roll2to12();
-            meteor.setImpactLine(impactLine);
-            game.fireEvent(new EventForMeteorSwarm(
-                    game.getGameStatus(),
-                    Collections.singletonList(meteor),
-                    impactLine
-            ));
+        resolvers.clear();
+        currentIndex = 0;
+        for (Meteor m : meteors) {
+            int line = Utility.roll2to12();
+            m.setImpactLine(line);
+            game.fireEvent(new EventForMeteorSwarm(game.getGameStatus(), List.of(m), line));
         }
     }
 
     /**
-     * Executes the Meteor Swarm effect.
-     * Applies each stored meteor impact line to every player's truck.
-     *
+     * Registers the current player as ready, and if all players are ready, fires the next meteor.
+     * Must be called in INIT_METEORSWARM phase by each player.
      */
-    public void applyEffect(String username) {
-        resolvers.add(username);
-        List<Player> players = Game.getInstance().getPlayers();
-        if(resolvers.size() == players.size()){
-            for (Meteor meteor : meteors) {
-                int impactLine = meteor.getImpactLine();
-                for (Player player : players) {
-                    player.getTruck().handleMeteor(meteor, impactLine);
-                }
-            }
+    public void ready(String username) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
+            throw new CardException("Cannot activate meteor swarm now: phase is " + game.getGameStatus());
         }
-        Game.getInstance().setGameStatus(GameStatus.Playing);
+        resolvers.add(username);
+        if (resolvers.size() < game.getPlayers().size()) {
+            return; // wait for all players
+        }
+        // Fire one meteor
+        Meteor meteor = meteors.get(currentIndex);
+        int line = meteor.getImpactLine();
+        for (Player p : game.getPlayers()) {
+            p.getTruck().handleMeteor(meteor, line);
+        }
+        currentIndex++;
+        resolvers.clear();
+        // Advance phase if done
+        if (currentIndex >= meteors.size()) {
+            game.setGameStatus(GameStatus.Playing);
+        }
     }
 
+    /**
+     * Returns available commands for the Meteor Swarm card.
+     */
+    public String help() {
+        if (Game.getInstance().getGameStatus() == GameStatus.INIT_METEORSWARM) {
+            return "Available commands: READY, ATTIVACANNONE, ATTIVASCUDO";
+        }
+        return "No commands available in current phase.";
+    }
 }
