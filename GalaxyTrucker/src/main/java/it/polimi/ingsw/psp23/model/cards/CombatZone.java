@@ -28,6 +28,7 @@ public class CombatZone extends Card {
     private int countGood;
     private String playerMin;
     private String loserSecondChallenge;
+    private int cannonShotIndex;
 
     public CombatZone(int level, int daysLost, int goodsLost, int membersLost, List<Challenge> penalties, List<CannonShot> cannonshot) {
         super(level);
@@ -39,6 +40,7 @@ public class CombatZone extends Card {
         this.countMember = 0;
         this.countGood = 0;
         this.playerMin = null;
+        this.cannonShotIndex = 0;
     }
 
     public List<Challenge> getPenalties() {
@@ -88,6 +90,7 @@ public class CombatZone extends Card {
         return playerTmp;
     }
 
+
     private Player findMinEngineStrength() {
         List<Player> players = Game.getInstance().getPlayers();
         int tmp = players.get(0).getTruck().calculateEngineStrength();
@@ -101,6 +104,50 @@ public class CombatZone extends Card {
         return playerTmp;
     }
 
+    public void activeCannon(String username, int i , int j, int batteryx, int batteryy){
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.INIT_COMBATZONE)) {
+            throw new CardException("Not available in the current state");
+        }
+
+        Game game = Game.getInstance();
+        if(!username.equals(game.getCurrentPlayer().getNickname())) {
+            throw new CardException("Not "+ username + "'s turn");
+        }
+        game.getPlayerFromNickname(username).getTruck().reduceBatteries(batteryx, batteryy, 1);
+        game.getPlayerFromNickname(username).getTruck().activeCannon(i, j);
+
+    }
+
+    public void activeShield(String username, int i , int j, int batteryx, int batteryy){
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.THIRD_COMBATZONE)) {
+            throw new CardException("Not available in the current state");
+        }
+
+        if(!playerMin.equals(username)) {
+            throw new CardException("Not the correct player");
+        }
+
+        Game game = Game.getInstance();
+
+        game.getPlayerFromNickname(username).getTruck().reduceBatteries(batteryx,batteryy,1);
+        game.getPlayerFromNickname(username).getTruck().activeShield(i, j);
+
+    }
+
+    public void activeEngine(String username, int i , int j, int batteryx, int batteryy){
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.INIT_COMBATZONE)) {
+            throw new CardException("Not available in the current state");
+        }
+
+        Game game = Game.getInstance();
+        if(!username.equals(game.getCurrentPlayer().getNickname())) {
+            throw new CardException("Not "+ username + "'s turn");
+        }
+        game.getPlayerFromNickname(username).getTruck().reduceBatteries(batteryx, batteryy, 1);
+        game.getPlayerFromNickname(username).getTruck().activeEngine(i, j);
+
+    }
+
     public void reduceCrew(String username, int i, int j, int num) {
 
         if (Game.getInstance().getGameStatus() != GameStatus.COMBATZONE_HUMANS) {
@@ -110,6 +157,9 @@ public class CombatZone extends Card {
         if (!username.equals(loserSecondChallenge)) {
             throw new CardException("User '" + username + "' is not the loser of the second challenge");
         }
+
+
+
         if (countMember < membersLost && Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
@@ -134,7 +184,8 @@ public class CombatZone extends Card {
                 default -> throw new CardException("Component at [" + i + "][" + j + "] is not a housing unit");
             }
             if (countMember == membersLost) {
-                Game.getInstance().setGameStatus(GameStatus.Playing);
+                Game.getInstance().setGameStatus(GameStatus.THIRD_COMBATZONE);
+                thirdChallenge();
             }
         } else if (countMember == membersLost) {
             throw new CardException("I membri da perdere sono esauriti!");
@@ -146,7 +197,6 @@ public class CombatZone extends Card {
     }
 
     public void removePreciousItem(String username, int i, int j, int item) {
-
         if (Game.getInstance().getGameStatus() != GameStatus.COMBATZONE_GOODS) {
             throw new CardException("It's not required to remove goods");
         }
@@ -154,6 +204,7 @@ public class CombatZone extends Card {
         if (!username.equals(loserSecondChallenge)) {
             throw new CardException("User '" + username + "' is not the loser of the second challenge");
         }
+
 
         if (countGood < goodsLost && Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
@@ -184,7 +235,8 @@ public class CombatZone extends Card {
             }
 
             if (countGood == goodsLost) {
-                Game.getInstance().setGameStatus(GameStatus.Playing);
+                Game.getInstance().setGameStatus(GameStatus.THIRD_COMBATZONE);
+                thirdChallenge();
             }
         } else if (countGood == goodsLost) {
             throw new CardException("Le merci da perdere sono esaurite!");
@@ -215,6 +267,10 @@ public class CombatZone extends Card {
     }
 
     public void firstChallenge() {
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.FIRST_COMBATZONE)) {
+            throw new CardException("Not available in the current state");
+        }
+        Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().get(0));
         int impactLine;
         int pos;
         int size = Game.getInstance().getPlayers().size();
@@ -231,6 +287,7 @@ public class CombatZone extends Card {
         } else {
             throw new CardException("Eccezione in combatzone ");
         }
+        secondChallenge();
     }
 
     public void secondChallenge() {
@@ -247,32 +304,30 @@ public class CombatZone extends Card {
 
     public void thirdChallenge() {
         //inizio terza sfida
-
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.THIRD_COMBATZONE)) {
+            throw new CardException("Not available in the current state");
+        }
         int impactLine;
-        Player playerTmp;
-
+        Game game = Game.getInstance();
         if (penalties.get(2) == Challenge.Members) {
-            playerTmp = findMinMembers();
-            int i = 0;
-            for (CannonShot c : cannonShot) {
+            playerMin = findMinMembers().getNickname();
+            CannonShot c = cannonShot.get(cannonShotIndex);
                 impactLine = Utility.roll2to12();
-                playerTmp.getTruck().handleCannonShot(c, impactLine);
-                i++;
-            }
-
-
-        } else if (penalties.get(2) == Challenge.CannonStrength) {
-            playerTmp = findMinCannonStrength();
-            int i = 0;
-            for (CannonShot c : cannonShot) {
+                game.getPlayerFromNickname(playerMin).getTruck().handleCannonShot(c, impactLine);
+                cannonShotIndex++;
+        }
+        else if (penalties.get(2) == Challenge.CannonStrength) {
+            playerMin = findMinCannonStrength().getNickname();
+            CannonShot c = cannonShot.get(cannonShotIndex);
                 impactLine = Utility.roll2to12();
-                playerTmp.getTruck().handleCannonShot(c, impactLine);
-                i++;
-            }
+                game.getPlayerFromNickname(playerMin).getTruck().handleCannonShot(c, impactLine);
+                cannonShotIndex++;
         } else {
             throw new CardException("Eccezione in combatzone");
         }
-        endPlay();
+        if(cannonShotIndex == (cannonShot.size()-1)) {
+            endPlay();
+        }
     }
 
 
@@ -287,7 +342,35 @@ public class CombatZone extends Card {
             case INIT_COMBATZONE   -> "Available commands: ATTIVACANNONI, ATTIVAMOTORI";
             case COMBATZONE_GOODS  -> "Available commands: REMOVEPRECIOUSITEMS";
             case COMBATZONE_HUMANS -> "Available commands: REMOVECREW";
+            case THIRD_COMBATZONE -> "Available commands: ATTIVASCUDI";
             default -> "No commands available in current phase.";
         };
+    }
+
+    public void ready(String username) {
+        if (Game.getInstance().getGameStatus().equals(GameStatus.THIRD_COMBATZONE)) {
+            if(!username.equals(playerMin)) {
+                throw new CardException("Not the correct player calling ready");
+            }
+            thirdChallenge();
+        } else {
+            if (!Game.getInstance().getGameStatus().equals(GameStatus.INIT_COMBATZONE)) {
+                throw new CardException("Not available in the current state");
+            }
+            if (!username.equals(Game.getInstance().getCurrentPlayer().getNickname())) {
+                throw new CardException("It's not your turn to declare to be ready");
+            } else {
+                Game game = Game.getInstance();
+                Player p = Game.getInstance().getPlayerFromNickname(username);
+
+                if (!(game.getPlayers().indexOf(p) == (game.getPlayers().size() - 1))) {
+                    game.setCurrentPlayer(game.getPlayers().get(game.getPlayers().indexOf(p) + 1));
+                } else {
+                    game.setCurrentPlayer(game.getPlayers().get(0));
+                    game.setGameStatus(GameStatus.FIRST_COMBATZONE);
+                    firstChallenge();
+                }
+            }
+        }
     }
 }
