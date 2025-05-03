@@ -29,6 +29,7 @@ public class OpenSpace extends Card{
             int potenzaMotrice = p.getTruck().calculateEngineStrength();
             Utility.updatePosition(players, Game.getInstance().getPlayers().indexOf(p) , potenzaMotrice);
         }
+        Game.getInstance().setGameStatus(GameStatus.Playing);
     }
 
 }
