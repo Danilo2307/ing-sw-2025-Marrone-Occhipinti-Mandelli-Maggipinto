@@ -16,7 +16,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CombatZone extends Card{
+public class CombatZone extends Card {
     // Danilo
 
     private final int daysLost;
@@ -27,8 +27,9 @@ public class CombatZone extends Card{
     private int countMember;
     private int countGood;
     private String playerMin;
+    private String loserSecondChallenge;
 
-    public CombatZone(int level,int daysLost, int goodsLost, int membersLost, List<Challenge> penalties, List<CannonShot> cannonshot) {
+    public CombatZone(int level, int daysLost, int goodsLost, int membersLost, List<Challenge> penalties, List<CannonShot> cannonshot) {
         super(level);
         this.daysLost = daysLost;
         this.goodsLost = goodsLost;
@@ -60,7 +61,7 @@ public class CombatZone extends Card{
         return new ArrayList<CannonShot>(cannonShot);
     }
 
-    private Player findMinMembers(){
+    private Player findMinMembers() {
         List<Player> players = Game.getInstance().getPlayers();
         int tmp = players.get(0).getTruck().calculateCrew();
         Player playerTmp = players.get(0);
@@ -74,7 +75,7 @@ public class CombatZone extends Card{
     }
 
     //prima di questo metodo il player deve chiamare activate cannon in modo da aumentare la sua potenza di fuoco
-    private Player findMinCannonStrength(){
+    private Player findMinCannonStrength() {
         List<Player> players = Game.getInstance().getPlayers();
         double tmp = players.get(0).getTruck().calculateCannonStrength();
         Player playerTmp = players.get(0);
@@ -87,7 +88,7 @@ public class CombatZone extends Card{
         return playerTmp;
     }
 
-    private Player findMinEngineStrength(){
+    private Player findMinEngineStrength() {
         List<Player> players = Game.getInstance().getPlayers();
         int tmp = players.get(0).getTruck().calculateEngineStrength();
         Player playerTmp = players.get(0);
@@ -100,8 +101,16 @@ public class CombatZone extends Card{
         return playerTmp;
     }
 
-    public void reduceCrew(int i, int j, int num) {
-        if(countMember < membersLost && Game.getInstance().getCurrentPlayer().equals(playerMin)){
+    public void reduceCrew(String username, int i, int j, int num) {
+
+        if (Game.getInstance().getGameStatus() != GameStatus.COMBATZONE_HUMANS) {
+            throw new CardException("It's not required to remove crew");
+        }
+
+        if (!username.equals(loserSecondChallenge)) {
+            throw new CardException("User '" + username + "' is not the loser of the second challenge");
+        }
+        if (countMember < membersLost && Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
 //        if ((!board.isValid(i, j)) || board.isFree(i,j))
@@ -117,28 +126,36 @@ public class CombatZone extends Card{
                             // controllo rimozione implementato in reduceOccupants
                             board.getHousingUnits().get(index).reduceOccupants(num);
                             countMember += num;
-                        }
-                        catch (IllegalArgumentException e) {
-                            throw new CardException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+                        } catch (IllegalArgumentException e) {
+                            throw new CardException("Failed to remove " + num + "crew members from HousingUnit at Ship[" + i + "][" + j + "]" + e.getMessage());
                         }
                     }
                 }
-                default -> throw new CardException("Component at ["+i+"]["+j+"] is not a housing unit");
+                default -> throw new CardException("Component at [" + i + "][" + j + "] is not a housing unit");
             }
-        }
-        else if(countMember == membersLost){
+            if (countMember == membersLost) {
+                Game.getInstance().setGameStatus(GameStatus.Playing);
+            }
+        } else if (countMember == membersLost) {
             throw new CardException("I membri da perdere sono esauriti!");
-        }
-        else if(!Game.getInstance().getCurrentPlayer().equals(playerMin)){
+        } else if (!Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             throw new CardException("Il player che ha meno potenza motrice è" + playerMin);
-        }
-        else if(penalties.get(1) == Challenge.Goods){
-            throw new CardException("La tua penalità è perdere le tue" + getGoodsLost() + "merci più importanti!" );
+        } else if (penalties.get(1) == Challenge.Goods) {
+            throw new CardException("La tua penalità è perdere le tue" + getGoodsLost() + "merci più importanti!");
         }
     }
 
-    public void removePreciousItem(int i, int j, int item) {
-        if(countGood < goodsLost && Game.getInstance().getCurrentPlayer().equals(playerMin)) {
+    public void removePreciousItem(String username, int i, int j, int item) {
+
+        if (Game.getInstance().getGameStatus() != GameStatus.COMBATZONE_GOODS) {
+            throw new CardException("It's not required to remove goods");
+        }
+
+        if (!username.equals(loserSecondChallenge)) {
+            throw new CardException("User '" + username + "' is not the loser of the second challenge");
+        }
+
+        if (countGood < goodsLost && Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             Board board = Game.getInstance().getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
             Component tile = ship[i][j];
@@ -158,45 +175,46 @@ public class CombatZone extends Card{
                     // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
                     try {
                         board.getContainers().get(index).loseItem(board.getContainers().get(index).getItems().get(item));
-                        countGood ++;
+                        countGood++;
                     } catch (ContainerException e) {
                         throw new CardException("Cannon remove precious item in Container at Ship[" + i + "][" + j + "]:" + e.getMessage());
                     }
                 }
                 default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
             }
-        }
-        else if(countGood == goodsLost){
+
+            if (countGood == goodsLost) {
+                Game.getInstance().setGameStatus(GameStatus.Playing);
+            }
+        } else if (countGood == goodsLost) {
             throw new CardException("Le merci da perdere sono esaurite!");
-        }
-        else if(!Game.getInstance().getCurrentPlayer().equals(playerMin)){
+        } else if (!Game.getInstance().getCurrentPlayer().equals(playerMin)) {
             throw new CardException("Il player che ha meno potenza motrice è" + playerMin);
-        }
-        else if(penalties.get(1) == Challenge.Members){
-            throw new CardException("La tua penalità è perdere" + getMembersLost() + "membri dell'equipaggio!" );
+        } else if (penalties.get(1) == Challenge.Members) {
+            throw new CardException("La tua penalità è perdere" + getMembersLost() + "membri dell'equipaggio!");
         }
     }
 
 
     @Override
-    public Object call(Visitor visitor){
+    public Object call(Visitor visitor) {
         return visitor.visitForCombatZone(this);
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico, int index){
-        if(index < 1 || index > 3) {
+    public Object call(VisitorParametrico visitorParametrico, int index) {
+        if (index < 1 || index > 3) {
             throw new IndexOutOfBoundsException("Eccezione lanciata nel metodo setIndex presente in combatZone");
         }
         return visitorParametrico.visitForCombatZone(this, index);
     }
 
-    public void initPlay(){
+    public void initPlay() {
         Game.getInstance().setGameStatus(GameStatus.INIT_COMBATZONE);
         Game.getInstance().fireEvent(new EventForCombatZone(Game.getInstance().getGameStatus(), daysLost, goodsLost, membersLost, penalties, cannonShot));
     }
 
-   public void play() {
+    public void firstChallenge() {
         int impactLine;
         int pos;
         int size = Game.getInstance().getPlayers().size();
@@ -213,11 +231,26 @@ public class CombatZone extends Card{
         } else {
             throw new CardException("Eccezione in combatzone ");
         }
+    }
 
+    public void secondChallenge() {
         //inizio seconda sfida
         playerMin = findMinEngineStrength().getNickname();
+        loserSecondChallenge = playerMin;
+        if (penalties.get(1) == Challenge.Members) {
+            Game.getInstance().setGameStatus(GameStatus.COMBATZONE_HUMANS);
+        } else {
+            Game.getInstance().setGameStatus(GameStatus.COMBATZONE_GOODS);
+        }
 
+    }
+
+    public void thirdChallenge() {
         //inizio terza sfida
+
+        int impactLine;
+        Player playerTmp;
+
         if (penalties.get(2) == Challenge.Members) {
             playerTmp = findMinMembers();
             int i = 0;
@@ -242,7 +275,19 @@ public class CombatZone extends Card{
         endPlay();
     }
 
+
     public void endPlay(){
-        Game.getInstance().setGameStatus(GameStatus.END_COMBATZONE);
+        Game.getInstance().setGameStatus(GameStatus.Playing);
+    }
+
+    public String help() {
+        Game game = Game.getInstance();
+        GameStatus status = game.getGameStatus();
+        return switch (status) {
+            case INIT_COMBATZONE   -> "Available commands: ATTIVACANNONI, ATTIVAMOTORI";
+            case COMBATZONE_GOODS  -> "Available commands: REMOVEPRECIOUSITEMS";
+            case COMBATZONE_HUMANS -> "Available commands: REMOVECREW";
+            default -> "No commands available in current phase.";
+        };
     }
 }
