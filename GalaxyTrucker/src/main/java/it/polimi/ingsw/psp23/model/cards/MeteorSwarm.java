@@ -83,6 +83,11 @@ public class MeteorSwarm extends Card {
                 player.getTruck().handleMeteor(meteor, impactLine);
             }
         }
+        Game.getInstance().setGameStatus(GameStatus.Playing);
+    }
+
+    public String help() {
+        return "No commands available in current phase.";
     }
 
 }
