@@ -31,6 +31,7 @@ public class Epidemic extends Card {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_EPIDEMIC);
         game.fireEvent(new EventForEpidemic(game.getGameStatus()));
+        applyEffect();
     }
 
     /**
@@ -40,11 +41,8 @@ public class Epidemic extends Card {
      *
      * @throws CardException if called outside INIT_EPIDEMIC or removal fails
      */
-    public void play() {
+    public void applyEffect() {
         Game game = Game.getInstance();
-        if (game.getGameStatus() != GameStatus.INIT_EPIDEMIC) {
-            throw new CardException("Cannot apply epidemic now: phase is " + game.getGameStatus());
-        }
         for (Player p : game.getPlayers()) {
             Board board = p.getTruck();
             List<HousingUnit> housingUnits = board.getHousingUnits();

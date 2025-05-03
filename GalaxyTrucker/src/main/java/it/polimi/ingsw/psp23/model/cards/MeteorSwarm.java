@@ -13,10 +13,10 @@ import java.util.*;
  * Represents a Meteor Swarm adventure card.
  * <p>
  * Upon initialization, rolls two dice for each meteor to determine its impact line,
- * stores the result in the meteor, and fires an event for each meteor.
- * During resolution, players call the same command (e.g., ATTIVACANNONE or ATTIVASCUDO),
- * which registers them as ready. Once all have called it, one meteor fires and the set resets.
- * The process repeats until all meteors have impacted.
+ * fires an event for each, then enters INIT_METEORSWARM.
+ * During resolution, players may call ATTIVACANNONE or ATTIVASCUDO in any order,
+ * then READY(username) to confirm. Once all have confirmed, one meteor impacts.
+ * The cycle repeats until all meteors have impacted.
  * </p>
  */
 public class MeteorSwarm extends Card {
@@ -54,19 +54,47 @@ public class MeteorSwarm extends Card {
     }
 
     /**
-     * Registers the current player as ready, and if all players are ready, fires the next meteor.
-     * Must be called in INIT_METEORSWARM phase by each player.
+     * Activates a cannon at the given coordinates.
+     * Can be called by any player during INIT_METEORSWARM.
+     */
+    public void activeCannon(String username, int i, int j) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
+            throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
+        }
+        game.getPlayerFromNickname(username).getTruck().activeCannon(i, j);
+    }
+
+    /**
+     * Activates a shield at the given coordinates.
+     * Can be called by any player during INIT_METEORSWARM.
+     */
+    public void activeShield(String username, int i, int j) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
+            throw new CardException("Cannot activate shield now: phase is " + game.getGameStatus());
+        }
+        game.getPlayerFromNickname(username).getTruck().activeShield(i, j);
+    }
+
+    /**
+     * READY command: registers the player as ready. Once all players are ready,
+     * one meteor impacts and readiness resets.
+     * @param username the player confirming readiness
      */
     public void ready(String username) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
-            throw new CardException("Cannot activate meteor swarm now: phase is " + game.getGameStatus());
+            throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
+        }
+        if (!game.getPlayers().contains(username)) {
+            throw new CardException("Unknown player: " + username);
         }
         resolvers.add(username);
         if (resolvers.size() < game.getPlayers().size()) {
-            return; // wait for all players
+            return; // wait for all
         }
-        // Fire one meteor
+        // All ready: impact one meteor
         Meteor meteor = meteors.get(currentIndex);
         int line = meteor.getImpactLine();
         for (Player p : game.getPlayers()) {
@@ -74,7 +102,6 @@ public class MeteorSwarm extends Card {
         }
         currentIndex++;
         resolvers.clear();
-        // Advance phase if done
         if (currentIndex >= meteors.size()) {
             game.setGameStatus(GameStatus.Playing);
         }
@@ -85,7 +112,7 @@ public class MeteorSwarm extends Card {
      */
     public String help() {
         if (Game.getInstance().getGameStatus() == GameStatus.INIT_METEORSWARM) {
-            return "Available commands: READY, ATTIVACANNONE, ATTIVASCUDO";
+            return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY";
         }
         return "No commands available in current phase.";
     }

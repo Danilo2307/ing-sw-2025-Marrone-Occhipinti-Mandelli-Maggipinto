@@ -6,6 +6,7 @@ module it.polimi.ingsw.psp23 {
     requires java.desktop;
     requires java.rmi;
     requires jdk.jfr;
+    requires jdk.jshell;
 
     opens it.polimi.ingsw.psp23 to javafx.fxml;
     exports it.polimi.ingsw.psp23;

@@ -6,205 +6,334 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
-import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
-import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents the Smugglers adventure card, where players compare
- * cannon strength against the smugglers and win prizes or suffer penalties.
+ * Represents the Smugglers adventure card.
+ * Players compare their cannon strength against smugglers to win prizes or
+ * suffer penalties. Manages the phases INIT_SMUGGLERS and END_SMUGGLERS.
  */
 public class Smugglers extends Card {
 
-    /** Required cannon strength to defeat the smugglers. */
+    /**
+     * Required cannon strength to defeat the smugglers.
+     */
     private final int firePower;
-    /** Number of items the smugglers steal from a losing player. */
-    private final int numItemsStolen;
-    /** Number of flight days lost when claiming the reward. */
-    private final int days;
-    /** List of items awarded to the winning player. */
-    private final List<Item> prize;
-    /** Nickname of the winning player, if any. */
-    private String winner = null;
-    /** Nicknames of the losing players. */
-    private List<String> losers = new ArrayList<>();
-    private int loadedCount;
-    private int losedCount;
 
     /**
-     * Constructs a Smugglers card with specified level and parameters.
-     *
-     * @param level the adventure difficulty level
-     * @param firePower the smugglers' firepower
-     * @param numItemsStolen the number of items stolen on defeat
-     * @param days the days lost when claiming the prize
-     * @param prize list of items awarded to the victor
+     * Number of items smugglers steal from each losing player.
      */
-    public Smugglers(int level, int firePower, int numItemsStolen, int days, List<Item> prize) {
+    private final int numItemsStolen;
+
+    /**
+     * Flight days lost when claiming the reward.
+     */
+    private final int days;
+
+    /**
+     * Items awarded to the winning player.
+     */
+    private final List<Item> prize;
+
+    /**
+     * Nickname of the winning player, or null if not determined.
+     */
+    private String winner = null;
+
+    /**
+     * Nicknames of players who failed to defeat smugglers.
+     */
+    private final List<String> losers = new ArrayList<>();
+
+    /**
+     * Tracks how many items have been stolen per player index.
+     */
+    private List<Integer> lostCount;
+
+    /**
+     * Tracks how many prize items have been loaded by the winner.
+     */
+    private int loadedCount;
+
+    /**
+     * Constructs a Smugglers card with the specified parameters.
+     *
+     * @param level           the difficulty level of this card
+     * @param firePower       the cannon strength threshold to win
+     * @param numItemsStolen  the number of items stolen on defeat
+     * @param days            the days lost penalty when claiming prize
+     * @param prize           the list of items awarded to the victor
+     */
+    public Smugglers(int level,
+                     int firePower,
+                     int numItemsStolen,
+                     int days,
+                     List<Item> prize) {
         super(level);
         this.firePower = firePower;
         this.numItemsStolen = numItemsStolen;
         this.days = days;
         this.prize = prize;
         this.loadedCount = 0;
-        this.losedCount = 0;
-    }
 
-    /** @return the smugglers' firepower threshold */
-    public int getFirePower() {
-        return firePower;
-    }
-
-    /** @return number of items the smugglers will steal on defeat */
-    public int getNumItemsStolen() {
-        return numItemsStolen;
-    }
-
-    /** @return number of flight days lost when claiming the prize */
-    public int getDays() {
-        return days;
+        int playerCount = Game.getInstance().getPlayers().size();
+        this.lostCount = new ArrayList<>(Collections.nCopies(playerCount, 0));
     }
 
     /**
-     * Returns a copy of the prize list for the winner.
-     *
-     * @return list of prize items
+     * @return the cannon strength needed to defeat smugglers
      */
-    public List<Item> getPrize() {
-        return new ArrayList<>(prize);
+    public int getFirePower() { return firePower; }
+
+    /**
+     * @return the number of items stolen from a losing player
+     */
+    public int getNumItemsStolen() { return numItemsStolen; }
+
+    /**
+     * @return the days lost penalty when claiming the reward
+     */
+    public int getDays() { return days; }
+
+    /**
+     * Returns a defensive copy of the prize list for the winner.
+     *
+     * @return copy of prize items
+     */
+    public List<Item> getPrize() { return new ArrayList<>(prize); }
+
+    /**
+     * Activates a cannon shot during the INIT_SMUGGLERS phase.
+     *
+     * @param username the current player's nickname
+     * @param row      the row coordinate for the shot
+     * @param col      the column coordinate for the shot
+     * @throws CardException if phase is invalid or wrong player
+     */
+    public void activeCannon(String username, int row, int col) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_SMUGGLERS) {
+            throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
+        }
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+        }
+        game.getPlayerFromNickname(username)
+                .getTruck()
+                .activeCannon(row, col);
     }
 
-    public void loadGoods(int i, int j){
-        if(loadedCount < prize.size() && Game.getInstance().getCurrentPlayer().equals(winner)){
-            if(loadedCount == 0){
-                Utility.updatePosition(Game.getInstance().getPlayers(), Game.getInstance().getCurrentPlayerIndex(), -days);
-            }
-            Board board = Game.getInstance().getCurrentPlayer().getTruck();
-            Component[][] ship = board.getShip();
-            Component tile = ship[i][j];
-            switch (tile) {
-                case Container container -> {
-                    int index = board.getContainers().indexOf(container);
-                    if (index == -1) {
-                        throw new CardException("Container not found in 'containers' list: error in loadGoods of Board");
-                    }
-                    try {
-                        // loadItem controlla anche se l'item può essere caricato in quello specifico container
-                        board.getContainers().get(index).loadItem(prize.get(loadedCount));
-                        loadedCount ++;
-
-                    } catch (CardException c) {
-                        // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
-                        throw new CardException("Item at index cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
-                    }
-
+    /**
+     * Loads prize items onto the winner's ship during the END_SMUGGLERS phase.
+     * Applies days penalty only on first load call.
+     *
+     * @param username the winning player's nickname
+     * @param row      the row of target container
+     * @param col      the column of target container
+     * @throws CardException if phase is invalid, wrong player, or loading fails
+     */
+    public void loadGoods(String username, int row, int col) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
+            throw new CardException("Cannot load goods");
+        }
+        if (!username.equals(winner)) {
+            throw new CardException("Player is not winner");
+        }
+        if (loadedCount == 0) {
+            int idx = Game.getInstance().getPlayers().indexOf(username);
+            Utility.updatePosition(Game.getInstance().getPlayers(), idx, -days);
+        }
+        Board board = game.getCurrentPlayer().getTruck();
+        Component tile = board.getShip()[row][col];
+        if (!(tile instanceof Container container)) {
+            throw new CardException("Component at [" + row + "][" + col + "] is not a container");
+        }
+        int cidx = board.getContainers().indexOf(container);
+        if (cidx == -1) {
+            throw new CardException("Container not found in list");
+        }
+        try {
+            container.loadItem(prize.get(loadedCount));
+            loadedCount++;
+            if (loadedCount == prize.size() - 1) {
+                winner = null;
+                if (allItemsStolen()) {
+                    game.setGameStatus(GameStatus.Playing);
                 }
-                default -> throw new CardException("Component at ["+i+"]["+j+"] is not a container");
             }
-        }
-        else{
-            throw new CardException("Merci esaurite");
-        }
-    }
-
-    public void removePreciousItem(int i, int j, int item) {
-        /// TODO: capire getCurrentPlayer perchè dovrebbero farlo tutte in parallelo
-        if(losedCount < numItemsStolen && losers.contains(Game.getInstance().getCurrentPlayer())){
-            Board board = Game.getInstance().getCurrentPlayer().getTruck();
-            Component[][] ship = board.getShip();
-            Component tile = ship[i][j];
-            switch (tile) {
-                case Container c -> {
-                    // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
-                    // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
-                    int index = board.getContainers().indexOf(ship[i][j]);
-                    // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
-                    if (index == -1) {
-                        throw new CardException("Invalid coordinates: ship[i][j] does not contain a container.");
-                    }
-                    // Controllo che l'item sia tra i più preziosi attualmente a bordo
-                    else if (!board.isMostPrecious(board.getContainers().get(index).getItems().get(item))) {
-                        throw new CardException("Item" + board.getContainers().get(index).getItems().get(item).getColor() + " at Container[" + i + "][" + j + "] is not among the most precious: you must remove the most valuable item first.");
-                    }
-                    // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
-                    try {
-                        board.getContainers().get(index).loseItem(board.getContainers().get(index).getItems().get(item));
-                        losedCount ++;
-                    } catch (ContainerException e) {
-                        throw new CardException("Cannon remove precious item in Container at Ship[" + i + "][" + j + "]:" + e.getMessage());
-                    }
-                }
-                default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
-            }
-        }
-        else if(losedCount == numItemsStolen){
-            throw new CardException("Le merci da perdere sono esaurite!");
-        }
-        else if(!losers.contains(Game.getInstance().getCurrentPlayer())){
-            throw new CardException("Il player non è tra i perdenti");
+        } catch (CardException e) {
+            throw new CardException("Item cannot be loaded: " + e.getMessage());
         }
     }
 
     /**
-     * Accepts a visitor for processing this card's logic.
+     * Allows the winner to skip claiming remaining prize items.
      *
-     * @param visitor the visitor handling Smugglers card
-     * @return result from the visitor
+     * @param username the winning player's nickname
+     * @throws CardException if phase is invalid or wrong player
      */
+    public void pass(String username) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
+            throw new CardException("Winner has not been determined yet");
+        }
+        if (!username.equals(winner)) {
+            throw new CardException("You did not defeat the smugglers: " + username);
+        }
+        winner = null;
+        if (allItemsStolen()) {
+            game.setGameStatus(GameStatus.Playing);
+        }
+    }
 
+    /**
+     * Checks if all items have been stolen from losing players.
+     *
+     * @return true if each player's lostCount >= numItemsStolen
+     */
+    public boolean allItemsStolen() {
+        for (int count : lostCount) {
+            if (count < numItemsStolen) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Removes a precious item from a losing player's container during END_SMUGGLERS.
+     *
+     * @param username  the losing player's nickname
+     * @param row       the row index of the container
+     * @param col       the column index of the container
+     * @param itemIndex the index of the item to remove
+     * @throws CardException if phase is invalid, wrong player, or removal fails
+     */
+    public void removePreciousItem(String username,
+                                   int row,
+                                   int col,
+                                   int itemIndex) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
+            throw new CardException("Cannot remove goods");
+        }
+        if (!losers.contains(username)) {
+            throw new CardException("Player is not loser");
+        }
+        Board board = game.getPlayerFromNickname(username).getTruck();
+        Component tile = board.getShip()[row][col];
+        if (!(tile instanceof Container container)) {
+            throw new CardException("Component at [" + row + "][" + col + "] is not a container");
+        }
+        int idx = board.getContainers().indexOf(container);
+        if (idx == -1) {
+            throw new CardException("Invalid coordinates: no container at [" + row + "][" + col + "]");
+        }
+        Item target = container.getItems().get(itemIndex);
+        if (!board.isMostPrecious(target)) {
+            throw new CardException("Item " + target.getColor() + " is not the most precious");
+        }
+        try {
+            container.loseItem(target);
+            int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
+            lostCount.set(pidx, lostCount.get(pidx) + 1);
+            if (allItemsStolen() && winner == null) {
+                game.setGameStatus(GameStatus.Playing);
+            }
+        } catch (ContainerException e) {
+            throw new CardException("Failed to remove item: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Accepts a visitor for processing this card.
+     *
+     * @param visitor the visitor for Smugglers
+     * @return visitor's result
+     */
     public Object call(Visitor visitor) {
         return visitor.visitForSmugglers(this);
     }
 
     /**
-     * Initializes play by firing an event with parameters for this card.
+     * Initializes the smugglers encounter phase and fires an event.
      */
     public void initPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
         game.fireEvent(new EventForSmugglers(
                 game.getGameStatus(),
-                firePower, numItemsStolen, prize, days
+                firePower,
+                numItemsStolen,
+                prize,
+                days
         ));
     }
 
     /**
-     * Executes the encounter: players compare their cannon strength
-     * to the smugglers' firepower in order of flight. The first
-     * player to exceed the firepower wins; all who fail are recorded
-     * as losers. Ties allow the smugglers to advance to the next player.
+     * Processes the READY command in INIT_SMUGGLERS phase.
      *
+     * @param username the player's nickname issuing READY
+     * @throws CardException if not INIT_SMUGGLERS
      */
-    public void play() {
-        List<Player> players = Game.getInstance().getPlayers();
-        for (Player p : players) {
-            if (p.getTruck().calculateCannonStrength() > firePower) {
-                winner = p.getNickname();
-                break;
-            } else if (p.getTruck().calculateCannonStrength() < firePower) {
-                losers.add(p.getNickname());
-            }
+    public void ready(String username) {
+        Game game = Game.getInstance();
+        if (game.getGameStatus() == GameStatus.INIT_SMUGGLERS) {
+            readyStartPhase(username);
+        } else {
+            throw new CardException("Invalid phase for READY: " + game.getGameStatus());
         }
-        endPlay();
     }
 
     /**
-     * Ends the Smugglers encounter and updates the game status to
-     * allow the winner to load goods or losers to pick most important goods.
+     * Core READY logic for INIT_SMUGGLERS.
+     *
+     * @param username the current player's nickname
      */
-    public void endPlay() {
+    private void readyStartPhase(String username) {
         Game game = Game.getInstance();
-        game.setGameStatus(GameStatus.END_SMUGGLERS);
-
-
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("User '" + username + "' is not the current player");
+        }
+        double power = game.getPlayerFromNickname(username)
+                .getTruck()
+                .calculateCannonStrength();
+        if (power > firePower) {
+            winner = username;
+            game.setGameStatus(GameStatus.END_SMUGGLERS);
+        } else {
+            losers.add(username);
+        }
+        if (game.getCurrentPlayerIndex() >= game.getPlayers().size()) {
+            game.setGameStatus(GameStatus.END_SMUGGLERS);
+        } else {
+            game.getNextPlayer();
+        }
     }
-
+    /**
+     * Provides usage instructions for the Smugglers card based on current game phase.
+     *
+     * @return help text listing available commands
+     */
+    public String help() {
+        GameStatus status = Game.getInstance().getGameStatus();
+        switch (status) {
+            case INIT_SMUGGLERS:
+                return "Available commands: ACTIVECANNON, READY";
+            case END_SMUGGLERS:
+                return "Available commands: LOADGOOD, PASS, REMOVEITEM";
+            default:
+                return "No commands available in current phase: " + status;
+        }
+    }
 }
