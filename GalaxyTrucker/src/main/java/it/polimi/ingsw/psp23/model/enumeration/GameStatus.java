@@ -25,4 +25,5 @@ public enum GameStatus {
     END_SLAVERS,
     END_SMUGGLERS,
     END_STARDUST,
+    END_EPIDEMIC,
 }
