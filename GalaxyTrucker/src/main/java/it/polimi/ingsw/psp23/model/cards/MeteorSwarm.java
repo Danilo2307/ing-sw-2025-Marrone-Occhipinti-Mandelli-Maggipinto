@@ -57,7 +57,7 @@ public class MeteorSwarm extends Card {
      * Registers the current player as ready, and if all players are ready, fires the next meteor.
      * Must be called in INIT_METEORSWARM phase by each player.
      */
-    public void applyEffects(String username) {
+    public void ready(String username) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot activate meteor swarm now: phase is " + game.getGameStatus());
@@ -85,7 +85,7 @@ public class MeteorSwarm extends Card {
      */
     public String help() {
         if (Game.getInstance().getGameStatus() == GameStatus.INIT_METEORSWARM) {
-            return "Available commands: ATTIVACANNONE, ATTIVASCUDO";
+            return "Available commands: READY, ATTIVACANNONE, ATTIVASCUDO";
         }
         return "No commands available in current phase.";
     }
