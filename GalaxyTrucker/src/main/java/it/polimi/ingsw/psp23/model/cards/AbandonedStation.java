@@ -110,9 +110,14 @@ public class AbandonedStation extends Card {
     /**
      * Allows passing during INIT_ABANDONEDSTATION: moves to next player or next card.
      */
-    public void pass() {
+    public void pass(String username) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) return;
+
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+        }
+
         if (game.getTurn() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {

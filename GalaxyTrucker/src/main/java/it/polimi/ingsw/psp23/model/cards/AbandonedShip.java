@@ -49,8 +49,11 @@ public class AbandonedShip extends Card {
      * If not the last player, advances to the next player's turn.
      * If the last player, skips to the next card.
      */
-    public void pass() {
+    public void pass(String username) {
         Game game = Game.getInstance();
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+        }
         if (game.getTurn() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {

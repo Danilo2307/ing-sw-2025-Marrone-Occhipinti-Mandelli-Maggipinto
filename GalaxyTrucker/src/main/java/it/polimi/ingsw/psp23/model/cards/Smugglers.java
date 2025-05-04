@@ -114,11 +114,11 @@ public class Smugglers extends Card {
      * Activates a cannon shot during the INIT_SMUGGLERS phase.
      *
      * @param username the current player's nickname
-     * @param row      the row coordinate for the shot
-     * @param col      the column coordinate for the shot
+     * @param i      the row coordinate for the shot
+     * @param j      the column coordinate for the shot
      * @throws CardException if phase is invalid or wrong player
      */
-    public void activeCannon(String username, int row, int col) {
+    public void activeCannon(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_SMUGGLERS) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
@@ -128,7 +128,7 @@ public class Smugglers extends Card {
         }
         game.getPlayerFromNickname(username)
                 .getTruck()
-                .activeCannon(row, col);
+                .activeCannon(i, j);
     }
 
     /**
@@ -136,11 +136,11 @@ public class Smugglers extends Card {
      * Applies days penalty only on first load call.
      *
      * @param username the winning player's nickname
-     * @param row      the row of target container
-     * @param col      the column of target container
+     * @param i      the row of target container
+     * @param j      the column of target container
      * @throws CardException if phase is invalid, wrong player, or loading fails
      */
-    public void loadGoods(String username, int row, int col) {
+    public void loadGoods(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot load goods");
@@ -153,9 +153,9 @@ public class Smugglers extends Card {
             Utility.updatePosition(Game.getInstance().getPlayers(), idx, -days);
         }
         Board board = game.getCurrentPlayer().getTruck();
-        Component tile = board.getShip()[row][col];
+        Component tile = board.getShip()[i][j];
         if (!(tile instanceof Container container)) {
-            throw new CardException("Component at [" + row + "][" + col + "] is not a container");
+            throw new CardException("Component at [" + i + "][" + j + "] is not a container");
         }
         int cidx = board.getContainers().indexOf(container);
         if (cidx == -1) {
@@ -213,15 +213,15 @@ public class Smugglers extends Card {
      * Removes a precious item from a losing player's container during END_SMUGGLERS.
      *
      * @param username  the losing player's nickname
-     * @param row       the row index of the container
-     * @param col       the column index of the container
-     * @param itemIndex the index of the item to remove
+     * @param i       the row index of the container
+     * @param j       the column index of the container
+     * @param item the index of the item to remove
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
     public void removePreciousItem(String username,
-                                   int row,
-                                   int col,
-                                   int itemIndex) {
+                                   int i,
+                                   int j,
+                                   int item) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
@@ -230,15 +230,15 @@ public class Smugglers extends Card {
             throw new CardException("Player is not loser");
         }
         Board board = game.getPlayerFromNickname(username).getTruck();
-        Component tile = board.getShip()[row][col];
+        Component tile = board.getShip()[i][j];
         if (!(tile instanceof Container container)) {
-            throw new CardException("Component at [" + row + "][" + col + "] is not a container");
+            throw new CardException("Component at [" + i + "][" + j + "] is not a container");
         }
         int idx = board.getContainers().indexOf(container);
         if (idx == -1) {
-            throw new CardException("Invalid coordinates: no container at [" + row + "][" + col + "]");
+            throw new CardException("Invalid coordinates: no container at [" + i + "][" + j + "]");
         }
-        Item target = container.getItems().get(itemIndex);
+        Item target = container.getItems().get(item);
         if (!board.isMostPrecious(target)) {
             throw new CardException("Item " + target.getColor() + " is not the most precious");
         }
