@@ -148,4 +148,15 @@ public class AbandonedShip extends Card {
     public Object call(Visitor visitor) {
         return visitor.visitForAbandonedShip(this);
     }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForAbandonedShip(this, username);
+    }
+
+    @Override
+    public Object call(VisitorCoordinateNum visitorUsernameCoordinateNum, String username, int i, int j, int num) {
+        return visitorUsernameCoordinateNum.visitForAbandonedShip(this, username, i, j, num);
+    }
+
 }

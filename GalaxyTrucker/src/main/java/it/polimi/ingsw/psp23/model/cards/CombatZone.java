@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Events.EventForCombatZone;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -360,6 +359,18 @@ public class CombatZone extends Card {
             throw new IndexOutOfBoundsException("Index must be between 1 and 3");
         }
         return visitorParametrico.visitForCombatZone(this, index);
+    }
+
+    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+        return visitorCoordinateNum.visitForCombatZone(this, username, i, j, num);
+    }
+
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForCombatZone(this, username, i, j);
+    }
+
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForCombatZone(this, username);
     }
 
     /**

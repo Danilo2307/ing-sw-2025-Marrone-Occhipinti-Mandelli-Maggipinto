@@ -191,6 +191,21 @@ public class Planets extends Card {
         return visitor.visitForPlanets(this);
     }
 
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForPlanets(this, username);
+    }
+
+    @Override
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForPlanets(this, username, i, j);
+    }
+
+    @Override
+    public Object call(VisitorUsernameIntero visitorUsernameIntero, String username, int i) {
+        return visitorUsernameIntero.visitForPlanets(this, username, i);
+    }
+
     /**
      * Initializes the planet landing phase and fires the event.
      */

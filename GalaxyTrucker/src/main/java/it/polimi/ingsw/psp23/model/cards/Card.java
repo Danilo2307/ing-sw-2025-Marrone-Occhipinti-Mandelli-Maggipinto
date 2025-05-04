@@ -1,9 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
-import it.polimi.ingsw.psp23.Player;
 
-import java.util.List;
-
-public class Card implements CardInterface, CardInterfaceParametrica {
+public class Card implements CardInterface, CardInterfaceParametrica, CardInterfaceUsername, CardInterfaceCoordinateNum, CardInterfaceCoordinate, CardInterfaceUsernameIntero {
     private int level;
     private boolean turned = false; // quando è false noi vediamo il retro della carta
 
@@ -33,6 +30,26 @@ public class Card implements CardInterface, CardInterfaceParametrica {
 
     @Override
     public <T> T call(VisitorParametrico<T> visitorParametrico, int index){
+        return null;
+    }
+
+    @Override
+    public <T> T call(VisitorUsername<T> visitorUsername, String username){
+        return null;
+    }
+
+    @Override
+    public <T> T call(VisitorCoordinateNum<T> visitorCoordinateNum, String username, int i, int j, int num){
+        return null;
+    }
+
+    @Override
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j){
+        return null;
+    }
+
+    @Override
+    public <T> T call(VisitorUsernameIntero<T> visitorUsernameIntero, String username, int i){
         return null;
     }
 }

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Board;
-import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForSlavers;
@@ -89,6 +88,21 @@ public class Slavers extends Card {
     @Override
     public Object call(Visitor visitor) {
         return visitor.visitForSlavers(this);
+    }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForSlavers(this, username);
+    }
+
+    @Override
+    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+        return visitorCoordinateNum.visitForSlavers(this, username, i, j, num);
+    }
+
+    @Override
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForSlavers(this, username, i, j);
     }
 
     /**
