@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -87,8 +88,10 @@ public class Server {
 
     public void setServerSocket(String host, int port) {
         try {
-            serverSocket.setReuseAddress(true);
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
+            ServerSocket newSock = new ServerSocket();
+            newSock.setReuseAddress(true);
+            newSock.bind(new InetSocketAddress(host, port), 10);
+            serverSocket = newSock;
         }
         catch (IOException e){
             System.out.println("Error re-instancing server: " + e.getMessage());

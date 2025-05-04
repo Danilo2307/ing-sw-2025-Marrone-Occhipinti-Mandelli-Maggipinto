@@ -24,7 +24,7 @@ public class MainServer {
         Users.getInstance().createClientHandler(connectionId);
         Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
         Message receivedMessage = Server.getInstance().receiveMessage(connectionId);
-        // Users.getInstance().getClientHandler(connectionId).handleMessage(receivedMessage);
+        Users.getInstance().getClientHandler(connectionId).handleMessage(receivedMessage);
 
         Server.getInstance().setServerSocket("localhost", 8000);
 
