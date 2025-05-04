@@ -40,7 +40,7 @@ public class StartListeningForServerThread extends Thread {
                     switch(message){
                         case BroadcastMessage m -> {
                             Event event = m.getEvent();
-                            clientEventHandler.messageReceived(event);
+                            clientEventHandler.handle(event);
                         }
                         case DirectMessage m -> {
                             Event event = m.getEvent();

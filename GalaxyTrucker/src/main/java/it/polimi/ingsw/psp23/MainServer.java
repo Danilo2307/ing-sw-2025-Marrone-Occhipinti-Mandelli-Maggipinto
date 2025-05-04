@@ -19,8 +19,6 @@ public class MainServer {
         String connectionId = UUID.randomUUID().toString();
         Server.getInstance().connectClients(connectionId);
 
-        Server.getInstance().close();
-
         Users.getInstance().createClientHandler(connectionId);
         Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
         Message receivedMessage = Server.getInstance().receiveMessage(connectionId);
