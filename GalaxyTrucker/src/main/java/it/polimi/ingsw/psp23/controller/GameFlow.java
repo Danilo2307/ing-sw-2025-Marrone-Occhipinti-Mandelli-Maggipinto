@@ -1,8 +1,11 @@
 package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
+import it.polimi.ingsw.psp23.model.cards.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.Visitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.io.Serializable;
@@ -21,23 +24,28 @@ public class GameFlow implements Serializable {
         currentPlayer = null;
     }
 
-    public Card nextCard(){
-        Game.getInstance().sortPlayersByPosition();
-        if(Game.getInstance().getNextCard() != null || !Game.getInstance().getPlayers().isEmpty()){
-            currentCard = Game.getInstance().getNextCard();
-            turn = 0;
-            return currentCard;
+    public void nextCard(){
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.Playing)){
+            throw new CardException("Cannot pick next card at this time");
         }
-        else {
+        Game.getInstance().sortPlayersByPosition();
+        currentCard = Game.getInstance().getNextCard();
+        if(currentCard == null || Game.getInstance().getPlayers().size() <= 1){
             Game.getInstance().setGameStatus(GameStatus.End);
             Game.getInstance().calculateFinalScores();
+        }else{
+            turn = 0;
+            currentPlayer = leaderPlayer();
+            Game.getInstance().setCurrentPlayer(currentPlayer);
+            Visitor visitor = new InitPlayVisitor();
+            currentCard.call(visitor);
+
         }
-        return null;
     }
 
     public Player nextTurn(){
         turn++;
-        if(turn > Game.getInstance().getPlayers().size()){
+        if(turn >= Game.getInstance().getPlayers().size()){
             Game.getInstance().sortPlayersByPosition();
             nextCard();
             currentPlayer = leaderPlayer();

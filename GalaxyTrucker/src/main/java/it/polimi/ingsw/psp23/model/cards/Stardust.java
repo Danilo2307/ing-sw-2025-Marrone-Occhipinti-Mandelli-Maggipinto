@@ -51,7 +51,7 @@ public class Stardust extends Card {
      *
      * @implNote This method mutates each player's position based on exposed connectors.
      */
-    public void applyEffect() {
+    private void applyEffect() {
         Game game = Game.getInstance();
         List<Player> players = new ArrayList<>(game.getPlayers());
         Collections.reverse(players);

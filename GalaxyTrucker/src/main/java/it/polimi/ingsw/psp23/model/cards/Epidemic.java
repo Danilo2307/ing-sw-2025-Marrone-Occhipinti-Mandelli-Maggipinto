@@ -41,7 +41,7 @@ public class Epidemic extends Card {
      *
      * @throws CardException if called outside INIT_EPIDEMIC or removal fails
      */
-    public void applyEffect() {
+    private void applyEffect() {
         Game game = Game.getInstance();
         for (Player p : game.getPlayers()) {
             Board board = p.getTruck();

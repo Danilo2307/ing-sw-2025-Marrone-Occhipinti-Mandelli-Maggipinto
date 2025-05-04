@@ -200,7 +200,7 @@ public class Smugglers extends Card {
      *
      * @return true if each player's lostCount >= numItemsStolen
      */
-    public boolean allItemsStolen() {
+    private boolean allItemsStolen() {
         for (int count : lostCount) {
             if (count < numItemsStolen) {
                 return false;
