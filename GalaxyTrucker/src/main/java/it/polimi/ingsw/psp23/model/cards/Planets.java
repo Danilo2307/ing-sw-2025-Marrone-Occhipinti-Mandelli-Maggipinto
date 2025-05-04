@@ -169,7 +169,7 @@ public class Planets extends Card {
      * Verifies if all goods for occupied planets are loaded.
      * @return true if all goods loaded, false otherwise
      */
-    public boolean verifyAll() {
+    private boolean verifyAll() {
         for (String player : planetsOccupied) {
             if (player != null && loadedCount.get(planetsOccupied.indexOf(player)) != planetGoods.get(planetsOccupied.indexOf(player)).size()) {
                 return false;

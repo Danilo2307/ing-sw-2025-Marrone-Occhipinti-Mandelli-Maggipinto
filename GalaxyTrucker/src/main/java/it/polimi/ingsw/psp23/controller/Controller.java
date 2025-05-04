@@ -5,6 +5,8 @@ import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
+import it.polimi.ingsw.psp23.model.cards.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.Visitor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -27,6 +29,7 @@ public class Controller {
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
     private Card currentCard;
+    GameFlow gameFlow = new GameFlow();
 
 
     public Controller() {
@@ -163,11 +166,14 @@ public class Controller {
             }
         }
         currentPosition++;
+        if(currentPosition == Game.getInstance().getPlayers().size()) {
+            startFlight();
+        }
     }
 
     public void startFlight(){
-        Game.getInstance().sortPlayersByPosition();
         Game.getInstance().setGameStatus(GameStatus.Playing);
+        gameFlow.nextCard();
     }
 
 
@@ -220,23 +226,7 @@ public class Controller {
         return Game.getInstance().getPlayers();
     }
 
-    public void gameOver(){
-        Game.getInstance().setGameStatus(GameStatus.End);
-    }
 
-    public void nextCard(){
-        currentCard = Game.getInstance().getNextCard();
-        if(currentCard == null){
-            gameOver();
-        }else{
-            // qui ci andrà l'handleCard method, ovvero quel metodo presente nel model per ogni carta
-            // che creerà l'evento, cambierà stato e metterà nell'evento le informazioni della carta.
-            // Dopo la chiamata a questo evento di inizializzazione ci sarà la chiamata dell'effettivo metodo Play
-            // al quale saranno già passati gli input richiesti nella precedente chiamata grazie all'evento
-            // (nota bene che nella chiamata al primo metodo, l'handleCard vuole l'istanza del model in  ingresso ovvero game
-            // perchè deve poter chiamare la funzione fireEvent dichiarata nel model per compattezza);
-        }
-    }
 
     //arriva un input dalla view
     public void handleInput(Object input) {
@@ -258,6 +248,28 @@ public class Controller {
         Message message = new BroadcastMessage(new StringResponse("evento generico in play"));
         Server.getInstance().notifyAllObservers(message);
     }
+
+
+    /*public void buyShip(String username) {
+        Visitor buyShip = new BuyShipVisitor(username);
+        card.call(buyShip);
+
+    }
+
+    public void reduceCrew(String username, int i, int j, int num) {
+        Visitor reduceCrew = new ReduceCrewVisitor(username, i, j, num);
+        card.call(reduceCrew);
+    }
+
+    public void pass(String username) {
+        Visitor pass = new PassVisitor(username);
+        card.call(pass);
+    }
+
+    public String help(){
+        Visitor help = new HelpVisitor();
+        return card.call(help);
+    }*/
 
 
 

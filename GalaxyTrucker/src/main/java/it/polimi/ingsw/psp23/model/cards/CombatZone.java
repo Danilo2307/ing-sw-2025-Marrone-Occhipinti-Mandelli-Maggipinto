@@ -229,7 +229,7 @@ public class CombatZone extends Card {
      * Applies one cannon shot to the losing player based on random impact line.
      * Advances to Playing status after the final shot.
      */
-    public void handleCannonShot() {
+    private void handleCannonShot() {
         Game game = Game.getInstance();
         CannonShot shot = cannonShot.get(cannonShotIndex);
         int impactLine = Utility.roll2to12();
@@ -387,7 +387,7 @@ public class CombatZone extends Card {
      * @param username nickname of player signaling completion
      * @throws CardException if not the current player's turn
      */
-    public void firstChallenge(String username) {
+    private void firstChallenge(String username) {
         Game game = Game.getInstance();
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("User '" + username + "' is not the current player");
@@ -412,7 +412,7 @@ public class CombatZone extends Card {
      * @param username nickname of player signaling completion
      * @throws CardException if not the current player's turn
      */
-    public void secondChallenge(String username) {
+    private void secondChallenge(String username) {
         Game game = Game.getInstance();
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("User '" + username + "' is not the current player");
@@ -433,7 +433,7 @@ public class CombatZone extends Card {
      * @param username nickname of player signaling completion
      * @throws CardException if not the current player's turn
      */
-    public void thirdChallenge(String username) {
+    private void thirdChallenge(String username) {
         Game game = Game.getInstance();
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("User '" + username + "' is not the current player");
