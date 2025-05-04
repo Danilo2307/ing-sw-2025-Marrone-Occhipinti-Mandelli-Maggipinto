@@ -17,9 +17,14 @@ public class MainServer {
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
         Server.getInstance().connectClients(connectionId);
+
+        Server.getInstance().close();
+
         Users.getInstance().createClientHandler(connectionId);
         Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
         Server.getInstance().receiveMessage(connectionId);
+
+        Server.getInstance().setServerSocket("localhost", 8000);
 
         // thread che permette di ascoltare più client
         ConnectionThread.getInstance().start();

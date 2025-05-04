@@ -12,10 +12,11 @@ public class MainClient {
         try {
             TuiApplication tui = new TuiApplication();
             ClientEventHandler clientEventHandler = new ClientEventHandler(tui);
+            Client client = new Client("localhost", 8000, null, clientEventHandler);
             System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
             Scanner scanner = new Scanner(System.in);
             String username = scanner.nextLine();
-            Client client = new Client("localhost", 8000, username, clientEventHandler);
+            client.setUsername(username);
             tui.setClient(client);
             tui.runGame();
         } catch (Exception e) {

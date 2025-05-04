@@ -11,6 +11,7 @@ import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class Client {
 
@@ -21,20 +22,21 @@ public class Client {
     // Nel costruttore verrà eseguita la connessione tra client e server
     public Client(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
 
-        Message message = new ActionMessage(new SetUsername(username));
+
 
         try {
             Socket socket = new Socket(serverIP, port);
             socketHandler = new SocketHandler(socket);
-            socketHandler.sendMessage(message);
+
             //message = socketHandler.readMessage();
             startListeningForServerThread = new StartListeningForServerThread(socketHandler, clientEventHandler, this);
             startListeningForServerThread.start();
             //if (!message.call(new GetEventVisitor()).toString().equals("Appropriate Username")) {
-                // this.close();
-                //throw new PlayerExistsException("Lanciata dal costruttore di client");
+            // this.close();
+            //throw new PlayerExistsException("Lanciata dal costruttore di client");
             //}
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             throw new RuntimeException("Errore class Client constructor: " + e.getMessage());
         }
 
@@ -55,6 +57,11 @@ public class Client {
     public void close() {
         socketHandler.close();
         startListeningForServerThread.stopThread();
+    }
+
+    public void setUsername(String username) {
+        Message message = new ActionMessage(new SetUsername(username));
+        socketHandler.sendMessage(message);
     }
 
 }

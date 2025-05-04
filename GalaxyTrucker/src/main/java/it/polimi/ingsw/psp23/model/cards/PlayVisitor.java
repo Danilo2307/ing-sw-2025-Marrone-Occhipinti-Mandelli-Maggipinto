@@ -3,57 +3,57 @@ package it.polimi.ingsw.psp23.model.cards;
 public class PlayVisitor implements VisitorInput<Void> {
 
     public Void visitForPlanets(Planets planets){
-        planets.play();
+        //planets.play();
         return null;
     }
 
     public Void visitForAbandonedShip(AbandonedShip abandonedShip){
-        abandonedShip.play();
+        //abandonedShip.play();
         return null;
     }
 
     public Void visitForAbandonedStation(AbandonedStation abandonedStation){
-        abandonedStation.play();
+        //abandonedStation.play();
         return null;
     }
 
     public Void visitForCombatZone(CombatZone combatZone){
-        combatZone.play();
+        //combatZone.play();
         return null;
     }
 
     public Void visitForEpidemic(Epidemic epidemic){
-        epidemic.play();
+        //epidemic.play();
         return null;
     }
 
     public Void visitForMeteorSwarm(MeteorSwarm meteorSwarm){
-        meteorSwarm.play();
+        //meteorSwarm.play();
         return null;
     }
 
     public Void visitForOpenSpace(OpenSpace openSpace){
-        openSpace.play();
+        //openSpace.play();
         return null;
     }
 
     public Void visitForPirates(Pirates pirates){
-        pirates.play();
+        //pirates.play();
         return null;
     }
 
     public Void visitForSlavers(Slavers slavers){
-        slavers.play();
+        //slavers.play();
         return null;
     }
 
     public Void visitForSmugglers(Smugglers smugglers){
-        smugglers.play();
+        //smugglers.play();
         return null;
     }
 
     public Void visitForStardust(Stardust stardust){
-        stardust.play();
+        //stardust.play();
         return null;
     }
 }

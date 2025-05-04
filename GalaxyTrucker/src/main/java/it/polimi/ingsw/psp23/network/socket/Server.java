@@ -27,7 +27,7 @@ public class Server {
     Server(int port) {
         try {
 
-            serverSocket = new ServerSocket(port);
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("localhost"));
 
             clients = new HashMap<>();
 
@@ -74,6 +74,24 @@ public class Server {
             instance = new Server(port, host);
         }
         return instance;
+    }
+
+    public void close() {
+        try {
+            serverSocket.close();
+        }
+        catch (IOException e) {
+            System.out.println("Error closing server: " + e.getMessage());
+        }
+    }
+
+    public void setServerSocket(String host, int port) {
+        try {
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
+        }
+        catch (IOException e){
+            System.out.println("Error re-instancing server: " + e.getMessage());
+        }
     }
 
     public void connectClients(String nameConnection) {
