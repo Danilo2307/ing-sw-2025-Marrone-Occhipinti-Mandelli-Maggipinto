@@ -53,10 +53,6 @@ public class Controller {
         if(game.getGameStatus() == GameStatus.Setup) {
             if (game.getPlayers().size() <= game.getNumRequestedPlayers() || game.getNumRequestedPlayers() == -1)
                 game.addPlayer(nickname);
-
-            if (game.getPlayers().size() == game.getNumRequestedPlayers()) {
-                startBuildingPhase();
-            }
         }
     }
 
