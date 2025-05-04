@@ -293,10 +293,10 @@ public class CombatZone extends Card {
      * @param username losing player's nickname
      * @param i        row index of the tile
      * @param j        column index of the tile
-     * @param item     index of the item within the container
+     * @param num     index of the item within the container
      * @throws CardException if not in correct phase, wrong player, or wrong tile/item
      */
-    public void removePreciousItem(String username, int i, int j, int item) {
+    public void removePreciousItem(String username, int i, int j, int num) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.SECOND_COMBATZONE || goodsLost <= 0) {
             throw new CardException("It's not required to remove goods");
@@ -313,7 +313,7 @@ public class CombatZone extends Card {
                 if (index == -1) {
                     throw new CardException("Invalid coordinates: not a container");
                 }
-                Item toRemove = container.getItems().get(item);
+                Item toRemove = container.getItems().get(num);
                 if (!board.isMostPrecious(toRemove)) {
                     throw new CardException("Item " + toRemove.getColor() + " is not the most precious");
                 }
