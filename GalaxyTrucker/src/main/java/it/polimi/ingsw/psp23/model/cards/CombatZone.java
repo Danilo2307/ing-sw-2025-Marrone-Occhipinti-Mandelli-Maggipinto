@@ -388,6 +388,7 @@ public class CombatZone extends Card {
             Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(minPlayer), -daysLost);
             game.sortPlayersByPosition();
             game.setCurrentPlayer(game.getPlayers().getFirst());
+            game.setGameStatus(GameStatus.SECOND_COMBATZONE);
         }
     }
 
