@@ -30,8 +30,6 @@ public class ConnectionThread extends Thread{
 
             Server.getInstance().connectClients(connectionId);
 
-            System.out.println(Game.getInstance().getNumRequestedPlayers());
-
             Users.getInstance().createClientHandler(connectionId);
 
         }

@@ -5,15 +5,11 @@ import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.InitPlayVisitor;
-import it.polimi.ingsw.psp23.model.cards.Visitor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
-import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StateChanged;
@@ -53,10 +49,6 @@ public class Controller {
         if(game.getGameStatus() == GameStatus.Setup) {
             if (game.getPlayers().size() <= game.getNumRequestedPlayers() || game.getNumRequestedPlayers() == -1)
                 game.addPlayer(nickname);
-
-            if (game.getPlayers().size() == game.getNumRequestedPlayers()) {
-                startBuildingPhase();
-            }
         }
     }
 

@@ -80,4 +80,15 @@ public class OpenSpace extends Card {
     public Object call(Visitor visitor) {
         return visitor.visitForOpenSpace(this);
     }
+
+    @Override
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForOpenSpace(this, username, i, j);
+    }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForOpenSpace(this, username);
+    }
+
 }

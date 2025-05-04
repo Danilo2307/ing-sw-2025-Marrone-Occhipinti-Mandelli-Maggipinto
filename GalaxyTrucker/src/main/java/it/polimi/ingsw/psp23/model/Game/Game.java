@@ -92,7 +92,7 @@ public class Game {
         if (numRequestedPlayers == -1)
             this.numRequestedPlayers = number;
         else
-            throw new InvalidActionException("Non puoi modificare il numero di giocatori attesi! Era compito del creatore della partita");
+            throw new InvalidActionException("Non puoi modificare il numero di giocatori attesi!");
     }
 
     public int getNumRequestedPlayers() {

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -21,7 +23,7 @@ public class Server {
 
     private static Server instance;
     private ServerSocket serverSocket;
-    private HashMap<String, SocketHandler> clients = null;
+    private final HashMap<String, SocketHandler> clients;
 
 
     // Qui creo il server
@@ -107,6 +109,14 @@ public class Server {
 
                 Socket socket = serverSocket.accept();
 
+                synchronized (clients) {
+                    // Nel caso in cui si sia registrato solo il primo client dobbiamo chiudere la connessione con altri
+                    // client perchè prima il "leader" della partita deve dichiarare quanti giocatori possono entrare
+                    if(clients.isEmpty()){
+                        close();
+                    }
+                }
+
                 // Questa istruzione serve per non andare avanti all'infinito ma, nel caso in cui dopo aver stabilito
                 // la connessione il client non dovesse mandare niente per 5 sec, questa istruzione lancerà un'eccezione
                 // socket.setSoTimeout(60000);
@@ -141,6 +151,11 @@ public class Server {
                     clients.put(nameConnection, socketHandler);
                     System.out.println("Client connected: " + nameConnection + " with username " + socketHandler.getUsername());
                 }
+
+                if(clients.size() == Game.getInstance().getNumRequestedPlayers()){
+                    Controller.getInstance().startBuildingPhase();
+                }
+
 
             } catch (IOException e) {
                 throw new RuntimeException("Could not accept the client in connectClients in Server" + e.getMessage());

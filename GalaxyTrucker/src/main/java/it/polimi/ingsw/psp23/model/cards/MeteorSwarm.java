@@ -38,6 +38,16 @@ public class MeteorSwarm extends Card {
         return visitor.visitForMeteorSwarm(this);
     }
 
+    @Override
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForMeteorSwarm(this, username, i, j);
+    }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForMeteorSwarm(this, username);
+    }
+
     /**
      * Rolls dice for each meteor, sets impact lines, fires events, and enters INIT_METEORSWARM.
      */

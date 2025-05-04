@@ -137,4 +137,19 @@ public class AbandonedStation extends Card {
             default -> "No commands available in current phase.";
         };
     }
+
+    @Override
+    public Object call(Visitor visitor) {
+        return visitor.visitForAbandonedStation(this);
+    }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForAbandonedStation(this, username);
+    }
+
+    @Override
+    public Object call(VisitorCoordinate visitorUsernameCoordinate, String username, int i, int j) {
+        return visitorUsernameCoordinate.visitForAbandonedStation(this, username, i, j);
+    }
 }

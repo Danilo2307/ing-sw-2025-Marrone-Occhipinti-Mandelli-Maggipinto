@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.Item;
-import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
@@ -10,7 +9,6 @@ import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
-import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.util.ArrayList;
@@ -337,4 +335,20 @@ public class Smugglers extends Card {
                 return "No commands available in current phase: " + status;
         }
     }
+
+    @Override
+    public Object call(VisitorUsername visitorUsername, String username) {
+        return visitorUsername.visitForSmugglers(this, username);
+    }
+
+    @Override
+    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+        return visitorCoordinate.visitForSmugglers(this, username, i, j);
+    }
+
+    @Override
+    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+        return visitorCoordinateNum.visitForSmugglers(this, username, i, j, num);
+    }
+
 }

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-public class InitPlayVisitor implements Visitor{
+public class InitPlayVisitor implements Visitor<Void>{
 
     public Void visitForPlanets(Planets planets){
         planets.initPlay();
@@ -38,7 +38,7 @@ public class InitPlayVisitor implements Visitor{
     }
 
     public Void visitForPirates(Pirates pirates){
-        // pirates.initPlay();
+        pirates.initPlay();
         return null;
     }
 
