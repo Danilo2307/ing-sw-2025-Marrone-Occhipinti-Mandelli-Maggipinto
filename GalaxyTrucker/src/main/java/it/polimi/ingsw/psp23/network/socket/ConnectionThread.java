@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.model.Game.Game;
+
 import java.util.UUID;
 
 /*
@@ -27,6 +29,8 @@ public class ConnectionThread extends Thread{
             String connectionId = UUID.randomUUID().toString();
 
             Server.getInstance().connectClients(connectionId);
+
+            System.out.println(Game.getInstance().getNumRequestedPlayers());
 
             Users.getInstance().createClientHandler(connectionId);
 

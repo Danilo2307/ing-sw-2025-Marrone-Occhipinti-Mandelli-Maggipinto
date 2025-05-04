@@ -87,6 +87,7 @@ public class Server {
 
     public void setServerSocket(String host, int port) {
         try {
+            serverSocket.setReuseAddress(true);
             serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
         }
         catch (IOException e){
@@ -209,8 +210,10 @@ public class Server {
     }
 
     public void notifyAllObservers(Message message) {
-        for (String connection : clients.keySet()) {
-            sendMessage(message, connection);
+        synchronized (clients) {
+            for (String connection : clients.keySet()) {
+                sendMessage(message, connection);
+            }
         }
     }
 

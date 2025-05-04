@@ -48,7 +48,7 @@ public class Controller {
         Game game = Game.getInstance();
 
         if(game.getGameStatus() == GameStatus.Setup) {
-            if (game.getPlayers().size() <= game.getNumRequestedPlayers())
+            if (game.getPlayers().size() <= game.getNumRequestedPlayers() || game.getNumRequestedPlayers() == -1)
                 game.addPlayer(nickname);
 
             if (game.getPlayers().size() == game.getNumRequestedPlayers()) {

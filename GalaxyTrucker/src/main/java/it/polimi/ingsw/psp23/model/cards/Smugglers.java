@@ -85,8 +85,7 @@ public class Smugglers extends Card {
         this.prize = prize;
         this.loadedCount = 0;
 
-        int playerCount = Game.getInstance().getPlayers().size();
-        this.lostCount = new ArrayList<>(Collections.nCopies(playerCount, 0));
+
     }
 
     /**
@@ -270,6 +269,8 @@ public class Smugglers extends Card {
      */
     public void initPlay() {
         Game game = Game.getInstance();
+        int playerCount = Game.getInstance().getPlayers().size();
+        lostCount = new ArrayList<>(Collections.nCopies(playerCount, 0));
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
         game.fireEvent(new EventForSmugglers(
                 game.getGameStatus(),

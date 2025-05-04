@@ -70,8 +70,10 @@ public class SocketHandler {
                 return received;
 
             } catch (IOException e) {
-                throw new RuntimeException("Problema(RuntimeException) in readMessage in SocketHandler " + e.getMessage());
+                e.printStackTrace();
+                throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {
+                e.printStackTrace();
                 throw new RuntimeException("Problema(ClassNotFoundException) in readMessage in SocketHandler " + e.getMessage());
             }
         }

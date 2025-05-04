@@ -14,7 +14,7 @@ public class Users {
         clients = new ArrayList<>();
     }
 
-    public static Users getInstance() {
+    public static synchronized Users getInstance() {
         if (instance == null) {
             instance = new Users();
         }

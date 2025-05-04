@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23;
 
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.network.socket.Users;
@@ -22,7 +23,8 @@ public class MainServer {
 
         Users.getInstance().createClientHandler(connectionId);
         Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
-        Server.getInstance().receiveMessage(connectionId);
+        Message receivedMessage = Server.getInstance().receiveMessage(connectionId);
+        // Users.getInstance().getClientHandler(connectionId).handleMessage(receivedMessage);
 
         Server.getInstance().setServerSocket("localhost", 8000);
 

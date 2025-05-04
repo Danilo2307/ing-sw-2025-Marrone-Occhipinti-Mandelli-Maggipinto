@@ -212,7 +212,7 @@ public class TuiApplication {
                 int number;
                 number = Integer.parseInt(words[1]);
                 boolean error = false;
-                while (number < 2 || number > 4 || error) {
+                while (number < 1 || number > 4 || error) {
 
                     io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
 
