@@ -250,7 +250,7 @@ public class Controller {
     }
 
 
-    /*public void buyShip(String username) {
+    public void buyShip(String username) {
         Visitor buyShip = new BuyShipVisitor(username);
         card.call(buyShip);
 
@@ -269,7 +269,7 @@ public class Controller {
     public String help(){
         Visitor help = new HelpVisitor();
         return card.call(help);
-    }*/
+    }
 
 
 
