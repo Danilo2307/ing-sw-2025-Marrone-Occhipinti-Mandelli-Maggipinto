@@ -1055,4 +1055,23 @@ public class Board {
     public Component[][] getShip() {
         return ship;
     }
+
+    public void removeGood(int i, int j, Color color){
+        if(!isValid(i,j)){
+            throw new ContainerException("Not a valid position for a component");
+        }
+
+        Component c = ship[i][j];
+        if(!containers.contains(c)){
+            throw new ContainerException("Not a container in "+ i + " " + j + "position");
+        }
+        Container container = containers.get(containers.indexOf(c));
+        for(Item item: container.getItems()){
+            if(item.getColor() == color){
+                container.getItems().remove(item);
+                return;
+            }
+        }
+        throw new ContainerException("There is no " + color + " good in that container");
+    }
 }

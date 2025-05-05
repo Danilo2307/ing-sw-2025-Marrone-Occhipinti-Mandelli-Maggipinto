@@ -4,9 +4,10 @@ import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.cards.Card;
+import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
@@ -242,26 +243,79 @@ public class Controller {
     }
 
 
-    /*public void buyShip(String username) {
-        Visitor buyShip = new BuyShipVisitor(username);
-        card.call(buyShip);
+    public void buyShip(String username) {
+        BuyShipVisitor buyShip = new BuyShipVisitor();
+        currentCard.call(buyShip, username);
 
     }
 
     public void reduceCrew(String username, int i, int j, int num) {
-        Visitor reduceCrew = new ReduceCrewVisitor(username, i, j, num);
-        card.call(reduceCrew);
+        ReduceCrewVisitorNum reduceCrew = new ReduceCrewVisitorNum();
+        currentCard.call(reduceCrew, username, i, j, num);
     }
 
     public void pass(String username) {
-        Visitor pass = new PassVisitor(username);
-        card.call(pass);
+        PassVisitor pass = new PassVisitor();
+        currentCard.call(pass, username);
     }
 
     public String help(){
-        Visitor help = new HelpVisitor();
-        return card.call(help);
-    }*/
+        HelpVisitor help = new HelpVisitor();
+        return currentCard.call(help);
+    }
+
+    public void activeCannon(String username, int i , int j, int iBattery, int jBattery){
+        ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
+        Game.getInstance().getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
+        currentCard.call(activeCannon, username, i, j);
+    }
+
+    public void activeEngine(String username, int i, int j, int iBattery, int jBattery){
+        ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
+        Game.getInstance().getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
+        currentCard.call(activeEngine, username, i, j);
+    }
+
+    public void activeShield(String username, int i, int j, int iBattery, int jBattery){
+        ActiveShieldVisitor activeShield = new ActiveShieldVisitor();
+        Game.getInstance().getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
+        currentCard.call(activeShield, username, i, j);
+    }
+
+    public void dockStation(String username){
+        DockStationVisitor dockStation = new DockStationVisitor();
+        currentCard.call(dockStation, username);
+    }
+
+    public void loadGoods(String username, int i, int j){
+        LoadGoodsVisitor loadGoods = new LoadGoodsVisitor();
+        currentCard.call(loadGoods, username, i, j);
+    }
+
+    public void removePreciousItems(String username, int i, int j, int num){
+        RemovePreciousItemVisitor removePreciousItem = new RemovePreciousItemVisitor();
+        currentCard.call(removePreciousItem, username, i, j, num);
+    }
+
+    public void ready(String username){
+        ReadyVisitor ready = new ReadyVisitor();
+        currentCard.call(ready, username);
+    }
+
+    public void landOnPlanet(String username, int i){
+        LandOnPlanetVisitor landOnPlanet = new LandOnPlanetVisitor();
+        currentCard.call(landOnPlanet, username, i);
+    }
+
+    public void removeItem(String username, int i, int j, Color color){
+        if(!Game.getInstance().getGameStatus().equals(GameStatus.Playing))
+            throw new RuntimeException("Not a possible instruction in this game state");
+        Game.getInstance().getPlayerFromNickname(username).getTruck().removeGood(i, j, color);
+    }
+
+
+
+
 
 
 
