@@ -109,4 +109,34 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         registerNumPlayers.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForNextTurn(NextTurn nextTurn, String username) {
+        nextTurn.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForBuyShip(BuyShip buyShip, String username) {
+        buyShip.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForHelp(Help help, String username) {
+        help.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForDockStation(DockStation dockStation, String username) {
+        dockStation.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForLoadGoods(LoadGood loadGood, String username) {
+        loadGood.handle(username);
+        return null;
+    }
 }

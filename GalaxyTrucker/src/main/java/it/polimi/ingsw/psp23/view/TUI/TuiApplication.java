@@ -227,6 +227,26 @@ public class TuiApplication {
                 }
                 sendAction(new RegisterNumPlayers(number));
             }
+
+            case "passa" -> {
+                sendAction(new NextTurn());
+            }
+            case "compra" -> {
+                sendAction(new BuyShip());
+            }
+            case "aiuto" -> {
+                sendAction(new Help());
+            }
+            case "attracca" -> {
+                sendAction(new DockStation());
+            }
+            case "carica" -> {
+                int lx = Integer.parseInt(words[1]);
+                int ly = Integer.parseInt(words[2]);
+                sendAction(new LoadGood(lx, ly));
+            }
+            case "pronto" -> {}
+            case "atterra" -> {}
             default -> throw new TuiInputException("Comando sconosciuto");
         }
     }

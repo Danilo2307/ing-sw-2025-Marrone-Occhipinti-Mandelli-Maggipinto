@@ -86,5 +86,4 @@ public class SetUsernameActionVisitor implements ActionVisitorSinglePar<String>{
     public String visitForReserveTile(ReserveTile reserveTile) {
         return null;
     }
-
 }

@@ -2,14 +2,18 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.Board;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.cards.ActiveCannonVisitor;
+import it.polimi.ingsw.psp23.model.cards.ActiveEngineVisitor;
+import it.polimi.ingsw.psp23.model.cards.Card;
 
 public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
 
     public void handle(String username){
         Game game = Game.getInstance();
-        Board truck = game.getPlayerFromNickname(username).getTruck();
-        truck.activeCannon(ex, ey);
-        truck.reduceBatteries(bx, by, 1);
+        Card currentCard = game.getCurrentCard();
+        ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
+        currentCard.call(activeEngine, username, ex, ey);
+        game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by,1);
     }
 
     @Override

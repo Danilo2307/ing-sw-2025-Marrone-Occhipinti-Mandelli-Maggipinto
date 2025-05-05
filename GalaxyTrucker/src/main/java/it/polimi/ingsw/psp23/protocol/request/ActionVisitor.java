@@ -38,4 +38,13 @@ public interface ActionVisitor<T> {
 
     public T visitForRegisterNumPlayers(RegisterNumPlayers registerNumPlayers, String username);
 
+    public T visitForNextTurn(NextTurn nextTurn, String username);
+    
+    public T visitForBuyShip(BuyShip buyShip, String username);
+
+    public T visitForHelp(Help help, String username);
+
+    public T visitForDockStation(DockStation dockStation, String username);
+
+    public T visitForLoadGoods(LoadGood loadGood, String username);
 }
