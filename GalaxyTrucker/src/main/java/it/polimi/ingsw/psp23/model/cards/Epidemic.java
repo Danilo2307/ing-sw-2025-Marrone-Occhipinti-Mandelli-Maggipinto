@@ -74,7 +74,7 @@ public class Epidemic extends Card {
             }
         }
         // finalize
-        Game.getInstance().setGameStatus(GameStatus.Playing);
+        game.nextCard();
     }
 
     /**

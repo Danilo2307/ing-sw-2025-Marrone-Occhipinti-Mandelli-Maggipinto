@@ -139,4 +139,28 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         loadGood.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForReady(Ready ready, String username) {
+        ready.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForLandOnPlanet(Land land, String username) {
+        land.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForReduceCrew(ReduceCrew reduceCrew, String username) {
+        reduceCrew.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForRemovePreciousItem(RemovePreciousItem removePreciousItem, String username) {
+        removePreciousItem.handle(username);
+        return null;
+    }
 }

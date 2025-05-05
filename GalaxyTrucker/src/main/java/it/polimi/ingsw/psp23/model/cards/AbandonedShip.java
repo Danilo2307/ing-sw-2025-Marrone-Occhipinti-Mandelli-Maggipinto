@@ -57,7 +57,7 @@ public class AbandonedShip extends Card {
         if (game.getTurn() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -112,7 +112,7 @@ public class AbandonedShip extends Card {
                     board.getHousingUnits().get(idx).reduceOccupants(num);
                     countMember += num;
                     if (countMember == numMembers) {
-                        game.setGameStatus(GameStatus.Playing);
+                        game.nextCard();
                     }
                 } catch (IllegalArgumentException e) {
                     throw new CardException("Failed to remove " + num + " members: " + e.getMessage());

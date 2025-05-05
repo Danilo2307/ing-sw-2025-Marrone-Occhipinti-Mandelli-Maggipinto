@@ -60,7 +60,7 @@ public class Stardust extends Card {
             int penalty = p.getTruck().calculateExposedConnectors();
             Utility.updatePosition(original, original.indexOf(p), -penalty);
         }
-        game.setGameStatus(GameStatus.Playing);
+        game.nextCard();
     }
     /**
      * Provides help information for the Stardust card.

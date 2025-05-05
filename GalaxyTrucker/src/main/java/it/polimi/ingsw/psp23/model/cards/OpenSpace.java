@@ -63,7 +63,7 @@ public class OpenSpace extends Card {
         }
         // Reset state
         resolvers.clear();
-        game.setGameStatus(GameStatus.Playing);
+        game.nextCard();
     }
 
     /**

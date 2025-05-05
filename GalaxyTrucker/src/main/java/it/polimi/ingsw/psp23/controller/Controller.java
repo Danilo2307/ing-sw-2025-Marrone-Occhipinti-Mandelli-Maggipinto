@@ -165,8 +165,9 @@ public class Controller {
     }
 
     public void startFlight(){
-        Game.getInstance().setGameStatus(GameStatus.Playing);
-        gameFlow.nextCard();
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.Playing);
+        game.nextCard();
     }
 
 

@@ -154,7 +154,7 @@ public class Slavers extends Card {
 
         winner = null;
         if (counterMember == membersStolen) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -173,7 +173,7 @@ public class Slavers extends Card {
 
         winner = null;
         if (counterMember == membersStolen) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -248,7 +248,7 @@ public class Slavers extends Card {
                     board.getHousingUnits().get(idx).reduceOccupants(num);
                     counterMember += num;
                     if (counterMember == membersStolen && winner == null) {
-                        game.setGameStatus(GameStatus.Playing);
+                        game.nextCard();
                     }
                 } catch (IllegalArgumentException e) {
                     throw new CardException("Failed to remove " + num + " members: " + e.getMessage());

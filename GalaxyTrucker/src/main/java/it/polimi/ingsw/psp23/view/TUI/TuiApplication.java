@@ -144,9 +144,23 @@ public class TuiApplication {
                 sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
-                int x = Integer.parseInt(words[1]);
-                int y = Integer.parseInt(words[2]);
-                sendAction(new RemoveTile(x, y));
+                if (words[1].equals("equipaggio")) {
+                    int hx = Integer.parseInt(words[2]);
+                    int hy = Integer.parseInt(words[3]);
+                    int num = Integer.parseInt(words[4]);
+                    sendAction(new ReduceCrew(hx, hy, num));
+                }
+                else if(words[1].equals("merce")){
+                    int cx = Integer.parseInt(words[2]);
+                    int cy = Integer.parseInt(words[3]);
+                    int num = Integer.parseInt(words[4]);
+                    sendAction(new RemovePreciousItem(cx, cy, num));
+                }
+                else{
+                    int x = Integer.parseInt(words[1]);
+                    int y = Integer.parseInt(words[2]);
+                    sendAction(new RemoveTile(x, y));
+                }
             }
             case "gira" -> {
                 sendAction(new TurnHourglass());
@@ -245,8 +259,13 @@ public class TuiApplication {
                 int ly = Integer.parseInt(words[2]);
                 sendAction(new LoadGood(lx, ly));
             }
-            case "pronto" -> {}
-            case "atterra" -> {}
+            case "pronto" -> {
+                sendAction(new Ready());
+            }
+            case "atterra" -> {
+                int pi = Integer.parseInt(words[1]);
+                sendAction(new Land(pi));
+            }
             default -> throw new TuiInputException("Comando sconosciuto");
         }
     }

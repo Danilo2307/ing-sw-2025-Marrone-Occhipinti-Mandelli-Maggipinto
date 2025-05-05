@@ -113,7 +113,7 @@ public class MeteorSwarm extends Card {
         currentIndex++;
         resolvers.clear();
         if (currentIndex >= meteors.size()) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 

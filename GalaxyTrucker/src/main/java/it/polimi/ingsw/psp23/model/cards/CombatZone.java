@@ -236,7 +236,7 @@ public class CombatZone extends Card {
                 .getTruck().handleCannonShot(shot, impactLine);
         cannonShotIndex++;
         if (cannonShotIndex == cannonShot.size() - 1) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 

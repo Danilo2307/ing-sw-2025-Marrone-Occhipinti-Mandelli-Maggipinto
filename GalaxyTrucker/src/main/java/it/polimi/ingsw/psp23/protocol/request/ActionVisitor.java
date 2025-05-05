@@ -47,4 +47,12 @@ public interface ActionVisitor<T> {
     public T visitForDockStation(DockStation dockStation, String username);
 
     public T visitForLoadGoods(LoadGood loadGood, String username);
+
+    public T visitForReady(Ready ready, String username);
+
+    public T visitForLandOnPlanet(Land land, String username);
+
+    public T visitForReduceCrew(ReduceCrew reduceCrew, String username);
+
+    public T visitForRemovePreciousItem(RemovePreciousItem removePreciousItem, String username);
 }

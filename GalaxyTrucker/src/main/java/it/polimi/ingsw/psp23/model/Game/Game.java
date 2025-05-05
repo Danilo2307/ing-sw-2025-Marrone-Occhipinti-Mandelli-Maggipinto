@@ -287,6 +287,21 @@ public class Game {
         }
     }
 
+    public void nextCard(){
+        sortPlayersByPosition();
+        currentCard = getNextCard();
+        if(currentCard == null || players.size() <= 1){
+            setGameStatus(GameStatus.End);
+            calculateFinalScores();
+        }else{
+            turn = 0;
+            currentPlayer = players.getFirst();
+            setCurrentPlayer(currentPlayer);
+            Visitor visitor = new InitPlayVisitor();
+            currentCard.call(visitor);
+        }
+    }
+
     /** Allows a player to temporarily view a deck during the Building phase.
      * Access is granted only if:
      *  - the game is in Building phase

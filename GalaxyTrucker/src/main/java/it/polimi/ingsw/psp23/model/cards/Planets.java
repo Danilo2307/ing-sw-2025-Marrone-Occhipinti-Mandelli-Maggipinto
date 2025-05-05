@@ -152,7 +152,7 @@ public class Planets extends Card {
                         board.getContainers().get(index).loadItem(items.get(loadedCount.get(player)));
                         loadedCount.set(player, loadedCount.get(player) + 1);
                         if (verifyAll()) {
-                            game.setGameStatus(GameStatus.Playing);
+                            game.nextCard();
                         }
                     } catch (CardException c) {
                         throw new CardException("Item cannot be loaded at [" + i + "][" + j + "]: " + c.getMessage());

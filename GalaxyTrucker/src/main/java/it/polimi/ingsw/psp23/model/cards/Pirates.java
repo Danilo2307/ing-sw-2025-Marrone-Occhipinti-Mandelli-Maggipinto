@@ -137,7 +137,7 @@ public class Pirates extends Card {
 
         winner = null;
         if (countCannonShot == cannonShot.size() - 1) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -156,7 +156,7 @@ public class Pirates extends Card {
 
         winner = null;
         if (countCannonShot == cannonShot.size() - 1) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -226,7 +226,7 @@ public class Pirates extends Card {
         countCannonShot++;
 
         if (countCannonShot == cannonShot.size() - 1 && winner == null) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 

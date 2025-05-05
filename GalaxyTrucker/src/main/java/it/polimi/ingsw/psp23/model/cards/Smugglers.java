@@ -165,7 +165,7 @@ public class Smugglers extends Card {
             if (loadedCount == prize.size() - 1) {
                 winner = null;
                 if (allItemsStolen()) {
-                    game.setGameStatus(GameStatus.Playing);
+                    game.nextCard();
                 }
             }
         } catch (CardException e) {
@@ -189,7 +189,7 @@ public class Smugglers extends Card {
         }
         winner = null;
         if (allItemsStolen()) {
-            game.setGameStatus(GameStatus.Playing);
+            game.nextCard();
         }
     }
 
@@ -245,7 +245,7 @@ public class Smugglers extends Card {
             int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
             lostCount.set(pidx, lostCount.get(pidx) + 1);
             if (allItemsStolen() && winner == null) {
-                game.setGameStatus(GameStatus.Playing);
+                game.nextCard();
             }
         } catch (ContainerException e) {
             throw new CardException("Failed to remove item: " + e.getMessage());
