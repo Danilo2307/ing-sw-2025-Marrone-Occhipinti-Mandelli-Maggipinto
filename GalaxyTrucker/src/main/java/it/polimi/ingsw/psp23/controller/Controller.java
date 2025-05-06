@@ -190,7 +190,7 @@ public class Controller {
             }
         }
         currentPosition++;
-        if(currentPosition == Game.getInstance().getPlayers().size()) {
+        if(currentPosition == Game.getInstance().getPlayers().size() + 1) {
             startCheckBoard();
         }
     }
