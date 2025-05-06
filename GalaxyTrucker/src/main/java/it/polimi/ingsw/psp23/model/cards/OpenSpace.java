@@ -94,6 +94,7 @@ public class OpenSpace extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta open space\n";
+                "è uscita la carta open space\n" +
+                "più motori si attivano, più si va avanti!";
     }
 }

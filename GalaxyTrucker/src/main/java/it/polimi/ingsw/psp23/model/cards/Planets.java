@@ -233,7 +233,33 @@ public class Planets extends Card {
 
     @Override
     public String toString(){
-        return
-                "è uscita la carta Planets\n";
+        if(planetGoods.size() == 2){
+            return
+                    "I pianeti sono 2\n" +
+                            "● ->" + planetGoods.get(0).toString() +"\n" +
+                            "● ->" + planetGoods.get(1).toString() +"\n";
+        }else if(planetGoods.size() == 3){
+            return
+                    "I pianeti sono 3\n" +
+                            "● ->" + planetGoods.get(0).toString() +"\n" +
+                            "● ->" + planetGoods.get(1).toString() +"\n" +
+                            "● ->" + planetGoods.get(2).toString() +"\n";
+        }else if(planetGoods.size() == 4){
+            return
+                    "I pianeti sono 3\n" +
+                            "● ->" + planetGoods.get(0).toString() +"\n" +
+                            "● ->" + planetGoods.get(1).toString() +"\n" +
+                            "● ->" + planetGoods.get(2).toString() +"\n" +
+                            "● ->" + planetGoods.get(3).toString() +"\n";
+        }else if(planetGoods.size() == 5){
+            return
+                    "I pianeti sono 3\n" +
+                            "● ->" + planetGoods.get(0).toString() +"\n" +
+                            "● ->" + planetGoods.get(1).toString() +"\n" +
+                            "● ->" + planetGoods.get(2).toString() +"\n" +
+                            "● ->" + planetGoods.get(3).toString() +"\n" +
+                            "● ->" + planetGoods.get(4).toString() +"\n";
+        }
+        return null;
     }
 }

@@ -130,6 +130,9 @@ public class MeteorSwarm extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta Meteor Swarm\n";
+                "è uscita la carta Meteor Swarm\n" +
+                "le meteore sono le seguenti:\n" +
+                meteors.toString() +
+                "\n";
     }
 }

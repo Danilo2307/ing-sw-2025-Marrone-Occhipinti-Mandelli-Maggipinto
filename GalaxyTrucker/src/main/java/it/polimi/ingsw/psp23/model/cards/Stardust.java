@@ -74,6 +74,7 @@ public class Stardust extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta Stardust\n";
+                "è uscita la carta Stardust\n" +
+                "si perdono tanti giorni quanti sono i connettori esposti";
     }
 }

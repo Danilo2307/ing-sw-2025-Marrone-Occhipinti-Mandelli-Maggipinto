@@ -500,7 +500,16 @@ public class CombatZone extends Card {
 
     @Override
     public String toString(){
-        return
-                "è uscita la carta Combat Zone\n";
+        if(penalties.get(0) == Challenge.CannonStrength){
+            return
+                    "è uscita la carta Combat Zone:\n La prima sfida riguarda la potenza di fuoco (penalità: 4 giorni)\n" +
+                            "la seconda sfida riguarda la potenza motrice (penalità: 3 merci importanti)\n" +
+                            "la terza sfida riguarda i membri dell'equipaggio (penalità colpi di cannone: "+ cannonShot.toString() + "\n";
+        }else{
+            return
+                    "è uscita la carta Combat Zone:\n La prima sfida riguarda i membri dell'equipaggio (penalità: 3 giorni)\n" +
+                            "la seconda sfida riguarda la potenza motrice (penalità: 2 membri dell'equipaggio)\n" +
+                            "la terza sfida riguarda la potenza di fuoco (penalità colpi di cannone: " + cannonShot.toString() +" \n";
+        }
     }
 }
