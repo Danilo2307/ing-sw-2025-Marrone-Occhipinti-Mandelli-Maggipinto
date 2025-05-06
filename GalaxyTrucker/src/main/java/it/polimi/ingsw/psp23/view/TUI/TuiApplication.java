@@ -67,7 +67,7 @@ public class TuiApplication {
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi"),
+            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa"),
             TuiState.ENDGAME, Set.of()
     );
 
