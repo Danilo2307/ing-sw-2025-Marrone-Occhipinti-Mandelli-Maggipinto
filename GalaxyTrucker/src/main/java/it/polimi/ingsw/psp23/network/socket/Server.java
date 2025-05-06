@@ -113,7 +113,7 @@ public class Server {
                     // Nel caso in cui si sia registrato solo il primo client dobbiamo chiudere la connessione con altri
                     // client perchè prima il "leader" della partita deve dichiarare quanti giocatori possono entrare
                     if(clients.isEmpty()){
-                        ConnectionThread.getInstance().stopAccepting();
+                        close();
                     }
                 }
 
