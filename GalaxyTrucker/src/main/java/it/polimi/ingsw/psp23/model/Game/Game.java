@@ -276,6 +276,7 @@ public class Game {
     /** @return the next card in the deck, or null if every card has been played */
     public Card getNextCard(){
         int size = deck.size();
+        if(currentCard == null) return deck.getFirst();
         int pos = deck.indexOf(currentCard);
         if(pos+1 < size){
             currentCard = deck.get(pos+1);
