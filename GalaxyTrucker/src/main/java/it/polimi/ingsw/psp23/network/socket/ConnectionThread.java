@@ -13,6 +13,10 @@ public class ConnectionThread extends Thread{
 
     public static ConnectionThread instance = null;
 
+    private final Object lock = new Object();
+
+    private boolean haveToAccept = true;
+
     public ConnectionThread(){}
 
     public static ConnectionThread getInstance(){
@@ -22,9 +26,27 @@ public class ConnectionThread extends Thread{
         return instance;
     }
 
+    public void stopAccepting() {
+        synchronized (lock) {
+            haveToAccept = false;
+        }
+    }
+
+    public void startAccepting() {
+        synchronized (lock) {
+            haveToAccept = true;
+        }
+    }
+
     @Override
     public void run() {
         while(true){
+
+            synchronized (lock) {
+                if (!haveToAccept) {
+                    break;
+                }
+            }
 
             String connectionId = UUID.randomUUID().toString();
 
