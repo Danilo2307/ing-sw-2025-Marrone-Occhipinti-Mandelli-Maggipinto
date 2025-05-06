@@ -230,4 +230,10 @@ public class Planets extends Card {
                 return "No commands available in current phase: " + status;
         }
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Planets\n";
+    }
 }

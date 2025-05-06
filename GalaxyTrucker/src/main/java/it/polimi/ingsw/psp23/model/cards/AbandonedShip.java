@@ -159,4 +159,15 @@ public class AbandonedShip extends Card {
         return visitorUsernameCoordinateNum.visitForAbandonedShip(this, username, i, j, num);
     }
 
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Abandoned Ship\n" +
+                        "l'equipaggio da perdere ammonta a "+ getNumMembers() +
+                "\ni crediti cosmici disponibili sono "+ getCosmicCredits() +
+                "\ni giorni persi sarebbero " + getDays();
+    }
+
+
+
 }

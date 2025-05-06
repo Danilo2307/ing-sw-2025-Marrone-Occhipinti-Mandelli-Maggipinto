@@ -90,4 +90,11 @@ public class Epidemic extends Card {
     public Object call(Visitor visitor) {
         return visitor.visitForEpidemic(this);
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Epidemic\n";
+    }
 }
+

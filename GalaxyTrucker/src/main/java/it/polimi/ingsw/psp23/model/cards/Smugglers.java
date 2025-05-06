@@ -351,4 +351,9 @@ public class Smugglers extends Card {
         return visitorCoordinateNum.visitForSmugglers(this, username, i, j, num);
     }
 
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Smugglers\n";
+    }
 }

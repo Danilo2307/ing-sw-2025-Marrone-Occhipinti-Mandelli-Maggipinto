@@ -91,4 +91,9 @@ public class OpenSpace extends Card {
         return visitorUsername.visitForOpenSpace(this, username);
     }
 
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta open space\n";
+    }
 }

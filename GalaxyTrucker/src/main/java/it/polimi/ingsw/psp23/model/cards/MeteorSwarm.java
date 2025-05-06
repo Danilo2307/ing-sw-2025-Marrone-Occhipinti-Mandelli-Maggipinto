@@ -126,4 +126,10 @@ public class MeteorSwarm extends Card {
         }
         return "No commands available in current phase.";
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Meteor Swarm\n";
+    }
 }
