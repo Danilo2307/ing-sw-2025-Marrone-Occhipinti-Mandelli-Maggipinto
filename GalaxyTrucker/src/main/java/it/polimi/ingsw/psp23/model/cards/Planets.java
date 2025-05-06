@@ -233,32 +233,41 @@ public class Planets extends Card {
 
     @Override
     public String toString(){
+
         if(planetGoods.size() == 2){
             return
-                    "I pianeti sono 2\n" +
-                            "● ->" + planetGoods.get(0).toString() +"\n" +
-                            "● ->" + planetGoods.get(1).toString() +"\n";
-        }else if(planetGoods.size() == 3){
-            return
-                    "I pianeti sono 3\n" +
+                    "è uscita la carta Planets\n" +
+                            "I pianeti sono 2\n" +
                             "● ->" + planetGoods.get(0).toString() +"\n" +
                             "● ->" + planetGoods.get(1).toString() +"\n" +
-                            "● ->" + planetGoods.get(2).toString() +"\n";
-        }else if(planetGoods.size() == 4){
+                            "i giorni persi sono " + getDaysLost();
+        }else if(planetGoods.size() == 3){
             return
-                    "I pianeti sono 3\n" +
+                    "è uscita la carta Planets\n" +
+                            "I pianeti sono 3\n" +
                             "● ->" + planetGoods.get(0).toString() +"\n" +
                             "● ->" + planetGoods.get(1).toString() +"\n" +
                             "● ->" + planetGoods.get(2).toString() +"\n" +
-                            "● ->" + planetGoods.get(3).toString() +"\n";
-        }else if(planetGoods.size() == 5){
+                            "i giorni persi sono " + getDaysLost();
+        }else if(planetGoods.size() == 4){
             return
-                    "I pianeti sono 3\n" +
+                    "è uscita la carta Planets\n" +
+                            "I pianeti sono 4\n" +
                             "● ->" + planetGoods.get(0).toString() +"\n" +
                             "● ->" + planetGoods.get(1).toString() +"\n" +
                             "● ->" + planetGoods.get(2).toString() +"\n" +
                             "● ->" + planetGoods.get(3).toString() +"\n" +
-                            "● ->" + planetGoods.get(4).toString() +"\n";
+                            "i giorni persi sono " + getDaysLost();
+        }else if(planetGoods.size() == 5){
+            return
+                    "è uscita la carta Planets\n" +
+                            "I pianeti sono 5\n" +
+                            "● ->" + planetGoods.get(0).toString() +"\n" +
+                            "● ->" + planetGoods.get(1).toString() +"\n" +
+                            "● ->" + planetGoods.get(2).toString() +"\n" +
+                            "● ->" + planetGoods.get(3).toString() +"\n" +
+                            "● ->" + planetGoods.get(4).toString() +"\n" +
+                            "i giorni persi sono " + getDaysLost();
         }
         return null;
     }
