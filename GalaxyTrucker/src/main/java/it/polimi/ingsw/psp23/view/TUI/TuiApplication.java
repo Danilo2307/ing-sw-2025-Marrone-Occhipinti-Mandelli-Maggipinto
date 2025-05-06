@@ -62,7 +62,7 @@ public class TuiApplication {
             TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio"),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
-            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info"),
+            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto"),
             TuiState.CHECK, Set.of("rimuovi", "mostra", "info"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio"),
             TuiState.NOTYOURTURN, Set.of(),
@@ -164,6 +164,12 @@ public class TuiApplication {
             }
             case "gira" -> {
                 sendAction(new TurnHourglass());
+            }
+            case "mazzetto" -> {
+                int x = Integer.parseInt(words[1]);
+                if (x<1 || x>3)
+                    throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                sendAction(new TakeVisibleDeck(x));
             }
             case "mostra" -> {
                 sendAction(new RequestShip());

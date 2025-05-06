@@ -55,4 +55,6 @@ public interface ActionVisitor<T> {
     public T visitForReduceCrew(ReduceCrew reduceCrew, String username);
 
     public T visitForRemovePreciousItem(RemovePreciousItem removePreciousItem, String username);
+
+    public T visitForTakeVisibleDeck(TakeVisibleDeck takeVisibleDeck, String username);
 }
