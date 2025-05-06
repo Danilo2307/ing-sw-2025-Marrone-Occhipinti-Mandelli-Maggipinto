@@ -198,6 +198,7 @@ public class Controller {
     public void startFlight(){
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.Playing);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Playing)));
         game.nextCard();
     }
 
@@ -270,7 +271,7 @@ public class Controller {
         //network.sendToAllClients("game_event", event);
 
         // TODO: capire quale evento effettivo bisogna inviare
-        Message message = new BroadcastMessage(new StringResponse("evento generico in play"));
+        Message message = new BroadcastMessage(new StringResponse(currentCard.toString()));
         Server.getInstance().notifyAllObservers(message);
     }
 
