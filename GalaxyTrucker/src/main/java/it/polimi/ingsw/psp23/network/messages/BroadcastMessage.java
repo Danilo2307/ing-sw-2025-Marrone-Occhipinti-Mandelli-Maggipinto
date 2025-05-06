@@ -21,4 +21,9 @@ public final class BroadcastMessage extends Message{
         return messageVisitor.visitForBroadcastMessage(this);
     }
 
+    @Override
+    public String toString() {
+        return getEvent().toString();
+    }
+
 }

@@ -8,4 +8,6 @@ public interface Event extends Serializable {
 
     public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication);
 
+    public String toString();
+
 }

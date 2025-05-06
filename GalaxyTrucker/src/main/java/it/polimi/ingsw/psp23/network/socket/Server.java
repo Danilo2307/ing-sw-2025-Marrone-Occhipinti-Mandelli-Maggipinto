@@ -231,6 +231,7 @@ public class Server {
         synchronized (clients) {
             for (String connection : clients.keySet()) {
                 sendMessage(message, connection);
+                System.out.println("Notify observer: " + getUsernameForConnection(connection) + " with message: " + message.toString());
             }
         }
     }

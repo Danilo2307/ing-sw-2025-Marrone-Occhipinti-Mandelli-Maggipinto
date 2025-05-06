@@ -15,4 +15,9 @@ public record StringResponse(String message) implements Event {
         return eventVisitor.visitForStringResponse(this, tuiApplication);
     }
 
+    @Override
+    public String toString() {
+        return message;
+    }
+
 }
