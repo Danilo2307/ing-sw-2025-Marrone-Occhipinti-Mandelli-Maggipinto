@@ -58,6 +58,8 @@ public interface ActionVisitor<T> {
 
     public T visitForTakeVisibleDeck(TakeVisibleDeck takeVisibleDeck, String username);
 
+    public T visitForReleaseDeck(ReleaseDeck releaseDeck, String username);
+
     public T visitForFinished(Finished finished, String username);
 
 }

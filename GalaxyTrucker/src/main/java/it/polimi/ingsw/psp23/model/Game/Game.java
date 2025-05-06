@@ -349,7 +349,7 @@ public class Game {
             if (player.getNickname().equals(deck1Owner)) {
                 deck1Owner = null;
             } else {
-                throw new IllegalStateException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
+                throw new InvalidActionException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
             }
         }
     }
@@ -359,7 +359,7 @@ public class Game {
             if (player.getNickname().equals(deck2Owner)) {
                 deck2Owner = null;
             } else {
-                throw new IllegalStateException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
+                throw new InvalidActionException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
             }
         }
     }
@@ -369,7 +369,7 @@ public class Game {
             if (player.getNickname().equals(deck3Owner)) {
                 deck3Owner = null;
             } else {
-                throw new IllegalStateException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
+                throw new InvalidActionException("Player " + player.getNickname() + " ha provato a rilasciare un deck non in suo possesso");
             }
         }
     }

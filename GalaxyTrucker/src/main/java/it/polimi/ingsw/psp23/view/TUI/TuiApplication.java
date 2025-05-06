@@ -134,7 +134,7 @@ public class TuiApplication {
                 int index = Integer.parseInt(words[2]);
                 sendAction(new TakeReservedTile(index - 1));
             }
-            case "rilascia" -> {
+            case "scarta" -> {
                 sendAction(new ReleaseTile());
             }
             case "ruota" -> {
@@ -170,6 +170,12 @@ public class TuiApplication {
                 if (x<1 || x>3)
                     throw new TuiInputException("I mazzetti visibili sono solo 3!");
                 sendAction(new TakeVisibleDeck(x));
+            }
+            case "rilascia" -> {
+                int x = Integer.parseInt(words[1]);
+                if (x<1 || x>3)
+                    throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                sendAction(new ReleaseDeck(x));
             }
             case "mostra" -> {
                 sendAction(new RequestShip());

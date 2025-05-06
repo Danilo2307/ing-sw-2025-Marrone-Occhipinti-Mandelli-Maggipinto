@@ -170,4 +170,16 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForTakeVisibleDeck(TakeVisibleDeck takeVisibleDeck, String username) {
+        takeVisibleDeck.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForReleaseDeck(ReleaseDeck releaseDeck, String username) {
+        releaseDeck.handle(username);
+        return null;
+    }
+
 }
