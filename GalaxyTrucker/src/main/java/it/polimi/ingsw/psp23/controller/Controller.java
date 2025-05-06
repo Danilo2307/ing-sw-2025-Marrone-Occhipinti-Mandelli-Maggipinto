@@ -18,6 +18,7 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public class Controller {
     // private CardHandler cardHandler;
@@ -27,6 +28,7 @@ public class Controller {
     private int currentPosition;
     private Card currentCard;
     GameFlow gameFlow = new GameFlow();
+    List<Player> crewPositioned = new ArrayList<>();
 
 
     public Controller() {
@@ -104,18 +106,44 @@ public class Controller {
             }
         }
 
-        startFlight();
+        for (Player player : Game.getInstance().getPlayers()) {
+            player.getTruck().updateAllowedAliens();
+        }
+
+
+        startSetCrew();
 
     }
 
-    public void removeComponent(String nickname,int i, int j){
-        Game.getInstance().getPlayerFromNickname(nickname).getTruck().delete(i,j);
+    public void startSetCrew() {
+        if (Game.getInstance().getGameStatus() == GameStatus.CheckBoards) {
+            Game.getInstance().setGameStatus(GameStatus.SetCrew);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.SetCrew)));
+        }else{
+            throw new RuntimeException("Not in the correct state to set crew");
+        }
+    }
+
+    public void crewPositioned(String username) {
+        if(!crewPositioned.contains(username)) {
+            crewPositioned.add(Game.getInstance().getPlayerFromNickname(username));
+        }else{
+            throw new InvalidActionException("You have already declared crew ");
+        }
+        if(crewPositioned.size() == Game.getInstance().getPlayers().size()){
+            crewPositioned.clear();
+            startFlight();
+        }
+    }
+
+    public void removeComponent(String username,int i, int j){
+        Game.getInstance().getPlayerFromNickname(username).getTruck().delete(i,j);
     }
 
 
 
-    public void addComponent(String nickname, Component c, int x, int y) {
-        Game.getInstance().getPlayerFromNickname(nickname).getTruck().addComponent(c, x, y);
+    public void addComponent(String username, Component c, int x, int y) {
+        Game.getInstance().getPlayerFromNickname(username).getTruck().addComponent(c, x, y);
     }
 
     public Component getTileFromHeap() {
@@ -136,26 +164,26 @@ public class Controller {
 
 //TODO: va gestita la possibilità del player di attaccare ancora pezzi una volta che dichiara di aver terminato ovvero dovremmo mettere una lista temporanea per dire chi ha finito
 
-    public void playerFinishedBuilding(String nickname) {
+    public void playerFinishedBuilding(String username) {
         switch (currentPosition) {
             case 1: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
-                Game.getInstance().getPlayerFromNickname(nickname).setPosition(8);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
+                Game.getInstance().getPlayerFromNickname(username).setPosition(8);
                 break;
             }
             case 2: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
-                Game.getInstance().getPlayerFromNickname(nickname).setPosition(5);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
+                Game.getInstance().getPlayerFromNickname(username).setPosition(5);
                 break;
             }
             case 3: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
-                Game.getInstance().getPlayerFromNickname(nickname).setPosition(3);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
+                Game.getInstance().getPlayerFromNickname(username).setPosition(3);
                 break;
             }
             case 4: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(nickname));
-                Game.getInstance().getPlayerFromNickname(nickname).setPosition(2);
+                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
+                Game.getInstance().getPlayerFromNickname(username).setPosition(2);
                 break;
             }
         }
@@ -172,9 +200,9 @@ public class Controller {
     }
 
 
-    public ArrayList<Card> getVisibleDeck1(String nickname){
+    public ArrayList<Card> getVisibleDeck1(String username){
         ArrayList<Card> deck;
-        deck = Game.getInstance().getVisibleDeck1(Game.getInstance().getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck1(Game.getInstance().getPlayerFromNickname(username));
         if(deck != null){
             return deck;
         }else{
@@ -182,9 +210,9 @@ public class Controller {
         }
     }
 
-    public ArrayList<Card> getVisibleDeck2(String nickname){
+    public ArrayList<Card> getVisibleDeck2(String username){
         ArrayList<Card> deck;
-        deck = Game.getInstance().getVisibleDeck2(Game.getInstance().getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck2(Game.getInstance().getPlayerFromNickname(username));
         if(deck != null){
             return deck;
         }else{
@@ -192,9 +220,9 @@ public class Controller {
         }
     }
 
-    public ArrayList<Card> getVisibleDeck3(String nickname){
+    public ArrayList<Card> getVisibleDeck3(String username){
         ArrayList<Card> deck;
-        deck = Game.getInstance().getVisibleDeck3(Game.getInstance().getPlayerFromNickname(nickname));
+        deck = Game.getInstance().getVisibleDeck3(Game.getInstance().getPlayerFromNickname(username));
         if(deck != null){
             return deck;
         }else{
@@ -202,16 +230,16 @@ public class Controller {
         }
     }
 
-    public void releaseDeck1(String nickname){
-        Game.getInstance().releaseVisibleDeck1(Game.getInstance().getPlayerFromNickname(nickname));
+    public void releaseDeck1(String username){
+        Game.getInstance().releaseVisibleDeck1(Game.getInstance().getPlayerFromNickname(username));
     }
 
-    public void releaseDeck2(String nickname){
-        Game.getInstance().releaseVisibleDeck2(Game.getInstance().getPlayerFromNickname(nickname));
+    public void releaseDeck2(String username){
+        Game.getInstance().releaseVisibleDeck2(Game.getInstance().getPlayerFromNickname(username));
     }
 
-    public void releaseDeck3(String nickname){
-        Game.getInstance().releaseVisibleDeck3(Game.getInstance().getPlayerFromNickname(nickname));
+    public void releaseDeck3(String username){
+        Game.getInstance().releaseVisibleDeck3(Game.getInstance().getPlayerFromNickname(username));
     }
 
     public ArrayList<Player> calculateFinalRanking(){
@@ -223,10 +251,10 @@ public class Controller {
 
 
 
-    //arriva un input dalla view
+    /*//arriva un input dalla view
     public void handleInput(Object input) {
         //currentCard.play(Game.getInstance(),input);
-    }
+    }*/
 
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
         Game.getInstance().setGameStatus(event.getNewStatus());

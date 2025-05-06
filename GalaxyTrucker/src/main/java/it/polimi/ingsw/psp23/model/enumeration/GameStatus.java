@@ -4,6 +4,7 @@ public enum GameStatus {
     Setup,
     Building,
     CheckBoards,
+    SetCrew,
     Playing,
     End,
     INIT_ABANDONEDSHIP,
