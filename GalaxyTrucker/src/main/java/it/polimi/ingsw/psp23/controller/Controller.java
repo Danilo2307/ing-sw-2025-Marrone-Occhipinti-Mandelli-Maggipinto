@@ -94,6 +94,7 @@ public class Controller {
         if (Game.getInstance().getGameStatus() == GameStatus.Building) {
             timer.shutdown();
             Game.getInstance().setGameStatus(GameStatus.CheckBoards);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.CheckBoards)));
         }
 
         for (Player player : Game.getInstance().getPlayers()) {
@@ -160,7 +161,7 @@ public class Controller {
         }
         currentPosition++;
         if(currentPosition == Game.getInstance().getPlayers().size()) {
-            startFlight();
+            startCheckBoard();
         }
     }
 
