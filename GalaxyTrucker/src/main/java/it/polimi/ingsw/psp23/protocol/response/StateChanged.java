@@ -4,7 +4,6 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.TUI.TuiState;
 
-import javax.swing.plaf.nimbus.State;
 
 public record StateChanged(GameStatus newState) implements Event {
 
@@ -13,6 +12,8 @@ public record StateChanged(GameStatus newState) implements Event {
         switch (newState){
             case Building -> tuiApplication.setState(TuiState.BUILDING);
             case CheckBoards -> tuiApplication.setState(TuiState.CHECK);
+            case SetCrew -> tuiApplication.setState(TuiState.ADDCREW);
+            case Playing -> tuiApplication.setState(TuiState.PLAY);
         }
     }
 

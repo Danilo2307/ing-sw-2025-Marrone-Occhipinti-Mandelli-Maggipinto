@@ -163,4 +163,11 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         removePreciousItem.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForFinished(Finished finished, String username) {
+        finished.handle(username);
+        return null;
+    }
+
 }

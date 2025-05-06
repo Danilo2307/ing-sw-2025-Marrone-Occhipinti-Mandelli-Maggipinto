@@ -57,4 +57,7 @@ public interface ActionVisitor<T> {
     public T visitForRemovePreciousItem(RemovePreciousItem removePreciousItem, String username);
 
     public T visitForTakeVisibleDeck(TakeVisibleDeck takeVisibleDeck, String username);
+
+    public T visitForFinished(Finished finished, String username);
+
 }

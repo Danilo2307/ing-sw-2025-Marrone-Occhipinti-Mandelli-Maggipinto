@@ -64,7 +64,7 @@ public class TuiApplication {
             TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto"),
             TuiState.CHECK, Set.of("rimuovi", "mostra", "info"),
-            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio"),
+            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
             TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi"),
@@ -271,6 +271,9 @@ public class TuiApplication {
             case "atterra" -> {
                 int pi = Integer.parseInt(words[1]);
                 sendAction(new Land(pi));
+            }
+            case "finito" -> {
+                sendAction(new Finished());
             }
             default -> throw new TuiInputException("Comando sconosciuto");
         }
