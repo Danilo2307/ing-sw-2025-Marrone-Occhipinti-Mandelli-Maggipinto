@@ -260,7 +260,7 @@ public class Planets extends Card {
                             "i giorni persi sono " + getDaysLost();
         }else if(planetGoods.size() == 5){
             return
-                    "è uscita la carta Planets" +
+                    "è uscita la carta Planets\n" +
                             "I pianeti sono 5\n" +
                             "● ->" + planetGoods.get(0).toString() +"\n" +
                             "● ->" + planetGoods.get(1).toString() +"\n" +
