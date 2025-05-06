@@ -100,6 +100,10 @@ public class Server {
         }
     }
 
+    public synchronized ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
     public void connectClients(String nameConnection) {
         if (clients.containsKey(nameConnection)) {
             throw new RuntimeException("La connessione è già presente!!");

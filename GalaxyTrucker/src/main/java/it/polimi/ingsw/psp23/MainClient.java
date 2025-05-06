@@ -12,7 +12,7 @@ public class MainClient {
         try {
             TuiApplication tui = new TuiApplication();
             ClientEventHandler clientEventHandler = new ClientEventHandler(tui);
-            Client client = new Client("172.20.10.8", 8000, null, clientEventHandler);
+            Client client = new Client("localhost", 8000, null, clientEventHandler);
             System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
             Scanner scanner = new Scanner(System.in);
             String username = scanner.nextLine();
