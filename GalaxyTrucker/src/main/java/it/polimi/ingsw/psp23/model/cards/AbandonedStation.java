@@ -152,4 +152,13 @@ public class AbandonedStation extends Card {
     public Object call(VisitorCoordinate visitorUsernameCoordinate, String username, int i, int j) {
         return visitorUsernameCoordinate.visitForAbandonedStation(this, username, i, j);
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Abandoned Station\n" +
+                        "i membri richiesti sono "+ getNumMembers() +
+                        "\nle merci disponibili sono "+ prize.toString() +
+                        "\ni giorni persi sarebbero " + getDays();
+    }
 }

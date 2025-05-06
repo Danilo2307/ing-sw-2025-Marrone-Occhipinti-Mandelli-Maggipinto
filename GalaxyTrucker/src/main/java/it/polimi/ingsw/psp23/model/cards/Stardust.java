@@ -70,4 +70,10 @@ public class Stardust extends Card {
     public String help() {
         return "No commands available for Stardust; effect is automatic.";
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Stardust\n";
+    }
 }

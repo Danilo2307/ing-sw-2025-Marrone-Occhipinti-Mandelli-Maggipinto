@@ -497,4 +497,10 @@ public class CombatZone extends Card {
             handleCannonShot();
         }
     }
+
+    @Override
+    public String toString(){
+        return
+                "è uscita la carta Combat Zone\n";
+    }
 }
