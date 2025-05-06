@@ -38,4 +38,6 @@ public interface EventVisitor<T> {
 
     public T visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, TuiApplication tuiApplication);
 
+    public T visitForIllegalTruck(IllegalTruck illegalTruck, TuiApplication tuiApplication);
+
 }

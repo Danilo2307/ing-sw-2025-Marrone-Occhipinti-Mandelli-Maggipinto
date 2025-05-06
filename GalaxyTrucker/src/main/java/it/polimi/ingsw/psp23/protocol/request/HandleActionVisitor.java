@@ -182,4 +182,16 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForPut(Put put, String username) {
+        put.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForFixed(Fixed fixed, String username) {
+        fixed.handle(username);
+        return null;
+    }
+
 }

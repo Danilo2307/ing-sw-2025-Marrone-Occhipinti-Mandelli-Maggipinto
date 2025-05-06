@@ -62,8 +62,8 @@ public class TuiApplication {
             TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio"),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
-            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info"),
+            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
@@ -280,6 +280,12 @@ public class TuiApplication {
             }
             case "finito" -> {
                 sendAction(new Finished());
+            }
+            case "posiziona" -> {
+                sendAction(new Put());
+            }
+            case "corretta" -> {
+                sendAction(new Fixed());
             }
             default -> throw new TuiInputException("Comando sconosciuto");
         }

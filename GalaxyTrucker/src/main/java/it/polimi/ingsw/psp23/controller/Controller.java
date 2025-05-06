@@ -11,8 +11,10 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.IllegalTruck;
 import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
@@ -101,8 +103,8 @@ public class Controller {
 
         for (Player player : Game.getInstance().getPlayers()) {
             if (!player.getTruck().check()) {
-                System.out.println("Player " + player.getNickname() + " has an illegal truck\n");
-                throw new IllegalTruckException(player.getNickname() + " has an illegal truck");
+                Server.getInstance().sendMessage(player.getNickname(), new DirectMessage((new IllegalTruck())));
+                return;
             }
         }
 

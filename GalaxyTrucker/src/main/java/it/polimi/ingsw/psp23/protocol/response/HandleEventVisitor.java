@@ -107,4 +107,10 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForIllegalTruck(IllegalTruck illegalTruck, TuiApplication tuiApplication){
+        illegalTruck.handle(tuiApplication);
+        return null;
+    }
+
 }

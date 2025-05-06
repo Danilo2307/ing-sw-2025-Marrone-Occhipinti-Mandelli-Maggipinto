@@ -62,4 +62,8 @@ public interface ActionVisitor<T> {
 
     public T visitForFinished(Finished finished, String username);
 
+    public T visitForPut(Put put, String username);
+
+    public T visitForFixed(Fixed fixed, String username);
+
 }
