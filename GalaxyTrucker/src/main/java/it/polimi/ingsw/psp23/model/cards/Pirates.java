@@ -250,6 +250,10 @@ public class Pirates extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta pirates \n";
+                "è uscita la carta Pirates \n" +
+                "la potenza di fuoco è " + getFirepower() + "\n" +
+                "i crediti cosmici sono " + getPrize() +"\n" +
+                "i giorni persi sono " + getDays() + "\n" +
+                "i colpi di cannone sono: " + getCannonShot().toString() + "\n";
     }
 }

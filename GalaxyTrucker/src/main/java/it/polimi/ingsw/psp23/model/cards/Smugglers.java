@@ -354,6 +354,10 @@ public class Smugglers extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta Smugglers\n";
+                "è uscita la carta Smugglers\n" +
+                "la potenza di fuoco è "+ getFirePower() +"\n" +
+                "le merci importanti che andrebbero perse sono " + getNumItemsStolen() +"\n" +
+                "i giorni persi sono " + getDays() +"\n"+
+                "le merci vinte sarebbero: " + getPrize().toString() +"\n";
     }
 }

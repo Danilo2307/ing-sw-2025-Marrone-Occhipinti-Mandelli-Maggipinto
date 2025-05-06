@@ -278,6 +278,10 @@ public class Slavers extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta Slavers\n";
+                "è uscita la carta Slavers\n" +
+                "la potenza di fuoco è " + getCannonStrength() +"\n" +
+                "i membri eventualmente persi sono " +getMembersStolen() +"\n" +
+                "i giorni persi sarebbero " + getDays() + "\n" +
+                "i crediti cosmici sono " + getPrize() +"\n";
     }
 }
