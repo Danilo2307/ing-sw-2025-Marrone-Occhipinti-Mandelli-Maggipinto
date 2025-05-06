@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
-import it.polimi.ingsw.psp23.protocol.response.ShowVisibleDeck;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
@@ -24,11 +23,15 @@ public record TakeVisibleDeck(int index) implements Action{
         };
 
         if (deckChosen == null) {
-            DirectMessage dm = new DirectMessage(new StringResponse("Il mazzetto "+index+" che hai richiesto è stato già preso! Attendi che il proprietario lo rilasci"))
+            DirectMessage dm = new DirectMessage(new StringResponse("Il mazzetto "+index+" che hai richiesto è stato già preso! Attendi che il proprietario lo rilasci"));
             Server.getInstance().sendMessage(username, dm);
         }
         else {
-            DirectMessage dm = new DirectMessage(new ShowVisibleDeck(deckChosen));
+            StringBuilder descriptions = new StringBuilder();
+            for (Card card : deckChosen) {
+                descriptions.append(card.toString()).append("\n");
+            }
+            DirectMessage dm = new DirectMessage(new StringResponse(descriptions.toString()));
             Server.getInstance().sendMessage(username, dm);
         }
     }
