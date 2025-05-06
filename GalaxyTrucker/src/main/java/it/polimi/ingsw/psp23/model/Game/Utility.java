@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.Game;
 import java.util.Random;
 import java.util.List;
 

@@ -1,7 +1,6 @@
-package it.polimi.ingsw.psp23;
+package it.polimi.ingsw.psp23.model.Game;
 
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.Game.*;
 import it.polimi.ingsw.psp23.model.components.*;
 
 

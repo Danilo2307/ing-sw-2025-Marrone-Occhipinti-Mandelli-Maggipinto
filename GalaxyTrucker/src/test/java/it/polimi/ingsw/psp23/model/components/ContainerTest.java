@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp23.model.components;
 
-import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;

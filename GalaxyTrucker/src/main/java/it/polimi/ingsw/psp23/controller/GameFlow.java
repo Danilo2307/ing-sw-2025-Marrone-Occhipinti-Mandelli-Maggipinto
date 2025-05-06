@@ -1,11 +1,8 @@
 package it.polimi.ingsw.psp23.controller;
 
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.InitPlayVisitor;
-import it.polimi.ingsw.psp23.model.cards.Visitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 import java.io.Serializable;

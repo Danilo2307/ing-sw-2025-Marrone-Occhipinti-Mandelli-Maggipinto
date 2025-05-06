@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForOpenSpace;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.model.Game.Utility;
 
 import java.util.HashSet;
 import java.util.List;

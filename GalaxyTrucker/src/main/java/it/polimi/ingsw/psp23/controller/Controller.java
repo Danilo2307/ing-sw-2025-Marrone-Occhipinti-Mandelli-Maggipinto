@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.controller;
 
-import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;

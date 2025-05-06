@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;

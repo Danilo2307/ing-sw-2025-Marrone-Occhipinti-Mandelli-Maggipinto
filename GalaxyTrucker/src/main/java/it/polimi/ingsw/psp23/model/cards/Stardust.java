@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-import it.polimi.ingsw.psp23.Player;
-import it.polimi.ingsw.psp23.Utility;
+import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.model.Events.EventForStardust;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.psp23.model.Game;
 
-import it.polimi.ingsw.psp23.Item;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;

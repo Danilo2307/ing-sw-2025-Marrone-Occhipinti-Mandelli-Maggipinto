@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
-import it.polimi.ingsw.psp23.Player;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 
 /** event triggered when the user wants to remove the tile at ship[x][y] .

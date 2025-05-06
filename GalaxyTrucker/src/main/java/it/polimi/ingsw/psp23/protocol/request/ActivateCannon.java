@@ -1,12 +1,8 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
-import it.polimi.ingsw.psp23.Board;
-import it.polimi.ingsw.psp23.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.ActiveCannonVisitor;
 import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.protocol.response.EventVisitor;
-import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
 /**
  * Event triggered when the user wants to activate a double cannon during the action phase.

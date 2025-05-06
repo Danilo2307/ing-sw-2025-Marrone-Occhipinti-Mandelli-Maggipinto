@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-import it.polimi.ingsw.psp23.Item;
+import it.polimi.ingsw.psp23.model.Game.Item;
 
 import java.util.List;
 
