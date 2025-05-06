@@ -34,11 +34,6 @@ public class StartListeningForClientThread extends Thread {
                 }
             }
             Message receivedMessage = Server.getInstance().receiveMessage(connectionID);
-
-            if(Server.getInstance().getClients().size() == 1) {
-                Server.getInstance().setServerSocket("172.20.10.8", 8000);
-            }
-
             System.out.println("Message read in class StartListeningForClientThread: " + receivedMessage);
             Users.getInstance().getClientHandler(connectionID).handleMessage(receivedMessage);
 
