@@ -179,7 +179,7 @@ public class Planets extends Card {
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico, int index) {
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
         if (index < 0 || index >= planetGoods.size()) {
             throw new IllegalArgumentException("Planets index out of bounds in method call");
         }
@@ -187,22 +187,22 @@ public class Planets extends Card {
     }
 
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForPlanets(this);
     }
 
     @Override
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForPlanets(this, username);
     }
 
     @Override
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForPlanets(this, username, i, j);
     }
 
     @Override
-    public Object call(VisitorUsernameIntero visitorUsernameIntero, String username, int i) {
+    public <T> T call(VisitorUsernameIntero<T> visitorUsernameIntero, String username, int i) {
         return visitorUsernameIntero.visitForPlanets(this, username, i);
     }
 

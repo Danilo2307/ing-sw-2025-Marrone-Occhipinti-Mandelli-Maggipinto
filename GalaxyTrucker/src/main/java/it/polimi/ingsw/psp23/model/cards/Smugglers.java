@@ -258,7 +258,7 @@ public class Smugglers extends Card {
      * @param visitor the visitor for Smugglers
      * @return visitor's result
      */
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForSmugglers(this);
     }
 
@@ -337,17 +337,17 @@ public class Smugglers extends Card {
     }
 
     @Override
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForSmugglers(this, username);
     }
 
     @Override
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForSmugglers(this, username, i, j);
     }
 
     @Override
-    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+    public <T> T call(VisitorCoordinateNum<T> visitorCoordinateNum, String username, int i, int j, int num) {
         return visitorCoordinateNum.visitForSmugglers(this, username, i, j, num);
     }
 

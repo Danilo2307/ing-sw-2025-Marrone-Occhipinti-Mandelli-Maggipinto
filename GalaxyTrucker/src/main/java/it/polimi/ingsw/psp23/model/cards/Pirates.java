@@ -54,17 +54,17 @@ public class Pirates extends Card {
     public List<CannonShot> getCannonShot() { return new ArrayList<>(cannonShot); }
 
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForPirates(this);
     }
 
     @Override
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForPirates(this, username);
     }
 
     @Override
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForPirates(this, username, i, j);
     }
 
