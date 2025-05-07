@@ -79,10 +79,10 @@ public class Planets extends Card {
         if (i < 0 || i >= planetsOccupied.size()) {
             throw new CardException("Planet index out of bounds: " + i);
         }
-        if (planetsOccupied.get(i) == null) {
-            planetsOccupied.set(i, username);
+        if (planetsOccupied.get(i-1) == null) {
+            planetsOccupied.set(i-1, username);
         } else {
-            throw new CardException("Planet " + (i + 1) + " is already occupied by " + planetsOccupied.get(i));
+            throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();
