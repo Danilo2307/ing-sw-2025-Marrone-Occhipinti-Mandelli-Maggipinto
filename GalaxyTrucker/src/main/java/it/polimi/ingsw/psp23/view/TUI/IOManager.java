@@ -29,11 +29,24 @@ public class IOManager {
         System.err.println("Errore: " + message);
     }
 
-    public void printShip(Component[][] ship) {
+    public void printShip(Component[][] ship, int[][] validCoordinates) {
+
         for (int i = 0; i < ship.length; i++) {
             for (int j = 0; j < ship[i].length; j++) {
-                Component c = ship[i][j];
-                System.out.print(getSymbol(c) + "\t");  // lascio spazio tra una tile e l'altra
+
+                boolean valid = false;
+                for (int[] coord : validCoordinates) {
+                    if (coord[0] == i && coord[1] == j) {
+                        valid = true;
+                    }
+                }
+                if (!valid) {
+                    print("x\t");
+                }
+                else {
+                    Component c = ship[i][j];
+                    System.out.print(getSymbol(c) + "\t");  // lascio spazio tra una tile e l'altra
+                }
             }
             System.out.println();
         }

@@ -21,7 +21,8 @@ public record RequestShip() implements Action {
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         Component[][] ship = p.getTruck().getShip();
-        DirectMessage dm = new DirectMessage(new ShipResponse(ship));
+        int[][] validCoordinates = p.getTruck().getValidCoords();
+        DirectMessage dm = new DirectMessage(new ShipResponse(ship, validCoordinates));
         Server.getInstance().sendMessage(username, dm);
     }
 
