@@ -74,7 +74,7 @@ public class Planets extends Card {
             throw new CardException("Cannot land in " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (i < 0 || i >= planetsOccupied.size()) {
             throw new CardException("Planet index out of bounds: " + i);
@@ -107,7 +107,7 @@ public class Planets extends Card {
             throw new CardException("Not in " + GameStatus.INIT_PLANETS);
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();

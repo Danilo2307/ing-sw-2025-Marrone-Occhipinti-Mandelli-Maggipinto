@@ -91,7 +91,7 @@ public class Pirates extends Card {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         game.getPlayerFromNickname(username)
                 .getTruck()

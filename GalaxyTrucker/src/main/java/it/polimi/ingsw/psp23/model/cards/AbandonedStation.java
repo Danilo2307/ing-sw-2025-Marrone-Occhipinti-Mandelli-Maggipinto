@@ -115,7 +115,7 @@ public class AbandonedStation extends Card {
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) return;
 
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
 
         if (game.getTurn() < game.getPlayers().size() - 1) {
