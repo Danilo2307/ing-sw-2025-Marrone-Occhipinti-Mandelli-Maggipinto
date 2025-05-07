@@ -64,4 +64,7 @@ public class Client {
         socketHandler.sendMessage(message);
     }
 
+    public SocketHandler getSocketHandler() {
+        return socketHandler;
+    }
 }

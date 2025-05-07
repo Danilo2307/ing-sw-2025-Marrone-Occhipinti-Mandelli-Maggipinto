@@ -178,7 +178,13 @@ public class TuiApplication {
                 sendAction(new ReleaseDeck(x));
             }
             case "mostra" -> {
-                sendAction(new RequestShip());
+                if (words.length == 1) {
+                    sendAction(new RequestShip(client.getSocketHandler().getUsername()));
+                }
+                else {
+                    String nickname = words[1];
+                    sendAction(new RequestShip(nickname));
+                }
             }
             case "info" -> {
                 int x = Integer.parseInt(words[1]);
