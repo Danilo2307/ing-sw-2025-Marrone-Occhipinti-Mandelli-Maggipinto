@@ -28,4 +28,14 @@ public final class Cannon extends Component {
     public boolean isActive(){
         return isActive;
     }
+
+    @Override
+    public String toSymbol() {
+        return isDouble() ? "G*" : "G";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Cannone " + (this.isDouble() ? "doppio":"singolo") + "\n";
+    }
 }

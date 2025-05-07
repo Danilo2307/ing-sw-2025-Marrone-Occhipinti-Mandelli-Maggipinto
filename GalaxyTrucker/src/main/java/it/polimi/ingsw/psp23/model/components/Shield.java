@@ -26,4 +26,14 @@ public final class Shield extends Component{
         return isActive;
     }
 
+    @Override
+    public String toSymbol() {
+        return "S";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Scudo\n";
+    }
+
 }

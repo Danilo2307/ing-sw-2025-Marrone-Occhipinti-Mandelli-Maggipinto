@@ -45,7 +45,7 @@ public class IOManager {
                 }
                 else {
                     Component c = ship[i][j];
-                    System.out.print(getSymbol(c) + "\t");  // lascio spazio tra una tile e l'altra
+                    print(getSymbol(c) + "\t");  // lascio spazio tra una tile e l'altra
                 }
             }
             System.out.println();
@@ -55,17 +55,7 @@ public class IOManager {
     public String getSymbol(Component c) {
         if (c == null) return "_";
 
-        return switch (c) {
-            case Cannon cannon -> cannon.isDouble() ? "G*" : "G";
-            case Engine engine -> engine.isDouble() ? "E*" : "E";
-            case HousingUnit cabin -> "H";
-            case AlienAddOns a -> a.getColor() == Color.Purple ? "Ap" : "Ab";
-            case StructuralComponent t -> "T";
-            case Container container -> container.getColor() == Color.Red ? "Cr" : "Cb";
-            case BatteryHub b -> b.getCapacity() == 2 ? "B2" : "B3";
-            case Shield s -> "S";
-            default -> "";   // non dovrebbe mai capitare
-        };
+        return c.toSymbol();
     }
 
     public void printInfoTile(Component c) {
@@ -74,30 +64,12 @@ public class IOManager {
             return;
         }
 
-        switch (c) {
-            case Cannon cannon -> System.out.println("Cannone " + (cannon.isDouble() ? "doppio":"singolo"));
-            case Engine engine -> System.out.println("Motore " + (engine.isDouble() ? "doppio":"singolo"));
-            case HousingUnit cabin -> {
-                if (cabin.getAlien() == null)
-                    System.out.println("Cabina contiene " + cabin.getNumAstronaut() + " astronauti");
-                else
-                    System.out.println("Cabina contiene un alieno di colore " + cabin.getAlien());
-            }
-            case AlienAddOns a -> System.out.println("Supporto vitale di colore "+ a.getColor());
-            case StructuralComponent t -> System.out.println("Tubi");
-            case Container container -> System.out.println("Container di colore "+ container.getColor() + " e capacità " + container.getSize()
-                    + ". Contiene le seguenti merci: " + container.getItems());
-            case BatteryHub b -> System.out.println("Il pacco batterie ha capacità " + b.getCapacity() +
-                    " e attualmente contiene " + b.getNumBatteries() + " batterie");
-            case Shield s -> System.out.println("Scudo");
-            default -> System.out.println();
-        }
-
-        System.out.println("Connettori:");
-        System.out.println("  ↑ Sopra     : " + c.getUp());
-        System.out.println("  ↓ Sotto     : " + c.getDown());
-        System.out.println("  ← Sinistra  : " + c.getLeft());
-        System.out.println("  → Destra    : " + c.getRight());
+        print(c.getInfo());
+        print("Connettori:\n" +
+                "  ↑ Sopra : " + c.getUp() + "\n" +
+                "  ↓ Sotto : " + c.getDown() + "\n" +
+                "  ← Sinistra : " + c.getLeft() + "\n" +
+                "  → Destra : " + c.getRight() + "\n");
     }
 
 

@@ -71,5 +71,20 @@ public final class HousingUnit extends Component {
         return this.isStartingCabin;
     }
 
+    @Override
+    public String toSymbol() {
+        return "H";
+    }
+
+    @Override
+    public String getInfo() {
+        String content;
+        if (this.getAlien() != null) {
+            content = "un alieno di colore\n" + this.getAlien() + "\n";
+        } else {
+            content = this.numAstronaut + " astronauti\n";
+        }
+        return "La cabina contiene " + content + "\n";
+    }
 
 }

@@ -102,4 +102,12 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
     public boolean isStartingCabin() {
         return false;
     }
+
+    public String toSymbol() {
+        return null;
+    }
+
+    public String getInfo() {
+        return null;
+    }
 }

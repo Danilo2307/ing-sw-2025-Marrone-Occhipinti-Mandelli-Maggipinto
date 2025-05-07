@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.components;
 
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 public final class BatteryHub extends Component {
@@ -30,5 +31,16 @@ public final class BatteryHub extends Component {
         else{
             throw new IllegalArgumentException("Error: num of batteries removed from this Battery Hub is out of bounds");
         }
+    }
+
+    @Override
+    public String toSymbol() {
+        return this.getCapacity() == 2 ? "B2" : "B3";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Il pacco batterie ha capacità " + this.getCapacity() +
+                " e attualmente contiene " + this.getNumBatteries() + " batterie\n";
     }
 }
