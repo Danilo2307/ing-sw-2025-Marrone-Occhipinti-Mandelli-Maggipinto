@@ -269,6 +269,6 @@ public class Planets extends Card {
                             "● ->" + planetGoods.get(4).toString() +"\n" +
                             "i giorni persi sono " + getDaysLost();
         }
-        return null;
+        return "Errore in carta Planets\n";
     }
 }
