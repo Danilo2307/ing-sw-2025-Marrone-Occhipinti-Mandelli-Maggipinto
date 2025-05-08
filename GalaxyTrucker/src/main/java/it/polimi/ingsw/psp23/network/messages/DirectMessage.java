@@ -21,4 +21,9 @@ public final class DirectMessage extends Message{
         return messageVisitor.visitForDirectMessage(this);
     }
 
+    @Override
+    public String toString() {
+        return e.toString();
+    }
+
 }

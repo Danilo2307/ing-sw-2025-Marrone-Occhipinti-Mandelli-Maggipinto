@@ -23,7 +23,7 @@ public final class BroadcastMessage extends Message{
 
     @Override
     public String toString() {
-        return getEvent().toString();
+        return e.toString();
     }
 
 }
