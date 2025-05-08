@@ -100,6 +100,10 @@ public class Server {
         }
     }
 
+    public synchronized ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+
     public void connectClients(String nameConnection) {
         if (clients.containsKey(nameConnection)) {
             throw new RuntimeException("La connessione è già presente!!");
@@ -144,7 +148,7 @@ public class Server {
                     }
                 } while(error);
 
-                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername()));
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
                 socketHandler.setUsername(username);
 
                 synchronized (clients) {

@@ -341,7 +341,7 @@ public class CombatZone extends Card {
      * @return result of the visitor method
      */
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForCombatZone(this);
     }
 
@@ -354,22 +354,22 @@ public class CombatZone extends Card {
      * @throws IndexOutOfBoundsException if index is out of range
      */
     @Override
-    public Object call(VisitorParametrico visitorParametrico, int index) {
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
         if (index < 1 || index > 3) {
             throw new IndexOutOfBoundsException("Index must be between 1 and 3");
         }
         return visitorParametrico.visitForCombatZone(this, index);
     }
 
-    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+    public <T> T call(VisitorCoordinateNum<T> visitorCoordinateNum, String username, int i, int j, int num) {
         return visitorCoordinateNum.visitForCombatZone(this, username, i, j, num);
     }
 
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForCombatZone(this, username, i, j);
     }
 
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForCombatZone(this, username);
     }
 

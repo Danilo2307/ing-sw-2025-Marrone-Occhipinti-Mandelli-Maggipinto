@@ -86,22 +86,22 @@ public class Slavers extends Card {
     }
 
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForSlavers(this);
     }
 
     @Override
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForSlavers(this, username);
     }
 
     @Override
-    public Object call(VisitorCoordinateNum visitorCoordinateNum, String username, int i, int j, int num) {
+    public <T> T call(VisitorCoordinateNum<T> visitorCoordinateNum, String username, int i, int j, int num) {
         return visitorCoordinateNum.visitForSlavers(this, username, i, j, num);
     }
 
     @Override
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForSlavers(this, username, i, j);
     }
 
@@ -127,7 +127,7 @@ public class Slavers extends Card {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         game.getPlayerFromNickname(username)
                 .getTruck()

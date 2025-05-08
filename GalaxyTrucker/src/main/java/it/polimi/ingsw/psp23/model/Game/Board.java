@@ -27,6 +27,7 @@ public class Board {
     private final ArrayList<Component> reservedTiles;
     private final int ROWS = 5;
     private final int COLS = 7;
+    int[][] validCoords;
 
 
     public Board() {
@@ -41,6 +42,9 @@ public class Board {
         housingUnits = new ArrayList<>();
         structuralComponents = new ArrayList<>();
         reservedTiles = new ArrayList<>();
+        validCoords = new int[][]{
+            {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 0}, {4, 1}, {4, 2}, {4, 4}, {4, 5}, {4, 6}
+        };
     }
 
     /**
@@ -126,23 +130,17 @@ public class Board {
 
     // indica se nella posizione i,j può starci un componente oppure no: la plancia non ha una forma perfettamente matriciale
     public boolean isValid(int i, int j) {
-
-        final boolean[][] validPositions = new boolean[ROWS][COLS];
-
-        int[][] validCoords = {
-                {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 0}, {4, 1}, {4, 2}, {4, 4}, {4, 5}, {4, 6}
-        };
-
+        // estraggo la coppia corrente e controllo se matcha
         for (int[] coord : validCoords) {
-            int x = coord[0];
-            int y = coord[1];
-            validPositions[x][y] = true;
+            if (coord[0] == i && coord[1] == j) {
+                return true;
+            }
         }
+        return false;
+    }
 
-        if (i < 0 || i >= ROWS || j < 0 || j >= COLS)
-            return false;
-        else
-            return validPositions[i][j];
+    public int[][] getValidCoords() {
+        return validCoords;
     }
 
     // determina se ship[i][j] contiene un component oppure no
@@ -1013,9 +1011,11 @@ public class Board {
     public boolean isWelded(){ //restituisce vero se il player ha almeno un pezzo saldato
         for(int i = 0; i < ROWS ; i++){
             for(int j = 0; j < COLS ; j++){
-                if(i!= 2 && j!= 3) // non considero la cabina centrale
-                    if(ship[i][j]!= null)
+                if(!(i == 2 && j == 3)) { // non considero la cabina centrale
+                    if (ship[i][j] != null) {
                         return true;
+                    }
+                }
             }
         }
         return false;

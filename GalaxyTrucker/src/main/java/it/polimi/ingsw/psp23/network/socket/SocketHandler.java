@@ -89,7 +89,7 @@ public class SocketHandler {
                 throw new RuntimeException("Problema(IOException) in reset di 'out' in writeMessage in SocketHandler " + e.getMessage());
             }
             try {
-                System.out.println("Sending " + message);
+                // System.out.println("Sending " + message);
                 out.writeObject(message);
             } catch (IOException e) {
                 throw new RuntimeException("Problema(IOException) in writeObject di 'out' in writeMessage in SocketHandler " + e.getMessage());

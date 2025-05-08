@@ -29,6 +29,16 @@ public final class Engine extends Component{
         return isActive;
     }
 
+    @Override
+    public String toSymbol() {
+        return isDouble() ? "E*" : "E";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Motore " + (this.isDouble() ? "doppio":"singolo") + "\n";
+    }
+
 
 
 

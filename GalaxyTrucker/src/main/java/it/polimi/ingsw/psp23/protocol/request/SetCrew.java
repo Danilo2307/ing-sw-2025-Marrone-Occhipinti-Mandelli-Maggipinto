@@ -3,9 +3,13 @@ package it.polimi.ingsw.psp23.protocol.request;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.exceptions.InvalidComponentActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 
 /**
  * Event triggered when the user wants to add crew to a housing unit located at ship[x][y].
@@ -20,7 +24,8 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
 
     public void handle(String username) {
         Game game = Game.getInstance();
-        Board truck = game.getPlayerFromNickname(username).getTruck();
+        Player p = game.getPlayerFromNickname(username);
+        Board truck = p.getTruck();
         Component tile = truck.getTile(x, y);
         int index = truck.getHousingUnits().indexOf(tile);
         HousingUnit housingUnit = truck.getHousingUnits().get(index);
@@ -39,6 +44,7 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         else {
             housingUnit.setAstronaut();
         }
+        Server.getInstance().sendMessage(username, new DirectMessage(new TileResponse(tile)));
     }
 
     @Override

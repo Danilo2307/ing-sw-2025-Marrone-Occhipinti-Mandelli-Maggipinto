@@ -310,9 +310,10 @@ public class Game {
      * @return a copy of the visible deck if access is granted, otherwise null
      */
     public ArrayList<Card> getVisibleDeck1(Player player){
+        String nickname = player.getNickname();
         synchronized (visibleCards1) {
-            if (gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded()) {
-                deck1Owner = player.getNickname();
+            if (gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded() && (deck2Owner == null || !deck2Owner.equals(nickname)) && (deck3Owner == null || !deck3Owner.equals(nickname))) {
+                deck1Owner = nickname;
                 return new ArrayList<>(visibleCards1);
             } else
                 return null;
@@ -320,9 +321,10 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck2(Player player){
+        String nickname = player.getNickname();
         synchronized (visibleCards2) {
-            if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded()) {
-                    deck2Owner = player.getNickname();
+            if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded() && (deck3Owner == null || !deck3Owner.equals(nickname)) && (deck1Owner == null || !deck1Owner.equals(nickname))) {
+                    deck2Owner = nickname;
                     return new ArrayList<>(visibleCards2);
                 }
             else
@@ -331,9 +333,10 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck3(Player player) {
+        String nickname = player.getNickname();
         synchronized (visibleCards3) {
-            if (gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded()) {
-                deck3Owner = player.getNickname();
+            if (gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded() && (deck1Owner == null || !deck1Owner.equals(nickname)) && (deck2Owner == null || !deck2Owner.equals(nickname))) {
+                deck3Owner = nickname;
                 return new ArrayList<>(visibleCards3);
             }
             else

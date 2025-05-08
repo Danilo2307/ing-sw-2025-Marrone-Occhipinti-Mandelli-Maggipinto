@@ -87,7 +87,7 @@ public class Epidemic extends Card {
     }
 
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForEpidemic(this);
     }
 

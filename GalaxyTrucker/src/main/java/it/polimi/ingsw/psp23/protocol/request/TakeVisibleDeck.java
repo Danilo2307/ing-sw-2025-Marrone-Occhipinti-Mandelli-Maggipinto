@@ -23,7 +23,7 @@ public record TakeVisibleDeck(int index) implements Action{
         };
 
         if (deckChosen == null) {
-            DirectMessage dm = new DirectMessage(new StringResponse("Il mazzetto "+index+" che hai richiesto è stato già preso! Attendi che il proprietario lo rilasci"));
+            DirectMessage dm = new DirectMessage(new StringResponse("Non puoi guardare il mazzetto "+index+" in questo momento"));
             Server.getInstance().sendMessage(username, dm);
         }
         else {

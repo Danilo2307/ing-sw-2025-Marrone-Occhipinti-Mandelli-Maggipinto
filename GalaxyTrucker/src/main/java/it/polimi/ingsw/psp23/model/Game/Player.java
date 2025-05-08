@@ -136,4 +136,8 @@ public class Player {
         c.moveToHand();
     }
 
+    public Component getCurrentTileInHand() {
+        return currentTileInHand;
+    }
+
 }

@@ -13,4 +13,14 @@ public final class AlienAddOns extends Component {
 
     public Color getColor(){ return c; }
 
+    @Override
+    public String toSymbol() {
+        return this.getColor() == Color.Purple ? "Ap" : "Ab";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Supporto vitale di colore " + this.getColor() + "\n";
+    }
+
 }

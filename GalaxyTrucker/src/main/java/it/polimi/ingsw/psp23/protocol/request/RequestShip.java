@@ -15,13 +15,14 @@ import it.polimi.ingsw.psp23.protocol.response.ShipResponse;
  * and sending back a response event (e.g. ShipStateResponse) containing the full ship matrix.
  * The client will then use this data to display the ship in the TUI.
  */
-public record RequestShip() implements Action {
+public record RequestShip(String nickname) implements Action {
 
     public void handle(String username) {
         Game game = Game.getInstance();
-        Player p = game.getPlayerFromNickname(username);
+        Player p = game.getPlayerFromNickname(nickname);
         Component[][] ship = p.getTruck().getShip();
-        DirectMessage dm = new DirectMessage(new ShipResponse(ship));
+        int[][] validCoordinates = p.getTruck().getValidCoords();
+        DirectMessage dm = new DirectMessage(new ShipResponse(ship, validCoordinates));
         Server.getInstance().sendMessage(username, dm);
     }
 

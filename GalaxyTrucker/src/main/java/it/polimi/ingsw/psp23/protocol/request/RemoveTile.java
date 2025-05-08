@@ -11,6 +11,9 @@ public record RemoveTile(int x, int y) implements Action {
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         p.getTruck().delete(x,y);
+        // Gestisco l'aggiornamento automatico della ship nella tui a seguito del fissaggio delle tile chiamando
+        // l'handle dell'azione RequestShip in modo da simulare (QUASI) una richiesta dell'utente
+        new RequestShip(username).handle(username);
     }
 
     @Override

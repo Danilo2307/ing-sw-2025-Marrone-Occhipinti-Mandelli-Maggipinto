@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class MainServer {
     public static void main(String[] args) {
-        Server.getInstance("172.20.10.8", 8000);
+        Server.getInstance("localhost", 8000);
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
@@ -22,11 +22,6 @@ public class MainServer {
         Users.getInstance().createClientHandler(connectionId);
         Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
 
-
-        Server.getInstance().setServerSocket("172.20.10.8", 8000);
-
-        // thread che permette di ascoltare più client
-        ConnectionThread.getInstance().start();
         try {
             ConnectionThread.getInstance().join(40000);
         }

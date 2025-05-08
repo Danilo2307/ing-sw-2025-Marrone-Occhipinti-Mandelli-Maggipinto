@@ -74,15 +74,15 @@ public class Planets extends Card {
             throw new CardException("Cannot land in " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (i < 0 || i >= planetsOccupied.size()) {
             throw new CardException("Planet index out of bounds: " + i);
         }
-        if (planetsOccupied.get(i) == null) {
-            planetsOccupied.set(i, username);
+        if (planetsOccupied.get(i-1) == null) {
+            planetsOccupied.set(i-1, username);
         } else {
-            throw new CardException("Planet " + (i + 1) + " is already occupied by " + planetsOccupied.get(i));
+            throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();
@@ -107,7 +107,7 @@ public class Planets extends Card {
             throw new CardException("Not in " + GameStatus.INIT_PLANETS);
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer());
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();
@@ -179,7 +179,7 @@ public class Planets extends Card {
     }
 
     @Override
-    public Object call(VisitorParametrico visitorParametrico, int index) {
+    public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
         if (index < 0 || index >= planetGoods.size()) {
             throw new IllegalArgumentException("Planets index out of bounds in method call");
         }
@@ -187,22 +187,22 @@ public class Planets extends Card {
     }
 
     @Override
-    public Object call(Visitor visitor) {
+    public <T> T call(Visitor<T> visitor) {
         return visitor.visitForPlanets(this);
     }
 
     @Override
-    public Object call(VisitorUsername visitorUsername, String username) {
+    public <T> T call(VisitorUsername<T> visitorUsername, String username) {
         return visitorUsername.visitForPlanets(this, username);
     }
 
     @Override
-    public Object call(VisitorCoordinate visitorCoordinate, String username, int i, int j) {
+    public <T> T call(VisitorCoordinate<T> visitorCoordinate, String username, int i, int j) {
         return visitorCoordinate.visitForPlanets(this, username, i, j);
     }
 
     @Override
-    public Object call(VisitorUsernameIntero visitorUsernameIntero, String username, int i) {
+    public <T> T call(VisitorUsernameIntero<T> visitorUsernameIntero, String username, int i) {
         return visitorUsernameIntero.visitForPlanets(this, username, i);
     }
 

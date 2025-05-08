@@ -7,4 +7,14 @@ public final class StructuralComponent extends Component {
     public StructuralComponent(Side up, Side down, Side left, Side right){
         super(up, down, left, right);
     }
+
+    @Override
+    public String toSymbol() {
+        return "T";
+    }
+
+    @Override
+    public  String getInfo() {
+        return "Tubi\n";
+    }
 }

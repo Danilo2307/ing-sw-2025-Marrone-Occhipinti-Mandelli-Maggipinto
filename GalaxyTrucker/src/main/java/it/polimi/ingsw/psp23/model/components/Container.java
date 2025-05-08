@@ -58,5 +58,15 @@ public final class Container extends Component {
         return size;
     }
 
+    @Override
+    public String toSymbol() {
+        return this.getColor() == Color.Red ? "Cr" : "Cb";
+    }
+
+    @Override
+    public String getInfo() {
+        return "Container di colore "+ this.getColor() + " e capacità " + this.getSize()
+                + ". Contiene le seguenti merci: " + this.getItems() + "\n";
+    }
 }
 
