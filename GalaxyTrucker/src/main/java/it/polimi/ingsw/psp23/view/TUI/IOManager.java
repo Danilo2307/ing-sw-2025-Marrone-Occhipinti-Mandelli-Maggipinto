@@ -67,9 +67,9 @@ public class IOManager {
         print(c.getInfo());
         print("Connettori:\n" +
                 "  ↑ Sopra : " + c.getUp() + "\n" +
+                "  → Destra : " + c.getRight() + "\n" +
                 "  ↓ Sotto : " + c.getDown() + "\n" +
-                "  ← Sinistra : " + c.getLeft() + "\n" +
-                "  → Destra : " + c.getRight() + "\n");
+                "  ← Sinistra : " + c.getLeft() + "\n");
     }
 
 
