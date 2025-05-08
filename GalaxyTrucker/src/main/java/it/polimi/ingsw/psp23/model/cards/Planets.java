@@ -258,16 +258,6 @@ public class Planets extends Card {
                             "● ->" + planetGoods.get(2).toString() +"\n" +
                             "● ->" + planetGoods.get(3).toString() +"\n" +
                             "i giorni persi sono " + getDaysLost();
-        }else if(planetGoods.size() == 5){
-            return
-                    "è uscita la carta Planets\n" +
-                            "I pianeti sono 5\n" +
-                            "● ->" + planetGoods.get(0).toString() +"\n" +
-                            "● ->" + planetGoods.get(1).toString() +"\n" +
-                            "● ->" + planetGoods.get(2).toString() +"\n" +
-                            "● ->" + planetGoods.get(3).toString() +"\n" +
-                            "● ->" + planetGoods.get(4).toString() +"\n" +
-                            "i giorni persi sono " + getDaysLost();
         }
         return "Errore in carta Planets\n";
     }
