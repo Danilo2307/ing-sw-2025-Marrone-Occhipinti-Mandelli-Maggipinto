@@ -296,4 +296,8 @@ public class TuiApplication {
             default -> throw new TuiInputException("Comando sconosciuto");
         }
     }
+
+    public Client getClient() {
+        return client;
+    }
 }

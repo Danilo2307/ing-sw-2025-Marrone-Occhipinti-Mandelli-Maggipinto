@@ -148,7 +148,7 @@ public class Server {
                     }
                 } while(error);
 
-                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername()));
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
                 socketHandler.setUsername(username);
 
                 synchronized (clients) {

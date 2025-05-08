@@ -3,9 +3,10 @@ package it.polimi.ingsw.psp23.protocol.response;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.TUI.TuiState;
 
-public record AppropriateUsername() implements Event {
+public record AppropriateUsername(String username) implements Event {
 
     public void handle(TuiApplication tui) {
+        tui.getClient().getSocketHandler().setUsername(username);
         tui.getIOManager().print("Benvenuto in Galaxy Trucker!!\n");
         tui.setState(TuiState.LOBBY);
     }

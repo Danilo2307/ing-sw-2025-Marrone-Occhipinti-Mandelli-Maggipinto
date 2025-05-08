@@ -41,7 +41,7 @@ public class IOManager {
                     }
                 }
                 if (!valid) {
-                    print("x\t");
+                    print(" \t");
                 }
                 else {
                     Component c = ship[i][j];
