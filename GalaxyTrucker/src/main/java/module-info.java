@@ -7,6 +7,7 @@ module it.polimi.ingsw.psp23 {
     requires java.rmi;
     requires jdk.jfr;
     requires jdk.jshell;
+    requires java.smartcardio;
 
     opens it.polimi.ingsw.psp23 to javafx.fxml;
     exports it.polimi.ingsw.psp23;

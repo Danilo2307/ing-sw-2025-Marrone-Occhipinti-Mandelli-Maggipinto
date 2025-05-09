@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 
+import javax.smartcardio.CardException;
 import java.util.Scanner;
 
 

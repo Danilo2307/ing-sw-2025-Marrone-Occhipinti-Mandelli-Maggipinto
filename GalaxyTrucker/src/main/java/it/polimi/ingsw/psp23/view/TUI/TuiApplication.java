@@ -105,6 +105,10 @@ public class TuiApplication {
         switch (keyword) {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
+                if (words.length != 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else{
                 if (words[1].equals("mucchio")) {
                     sendAction(new DrawFromHeap());
                 }
@@ -114,6 +118,7 @@ public class TuiApplication {
                 }
                 else
                     throw new TuiInputException("Comando non valido");
+                }
             }
             case "scoperte" -> {
                 sendAction(new RequestUncovered());
@@ -121,9 +126,14 @@ public class TuiApplication {
             case "salda" -> {
                 // TODO: inserire controlli interi ovunque
                 try {
-                    int x = Integer.parseInt(words[1]);
-                    int y = Integer.parseInt(words[2]);
-                    sendAction(new AddTile(x, y));
+                    if (words.length != 3) {
+                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    }
+                    else {
+                        int x = Integer.parseInt(words[1]);
+                        int y = Integer.parseInt(words[2]);
+                        sendAction(new AddTile(x, y));
+                    }
                 }
                 catch (NumberFormatException e) {
                     throw new TuiInputException("Devi inserire 2 interi!");
@@ -131,8 +141,13 @@ public class TuiApplication {
             }
             case "prendi" -> {
                 // prendi prenotata x
-                int index = Integer.parseInt(words[2]);
-                sendAction(new TakeReservedTile(index - 1));
+                if (words.length != 3) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    int index = Integer.parseInt(words[2]);
+                    sendAction(new TakeReservedTile(index - 1));
+                }
             }
             case "scarta" -> {
                 sendAction(new ReleaseTile());
@@ -145,119 +160,167 @@ public class TuiApplication {
             }
             case "rimuovi" -> {
                 if (words[1].equals("equipaggio")) {
-                    int hx = Integer.parseInt(words[2]);
-                    int hy = Integer.parseInt(words[3]);
-                    int num = Integer.parseInt(words[4]);
-                    sendAction(new ReduceCrew(hx, hy, num));
+                    if (words.length != 5) {
+                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    }
+                    else {
+                        int hx = Integer.parseInt(words[2]);
+                        int hy = Integer.parseInt(words[3]);
+                        int num = Integer.parseInt(words[4]);
+                        sendAction(new ReduceCrew(hx, hy, num));
+                    }
                 }
                 else if(words[1].equals("merce")){
-                    int cx = Integer.parseInt(words[2]);
-                    int cy = Integer.parseInt(words[3]);
-                    int num = Integer.parseInt(words[4]);
-                    sendAction(new RemovePreciousItem(cx, cy, num));
+                    if (words.length != 5) {
+                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    }
+                    else {
+                        int cx = Integer.parseInt(words[2]);
+                        int cy = Integer.parseInt(words[3]);
+                        int num = Integer.parseInt(words[4]);
+                        sendAction(new RemovePreciousItem(cx, cy, num));
+                    }
                 }
                 else{
-                    int x = Integer.parseInt(words[1]);
-                    int y = Integer.parseInt(words[2]);
-                    sendAction(new RemoveTile(x, y));
+                    if (words.length != 3) {
+                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    }
+                    else {
+                        int x = Integer.parseInt(words[1]);
+                        int y = Integer.parseInt(words[2]);
+                        sendAction(new RemoveTile(x, y));
+                    }
                 }
             }
             case "gira" -> {
                 sendAction(new TurnHourglass());
             }
             case "mazzetto" -> {
-                int x = Integer.parseInt(words[1]);
-                if (x<1 || x>3)
-                    throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                sendAction(new TakeVisibleDeck(x));
-            }
-            case "rilascia" -> {
-                int x = Integer.parseInt(words[1]);
-                if (x<1 || x>3)
-                    throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                sendAction(new ReleaseDeck(x));
-            }
-            case "mostra" -> {
-                if (words.length == 1) {
-                    sendAction(new RequestShip(client.getSocketHandler().getUsername()));
+                if (words.length != 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
-                    String nickname = words[1];
-                    sendAction(new RequestShip(nickname));
+                    int x = Integer.parseInt(words[1]);
+                    if (x < 1 || x > 3)
+                        throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                    sendAction(new TakeVisibleDeck(x));
+                }
+            }
+            case "rilascia" -> {
+                if (words.length != 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    int x = Integer.parseInt(words[1]);
+                    if (x < 1 || x > 3)
+                        throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                    sendAction(new ReleaseDeck(x));
+                }
+            }
+            case "mostra" -> {
+                if (words.length > 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    if (words.length == 1) {
+                        sendAction(new RequestShip(client.getSocketHandler().getUsername()));
+                    } else {
+                        String nickname = words[1];
+                        sendAction(new RequestShip(nickname));
+                    }
                 }
             }
             case "info" -> {
-                int x = Integer.parseInt(words[1]);
-                int y = Integer.parseInt(words[2]);
-                sendAction(new RequestTileInfo(x, y));
+                if (words.length != 3) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    int x = Integer.parseInt(words[1]);
+                    int y = Integer.parseInt(words[2]);
+                    sendAction(new RequestTileInfo(x, y));
+                }
             }
             case "attiva" -> {
-                switch (words[1]) {
-                    case "cannone" -> {
-                        int cx = Integer.parseInt(words[2]);
-                        int cy = Integer.parseInt(words[3]);
-                        int bx = Integer.parseInt(words[4]);
-                        int by = Integer.parseInt(words[5]);
-                        sendAction(new ActivateCannon(cx, cy, bx, by));
-                    }
-                    case "motore" -> {
-                        int ex = Integer.parseInt(words[2]);
-                        int ey = Integer.parseInt(words[3]);
-                        int bx = Integer.parseInt(words[4]);
-                        int by = Integer.parseInt(words[5]);
-                        sendAction(new ActivateEngine(ex, ey, bx, by));
-                    }
-                    case "scudo" -> {
-                        int sx = Integer.parseInt(words[2]);
-                        int sy = Integer.parseInt(words[3]);
-                        int bx = Integer.parseInt(words[4]);
-                        int by = Integer.parseInt(words[5]);
-                        sendAction(new ActivateShield(sx, sy, bx, by));
+                if (words.length != 6) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else{
+
+                    switch (words[1]) {
+                        case "cannone" -> {
+                            int cx = Integer.parseInt(words[2]);
+                            int cy = Integer.parseInt(words[3]);
+                            int bx = Integer.parseInt(words[4]);
+                            int by = Integer.parseInt(words[5]);
+                            sendAction(new ActivateCannon(cx, cy, bx, by));
+                        }
+                        case "motore" -> {
+                            int ex = Integer.parseInt(words[2]);
+                            int ey = Integer.parseInt(words[3]);
+                            int bx = Integer.parseInt(words[4]);
+                            int by = Integer.parseInt(words[5]);
+                            sendAction(new ActivateEngine(ex, ey, bx, by));
+                        }
+                        case "scudo" -> {
+                            int sx = Integer.parseInt(words[2]);
+                            int sy = Integer.parseInt(words[3]);
+                            int bx = Integer.parseInt(words[4]);
+                            int by = Integer.parseInt(words[5]);
+                            sendAction(new ActivateShield(sx, sy, bx, by));
+                        }
                     }
                 }
             }
             case "equipaggio" -> {
-                // astronauta: equipaggio <x> <y>
-                if (words.length == 3) {
-                    int x = Integer.parseInt(words[1]);
-                    int y = Integer.parseInt(words[2]);
-                    sendAction(new SetCrew(x, y, false, null));
-                }
-                // alieno: equipaggio alieno <colore> <x> <y>
-                else if (words.length == 5 && words[1].equalsIgnoreCase("alieno")) {
-                    Color color = Color.parse(words[2]);
-                    if (color == null || !(color.equals(Color.Brown) || color.equals(Color.Purple)))
-                        throw new TuiInputException("Alieno può essere solo viola o marrone!");
-                    int x = Integer.parseInt(words[3]);
-                    int y = Integer.parseInt(words[4]);
-                    sendAction(new SetCrew(x, y, true, color));
+                if (words.length != 3 && words.length != 5) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
-                    throw new TuiInputException(
-                            "Uso corretto:\n" +
-                                    "  equipaggio <x> <y>  -> aggiungi i 2 astronauti\n" +
-                                    "  equipaggio alieno <colore> <x> <y> -> aggiungi alieno"
-                    );
+                    // astronauta: equipaggio <x> <y>
+                    if (words.length == 3) {
+                        int x = Integer.parseInt(words[1]);
+                        int y = Integer.parseInt(words[2]);
+                        sendAction(new SetCrew(x, y, false, null));
+                    }
+                    // alieno: equipaggio alieno <colore> <x> <y>
+                    else if (words.length == 5 && words[1].equalsIgnoreCase("alieno")) {
+                        Color color = Color.parse(words[2]);
+                        if (color == null || !(color.equals(Color.Brown) || color.equals(Color.Purple)))
+                            throw new TuiInputException("Alieno può essere solo viola o marrone!");
+                        int x = Integer.parseInt(words[3]);
+                        int y = Integer.parseInt(words[4]);
+                        sendAction(new SetCrew(x, y, true, color));
+                    } else {
+                        throw new TuiInputException(
+                                "Uso corretto:\n" +
+                                        "  equipaggio <x> <y>  -> aggiungi i 2 astronauti\n" +
+                                        "  equipaggio alieno <colore> <x> <y> -> aggiungi alieno"
+                        );
+                    }
                 }
             }
             case "accetta" -> {
-                int number;
-                number = Integer.parseInt(words[1]);
-                boolean error = false;
-                while (number < 2 || number > 4 || error) {
-
-                    io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
-
-                    try {
-                        number = Integer.parseInt(io.read());
-                        error = false;
-                    }
-                    catch (NumberFormatException e) {
-                        error = true;
-                    }
-
+                if (words.length != 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
-                sendAction(new RegisterNumPlayers(number));
+                else {
+                    int number;
+                    number = Integer.parseInt(words[1]);
+                    boolean error = false;
+                    while (number < 2 || number > 4 || error) {
+
+                        io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
+
+                        try {
+                            number = Integer.parseInt(io.read());
+                            error = false;
+                        } catch (NumberFormatException e) {
+                            error = true;
+                        }
+
+                    }
+                    sendAction(new RegisterNumPlayers(number));
+                }
             }
 
             case "passa" -> {
@@ -273,16 +336,26 @@ public class TuiApplication {
                 sendAction(new DockStation());
             }
             case "carica" -> {
-                int lx = Integer.parseInt(words[1]);
-                int ly = Integer.parseInt(words[2]);
-                sendAction(new LoadGood(lx, ly));
+                if (words.length != 3) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    int lx = Integer.parseInt(words[1]);
+                    int ly = Integer.parseInt(words[2]);
+                    sendAction(new LoadGood(lx, ly));
+                }
             }
             case "pronto" -> {
                 sendAction(new Ready());
             }
             case "atterra" -> {
-                int pi = Integer.parseInt(words[1]);
-                sendAction(new Land(pi));
+                if (words.length != 2) {
+                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                }
+                else {
+                    int pi = Integer.parseInt(words[1]);
+                    sendAction(new Land(pi));
+                }
             }
             case "finito" -> {
                 sendAction(new Finished());
