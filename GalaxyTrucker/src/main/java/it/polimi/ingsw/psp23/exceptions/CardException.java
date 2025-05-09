@@ -1,13 +1,11 @@
 package it.polimi.ingsw.psp23.exceptions;
 
-public class CardException extends RuntimeException {
-    public CardException() {
-        super();
-    }
+public class CardException extends GameException {
+
     public CardException(String message) {
         super(message);
     }
-    public CardException(String message, Throwable cause) {
+    /*public CardException(String message, Throwable cause) {
         super(message, cause);
-    }
+    }*/
 }

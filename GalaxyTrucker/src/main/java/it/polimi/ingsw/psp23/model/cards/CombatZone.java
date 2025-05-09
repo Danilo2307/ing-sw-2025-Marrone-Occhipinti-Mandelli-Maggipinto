@@ -327,7 +327,7 @@ public class CombatZone extends Card {
                         game.setGameStatus(GameStatus.THIRD_COMBATZONE);
                     }
                 } catch (ContainerException e) {
-                    throw new CardException("Failed to remove precious item: " + e.getMessage());
+                    throw new ContainerException("Failed to remove precious item: " + e.getMessage());
                 }
             }
             default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
@@ -356,7 +356,7 @@ public class CombatZone extends Card {
     @Override
     public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
         if (index < 1 || index > 3) {
-            throw new IndexOutOfBoundsException("Index must be between 1 and 3");
+            throw new CardException("Index must be between 1 and 3");
         }
         return visitorParametrico.visitForCombatZone(this, index);
     }

@@ -181,7 +181,7 @@ public class Planets extends Card {
     @Override
     public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
         if (index < 0 || index >= planetGoods.size()) {
-            throw new IllegalArgumentException("Planets index out of bounds in method call");
+            throw new CardException("Planets index out of bounds in method call");
         }
         return visitorParametrico.visitForPlanets(this, index);
     }
