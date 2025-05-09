@@ -67,7 +67,7 @@ public class TuiApplication {
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa", "ready"),
+            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa"),
             TuiState.ENDGAME, Set.of()
     );
 
@@ -292,9 +292,6 @@ public class TuiApplication {
             }
             case "corretta" -> {
                 sendAction(new Fixed());
-            }
-            case "ready" -> {
-                sendAction(new Ready());
             }
             default -> throw new TuiInputException("Comando sconosciuto");
         }
