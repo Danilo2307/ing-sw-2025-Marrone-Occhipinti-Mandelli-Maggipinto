@@ -113,4 +113,9 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    public Void visitForUpdateFromCard(UpdateFromCard updateFromCard, TuiApplication tuiApplication){
+        updateFromCard.handle(tuiApplication);
+        return null;
+    }
+
 }

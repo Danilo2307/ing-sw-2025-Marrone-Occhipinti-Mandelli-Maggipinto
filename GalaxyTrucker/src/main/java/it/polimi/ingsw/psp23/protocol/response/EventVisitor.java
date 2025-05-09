@@ -40,4 +40,6 @@ public interface EventVisitor<T> {
 
     public T visitForIllegalTruck(IllegalTruck illegalTruck, TuiApplication tuiApplication);
 
+    public T visitForUpdateFromCard(UpdateFromCard updateFromCard, TuiApplication tuiApplication);
+
 }
