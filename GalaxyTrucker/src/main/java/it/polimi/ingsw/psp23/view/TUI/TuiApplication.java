@@ -106,7 +106,7 @@ public class TuiApplication {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
             case "pesca" -> {
                 if (words.length != 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else{
                 if (words[1].equals("mucchio")) {
@@ -127,7 +127,7 @@ public class TuiApplication {
                 // TODO: inserire controlli interi ovunque
                 try {
                     if (words.length != 3) {
-                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                        io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                     }
                     else {
                         int x = Integer.parseInt(words[1]);
@@ -142,7 +142,7 @@ public class TuiApplication {
             case "prendi" -> {
                 // prendi prenotata x
                 if (words.length != 3) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int index = Integer.parseInt(words[2]);
@@ -161,7 +161,7 @@ public class TuiApplication {
             case "rimuovi" -> {
                 if (words[1].equals("equipaggio")) {
                     if (words.length != 5) {
-                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                        io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                     }
                     else {
                         int hx = Integer.parseInt(words[2]);
@@ -172,7 +172,7 @@ public class TuiApplication {
                 }
                 else if(words[1].equals("merce")){
                     if (words.length != 5) {
-                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                        io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                     }
                     else {
                         int cx = Integer.parseInt(words[2]);
@@ -183,7 +183,7 @@ public class TuiApplication {
                 }
                 else{
                     if (words.length != 3) {
-                        getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                        io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                     }
                     else {
                         int x = Integer.parseInt(words[1]);
@@ -197,7 +197,7 @@ public class TuiApplication {
             }
             case "mazzetto" -> {
                 if (words.length != 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int x = Integer.parseInt(words[1]);
@@ -208,7 +208,7 @@ public class TuiApplication {
             }
             case "rilascia" -> {
                 if (words.length != 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int x = Integer.parseInt(words[1]);
@@ -219,7 +219,7 @@ public class TuiApplication {
             }
             case "mostra" -> {
                 if (words.length > 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     if (words.length == 1) {
@@ -232,7 +232,7 @@ public class TuiApplication {
             }
             case "info" -> {
                 if (words.length != 3) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int x = Integer.parseInt(words[1]);
@@ -242,7 +242,7 @@ public class TuiApplication {
             }
             case "attiva" -> {
                 if (words.length != 6) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else{
 
@@ -273,7 +273,7 @@ public class TuiApplication {
             }
             case "equipaggio" -> {
                 if (words.length != 3 && words.length != 5) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     // astronauta: equipaggio <x> <y>
@@ -301,7 +301,7 @@ public class TuiApplication {
             }
             case "accetta" -> {
                 if (words.length != 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int number;
@@ -337,7 +337,7 @@ public class TuiApplication {
             }
             case "carica" -> {
                 if (words.length != 3) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int lx = Integer.parseInt(words[1]);
@@ -350,7 +350,7 @@ public class TuiApplication {
             }
             case "atterra" -> {
                 if (words.length != 2) {
-                    getIOManager().error("Non hai inviato il numero corretto di parametri, riprova\n");
+                    io.error("Non hai inviato il numero corretto di parametri, riprova\n");
                 }
                 else {
                     int pi = Integer.parseInt(words[1]);
