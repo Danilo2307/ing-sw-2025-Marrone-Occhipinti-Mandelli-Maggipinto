@@ -194,10 +194,4 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
-    @Override
-    public Void visitForInitGame(InitGame initGame, String username) {
-        initGame.handle(username);
-        return null;
-    }
-
 }

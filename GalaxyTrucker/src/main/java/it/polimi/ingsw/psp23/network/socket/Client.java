@@ -4,7 +4,6 @@ package it.polimi.ingsw.psp23.network.socket;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
-import it.polimi.ingsw.psp23.protocol.request.InitGame;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -62,11 +61,6 @@ public class Client {
 
     public void setUsername(String username) {
         Message message = new ActionMessage(new SetUsername(username));
-        socketHandler.sendMessage(message);
-    }
-
-    public void setInitGame(String username, int level) {
-        Message message = new ActionMessage(new InitGame(username, level));
         socketHandler.sendMessage(message);
     }
 

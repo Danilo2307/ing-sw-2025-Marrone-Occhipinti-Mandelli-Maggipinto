@@ -134,29 +134,22 @@ public class Server {
                 Action a = null;
                 String username = null;
 
-                synchronized (clients) {
-                    if (!clients.isEmpty()) {
-                        boolean error;
-                        do {
-                            try {
-                                a = socketHandler.readMessage().call(new GetActionVisitor());
-                                username = a.call(new SetUsernameActionVisitor());
-                                a.call(new HandleActionVisitor(), username);
-                                error = false;
-                            } catch (PlayerExistsException e) {
-                                socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
-                                error = true;
-                            }
-                        } while (error);
+                boolean error;
+                do {
+                    try {
+                        a = socketHandler.readMessage().call(new GetActionVisitor());
+                        username = a.call(new SetUsernameActionVisitor());
+                        a.call(new HandleActionVisitor(), username);
+                        error = false;
+                    }
+                    catch(PlayerExistsException e){
+                        socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
+                        error = true;
+                    }
+                } while(error);
 
-                        socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
-                        socketHandler.setUsername(username);
-                    }
-                    else {
-                        socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
-                        socketHandler.setUsername(username);
-                    }
-                }
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
+                socketHandler.setUsername(username);
 
                 synchronized (clients) {
                     clients.put(nameConnection, socketHandler);
