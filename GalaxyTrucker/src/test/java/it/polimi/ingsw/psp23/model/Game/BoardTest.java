@@ -475,6 +475,30 @@ public class BoardTest {
     }
 
     @Test
+    public void testDeleteGuns() {
+        Board truck = new Board();
+        HousingUnit h = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        h.moveToHand();
+        truck.addComponent(h, 2, 3);
+
+        Cannon c1 = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        c1.moveToHand();
+        truck.addComponent(c1, 1, 3);
+        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.GUN, false);
+        c2.moveToHand();
+        truck.addComponent(c2, 2, 4);
+        Cannon c3 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.EMPTY, Side.EMPTY, false);
+        c3.moveToHand();
+        truck.addComponent(c3, 3, 3);
+
+        truck.delete(2,4);
+        assertNull(truck.getTile(2,4));
+        assertNotNull(truck.getTile(1,3));
+        assertNotNull(truck.getTile(3,3));
+        assertEquals(2, truck.getCannons().size());
+    }
+
+    @Test
     public void testDeleteUnreachableTiles() {
         // setup
         Board truck = new Board();
