@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
+import it.polimi.ingsw.psp23.model.Events.PlanetOccupation;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -80,6 +83,8 @@ public class Planets extends Card {
             throw new CardException("Planet index out of bounds: " + i);
         }
         if (planetsOccupied.get(i-1) == null) {
+            game.fireEvent(new PlanetOccupation(game.getGameStatus(), i));
+            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             planetsOccupied.set(i-1, username);
         } else {
             throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
@@ -111,6 +116,7 @@ public class Planets extends Card {
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         } else {
             for (Player p : game.getPlayers().reversed()) {
                 if (planetsOccupied.contains(p.getNickname())) {
@@ -169,6 +175,7 @@ public class Planets extends Card {
      * Verifies if all goods for occupied planets are loaded.
      * @return true if all goods loaded, false otherwise
      */
+    // TODO: da rivedere perchè non è detto che i player che atterrano caricano tutte le merci presenti sul pianeta
     private boolean verifyAll() {
         for (String player : planetsOccupied) {
             if (player != null && loadedCount.get(planetsOccupied.indexOf(player)) != planetGoods.get(planetsOccupied.indexOf(player)).size()) {

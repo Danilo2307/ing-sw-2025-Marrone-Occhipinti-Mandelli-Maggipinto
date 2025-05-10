@@ -20,9 +20,9 @@ public class CannonShot {
 
     public String toString() {
         if(big == true){
-            return "Big shot from" + direction;
+            return "Big shot from " + direction;
         }else{
-            return "Small shot from" + direction;
+            return "Small shot from " + direction;
         }
     }
 }

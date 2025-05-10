@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.CannonShotIncoming;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -232,6 +234,7 @@ public class CombatZone extends Card {
         Game game = Game.getInstance();
         CannonShot shot = cannonShot.get(cannonShotIndex);
         int impactLine = Utility.roll2to12();
+        game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, shot.getDirection()), loserThirdChallenge);
         game.getPlayerFromNickname(loserThirdChallenge)
                 .getTruck().handleCannonShot(shot, impactLine);
         cannonShotIndex++;

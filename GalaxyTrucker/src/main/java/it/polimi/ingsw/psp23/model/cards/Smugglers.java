@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
+import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Utility;
@@ -309,6 +312,8 @@ public class Smugglers extends Card {
                 .calculateCannonStrength();
         if (power > firePower) {
             winner = username;
+            game.fireEvent(new EnemyDefeated(game.getGameStatus()));
+            game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else {
             losers.add(username);
@@ -317,6 +322,7 @@ public class Smugglers extends Card {
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else {
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         }
     }
     /**

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.AbandonedStationOccupation;
+import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -64,7 +67,9 @@ public class AbandonedStation extends Card {
             throw new CardException("Not enough crew to dock station");
         }
         isSold = username;
+        game.fireEvent(new AbandonedStationOccupation(game.getGameStatus()));
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
+        game.fireEvent(new ItemsEarned(game.getGameStatus()), isSold);
         game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
     }
 
@@ -120,6 +125,7 @@ public class AbandonedStation extends Card {
 
         if (game.getTurn() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         } else {
             game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
         }

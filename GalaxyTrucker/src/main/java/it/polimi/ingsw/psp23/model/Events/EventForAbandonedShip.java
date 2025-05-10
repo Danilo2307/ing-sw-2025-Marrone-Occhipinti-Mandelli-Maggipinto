@@ -52,7 +52,7 @@ public class EventForAbandonedShip extends Event {
         sb.append("Evento Nave abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Crediti cosmici ottenuti: ").append(cosmicCredits).append("\n")
-                .append("  Membri di equipaggio recuperati: ").append(numMembers);
+                .append("  Membri di equipaggio recuperati: ").append(numMembers).append("\nSi parte dal leader\n");
         return sb.toString();
     }
 }

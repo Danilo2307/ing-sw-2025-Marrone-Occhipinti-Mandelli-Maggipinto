@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
+import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
@@ -205,6 +208,8 @@ public class Slavers extends Card {
 
         if (playerFirepower > cannonStrength) {
             winner = username;
+            game.fireEvent(new EnemyDefeated(game.getGameStatus()));
+            game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SLAVERS);
         } else {
             losers.add(username);
@@ -215,6 +220,7 @@ public class Slavers extends Card {
         }
         else{
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         }
     }
 

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.AbandonedShipOccupation;
+import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
@@ -56,6 +59,8 @@ public class AbandonedShip extends Card {
         }
         if (game.getTurn() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
+            String currentPlayerNickname = game.getCurrentPlayer().getNickname();
+            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
         } else {
             game.nextCard();
         }
@@ -79,8 +84,10 @@ public class AbandonedShip extends Card {
             throw new CardException("User '" + username + "' does not have enough crew");
         }
         isSold = username;
+        game.fireEvent(new AbandonedShipOccupation(game.getGameStatus()));
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
         p.updateMoney(cosmicCredits);
+        game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), isSold);
         endPlay();
     }
 

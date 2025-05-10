@@ -1,8 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.*;
 import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.model.Events.EventForPirates;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
@@ -186,6 +186,10 @@ public class Pirates extends Card {
 
         if (playerFirepower > firepower) {
             winner = username;
+            game.fireEvent(new EnemyDefeated(game.getGameStatus()));
+            game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), winner);
+            /*TODO: il metodo getCosmicCredits attualmente è collegato con il comando CREDIT dalla view ma secondo me
+            è meglio farlo in automatico in questo punto*/
             if (!losers.isEmpty()) {
                 game.setCurrentPlayer(
                         game.getPlayerFromNickname(losers.getFirst())
@@ -193,6 +197,7 @@ public class Pirates extends Card {
             }
             game.setGameStatus(GameStatus.END_PIRATES);
         } else {
+            game.fireEvent(new DefeatedFromPirates(game.getGameStatus()), username);
             losers.add(username);
         }
 
@@ -204,6 +209,7 @@ public class Pirates extends Card {
         }
         else{
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         }
     }
 
@@ -218,6 +224,7 @@ public class Pirates extends Card {
 
         CannonShot c = cannonShot.get(countCannonShot);
         int impactLine = Utility.roll2to12();
+        game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
         for (String player : losers) {
             game.getPlayerFromNickname(player)
                     .getTruck()
@@ -250,7 +257,7 @@ public class Pirates extends Card {
     @Override
     public String toString(){
         return
-                "è uscita la carta Pirates \n" +
+                "È uscita la carta Pirates \n" +
                 "la potenza di fuoco è " + getFirepower() + "\n" +
                 "i crediti cosmici sono " + getPrize() +"\n" +
                 "i giorni persi sono " + getDays() + "\n" +

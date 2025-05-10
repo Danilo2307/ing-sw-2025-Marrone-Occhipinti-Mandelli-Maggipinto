@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Events.MeteorIncoming;
+import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
@@ -107,6 +109,7 @@ public class MeteorSwarm extends Card {
         // All ready: impact one meteor
         Meteor meteor = meteors.get(currentIndex);
         int line = meteor.getImpactLine();
+        game.fireEvent(new MeteorIncoming(game.getGameStatus(), line, meteor.getDirection()));
         for (Player p : game.getPlayers()) {
             p.getTruck().handleMeteor(meteor, line);
         }

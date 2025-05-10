@@ -11,7 +11,7 @@ public class DefeatedFromPirates extends Event {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Hai perso, ora devi resistere alle cannonate!\n");
+        sb.append("Hai perso, dovrai resistere alle cannonate!\n");
         return sb.toString();
     }
 

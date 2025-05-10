@@ -66,7 +66,7 @@ public class EventForAbandonedStation extends Event {
         sb.append("Evento Stazione abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Membri di equipaggio recuperati: ").append(numMembers).append("\n")
-                .append("  Oggetti premio: ").append(prizeDescription());
+                .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader\n");
         return sb.toString();
     }
 }
