@@ -31,7 +31,6 @@ class PlanetsTest {
 
     @BeforeEach
     void setUp() throws NoSuchFieldException, IllegalAccessException {
-        Game.resetInstance();
         this.game = Game.getInstance();
 
         game.addPlayer("Albi");

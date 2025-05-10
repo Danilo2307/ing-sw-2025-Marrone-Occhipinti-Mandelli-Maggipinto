@@ -93,7 +93,9 @@ public class Planets extends Card {
             game.getNextPlayer();
         } else {
             for (String p : planetsOccupied) {
-                Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(game.getPlayerFromNickname(p)), -daysLost);
+                if(p != null) {
+                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(game.getPlayerFromNickname(p)), -daysLost);
+                }
             }
             game.setGameStatus(GameStatus.END_PLANETS);
         }
