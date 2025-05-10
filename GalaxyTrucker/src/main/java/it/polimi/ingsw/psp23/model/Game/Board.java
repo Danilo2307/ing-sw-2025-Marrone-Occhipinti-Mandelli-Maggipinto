@@ -747,29 +747,29 @@ public class Board {
     }
 
 
-//    public void reduceCrew(int i, int j, int num) {
-//        if ((!isValid(i, j)) || isFree(i,j))
-//            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
-//
-//        Component tile = ship[i][j];
-//        switch (tile) {
-//            case HousingUnit cabin -> {
-//                int index = housingUnits.indexOf(cabin);
-//                if (index == -1) {
-//                    throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
-//                } else {
-//                    try {
-//                        // controllo rimozione implementato in reduceOccupants
-//                        housingUnits.get(index).reduceOccupants(num);
-//                    }
-//                    catch (IllegalArgumentException e) {
-//                        throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
-//                    }
-//                }
-//            }
-//            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a housing unit");
-//        }
-//    }
+    public void reduceCrew(int i, int j, int num) {
+        if ((!isValid(i, j)) || isFree(i,j))
+            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
+
+        Component tile = ship[i][j];
+        switch (tile) {
+            case HousingUnit cabin -> {
+                int index = housingUnits.indexOf(cabin);
+                if (index == -1) {
+                    throw new ComponentMismatchException("HousingUnit not found in 'housingUnit' list: error in reduceCrew of Board");
+                } else {
+                    try {
+                        // controllo rimozione implementato in reduceOccupants
+                        housingUnits.get(index).reduceOccupants(num);
+                    }
+                    catch (IllegalArgumentException e) {
+                        throw new CrewOperationException("Failed to remove "+ num + "crew members from HousingUnit at Ship["+i+"]["+j+"]" + e.getMessage());
+                    }
+                }
+            }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a housing unit");
+        }
+    }
 
     public int calculateExposedConnectors() {
         /* Fa dei controlli lato per lato, analizzando esclusivamente i component che definiscono il bordo della nave,

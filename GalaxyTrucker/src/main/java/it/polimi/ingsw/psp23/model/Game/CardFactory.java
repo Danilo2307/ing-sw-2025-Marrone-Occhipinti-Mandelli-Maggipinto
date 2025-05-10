@@ -12,7 +12,6 @@ import java.util.List;
 
 // Utility Class che istanzia tutte le carte
 public class CardFactory {
-
     // costruttore private e vuoto, così impedisco istanziazione: le carte vengono create una sola volta
     private CardFactory() {};
 

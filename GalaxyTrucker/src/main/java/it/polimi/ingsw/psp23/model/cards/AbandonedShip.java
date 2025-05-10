@@ -1,12 +1,12 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.AbandonedShipOccupation;
 import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
-import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForAbandonedShip;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -45,6 +45,7 @@ public class AbandonedShip extends Card {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_ABANDONEDSHIP);
         game.fireEvent(new EventForAbandonedShip(game.getGameStatus(), days, cosmicCredits, numMembers));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
     /**
@@ -57,7 +58,7 @@ public class AbandonedShip extends Card {
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-        if (game.getTurn() < game.getPlayers().size() - 1) {
+        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
             String currentPlayerNickname = game.getCurrentPlayer().getNickname();
             game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
@@ -76,7 +77,7 @@ public class AbandonedShip extends Card {
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
             throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
         }
-        if (!username.equals(game.getPlayers().get(game.getTurn()))) {
+        if (!username.equals(game.getCurrentPlayer().getNickname())) {
             throw new CardException("User '" + username + "' is not the current player");
         }
         Player p = game.getPlayerFromNickname(username);
@@ -88,7 +89,7 @@ public class AbandonedShip extends Card {
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
         p.updateMoney(cosmicCredits);
         game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), isSold);
-        endPlay();
+        game.setGameStatus(GameStatus.END_ABANDONEDSHIP);
     }
 
     /**
@@ -105,36 +106,16 @@ public class AbandonedShip extends Card {
             throw new CardException("User '" + username + "' is not the buyer");
         }
         Board board = game.getPlayerFromNickname(username).getTruck();
-        if (!board.isValid(i, j) || board.isFree(i, j)) {
-            throw new CardException("Invalid coordinates or empty cell: [" + i + "][" + j + "]");
-        }
-        Component tile = board.getShip()[i][j];
-        switch (tile) {
-            case HousingUnit cabin -> {
-                int idx = board.getHousingUnits().indexOf(cabin);
-                if (idx == -1) {
-                    throw new CardException("HousingUnit not found in list");
-                }
-                try {
-                    board.getHousingUnits().get(idx).reduceOccupants(num);
-                    countMember += num;
-                    if (countMember == numMembers) {
-                        game.nextCard();
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new CardException("Failed to remove " + num + " members: " + e.getMessage());
-                }
+        try{
+            board.reduceCrew(i, j, num);
+            countMember += num;
+            if (countMember == numMembers) {
+                game.nextCard();
             }
-            default -> throw new CardException("Component at [" + i + "][" + j + "] is not a housing unit");
         }
-    }
-
-    /**
-     * Sets the game status to END_ABANDONEDSHIP.
-     */
-    public void endPlay() {
-        Game game = Game.getInstance();
-        game.setGameStatus(GameStatus.END_ABANDONEDSHIP);
+        catch (InvalidCoordinatesException | ComponentMismatchException | CrewOperationException | TypeMismatchException e){
+            throw new CrewOperationException("Errore nella scelta dell'equipaggio", e);
+        }
     }
 
     /**
