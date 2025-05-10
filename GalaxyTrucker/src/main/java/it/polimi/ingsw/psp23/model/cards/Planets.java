@@ -104,14 +104,24 @@ public class Planets extends Card {
     public void pass(String username) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_PLANETS) {
-            throw new CardException("Not in " + GameStatus.INIT_PLANETS);
+            int playerIndex = planetsOccupied.indexOf(username);
+            if (playerIndex >= 0) {
+                List<Item> goodsOnPlanet = planetGoods.get(playerIndex);
+                int alreadyLoaded = loadedCount.get(playerIndex);
+                int totalGoods = goodsOnPlanet.size();
+                if (alreadyLoaded < totalGoods) {
+                    loadedCount.set(playerIndex, totalGoods);
+                    return;
+                }
+            }
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
             game.getNextPlayer();
-        } else {
+        }
+        else {
             for (Player p : game.getPlayers().reversed()) {
                 if (planetsOccupied.contains(p.getNickname())) {
                     Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
