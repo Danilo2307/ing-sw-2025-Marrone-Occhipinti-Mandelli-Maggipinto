@@ -1,20 +1,22 @@
 package it.polimi.ingsw.psp23.model.Events;
 
+import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
-public class PlanetOccupation extends Event{
+public class ShowCurrentCard extends Event {
 
-    int i;
+    Card currentCard;
 
-    public PlanetOccupation(GameStatus newStatus, int i){
+    public ShowCurrentCard(GameStatus newStatus, Card card) {
         super(newStatus);
-        this.i = i;
+        this.currentCard = card;
     }
 
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("È stato occupato il pianeta numero ").append(i).append("\n");
+        sb.append(currentCard.toString()).append("\n");
         return sb.toString();
     }
+
 }

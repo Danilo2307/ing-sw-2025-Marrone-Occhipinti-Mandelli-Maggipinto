@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp23.model.Game;
+import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
+import it.polimi.ingsw.psp23.model.Events.ShowCurrentCard;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -296,6 +298,11 @@ public class Game {
             turn = 0;
             currentPlayer = players.getFirst();
             setCurrentPlayer(currentPlayer);
+
+            // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
+            Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
+            Controller.getInstance().onGameEvent(e);
+
             Visitor visitor = new InitPlayVisitor();
             currentCard.call(visitor);
         }

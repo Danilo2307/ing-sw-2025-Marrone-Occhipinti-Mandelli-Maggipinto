@@ -17,6 +17,7 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.IllegalTruck;
 import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
+import it.polimi.ingsw.psp23.protocol.response.UpdateFromCard;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -258,6 +259,8 @@ public class Controller {
         //currentCard.play(Game.getInstance(),input);
     }*/
 
+
+    // Questo onGameEvent inoltra gli eventi rivolti a tutti i client
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
         Game.getInstance().setGameStatus(event.getNewStatus());
         //qui serve tutta la gestione della chiamata alla view poichè giunti a questo punto
@@ -270,8 +273,18 @@ public class Controller {
         //network.sendToAllClients("game_event", event);
 
         // TODO: capire quale evento effettivo bisogna inviare
-        Message message = new BroadcastMessage(new StringResponse(Game.getInstance().getCurrentCard().toString()));
+        Message message = new BroadcastMessage(new UpdateFromCard(event.describe()));
         Server.getInstance().notifyAllObservers(message);
+
+    }
+
+    // Questo onGameEvent inoltra gli eventi rivolti ad un solo client
+    public void onGameEvent(Event event, String playerUsername) {
+        Game.getInstance().setGameStatus(event.getNewStatus());
+
+        Message message = new DirectMessage(new UpdateFromCard(event.describe()));
+        Server.getInstance().sendMessage(playerUsername, message);
+
     }
 
 
