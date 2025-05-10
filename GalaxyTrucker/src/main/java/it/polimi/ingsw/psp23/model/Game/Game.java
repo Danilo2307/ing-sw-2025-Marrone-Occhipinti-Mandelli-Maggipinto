@@ -300,6 +300,7 @@ public class Game {
     }
 
     public void nextCard(){
+        checkEliminationPlayers();
         sortPlayersByPosition();
         currentCard = getNextCard();
         if(currentCard == null || players.size() <= 1){
