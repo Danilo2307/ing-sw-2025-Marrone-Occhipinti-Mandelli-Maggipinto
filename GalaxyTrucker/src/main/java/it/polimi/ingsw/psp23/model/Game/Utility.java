@@ -27,6 +27,7 @@ public final class Utility {
                 for (int k = 0; k < players.size(); k++) {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi++;
+                        offset++;
                         k = 0; // azzerando k ottengo l'effetto di far ripartire il ciclo nel caso in cui ci sia una collisione, in modo da
                         // essere sicuro di confrontare il giocatore corrente con TUTTI GLI ALTRI GIOCATORI PRESENTI
 
@@ -40,6 +41,7 @@ public final class Utility {
                 for (int k = 0; k < players.size(); k++) {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi--;
+                        offset--;
                         k = 0; // azzerando k ottengo l'effetto di far ripartire il ciclo nel caso in cui ci sia una collisione, in modo da
                         // essere sicuro di confrontare il giocatore corrente con TUTTI GLI ALTRI GIOCATORI PRESENTI
 
