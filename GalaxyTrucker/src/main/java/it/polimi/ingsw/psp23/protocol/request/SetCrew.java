@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.exceptions.InvalidComponentActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
@@ -24,6 +26,9 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
 
     public void handle(String username) {
         Game game = Game.getInstance();
+        if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SLAVERS){
+            throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
+        }
         Player p = game.getPlayerFromNickname(username);
         Board truck = p.getTruck();
         Component tile = truck.getTile(x, y);
