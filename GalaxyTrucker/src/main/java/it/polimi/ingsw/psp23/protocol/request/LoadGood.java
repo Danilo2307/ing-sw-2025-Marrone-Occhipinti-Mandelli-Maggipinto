@@ -1,13 +1,18 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.DockStationVisitor;
 import it.polimi.ingsw.psp23.model.cards.LoadGoodsVisitor;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 public record LoadGood(int lx, int ly) implements Action {
     public void handle(String username){
         Game game = Game.getInstance();
+        if(game.getGameStatus() != GameStatus.END_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_PLANETS && game.getGameStatus() != GameStatus.END_SMUGGLERS){
+            throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
+        }
         Card currentCard = game.getCurrentCard();
         LoadGoodsVisitor loadGood = new LoadGoodsVisitor();
         currentCard.call(loadGood, username, lx, ly);
