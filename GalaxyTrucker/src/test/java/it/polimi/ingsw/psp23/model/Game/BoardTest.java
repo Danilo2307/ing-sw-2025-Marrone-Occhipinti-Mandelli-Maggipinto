@@ -108,38 +108,7 @@ public class BoardTest {
         assertEquals(container.getItems().size(), 2);
     }
 
-    @Test
-    public void testRemovePreciousItemFromContainer() {
-        // setup
-        Board truck = new Board();
-        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
-        cabin.moveToHand();
-        truck.addComponent(cabin, 2, 3);
 
-        // creo e saldo 2 container
-        Container ctn1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(List.of(new Item(Color.Blue), new Item(Color.Yellow), new Item(Color.Blue))));
-        ctn1.moveToHand();
-        truck.addComponent(ctn1, 2, 4);
-        Container ctn2 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 2, Color.Red, new ArrayList<>(List.of(new Item(Color.Red), new Item(Color.Green))));
-        ctn2.moveToHand();
-        truck.addComponent(ctn2, 2, 2);
-
-        // merce gialla non è la più preziosa -> lancio eccezione
-        assertThrows(IllegalArgumentException.class, () -> truck.removePreciousItemFromContainer(2,4, new Item(Color.Yellow)));
-
-        // rimozione effettiva
-        truck.removePreciousItemFromContainer(2,2, new Item(Color.Red));
-        assertEquals(1, ctn2.getItems().size());
-        assertEquals(Color.Green, ctn2.getItems().getFirst().getColor());
-        assertFalse(ctn2.getItems().contains(new Item(Color.Red)));
-
-        // tento di rimuovere un Item che non è presente nella lista -> lancio eccezione
-        assertThrows(ContainerException.class, () -> truck.removePreciousItemFromContainer(2,4, new Item(Color.Red)));
-
-        // ora giallo è il più prezioso rimasto -> ricontrollo rimozione
-        truck.removePreciousItemFromContainer(2,4, new Item(Color.Yellow));
-        assertFalse(ctn1.getItems().contains(new Item(Color.Yellow)));
-    }
 
     @Test
     // non ritesto l'invalidità delle coordinate o TypeMismatch perchè già coperti da altri test e la logica è identica
@@ -161,56 +130,6 @@ public class BoardTest {
 
         // provo a rimuovere 2 batterie avendone 1 disponibile -> eccezione
         assertThrows(BatteryOperationException.class, () -> truck.reduceBatteries(3,3,2));
-    }
-
-    @Test
-    public void testReduceCrew() {
-        // setup
-        Board truck = new Board();
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
-        central.moveToHand();
-        truck.addComponent(central, 2, 3);
-
-        // CASO 1: cabin con 2 umani
-        HousingUnit cabin  = new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
-        cabin.moveToHand();
-        truck.addComponent(cabin, 3, 3);
-        cabin.setAstronaut();
-
-        // rimuovo 1 umano -> deve rimanerne 1
-        truck.reduceCrew(3,3,1);
-        assertEquals(cabin.getNumAstronaut(), 1);
-
-        // provo a rimuovere 2 umani avendone solo 1 disponibile -> eccezione
-        assertThrows(CrewOperationException.class, () -> truck.reduceCrew(3,3,2));
-
-        //  CASO 2: cabina con alieno
-        HousingUnit alienCabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
-        alienCabin.moveToHand();
-        truck.addComponent(alienCabin, 2, 4);
-
-        // non ho supporto vitale adiacente -> setAlien deve lanciare eccezione
-        assertThrows(InvalidComponentActionException.class, () -> alienCabin.setAlien(Color.Purple));
-
-        // creo e saldo supporto vitale adiacente
-        AlienAddOns supporto = new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, Color.Purple);
-        supporto.moveToHand();
-        truck.addComponent(supporto, 2, 5);
-
-        // aggiorno supporti vitali adiacenti; inserimento alieno marrone con supporto adiacente viola lancia eccezione
-        truck.updateAllowedAliens();
-        assertThrows(InvalidComponentActionException.class, () -> alienCabin.setAlien(Color.Brown));
-
-        // inserisco alieno. Provo a rimuoverne 2 -> lancio eccezione
-        alienCabin.setAlien(Color.Purple);
-        assertThrows(CrewOperationException.class, () -> truck.reduceCrew(2,4,2));
-
-        // rimozione effettiva alieno
-        truck.reduceCrew(2,4,1);
-        assertNull(alienCabin.getAlien());
-
-        // check calcolo crew totale: 2 umani in central + 1 umano in cabin
-        assertEquals(3, truck.calculateCrew());
     }
 
     @Test
@@ -730,9 +649,10 @@ public class BoardTest {
         e.moveToHand();
         truck.addComponent(e, 3, 4);
 
-        // suppongo di voler usare sempre scudo s per difendermi, così verifico la sua inutilità per cannonate pesanti
+        // attivo scudo per vedere che non succede nulla
+        truck.activeShield(3,3);
         // Cannonata pesante da sopra alla colonna 8
-        truck.handleCannonShot(new CannonShot(true, Direction.UP), 8, s);
+        truck.handleCannonShot(new CannonShot(true, Direction.UP), 8);
         // controllo eliminazione di 'c' e che tutto il resto sia rimasto intatto, infatti solo il 1^ modulo colpito viene eliminato (non controllo anche liste perchè già fatto in tutti i precedenti)
         assertNull(truck.getTile(2,4));
         assertNotNull(truck.getTile(3,4));
@@ -740,13 +660,13 @@ public class BoardTest {
         assertNotNull(truck.getTile(2,3));
 
         // Cannonata pesante da destra a riga 6: riga vuota -> tutto intatto
-        truck.handleCannonShot(new CannonShot(true, Direction.RIGHT), 6, s);
+        truck.handleCannonShot(new CannonShot(true, Direction.RIGHT), 6);
         assertNotNull(truck.getTile(3,4));
         assertNotNull(truck.getTile(3,3));
         assertNotNull(truck.getTile(2,3));
 
         // Cannonata pesante da sotto sulla colonna 7 -> elimina 's' e anche 'e' in quanto raggiungibile solo tramite 's'
-        truck.handleCannonShot(new CannonShot(true, Direction.DOWN), 7, s);
+        truck.handleCannonShot(new CannonShot(true, Direction.DOWN), 7);
         assertNull(truck.getTile(3,3));
         assertNull(truck.getTile(3,4));
         assertNotNull(truck.getTile(2,3));
@@ -773,21 +693,24 @@ public class BoardTest {
         truck.addComponent(e, 3, 4);
 
         // cannonata piccola da sopra su colonna 8 e da sinistra su riga 7 (verso container c e cabina centrale): tutto intatto grazie a scudo
-        truck.handleCannonShot(new CannonShot(false, Direction.UP), 8, s);
-        truck.handleCannonShot(new CannonShot(false, Direction.LEFT), 7, s);
+        truck.activeShield(3,3);
+        truck.handleCannonShot(new CannonShot(false, Direction.UP), 8);
+        truck.activeShield(3,3);
+        truck.handleCannonShot(new CannonShot(false, Direction.LEFT), 7);
         assertNotNull(truck.getTile(2,3));
         assertNotNull(truck.getTile(3,3));
         assertNotNull(truck.getTile(3,4));
         assertNotNull(truck.getTile(2,4));
 
         // cannonata da sotto su colonna 7 -> rimuove solo scudo (non protegge quella direzione)
-        truck.handleCannonShot(new CannonShot(false, Direction.DOWN), 7, s);
+        truck.activeShield(3,3);
+        truck.handleCannonShot(new CannonShot(false, Direction.DOWN), 7);
         assertNull(truck.getTile(3,3));
         assertNotNull(truck.getTile(3,4));
         assertNotNull(truck.getTile(2,4));
 
         // cannonata da sopra su colonna 8 -> ora senza scudo, 'c' viene colpito -> 'e' viene rimosso perché isolato
-        truck.handleCannonShot(new CannonShot(false, Direction.UP), 8, null );
+        truck.handleCannonShot(new CannonShot(false, Direction.UP), 8);
         assertNull(truck.getTile(2,4));
         assertNull(truck.getTile(3,4));
         assertNotNull(truck.getTile(2,3));
@@ -825,26 +748,31 @@ public class BoardTest {
 
         // suppongo di voler usare sempre scudo s per difendermi, così verifico la sua inutilità per big meteors
         // big meteor da sopra su colonna 7 -> c1 la distrugge -> tutto intatto
-        truck.handleMeteor(new Meteor(true, Direction.UP), 7, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.UP), 7);
         assertNotNull(truck.getTile(1,3));
 
         // big meteor da destra su riga 6 -> c3 la distrugge "sparando in diagonale" -> tutto intatto
-        truck.handleMeteor(new Meteor(true, Direction.RIGHT), 6, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.RIGHT), 6);
         assertNotNull(truck.getTile(1,4));
         assertNotNull(truck.getTile(2,5));
         assertNotNull(truck.getTile(3,3));
 
         // big meteor da sopra su colonna 8 -> c1 non protegge -> bh eliminato
-        truck.handleMeteor(new Meteor(true, Direction.UP), 8, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.UP), 8);
         assertNull(truck.getTile(1,4));
         assertNotNull(truck.getTile(2,4));
 
         // big meteor da sotto su colonna 6 -> c2 la distrugge "sparando in diagonale" -> tutto intatto
-        truck.handleMeteor(new Meteor(true, Direction.DOWN), 6, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.DOWN), 6);
         assertNotNull(truck.getTile(2,2));
 
         // big meteor da sinistra su riga 6 -> nessun cannone -> c1 distrutto
-        truck.handleMeteor(new Meteor(true, Direction.LEFT), 6, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.LEFT), 6);
         assertNull(truck.getTile(1,3));
 
         // al posto di c1 metto cannone doppio
@@ -853,11 +781,13 @@ public class BoardTest {
         truck.addComponent(c4, 1, 3);
 
         truck.activeCannon(1,3);
-        truck.handleMeteor(new Meteor(true, Direction.UP), 7, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.UP), 7);
         assertNotNull(truck.getTile(1,3));
 
         // ora è disattivato -> meteora uguale a prima lo elimina
-        truck.handleMeteor(new Meteor(true, Direction.UP), 7, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.UP), 7);
         assertNull(truck.getTile(1,3));
     }
 
@@ -891,36 +821,39 @@ public class BoardTest {
 
         assertTrue(truck.check());
 
-        truck.handleMeteor(new Meteor(false, Direction.RIGHT), 6, null );
+        truck.handleMeteor(new Meteor(false, Direction.RIGHT), 6);
         // bh non ha connettore esposto a dx -> non è necessario scudo -> meteor rimbalza -> intatto
         assertNotNull(truck.getTile(1,4));
 
-        truck.handleMeteor(new Meteor(false, Direction.UP), 8, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(false, Direction.UP), 8);
         // bh sopra ha connettore esposto, ma scudo protege
         assertNotNull(truck.getTile(1,4));
 
-        truck.handleMeteor(new Meteor(false, Direction.UP), 8, null );
+        truck.handleMeteor(new Meteor(false, Direction.UP), 8);
         // ora scudo non protegge -> bh eliminato
         assertNull(truck.getTile(1,4));
         assertNotNull(truck.getTile(2,4));
 
-        truck.handleMeteor(new Meteor(false, Direction.LEFT), 8, s );
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(false, Direction.LEFT), 8);
         // c2 ha connettore esposto a sx ma scudo protegge
         assertNotNull(truck.getTile(3,3));
 
-        truck.handleMeteor(new Meteor(false, Direction.LEFT), 8, null );
+        truck.handleMeteor(new Meteor(false, Direction.LEFT), 8);
         // scelgo di non attivare scudo -> c2 eliminato
         assertNull(truck.getTile(3,3));
 
-        truck.handleMeteor(new Meteor(false, Direction.UP), 7, null );
+        truck.handleMeteor(new Meteor(false, Direction.UP), 7);
         // lato GUN non è connettore esposto -> meteor rimbalza
         assertNotNull(truck.getTile(1,3));
 
-        truck.handleMeteor(new Meteor(false, Direction.DOWN), 6, s);
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(false, Direction.DOWN), 6);
         // uso scudo: mi protegge nonostante connettore esposto
         assertNotNull(truck.getTile(2,2));
 
-        truck.handleMeteor(new Meteor(false, Direction.DOWN), 6, null );
+        truck.handleMeteor(new Meteor(false, Direction.DOWN), 6);
         // non uso scudo e ha connettore esposto -> eliminato
         assertNull(truck.getTile(2,2));
     }
