@@ -66,4 +66,7 @@ public interface ActionVisitor<T> {
 
     public T visitForFixed(Fixed fixed, String username);
 
+    public T visitForInitGame(InitGame initGame, String username);
+
+
 }

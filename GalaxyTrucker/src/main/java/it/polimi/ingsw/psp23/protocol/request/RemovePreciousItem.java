@@ -1,13 +1,18 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
+import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.ActiveCannonVisitor;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.RemovePreciousItemVisitor;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 public record RemovePreciousItem(int cx, int cy, int num) implements Action {
     public void handle(String username){
         Game game = Game.getInstance();
+        if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SMUGGLERS){
+            throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
+        }
         Card currentCard = game.getCurrentCard();
         RemovePreciousItemVisitor removeItem = new RemovePreciousItemVisitor();
         currentCard.call(removeItem, username, cx, cy, num);

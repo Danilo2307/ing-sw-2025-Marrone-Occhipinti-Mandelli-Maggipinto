@@ -671,10 +671,10 @@ public class Board {
      viene lanciata un'eccezione (presente in loadItem) e nessun item successivo viene caricato (ma i preceedenti si!).
      Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
      */
-    public void loadGoods(List<Item> items, int i, int j) {
-        if (!isValid(i, j) || isFree(i,j))
-            throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
-
+    public void loadGoods(Item item, int i, int j) {
+        if (!isValid(i, j) || isFree(i,j)) {
+            throw new InvalidCoordinatesException("Coordinates(" + i + "," + j + ") cannon contain a tile or don't contain one");
+        }
         Component tile = ship[i][j];
         switch (tile) {
             case Container container -> {
@@ -682,17 +682,12 @@ public class Board {
                 if (index == -1) {
                     throw new ComponentMismatchException("Container not found in 'containers' list: error in loadGoods of Board");
                 }
-
-                int scorr = 0;
-                while (scorr < items.size()) {
-                    try {
-                        // loadItem controlla anche se l'item può essere caricato in quello specifico container
-                        containers.get(index).loadItem(items.get(scorr));
-                        scorr++;
-                    } catch (ContainerException c) {
-                        // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
-                        throw new ContainerException("Item at index " + scorr + " cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
-                    }
+                try {
+                    // loadItem controlla anche se l'item può essere caricato in quello specifico container
+                    containers.get(index).loadItem(item);
+                } catch (ContainerException c) {
+                    // Rilancio una ContainerException con maggior contesto, da gestire poi nel Controller
+                    throw new ContainerException("Item cannot be loaded in container at [" + i + "][" + j + "]: " + c.getMessage());
                 }
             }
             default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");

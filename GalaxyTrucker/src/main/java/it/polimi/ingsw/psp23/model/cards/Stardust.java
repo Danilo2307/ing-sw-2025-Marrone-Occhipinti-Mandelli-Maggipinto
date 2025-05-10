@@ -77,4 +77,9 @@ public class Stardust extends Card {
                 "è uscita la carta Stardust\n" +
                 "si perdono tanti giorni quanti sono i connettori esposti";
     }
+
+    public <T> T call(Visitor<T> visitor) {
+        return visitor.visitForStardust(this);
+    }
+
 }
