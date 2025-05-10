@@ -84,7 +84,7 @@ public class Planets extends Card {
         }
         if (planetsOccupied.get(i-1) == null) {
             game.fireEvent(new PlanetOccupation(game.getGameStatus(), i));
-//            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
+            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             planetsOccupied.set(i-1, username);
         } else {
             throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
