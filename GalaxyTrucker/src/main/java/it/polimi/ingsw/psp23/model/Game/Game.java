@@ -39,6 +39,7 @@ public class Game {
     private String deck2Owner;
     private String deck3Owner;
     private Consumer<Event> eventListener;
+    private Consumer<Event> eventListener2;
     private int numRequestedPlayers;
     private int turn;
 
@@ -430,9 +431,19 @@ public class Game {
         this.eventListener = listener;
     }
 
+    public void setEventListener2(Consumer<Event> listener) {
+        this.eventListener2 = listener;
+    }
+
     public void fireEvent(Event event) {
         if (eventListener != null) {
             eventListener.accept(event);
+        }
+    }
+
+    public void fireEvent(Event event, String username) {
+        if(eventListener != null) {
+            eventListener2.accept(event);
         }
     }
 

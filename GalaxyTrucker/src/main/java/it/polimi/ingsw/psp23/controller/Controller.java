@@ -39,6 +39,7 @@ public class Controller {
         isFirstBuildingPhaseEnded = false;
         currentPosition = 1;
         Game.getInstance().setEventListener(this::onGameEvent);
+        Game.getInstance().setEventListener2(this::onGameEvent);
     }
 
     public static synchronized Controller getInstance() {
