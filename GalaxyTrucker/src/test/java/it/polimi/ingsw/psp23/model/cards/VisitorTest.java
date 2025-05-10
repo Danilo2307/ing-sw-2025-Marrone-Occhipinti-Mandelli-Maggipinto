@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -47,12 +48,10 @@ public class VisitorTest {
 
         Card carta1 = new Smugglers(2, 3, 3, 3, prizes1);
         Card carta2 = new Planets(2, 2, pianeti);
-        Card carta3 = new CombatZone(2, 2, 3, 1, Challenge.CannonStrength, Challenge.Members, Challenge.EngineStrength, cannonShotList1);
 
         List<Card> deck = new ArrayList<>();
         deck.add(carta1);
         deck.add(carta2);
-        deck.add(carta3);
 
         System.out.println("Stampa con deck e 0: " + deck.get(0).call(visitor3));
         System.out.println("Stampa con deck e 1: " + deck.get(1).call(visitor3));
@@ -79,8 +78,6 @@ public class VisitorTest {
         }
         System.out.println();
 
-        System.out.println("La prima penalità è: " + carta3.call(visitorParametrico1, 3));
-        System.out.println("La prima penalità è: " + carta3.call(visitorParametrico1, 2));
 
     }
 }

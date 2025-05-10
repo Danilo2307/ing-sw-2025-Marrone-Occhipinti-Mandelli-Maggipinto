@@ -84,12 +84,12 @@ public class Planets extends Card {
         }
         if (planetsOccupied.get(i-1) == null) {
             game.fireEvent(new PlanetOccupation(game.getGameStatus(), i));
-            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
+//            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             planetsOccupied.set(i-1, username);
         } else {
             throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
         }
-        if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
+        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {
             for (Player p : game.getPlayers().reversed()) {
@@ -102,7 +102,7 @@ public class Planets extends Card {
     }
 
     /**
-     * Player passes landing.
+     * Player passes landing or loading item.
      * @param username player nickname
      * @throws CardException if state invalid
      */
@@ -123,7 +123,7 @@ public class Planets extends Card {
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-        if (game.getCurrentPlayerIndex() < game.getPlayers().size()) {
+        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
             game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         } else {
@@ -226,8 +226,10 @@ public class Planets extends Card {
      * Initializes the planet landing phase and fires the event.
      */
     public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.INIT_PLANETS);
-        Game.getInstance().fireEvent(new EventForPlanets(Game.getInstance().getGameStatus(), daysLost, planetGoods));
+        Game game = Game.getInstance();
+        game.setGameStatus(GameStatus.INIT_PLANETS);
+        game.fireEvent(new EventForPlanets(game.getGameStatus(), daysLost, planetGoods));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
     /**

@@ -39,7 +39,6 @@ public class Game {
     private String deck2Owner;
     private String deck3Owner;
     private Consumer<Event> eventListener;
-    private Consumer<Event> eventListener2;
     private int numRequestedPlayers;
     private int turn;
 
@@ -228,6 +227,15 @@ public class Game {
         }
     }
 
+    public void checkReservedTiles() {
+        for (Player p : players) {
+            int reserved = p.getTruck().getReservedTiles().size();
+            if (reserved != 0) {
+                p.getTruck().setGarbage(reserved);
+            }
+        }
+    }
+
     /** @return the current player in the round */
     public Player getCurrentPlayer(){
         return currentPlayer;
@@ -240,6 +248,7 @@ public class Game {
     /** @param player the player to set as current */
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
+        currentPlayerIndex = players.indexOf(player);
     }
 
     public void setCurrentPlayerIndex(int index){
@@ -249,11 +258,9 @@ public class Game {
     /** @return the next player in the round, or null if the round is over        */
     public Player getNextPlayer(){
         int size = players.size();
-        int pos = players.indexOf(currentPlayer);
-        if(pos+1 < size){
+        if(currentPlayerIndex < size - 1){
             turn ++;
-            setCurrentPlayer(players.get(pos+1));
-            setCurrentPlayerIndex(pos+1);
+            setCurrentPlayer(players.get(currentPlayerIndex+1));
             fireEvent(new TurnOf(getGameStatus(), currentPlayer.getNickname()));
             return currentPlayer;
         } else{
@@ -301,6 +308,11 @@ public class Game {
             turn = 0;
             currentPlayer = players.getFirst();
             setCurrentPlayer(currentPlayer);
+            setCurrentPlayerIndex(0);
+            // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
+            // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
+            // Controller.getInstance().onGameEvent(e);
+
             Visitor visitor = new InitPlayVisitor();
             currentCard.call(visitor);
         }
@@ -431,19 +443,9 @@ public class Game {
         this.eventListener = listener;
     }
 
-    public void setEventListener2(Consumer<Event> listener) {
-        this.eventListener2 = listener;
-    }
-
     public void fireEvent(Event event) {
         if (eventListener != null) {
             eventListener.accept(event);
-        }
-    }
-
-    public void fireEvent(Event event, String username) {
-        if(eventListener != null) {
-            eventListener2.accept(event);
         }
     }
 
