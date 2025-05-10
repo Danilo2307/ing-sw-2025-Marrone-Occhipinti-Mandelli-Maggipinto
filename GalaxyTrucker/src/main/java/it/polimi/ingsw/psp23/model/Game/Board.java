@@ -1025,6 +1025,10 @@ public class Board {
         return garbage;
     }
 
+    public void setGarbage(int offset) {
+        garbage += offset;
+    }
+
     /** Di seguito metto metodi necessari per il testing (BoardTest) */
     public List<Cannon> getCannons() {
         // ritorno copia immutabile così è solo read-only ed evito side-effects esterni

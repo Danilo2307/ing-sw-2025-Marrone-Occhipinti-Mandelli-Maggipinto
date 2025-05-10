@@ -98,7 +98,9 @@ public class Controller {
 
         if (Game.getInstance().getGameStatus() == GameStatus.Building) {
             timer.shutdown();
-            Game.getInstance().setGameStatus(GameStatus.CheckBoards);
+            Game game = Game.getInstance();
+            game.checkReservedTiles();
+            game.setGameStatus(GameStatus.CheckBoards);
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.CheckBoards)));
         }
 
