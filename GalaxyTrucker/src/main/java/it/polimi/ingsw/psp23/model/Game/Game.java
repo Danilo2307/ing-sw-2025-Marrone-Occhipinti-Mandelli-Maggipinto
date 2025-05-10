@@ -444,6 +444,10 @@ public class Game {
         this.eventListener = listener;
     }
 
+    public void setEventListener2(Consumer<Event> listener) {
+        this.eventListener2 = listener;
+    }
+
     public void fireEvent(Event event) {
         if (eventListener != null) {
             eventListener.accept(event);
