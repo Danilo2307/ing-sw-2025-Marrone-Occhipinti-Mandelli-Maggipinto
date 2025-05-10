@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
 import it.polimi.ingsw.psp23.model.Events.PlanetOccupation;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
@@ -7,7 +8,6 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
-import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForPlanets;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -87,14 +87,14 @@ public class Planets extends Card {
             game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             planetsOccupied.set(i-1, username);
         } else {
-            throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i));
+            throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i-1));
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {
-            for (String p : planetsOccupied) {
-                if(p != null) {
-                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(game.getPlayerFromNickname(p)), -daysLost);
+            for (Player p : game.getPlayers().reversed()) {
+                if(p != null && planetsOccupied.contains(p.getNickname())) {
+                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
                 }
             }
             game.setGameStatus(GameStatus.END_PLANETS);
@@ -108,7 +108,7 @@ public class Planets extends Card {
      */
     public void pass(String username) {
         Game game = Game.getInstance();
-        if (game.getGameStatus() != GameStatus.INIT_PLANETS) {
+        if (game.getGameStatus() == GameStatus.END_PLANETS) {
             int playerIndex = planetsOccupied.indexOf(username);
             if (playerIndex >= 0) {
                 List<Item> goodsOnPlanet = planetGoods.get(playerIndex);
@@ -116,6 +116,9 @@ public class Planets extends Card {
                 int totalGoods = goodsOnPlanet.size();
                 if (alreadyLoaded < totalGoods) {
                     loadedCount.set(playerIndex, totalGoods);
+                    if(verifyAll()){
+                        game.nextCard();
+                    }
                     return;
                 }
             }
@@ -128,8 +131,8 @@ public class Planets extends Card {
             game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         } else {
             for (Player p : game.getPlayers().reversed()) {
-                if (planetsOccupied.contains(p.getNickname())) {
-                    p.setPosition(-daysLost);
+                if(p != null && planetsOccupied.contains(p.getNickname())) {
+                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
                 }
             }
             game.setGameStatus(GameStatus.END_PLANETS);
@@ -154,27 +157,16 @@ public class Planets extends Card {
         int player = planetsOccupied.indexOf(username);
         List<Item> items = planetGoods.get(player);
         if (loadedCount.get(player) < items.size()) {
-            Board board = game.getCurrentPlayer().getTruck();
-            Component[][] ship = board.getShip();
-            // TODO: gestire i casi in cui i e j siano fuori dai nostri indici
-            Component tile = ship[i][j];
-            switch (tile) {
-                case Container container -> {
-                    int index = board.getContainers().indexOf(container);
-                    if (index == -1) {
-                        throw new CardException("Container not found in 'containers' list");
-                    }
-                    try {
-                        board.getContainers().get(index).loadItem(items.get(loadedCount.get(player)));
-                        loadedCount.set(player, loadedCount.get(player) + 1);
-                        if (verifyAll()) {
-                            game.nextCard();
-                        }
-                    } catch (CardException c) {
-                        throw new CardException("Item cannot be loaded at [" + i + "][" + j + "]: " + c.getMessage());
-                    }
+            try {
+                Board board = game.getPlayerFromNickname(username).getTruck();
+                board.loadGoods(items.get(loadedCount.get(player)), i, j);
+                loadedCount.set(player, loadedCount.get(player) + 1);
+                if (verifyAll()) {
+                    game.nextCard();
                 }
-                default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
+            }
+            catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException | TypeMismatchException e){
+                throw new LoadException("Caricamento non valido", e);
             }
         } else {
             throw new CardException("No goods left");

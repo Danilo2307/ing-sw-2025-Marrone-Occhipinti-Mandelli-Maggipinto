@@ -1,36 +1,37 @@
-package it.polimi.ingsw.psp23.model.cards;
-
-import static org.junit.jupiter.api.Assertions.*;
+package it.polimi.ingsw.psp23.model.cards.planets;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
+import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
-import it.polimi.ingsw.psp23.model.enumeration.Side;
-import org.junit.jupiter.api.*;
-
-import it.polimi.ingsw.psp23.model.Game.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
-class PlanetsTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+public class PlanetsTest2 {
+    //TEST DI PLANETS IN CUI L'UTENTE SBAGLIA: NON SEGUE L'ORDINE, VUOLE ATTERRARE SU UN PIANETA OCCUPATO
     Game game;
     Player p1, p2;
-    Board b1, b2;
     Planets card;
     MeteorSwarm nextCard;
 
     @BeforeEach
-    void setUp() throws NoSuchFieldException, IllegalAccessException {
+    void setUp() {
         this.game = Game.getInstance();
 
         game.addPlayer("Albi");
@@ -41,7 +42,7 @@ class PlanetsTest {
 
         HousingUnit h1 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         HousingUnit h2 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
-        Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Red, new ArrayList<>());
+        Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 1, Color.Blue, new ArrayList<>());
         Container c2 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Blue, new ArrayList<>());
         Container c3 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Red, new ArrayList<>());
         Container c4 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Blue, new ArrayList<>());
@@ -68,7 +69,7 @@ class PlanetsTest {
     }
 
     @Test
-    void testLandingAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testLandingAndLoading() throws CardException {
         // INIT
         card.initPlay();
         assertEquals(GameStatus.INIT_PLANETS, game.getGameStatus());
@@ -77,8 +78,7 @@ class PlanetsTest {
         card.landOnPlanet("Albi", 1);
         assertEquals("Albi", card.getPlanetsOccupied()[0]);
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
-        System.out.println("Giocatori in Game: " + Game.getInstance().getPlayers()
-                .stream().map(Player::getNickname).collect(Collectors.toList()));
+
         // Fede atterra sul pianeta 2
         card.landOnPlanet("Fede", 2);
         assertEquals("Fede", card.getPlanetsOccupied()[1]);
@@ -93,17 +93,17 @@ class PlanetsTest {
         // dobbiamo avere dei Container in posizioni note (i,j).
 
         // Albi carica item
-        card.loadGoods("Albi", 7, 6);
-        card.loadGoods("Albi", 7, 6);
-        card.loadGoods("Albi", 7, 6);
-        card.loadGoods("Albi", 7, 8);
+        card.loadGoods("Albi", 1, 3);
+        card.loadGoods("Albi", 1, 3);
+        card.loadGoods("Albi", 1, 3);
+        card.loadGoods("Albi", 1, 4);
 
         // Fede carica item
-        card.loadGoods("Fede", 7, 6);
-        card.loadGoods("Fede", 7, 6);
-        card.loadGoods("Fede", 7, 8);
+        card.loadGoods("Fede", 1, 3);
+        card.loadGoods("Fede", 1, 3);
+        card.loadGoods("Fede", 1, 4);
         GameStatus before = game.getGameStatus();
-        card.loadGoods("Fede", 7, 8);
+        card.loadGoods("Fede", 1, 4);
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

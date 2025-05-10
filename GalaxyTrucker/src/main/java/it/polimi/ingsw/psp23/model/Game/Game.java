@@ -83,6 +83,15 @@ public class Game {
         Collections.shuffle(this.heap);
     }
 
+    /**
+     * Resets the Game singleton so that the next call to getInstance()
+     * will create a new Game instance.
+     * For testing purposes only.
+     */
+    public static void resetInstance() {
+        instance = null;
+    }
+
     public static Game getInstance(){
         if(instance == null){
             instance = new Game();
