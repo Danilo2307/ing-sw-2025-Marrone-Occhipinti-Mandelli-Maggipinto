@@ -156,6 +156,7 @@ public class Planets extends Card {
         if (loadedCount.get(player) < items.size()) {
             Board board = game.getCurrentPlayer().getTruck();
             Component[][] ship = board.getShip();
+            // TODO: gestire i casi in cui i e j siano fuori dai nostri indici
             Component tile = ship[i][j];
             switch (tile) {
                 case Container container -> {
