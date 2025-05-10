@@ -16,7 +16,10 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.lang.reflect.Field;
 
 class PlanetsTest {
 
@@ -27,12 +30,16 @@ class PlanetsTest {
     MeteorSwarm nextCard;
 
     @BeforeEach
-    void setUp() {
-        // 1. Inizializza singleton Game
-        game = Game.getInstance();
+    void setUp() throws NoSuchFieldException, IllegalAccessException {
+        Game.resetInstance();
+        this.game = Game.getInstance();
 
-        p1 = new Player("Albi");
-        p2 = new Player("Fede");
+        game.addPlayer("Albi");
+        game.addPlayer("Fede");
+
+        p1 = game.getPlayerFromNickname("Albi");
+        p2 = game.getPlayerFromNickname("Fede");
+
         HousingUnit h1 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         HousingUnit h2 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Red, new ArrayList<>());
@@ -53,8 +60,6 @@ class PlanetsTest {
         p2.getTruck().addComponent(c3, 1, 3);
         p2.getTruck().addComponent(c4, 1, 4);
 
-        game.addPlayer(p1.getNickname());
-        game.addPlayer(p2.getNickname());
         p1.setPosition(12);
         p2.setPosition(10);
         game.sortPlayersByPosition();
@@ -73,12 +78,14 @@ class PlanetsTest {
         card.landOnPlanet("Albi", 1);
         assertEquals("Albi", card.getPlanetsOccupied()[0]);
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
-
+        System.out.println("Giocatori in Game: " + Game.getInstance().getPlayers()
+                .stream().map(Player::getNickname).collect(Collectors.toList()));
         // Fede atterra sul pianeta 2
         card.landOnPlanet("Fede", 2);
         assertEquals("Fede", card.getPlanetsOccupied()[1]);
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_PLANETS, game.getGameStatus());
+
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(8, p1.getPosition());
         assertEquals(6, p2.getPosition());

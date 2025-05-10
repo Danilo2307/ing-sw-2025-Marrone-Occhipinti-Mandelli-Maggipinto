@@ -92,10 +92,8 @@ public class Planets extends Card {
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {
-            for (Player p : game.getPlayers().reversed()) {
-                if (planetsOccupied.contains(p.getNickname())) {
-                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
-                }
+            for (String p : planetsOccupied) {
+                Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(game.getPlayerFromNickname(p)), -daysLost);
             }
             game.setGameStatus(GameStatus.END_PLANETS);
         }
@@ -129,7 +127,7 @@ public class Planets extends Card {
         } else {
             for (Player p : game.getPlayers().reversed()) {
                 if (planetsOccupied.contains(p.getNickname())) {
-                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
+                    p.setPosition(-daysLost);
                 }
             }
             game.setGameStatus(GameStatus.END_PLANETS);
