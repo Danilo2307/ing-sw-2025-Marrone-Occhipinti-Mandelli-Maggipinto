@@ -92,10 +92,12 @@ public class Game {
         instance = null;
     }
 
+    public static Game createInstance(int level) {
+        Game game = new Game();
+        return instance;
+    }
+
     public static Game getInstance(){
-        if(instance == null){
-            instance = new Game();
-        }
         return instance;
     }
 
