@@ -118,4 +118,9 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    public Void visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication){
+        selectLevel.handle(tuiApplication);
+        return null;
+    }
+
 }

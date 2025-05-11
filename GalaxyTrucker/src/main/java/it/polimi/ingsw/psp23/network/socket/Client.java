@@ -11,6 +11,7 @@ import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
 public class Client {
@@ -30,7 +31,7 @@ public class Client {
 
             //message = socketHandler.readMessage();
             startListeningForServerThread = new StartListeningForServerThread(socketHandler, clientEventHandler, this);
-            startListeningForServerThread.start();
+            //startListeningForServerThread.start();
             //if (!message.call(new GetEventVisitor()).toString().equals("Appropriate Username")) {
             // this.close();
             //throw new PlayerExistsException("Lanciata dal costruttore di client");
@@ -42,10 +43,17 @@ public class Client {
 
     }
 
+    public void avvia(){
+        startListeningForServerThread.start();
+    }
 
     // Metodo incaricato dell'inoltro dei messaggi
     public void sendMessage(Message message) {
         socketHandler.sendMessage(message);
+    }
+
+    public Message readMessage() throws SocketTimeoutException {
+        return socketHandler.readMessage();
     }
 
     public void handleMessage(Message message) {
@@ -66,5 +74,9 @@ public class Client {
 
     public SocketHandler getSocketHandler() {
         return socketHandler;
+    }
+
+    public Socket getSocket() {
+        return socketHandler.socket;
     }
 }

@@ -10,6 +10,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
+import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
 
 import java.io.IOException;
@@ -127,6 +128,25 @@ public class Server {
 
                 SocketHandler socketHandler = new SocketHandler(socket);
 
+                synchronized (clients) {
+                    clients.put(nameConnection, socketHandler);
+                    System.out.println("Client connected: " + nameConnection);
+
+                    if(clients.size() == 1){
+
+                        socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
+
+                        Message message = socketHandler.readMessage();
+
+                        System.out.println(message.toString());
+
+                        Game.getInstance(Integer.parseInt(message.toString()));
+
+                        System.out.println("arrivato a questo punto");
+
+                    }
+                }
+
                 // Adesso mi occupo di ricevere lo username del player
                 // Queste sono le istruzioni necessarie per ricevere lo username dal client, ELABORARLO e permettere
                 // al game di aggiungere il player alla lista di player tramite l'handle delle action
@@ -151,10 +171,7 @@ public class Server {
                 socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
                 socketHandler.setUsername(username);
 
-                synchronized (clients) {
-                    clients.put(nameConnection, socketHandler);
-                    System.out.println("Client connected: " + nameConnection + " with username " + socketHandler.getUsername());
-                }
+
 
                 if(clients.size() == Game.getInstance().getNumRequestedPlayers()){
                     Controller.getInstance().startBuildingPhase();
@@ -226,7 +243,12 @@ public class Server {
         }
 
         if (socketHandler != null) {
-            return socketHandler.readMessage();
+            try {
+                return socketHandler.readMessage();
+            }
+            catch (IOException e) {
+                throw new RuntimeException("Error receiving the message: " + e.getMessage());
+            }
         }
         return null;
     }

@@ -10,6 +10,8 @@ import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 
+import java.net.SocketTimeoutException;
+
 
 public class StartListeningForServerThread extends Thread {
 
@@ -51,6 +53,8 @@ public class StartListeningForServerThread extends Thread {
 
                 }
             }
+        } catch (SocketTimeoutException e) {
+
         }
         catch(Exception e){
             throw new RuntimeException("Errore in run di StartListeningForServerThread: " + e.getMessage());

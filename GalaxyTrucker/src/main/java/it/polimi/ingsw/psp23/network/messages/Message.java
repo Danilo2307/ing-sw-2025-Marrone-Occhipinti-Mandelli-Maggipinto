@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 // La seguente classe implementa Serializable in modo da permettere una corretta serializzazione.
 // Non dovrebbe essere necessario fare l'override dei metodi perchè quelli di default vanno bene
-public sealed abstract class Message implements Serializable, MessageInterface permits BroadcastMessage, DirectMessage, ActionMessage {
+public sealed abstract class Message implements Serializable, MessageInterface permits BroadcastMessage, DirectMessage, ActionMessage, LevelSelectionMessage {
 
     public Message() {
 

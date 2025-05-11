@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 /*
  * Questa classe serve per far sì che il server invochi i metodi di sendMessage e readMessage specifici per le istanze
@@ -59,19 +60,17 @@ public class SocketHandler {
     }
 
 
-    public Message readMessage(){
+    public Message readMessage() throws SocketTimeoutException {
         synchronized (lockLettura) {
             Message received = null;
             try {
 
-                // TODO: casting da togliere!!!
                 received = (Message)in.readObject();
-
                 return received;
 
             } catch (IOException e) {
-                e.printStackTrace();
-                throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
+                //e.printStackTrace();
+                throw new SocketTimeoutException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Problema(ClassNotFoundException) in readMessage in SocketHandler " + e.getMessage());

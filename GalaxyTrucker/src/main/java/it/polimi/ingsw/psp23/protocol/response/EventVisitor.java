@@ -42,4 +42,6 @@ public interface EventVisitor<T> {
 
     public T visitForUpdateFromCard(UpdateFromCard updateFromCard, TuiApplication tuiApplication);
 
+    public T visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication);
+
 }
