@@ -64,11 +64,7 @@ public class Test1 {
         p2.getTruck().addComponent(h6, 1, 4);
         p2.getTruck().addComponent(c1, 1, 5);
 
-        p1.setPosition(12);
-        p2.setPosition(10);
-        game.sortPlayersByPosition();
 
-        card = new AbandonedStation(1,1,5, List.of(new Item(Color.Yellow), new Item(Color.Green)));
     }
 
     @Test

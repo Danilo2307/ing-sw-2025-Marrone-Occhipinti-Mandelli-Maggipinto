@@ -100,7 +100,7 @@ public class AbandonedStation extends Card {
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
                TypeMismatchException e){
-            throw new LoadException("Caricamento non valido", e);
+            throw new ItemException("Caricamento non valido", e);
         }
     }
 

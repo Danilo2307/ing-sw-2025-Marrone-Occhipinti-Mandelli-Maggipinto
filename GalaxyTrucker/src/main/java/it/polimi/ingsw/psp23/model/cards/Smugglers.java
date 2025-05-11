@@ -1,15 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
 import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
-import it.polimi.ingsw.psp23.model.Game.Board;
-import it.polimi.ingsw.psp23.model.Game.Item;
-import it.polimi.ingsw.psp23.model.Game.Utility;
-import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.exceptions.ContainerException;
+import it.polimi.ingsw.psp23.model.Game.*;
 import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
-import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -58,7 +54,7 @@ public class Smugglers extends Card {
     /**
      * Tracks how many items have been stolen per player index.
      */
-    private List<Integer> lostCount;
+    private List<Integer> lostCount = new ArrayList<>();
 
     /**
      * Tracks how many prize items have been loaded by the winner.
@@ -144,35 +140,31 @@ public class Smugglers extends Card {
     public void loadGoods(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
-            throw new CardException("Cannot load goods");
+            throw new CardException("Cannot load goods in this phase");
         }
         if (!username.equals(winner)) {
-            throw new CardException("Player is not winner");
+            throw new CardException("You are not winner");
+        }
+        if(loadedCount == prize.size()){
+            throw new CardException("You have just awarded prize");
         }
         if (loadedCount == 0) {
-            int idx = Game.getInstance().getPlayers().indexOf(username);
+            int idx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
             Utility.updatePosition(Game.getInstance().getPlayers(), idx, -days);
         }
-        Board board = game.getCurrentPlayer().getTruck();
-        Component tile = board.getShip()[i][j];
-        if (!(tile instanceof Container container)) {
-            throw new CardException("Component at [" + i + "][" + j + "] is not a container");
-        }
-        int cidx = board.getContainers().indexOf(container);
-        if (cidx == -1) {
-            throw new CardException("Container not found in list");
-        }
         try {
-            container.loadItem(prize.get(loadedCount));
+            Board board = game.getPlayerFromNickname(username).getTruck();
+            board.loadGoods(prize.get(loadedCount), i, j);
             loadedCount++;
-            if (loadedCount == prize.size() - 1) {
-                winner = null;
+            if (loadedCount == prize.size()) {
                 if (allItemsStolen()) {
                     game.nextCard();
                 }
             }
-        } catch (CardException e) {
-            throw new CardException("Item cannot be loaded: " + e.getMessage());
+        }
+        catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
+               TypeMismatchException e){
+            throw new ItemException("Caricamento non valido", e);
         }
     }
 
@@ -190,7 +182,7 @@ public class Smugglers extends Card {
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the smugglers: " + username);
         }
-        winner = null;
+        loadedCount = prize.size();
         if (allItemsStolen()) {
             game.nextCard();
         }
@@ -202,9 +194,13 @@ public class Smugglers extends Card {
      * @return true if each player's lostCount >= numItemsStolen
      */
     private boolean allItemsStolen() {
-        for (int count : lostCount) {
-            if (count < numItemsStolen) {
-                return false;
+        Game game = Game.getInstance();
+        for (String p : losers) {
+            Player player = game.getPlayerFromNickname(p);
+            if(player.getTruck().calculateGoods() > 0 || player.getTruck().calculateBatteriesAvailable() > 0) {
+                if (lostCount.get(game.getPlayers().indexOf(player)) < numItemsStolen) {
+                    return false;
+                }
             }
         }
         return true;
@@ -219,39 +215,55 @@ public class Smugglers extends Card {
      * @param item the index of the item to remove
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
-    public void removePreciousItem(String username,
-                                   int i,
-                                   int j,
-                                   int item) {
+    public void removePreciousItem(String username, int i, int j, int item) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
         }
         if (!losers.contains(username)) {
-            throw new CardException("Player is not loser");
+            throw new CardException("You are not loser");
         }
-        Board board = game.getPlayerFromNickname(username).getTruck();
-        Component tile = board.getShip()[i][j];
-        if (!(tile instanceof Container container)) {
-            throw new CardException("Component at [" + i + "][" + j + "] is not a container");
-        }
-        int idx = board.getContainers().indexOf(container);
-        if (idx == -1) {
-            throw new CardException("Invalid coordinates: no container at [" + i + "][" + j + "]");
-        }
-        Item target = container.getItems().get(item);
-        if (!board.isMostPrecious(target)) {
-            throw new CardException("Item " + target.getColor() + " is not the most precious");
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() == 0){
+            throw new CardException("You can only lose batteries");
         }
         try {
-            container.loseItem(target);
+            Board board = game.getPlayerFromNickname(username).getTruck();
+            board.removePreciousItem(i, j, item);
             int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
             lostCount.set(pidx, lostCount.get(pidx) + 1);
-            if (allItemsStolen() && winner == null) {
+            if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {
                 game.nextCard();
             }
-        } catch (ContainerException e) {
-            throw new CardException("Failed to remove item: " + e.getMessage());
+        }
+        catch (IllegalArgumentException | ComponentMismatchException | ContainerException |
+               TypeMismatchException e){
+            throw new ItemException("Scaricamento non valido", e);
+        }
+    }
+
+    public void removeBatteries(String username, int i, int j, int num){
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
+            throw new CardException("Cannot remove batteries");
+        }
+        if (!losers.contains(username)) {
+            throw new CardException("You are not loser");
+        }
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() > 0){
+            throw new CardException("You have to lose items");
+        }
+        try {
+            Board board = game.getPlayerFromNickname(username).getTruck();
+            board.reduceBatteries(i, j, num);
+            int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
+            lostCount.set(pidx, lostCount.get(pidx) + num);
+            if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {
+                game.nextCard();
+            }
+        }
+        catch (InvalidCoordinatesException | ComponentMismatchException | BatteryOperationException |
+               TypeMismatchException e){
+            throw new ItemException("Perdita batterie non valido", e);
         }
     }
 
@@ -280,6 +292,7 @@ public class Smugglers extends Card {
                 prize,
                 days
         ));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
     /**
@@ -290,6 +303,9 @@ public class Smugglers extends Card {
      */
     public void ready(String username) {
         Game game = Game.getInstance();
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+        }
         if (game.getGameStatus() == GameStatus.INIT_SMUGGLERS) {
             readyStartPhase(username);
         } else {
@@ -315,10 +331,10 @@ public class Smugglers extends Card {
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
             game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SMUGGLERS);
-        } else {
+        } else if (power < firePower){
             losers.add(username);
         }
-        if (game.getCurrentPlayerIndex() >= game.getPlayers().size()) {
+        if (game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1) {
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else {
             game.getNextPlayer();

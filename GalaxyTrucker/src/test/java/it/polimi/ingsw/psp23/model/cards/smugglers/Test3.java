@@ -4,7 +4,6 @@ import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.AbandonedStation;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -20,8 +19,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
-    //TEST A PAGINA 14 MANUALE GALAXY TRUCKER
+public class Test3 {
+    //TESTA UN PO DI ERRORI
     Game game;
     Player p1, p2, p3;
     Smugglers card;
@@ -155,23 +154,28 @@ public class Test1 {
         card.ready("Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
-        // Fede attiva due cannoni e sconfigge il nemico
-        card.activeCannon("Fede", 1, 4);
-        card.activeCannon("Fede", 1, 3);
-//        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
+        // Fede viene sconfitto
+        assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
+
+        //Gigi attiva tutto ma perde
+        card.activeCannon("Gigi", 1, 3);
+        card.ready("Gigi");
+
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
 
-        //Fede non ha spazio, toglia la merce blu e carica le altre
-        card.loadGoods("Fede", 2, 2);
-        card.loadGoods("Fede", 2, 2);
         GameStatus before = game.getGameStatus();
-        card.pass("Fede");
 
-        // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());
-        assertEquals(9, p2.getPosition());
+        assertEquals(10, p2.getPosition());
         assertEquals(8, p3.getPosition());
+
+        //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
+        card.removeBatteries("Fede", 2, 4, 2);
+
+        //GIGI RIMUOVE UNA ED UNA
+        card.removePreciousItem("Gigi", 2, 4, 1);
+        card.removeBatteries("Gigi", 2, 2, 1);
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
@@ -181,4 +185,3 @@ public class Test1 {
 
     }
 }
-
