@@ -3,58 +3,58 @@ package it.polimi.ingsw.psp23.model.cards;
 public class HelpVisitor implements Visitor<String> {
 
     public String visitForPlanets(Planets planets){
-        planets.help();
-        return null;
+
+        return planets.help();
     }
 
     public String visitForAbandonedShip(AbandonedShip abandonedShip){
-        abandonedShip.help();
-        return null;
+
+        return abandonedShip.help();
     }
 
     public String visitForAbandonedStation(AbandonedStation abandonedStation){
-        abandonedStation.help();
-        return null;
+
+        return abandonedStation.help();
     }
 
     public String visitForCombatZone(CombatZone combatZone){
-        combatZone.help();
-        return null;
+
+        return combatZone.help();
     }
 
     public String visitForEpidemic(Epidemic epidemic){
-        epidemic.help();
-        return null;
+
+        return epidemic.help();
     }
 
     public String visitForMeteorSwarm(MeteorSwarm meteorSwarm){
-        meteorSwarm.help();
-        return null;
+
+        return meteorSwarm.help();
     }
 
     public String visitForOpenSpace(OpenSpace openSpace){
-        openSpace.help();
-        return null;
+
+        return openSpace.help();
     }
 
     public String visitForPirates(Pirates pirates){
-        pirates.help();
-        return null;
+
+        return pirates.help();
     }
 
     public String visitForSlavers(Slavers slavers){
-        slavers.help();
-        return null;
+
+        return slavers.help();
     }
 
     public String visitForSmugglers(Smugglers smugglers){
-        smugglers.help();
-        return null;
+
+        return smugglers.help();
     }
 
     public String visitForStardust(Stardust stardust){
-        stardust.help();
-        return null;
+
+        return stardust.help();
     }
 
 }
