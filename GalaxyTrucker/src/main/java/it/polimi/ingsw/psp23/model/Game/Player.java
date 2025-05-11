@@ -126,11 +126,17 @@ public class Player {
     }
 
     public void reserve() {
+        if (game.getLevel() == 0)
+            throw new LevelException("Non puoi prenotare tessere nel livello di prova!");
+
         getTruck().reserveTile(currentTileInHand);
         currentTileInHand = null;
     }
 
     public void takeReservedTile(int index) {
+        if (game.getLevel() == 0)
+            throw new LevelException("Non puoi prenotare tessere nel livello di prova!");
+
         Component c = getTruck().getReservedTiles().get(index);
         currentTileInHand = c;
         c.moveToHand();

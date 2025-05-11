@@ -194,4 +194,10 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForShowPlayersPositions(ShowPlayersPositions showPlayersPositions, String username) {
+        showPlayersPositions.handle(username);
+        return null;
+    }
+
 }
