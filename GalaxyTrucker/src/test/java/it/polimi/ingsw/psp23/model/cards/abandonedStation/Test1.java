@@ -1,17 +1,14 @@
-package it.polimi.ingsw.psp23.model.cards.abandonedShip;
+package it.polimi.ingsw.psp23.model.cards.abandonedStation;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedShip;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
-import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.cards.AbandonedStation;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,10 +22,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class Test1 {
-    // PRIMO PASSA E SECONDO COMPRA LA NAVE
+    //TEST COMPLETO (MOLTE FUNZIONALITA' GIA' TESTATE IN ABANDONEDSHIP)
     Game game;
     Player p1, p2;
-    AbandonedShip card;
+    AbandonedStation card;
 
     @BeforeEach
     void setUp() {
@@ -46,6 +43,7 @@ public class Test1 {
         HousingUnit h4 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false);
         HousingUnit h5 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false);
         HousingUnit h6 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false);
+        Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 6, Color.Blue, new ArrayList<>());
         h3.setAstronaut();
         h4.setAstronaut();
         h5.setAstronaut();
@@ -56,6 +54,7 @@ public class Test1 {
         h4.moveToHand();
         h5.moveToHand();
         h6.moveToHand();
+        c1.moveToHand();
         // la cabina centrale non richiede adiacenza
         p1.getTruck().addComponent(h1, 2, 3);
         p2.getTruck().addComponent(h2, 2, 3);
@@ -63,28 +62,29 @@ public class Test1 {
         p1.getTruck().addComponent(h4, 1, 4);
         p2.getTruck().addComponent(h5, 1, 3);
         p2.getTruck().addComponent(h6, 1, 4);
+        p2.getTruck().addComponent(c1, 1, 5);
 
         p1.setPosition(12);
         p2.setPosition(10);
         game.sortPlayersByPosition();
 
-        card = new AbandonedShip(1,1,4,3);
+        card = new AbandonedStation(1,1,5, List.of(new Item(Color.Yellow), new Item(Color.Green)));
     }
 
     @Test
-    void testBuyAndReduce() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testDockAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
-        assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
+        card.help();
+        assertEquals(GameStatus.INIT_ABANDONEDSTATION, game.getGameStatus());
 
         // Albi passa
         card.pass("Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
-        // Fede compra la nave
-        card.buyShip("Fede");
-        // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
-        assertEquals(GameStatus.END_ABANDONEDSHIP, game.getGameStatus());
+        // Fede attracca
+        card.dockStation("Fede");
+        assertEquals(GameStatus.END_ABANDONEDSTATION, game.getGameStatus());
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());
@@ -92,8 +92,8 @@ public class Test1 {
 
         //Riduzione crew Fede
         GameStatus before = game.getGameStatus();
-        card.reduceCrew("Fede", 1, 3, 2);
-        card.reduceCrew("Fede", 1, 4, 1);
+        card.loadGoods("Fede", 1, 5);
+        card.loadGoods("Fede", 1, 5);
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

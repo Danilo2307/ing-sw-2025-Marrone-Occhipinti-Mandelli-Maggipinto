@@ -149,7 +149,7 @@ public class Planets extends Card {
     public void loadGoods(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_PLANETS) {
-            throw new CardException("Cannot load goods");
+            throw new CardException("Cannot load goods in this phase");
         }
         if (!planetsOccupied.contains(username)) {
             throw new CardException("Player is not on any planet");

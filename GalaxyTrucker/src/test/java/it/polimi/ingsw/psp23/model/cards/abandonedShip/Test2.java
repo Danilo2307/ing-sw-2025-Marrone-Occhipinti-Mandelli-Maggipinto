@@ -24,8 +24,9 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
-    // PRIMO PASSA E SECONDO COMPRA LA NAVE
+public class Test2 {
+    //TEST 2 PER IL PRIMO COMPRA, IL SECONDO TENTA, TEST ORDINE SBAGLIATO, REDUCE CHIAMATO DAL SECONDO,
+    //RESTA IN ATTESA SE NON VENGONO TOLTE TUTTE LE MERCI, BLOCCA SE HAI INSUFFICENTE CREW
     Game game;
     Player p1, p2;
     AbandonedShip card;
@@ -68,7 +69,7 @@ public class Test1 {
         p2.setPosition(10);
         game.sortPlayersByPosition();
 
-        card = new AbandonedShip(1,1,4,3);
+        card = new AbandonedShip(1,3,4,3);
     }
 
     @Test
@@ -77,28 +78,27 @@ public class Test1 {
         card.initPlay();
         assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
 
-        // Albi passa
-        card.pass("Albi");
-        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
+        // Albi COMPRA
+        card.buyShip("Albi");
+        assertEquals(p1.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede compra la nave
-        card.buyShip("Fede");
+        // card.buyShip("Fede");
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_ABANDONEDSHIP, game.getGameStatus());
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
-        assertEquals(12, p1.getPosition());
-        assertEquals(9, p2.getPosition());
+        assertEquals(8, p1.getPosition());
+        assertEquals(10, p2.getPosition());
 
         //Riduzione crew Fede
         GameStatus before = game.getGameStatus();
-        card.reduceCrew("Fede", 1, 3, 2);
-        card.reduceCrew("Fede", 1, 4, 1);
+        card.reduceCrew("Albi", 1, 3, 2);
+        card.reduceCrew("Albi", 1, 4, 1);
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
 
         assertNotEquals(before, after);
-
     }
 }

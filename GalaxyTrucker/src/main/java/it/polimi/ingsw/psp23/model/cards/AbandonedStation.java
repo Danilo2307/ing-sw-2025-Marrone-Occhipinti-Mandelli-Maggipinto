@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.AbandonedStationOccupation;
 import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
@@ -7,8 +8,6 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
-import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.exceptions.ContainerException;
 import it.polimi.ingsw.psp23.model.Events.EventForAbandonedStation;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -48,6 +47,7 @@ public class AbandonedStation extends Card {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
         game.fireEvent(new EventForAbandonedStation(game.getGameStatus(), days, numMembers, prize));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
     /**
@@ -56,28 +56,33 @@ public class AbandonedStation extends Card {
      */
     public void dockStation(String username) {
         Game game = Game.getInstance();
-        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) {
-            throw new CardException("Cannot dock station in phase: " + game.getGameStatus());
+        if(isSold != null){
+            throw new CardException("Station was docked by " + isSold );
         }
-        if (!username.equals(game.getPlayers().get(game.getTurn()))) {
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) {
+            throw new CardException("User '" + username + "' cannot dock the station in phase: " + game.getGameStatus());
+        }
+        if (!username.equals(game.getCurrentPlayer().getNickname())) {
             throw new CardException("User '" + username + "' is not the current player");
         }
         Player p = game.getPlayerFromNickname(username);
-        if (p.getTruck().calculateCrew() < numMembers) {
-            throw new CardException("Not enough crew to dock station");
+        int crew = p.getTruck().calculateCrew();
+        if (crew < numMembers) {
+            throw new CardException("User '" + username + "' can't dock station, he does not have enough crew");
         }
         isSold = username;
         game.fireEvent(new AbandonedStationOccupation(game.getGameStatus()));
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
         game.fireEvent(new ItemsEarned(game.getGameStatus()), isSold);
         game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
+        game.setCurrentPlayer(game.getPlayerFromNickname(isSold));
     }
 
     /**
      * Loads prize items into containers during END_ABANDONEDSTATION.
      * Throws ContainerException for container-specific failures, or CardException if used in wrong phase or by wrong user.
      */
-    public void loadGoods(String username, int i, int j) throws ContainerException {
+    public void loadGoods(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
             throw new CardException("Cannot load goods in phase: " + game.getGameStatus());
@@ -85,30 +90,17 @@ public class AbandonedStation extends Card {
         if (!username.equals(isSold)) {
             throw new CardException("User '" + username + "' did not dock the station");
         }
-        Board board = game.getPlayerFromNickname(username).getTruck();
-        if (!board.isValid(i, j) || board.isFree(i, j)) {
-            throw new CardException("Invalid coordinates or empty cell: [" + i + "][" + j + "]");
-        }
-        Component tile = board.getShip()[i][j];
-        switch (tile) {
-            case Container container -> {
-                int idx = board.getContainers().indexOf(container);
-                if (idx == -1) {
-                    throw new CardException("Container not found in list");
-                }
-                try {
-                    container.loadItem(prize.get(counterItem));
-                    counterItem++;
-                    if (counterItem == prize.size()) {
-                        game.getNextCard();
-                    }
-                } catch (ContainerException e) {
-                    throw new ContainerException(
-                            "Cannot load item " + counterItem + " into container at [" + i + "][" + j + "]: " + e.getMessage()
-                    );
-                }
+        try {
+            Board board = game.getPlayerFromNickname(username).getTruck();
+            board.loadGoods(prize.get(counterItem), i, j);
+            counterItem++;
+            if (counterItem == prize.size()) {
+                game.nextCard();
             }
-            default -> throw new CardException("Component at [" + i + "][" + j + "] is not a container");
+        }
+        catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
+               TypeMismatchException e){
+            throw new LoadException("Caricamento non valido", e);
         }
     }
 
@@ -117,17 +109,18 @@ public class AbandonedStation extends Card {
      */
     public void pass(String username) {
         Game game = Game.getInstance();
-        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) return;
-
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) {
+            throw new CardException("User '" + username + "' cannot dock station in phase: " + game.getGameStatus());
+        }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-
-        if (game.getTurn() < game.getPlayers().size() - 1) {
+        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
-            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+            String currentPlayerNickname = game.getCurrentPlayer().getNickname();
+            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
         } else {
-            game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
+            game.nextCard();
         }
     }
 
