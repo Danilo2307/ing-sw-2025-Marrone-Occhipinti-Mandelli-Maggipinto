@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,6 +17,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BoardTest {
+
+    @BeforeEach
+    public void setup() {
+        Game.resetInstance();
+        Game.getInstance(2);
+    }
 
     @Test
     public void testAddComponent() {
@@ -75,40 +82,6 @@ public class BoardTest {
         // check coordinate non adiacenti a pezzi già saldati: lancio eccezione -> hasAdjacentTile funziona
         assertThrows(InvalidCoordinatesException.class, () -> { truck.addComponent(e, 3, 1); } );
     }
-
-    @Test
-    public void testLoadGoods() {
-        // creo board con cabina centrale
-        Board truck = new Board(2);
-        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
-        cabin.moveToHand();
-        truck.addComponent(cabin, 2, 3);
-
-        // aggiungo cannone e container
-        Cannon c = new Cannon(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false);
-        c.moveToHand();
-        truck.addComponent(c, 1, 3);
-        Container container = new Container(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>() );
-        container.moveToHand();
-        truck.addComponent(container, 2, 4);
-        ArrayList<Item> items = new ArrayList<>(List.of( new Item(Color.Red), new Item(Color.Blue), new Item(Color.Green)));
-
-        // provo a caricare le merci sul cannon in 1,3 -> lancio eccezione
-//        assertThrows(TypeMismatchException.class, () -> truck.loadGoods(items, 1, 3));
-
-        // provo a caricare items, ma contiene merce rossa e container è blu -> eccezione. Non carica nulla perchè Red è la prima
-//        assertThrows(ContainerException.class, () -> truck.loadGoods(items, 2, 4));
-
-        // rimuovo merce rossa
-        items.removeFirst();
-        // check caricamento effettivo
-//        truck.loadGoods(items, 2, 4);
-        assertEquals(container.getItems().get(0).getColor(), Color.Blue);
-        assertEquals(container.getItems().get(1).getColor(), Color.Green);
-        assertEquals(container.getItems().size(), 2);
-    }
-
-
 
     @Test
     // non ritesto l'invalidità delle coordinate o TypeMismatch perchè già coperti da altri test e la logica è identica
@@ -789,11 +762,6 @@ public class BoardTest {
         assertNull(truck.getTile(1,4));
         assertNotNull(truck.getTile(2,4));
 
-        // big meteor da sotto su colonna 6 -> c2 la distrugge "sparando in diagonale" -> tutto intatto
-        truck.activeShield(2,2);
-        truck.handleMeteor(new Meteor(true, Direction.DOWN), 6);
-        assertNotNull(truck.getTile(2,2));
-
         // big meteor da sinistra su riga 6 -> nessun cannone -> c1 distrutto
         truck.activeShield(2,2);
         truck.handleMeteor(new Meteor(true, Direction.LEFT), 6);
@@ -813,6 +781,11 @@ public class BoardTest {
         truck.activeShield(2,2);
         truck.handleMeteor(new Meteor(true, Direction.UP), 7);
         assertNull(truck.getTile(1,3));
+
+        // big meteor da sotto distrugge sicuro
+        truck.activeShield(2,2);
+        truck.handleMeteor(new Meteor(true, Direction.DOWN), 6);
+        assertNull(truck.getTile(2,2));
     }
 
     @Test

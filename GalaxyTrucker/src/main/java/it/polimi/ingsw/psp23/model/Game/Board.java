@@ -602,14 +602,19 @@ public class Board {
 
             // Flag che indica se la meteora è stata distrutta da un cannone
             boolean isDestroyed = false;
+            // in base al livello posso sparare ai lati
+            boolean canShootToSide = Game.getInstance().getLevel() == 2;
+
             // Scorro tutti i cannoni installati sulla nave
             for (Cannon s : cannons) {
                 // Determino se il cannone si trova in una posizione adatta a colpire la meteora
                 boolean matchesPosition = switch (meteor.getDirection()) {
                     case UP -> s.getY() == realImpactLine;
-                    case DOWN -> s.getY() == realImpactLine || s.getY() == realImpactLine + 1 || s.getY() == realImpactLine - 1;
-                    case RIGHT, LEFT ->
-                            s.getX() == realImpactLine || s.getX() == realImpactLine + 1 || s.getX() == realImpactLine - 1;
+                    case DOWN -> false;
+                    case RIGHT, LEFT -> canShootToSide &&
+                                    (s.getX() == realImpactLine ||
+                                    s.getX() == realImpactLine + 1 ||
+                                    s.getX() == realImpactLine - 1);
                 };
                 // (L'ho svolto così per evitare quadruplicazione cospicua di codice).
                 // Verifico se il cannone è rivolto nella direzione da cui arriva la meteora
