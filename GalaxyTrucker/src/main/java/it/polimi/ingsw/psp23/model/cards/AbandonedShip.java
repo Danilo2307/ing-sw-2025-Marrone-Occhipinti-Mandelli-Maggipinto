@@ -55,6 +55,9 @@ public class AbandonedShip extends Card {
      */
     public void pass(String username) {
         Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
+            throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
+        }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
