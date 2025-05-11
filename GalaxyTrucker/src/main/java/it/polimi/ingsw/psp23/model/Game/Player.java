@@ -17,7 +17,7 @@ public class Player {
     public Player(String nickname) {
         this.nickname = nickname;
         this.position = 0;
-        this.truck = new Board();
+        this.truck = new Board(game.getLevel());
         this.money = 0;
         this.currentTileInHand = null;
         this.inGame = true;

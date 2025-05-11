@@ -15,6 +15,21 @@ public class CardFactory {
     // costruttore private e vuoto, così impedisco istanziazione: le carte vengono create una sola volta
     private CardFactory() {};
 
+    public static ArrayList<Card> generateTrialCards() {
+        ArrayList<Card> trialCards = new ArrayList<>();
+
+        trialCards.add(new OpenSpace(1));
+        trialCards.add(new Planets(1, 2, List.of(List.of(new Item(Color.Red), new Item(Color.Red)), List.of(new Item(Color.Red), new Item(Color.Blue), new Item(Color.Blue)), List.of(new Item(Color.Yellow)))));
+        trialCards.add(new AbandonedShip(1, 1, 4, 3));
+        trialCards.add(new AbandonedStation(1, 1, 5, List.of(new Item(Color.Yellow), new Item(Color.Green))));
+        trialCards.add(new Stardust(1));
+        trialCards.add(new Smugglers(1, 4, 2, 1, List.of(new Item(Color.Yellow), new Item(Color.Green), new Item(Color.Blue))));
+        trialCards.add(new MeteorSwarm(1, List.of(new Meteor(true, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT))));
+        trialCards.add(new CombatZone(1,3,0,2, List.of(Challenge.Members, Challenge.EngineStrength, Challenge.CannonStrength), List.of(new CannonShot(false, Direction.DOWN), new CannonShot(true, Direction.DOWN))));
+
+        return trialCards;
+    }
+
     public static ArrayList<Card> generateLevel1Cards() {
         ArrayList<Card> cardsOne = new ArrayList<>();
 

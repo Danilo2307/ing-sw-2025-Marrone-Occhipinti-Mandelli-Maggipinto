@@ -29,8 +29,19 @@ public class Board {
     private final int COLS = 7;
     int[][] validCoords;
 
-
-    public Board() {
+    public Board(int level) {
+        if (level == 2) {
+            validCoords = new int[][]{
+                    {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4},
+                    {2, 5}, {2, 6}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 0}, {4, 1}, {4, 2}, {4, 4}, {4, 5}, {4, 6}
+            };
+        }
+        else {
+            validCoords = new int[][]{
+                    {0, 3}, {1, 2}, {1, 3}, {1, 4}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5},
+                    {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {4, 1}, {4, 2}, {4, 4}, {4, 5},
+            };
+        }
         ship = new Component[ROWS][COLS];
         garbage = 0;
         batteryHubs = new ArrayList<>();
@@ -42,9 +53,6 @@ public class Board {
         housingUnits = new ArrayList<>();
         structuralComponents = new ArrayList<>();
         reservedTiles = new ArrayList<>();
-        validCoords = new int[][]{
-            {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4}, {2, 5}, {2, 6}, {3, 0}, {3, 1}, {3, 2}, {3, 3}, {3, 4}, {3, 5}, {3, 6}, {4, 0}, {4, 1}, {4, 2}, {4, 4}, {4, 5}, {4, 6}
-        };
     }
 
     /**

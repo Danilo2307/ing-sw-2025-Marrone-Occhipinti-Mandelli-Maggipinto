@@ -25,9 +25,9 @@ public class Game {
     private final ArrayList<Player> players;
     private final ArrayList<Player> playersNotOnFlight;
     private final ArrayList<Card> deck;
-    private final ArrayList<Card> visibleCards1;
-    private final ArrayList<Card> visibleCards2;
-    private final ArrayList<Card> visibleCards3;
+    private ArrayList<Card> visibleCards1 = null;
+    private ArrayList<Card> visibleCards2 = null;
+    private ArrayList<Card> visibleCards3 = null;
     private final ArrayList<Component> heap;
     private final ArrayList<Component> uncovered;
     private int lastUncoveredVersion;
@@ -35,15 +35,16 @@ public class Game {
     private int currentPlayerIndex; // Questa variabile sarà inizializzata a -1
     private GameStatus gameStatus;
     private Card currentCard;
-    private String deck1Owner;
-    private String deck2Owner;
-    private String deck3Owner;
+    private String deck1Owner = null;
+    private String deck2Owner = null;
+    private String deck3Owner = null;
     private Consumer<Event> eventListener;
     private Consumer<Event> eventListener2;
     private int numRequestedPlayers;
     private int turn;
+    int level;
 
-    public Game() {
+    private Game(int level) {
         this.players = new ArrayList<>();
         this.playersNotOnFlight = new ArrayList<>();
         this.deck = new ArrayList<>();
@@ -54,33 +55,38 @@ public class Game {
         this.currentPlayerIndex = -1;
         this.gameStatus = GameStatus.Setup;
         this.currentCard = null;
-        this.visibleCards1 = new ArrayList<>(); //questi sono i tre mazzetti visibili ad inizio game, vanno staccati
-        this.visibleCards2 = new ArrayList<>(); //perchè possono essere visti solo uno alla volta
-        this.visibleCards3 = new ArrayList<>();
-        this.deck1Owner = null;
-        this.deck2Owner = null;
-        this.deck3Owner = null;
         this.numRequestedPlayers = -1;
         this.turn = 0;
-
-        // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
-        ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
-        ArrayList<Card> level2Cards = CardFactory.generateLevel2Cards();
-        Collections.shuffle(level1Cards);
-        Collections.shuffle(level2Cards);
-        this.visibleCards1.add(level1Cards.get(0));
-        this.visibleCards1.addAll(level2Cards.subList(0,2));
-        this.visibleCards2.add(level1Cards.get(1));
-        this.visibleCards2.addAll(level2Cards.subList(2,4));
-        this.visibleCards3.add(level1Cards.get(2));
-        this.visibleCards3.addAll(level2Cards.subList(4,6));
-        this.deck.addAll(level1Cards.subList(0,4));  // indice finale è escluso
-        this.deck.addAll(level2Cards.subList(0,8));
-        Collections.shuffle(this.deck);
-
+        this.level = level;
         // istanzio tutti i componenti e li metto nell'heap
-        this.heap.addAll(ComponentFactory.generateAllComponents());
+        this.heap.addAll(ComponentFactory.generateAllComponents(level));
+
+        if (level == 2) {
+            this.visibleCards1 = new ArrayList<>(); //questi sono i tre mazzetti visibili ad inizio game, vanno staccati
+            this.visibleCards2 = new ArrayList<>(); //perchè possono essere visti solo uno alla volta
+            this.visibleCards3 = new ArrayList<>();
+
+            // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
+            ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
+            ArrayList<Card> level2Cards = CardFactory.generateLevel2Cards();
+            Collections.shuffle(level1Cards);
+            Collections.shuffle(level2Cards);
+            this.visibleCards1.add(level1Cards.get(0));
+            this.visibleCards1.addAll(level2Cards.subList(0, 2));
+            this.visibleCards2.add(level1Cards.get(1));
+            this.visibleCards2.addAll(level2Cards.subList(2, 4));
+            this.visibleCards3.add(level1Cards.get(2));
+            this.visibleCards3.addAll(level2Cards.subList(4, 6));
+            this.deck.addAll(level1Cards.subList(0, 4));  // indice finale è escluso
+            this.deck.addAll(level2Cards.subList(0, 8));
+        }
+        else {
+            this.deck.addAll(CardFactory.generateTrialCards());
+        }
+
+        Collections.shuffle(this.deck);
         Collections.shuffle(this.heap);
+
     }
 
     /**
@@ -92,10 +98,16 @@ public class Game {
         instance = null;
     }
 
+    public static Game getInstance(int level) {
+        instance = new Game(level);
+        return instance;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
     public static Game getInstance(){
-        if(instance == null){
-            instance = new Game();
-        }
         return instance;
     }
 

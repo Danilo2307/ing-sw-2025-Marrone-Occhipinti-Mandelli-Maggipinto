@@ -12,16 +12,18 @@ public class ComponentFactory {
     private ComponentFactory() {}
 
     // non necessita di uno stato interno dell'oggetto; può essere usato senza l'istanza della classe
-    public static ArrayList<Component> generateAllComponents() {
+    public static ArrayList<Component> generateAllComponents(int level) {
         ArrayList<Component> components = new ArrayList<>();
         components.addAll(generateContainers());
         components.addAll(generateHousingUnits());
         components.addAll(generateBatteryHubs());
-        components.addAll(generateAlienAddOns());
         components.addAll(generateCannons());
         components.addAll(generateEngines());
         components.addAll(generateShields());
         components.addAll(generateStructuralComponents());
+        if (level == 2) {
+            components.addAll(generateAlienAddOns());
+        }
 
         return components;
     }
