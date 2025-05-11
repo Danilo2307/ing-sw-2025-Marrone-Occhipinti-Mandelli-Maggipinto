@@ -2,10 +2,7 @@ package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.ConnectorType;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
-import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.model.enumeration.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -284,9 +281,11 @@ public class Board {
                     " non trovato nella rispettiva lista: errore in delete() di Board alla cella [" + i + "][" + j + "]");
         }
 
-        // elimino component e aggiorno la pila degli scarti
+        // elimino component e aggiorno la pila degli scarti se necessario
         ship[i][j] = null;
-        garbage++;
+        if (Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() != 0 ) {
+            garbage++;
+        }
 
         // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
         // perchè potrebbe essere importante per collegare altri componenti

@@ -37,7 +37,7 @@ public class Controller {
         // cardHandler = new CardHandler();
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
-        currentPosition = 1;
+        currentPosition = 0;
         Game.getInstance().setEventListener(this::onGameEvent);
         Game.getInstance().setEventListener2(this::onGameEvent);
     }
@@ -59,18 +59,24 @@ public class Controller {
     }
 
     public void startBuildingPhase() {
-
-        for (Player player : Game.getInstance().getPlayers()) {
+        Game game = Game.getInstance();
+        for (Player player : game.getPlayers()) {
             player.getTruck().addComponent(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true), 2, 3);
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
-        Game.getInstance().setGameStatus(GameStatus.Building);
+        game.setGameStatus(GameStatus.Building);
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Building)));
 
-        startTimer();
+        if (game.getLevel() != 0) {
+            startTimer();
+        }
     }
 
     public void startTimer() {
+        if (Game.getInstance().getLevel() == 0) {
+            throw new LevelException("Non esiste la clessidra nel volo di prova!");
+        }
+
         //la clessidra dura un minuto e mezzo
         timer.startCountdown(90, this::handleTimeout);
     }
@@ -170,30 +176,11 @@ public class Controller {
 //TODO: va gestita la possibilità del player di attaccare ancora pezzi una volta che dichiara di aver terminato ovvero dovremmo mettere una lista temporanea per dire chi ha finito
 
     public void playerFinishedBuilding(String username) {
-        switch (currentPosition) {
-            case 1: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
-                Game.getInstance().getPlayerFromNickname(username).setPosition(8);
-                break;
-            }
-            case 2: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
-                Game.getInstance().getPlayerFromNickname(username).setPosition(5);
-                break;
-            }
-            case 3: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
-                Game.getInstance().getPlayerFromNickname(username).setPosition(3);
-                break;
-            }
-            case 4: {
-                Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayerFromNickname(username));
-                Game.getInstance().getPlayerFromNickname(username).setPosition(2);
-                break;
-            }
-        }
+        Game game = Game.getInstance();
+        // game.setCurrentPlayer(game.getPlayerFromNickname(username));
+        game.getPlayerFromNickname(username).setPosition(game.getFirstPositions()[currentPosition]);
         currentPosition++;
-        if(currentPosition == Game.getInstance().getPlayers().size() + 1) {
+        if(currentPosition == game.getPlayers().size()) {
             startCheckBoard();
         }
     }

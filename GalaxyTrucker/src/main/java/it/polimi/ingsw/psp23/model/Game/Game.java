@@ -43,6 +43,7 @@ public class Game {
     private int numRequestedPlayers;
     private int turn;
     int level;
+    int []firstPositions = new int[4];
 
     private Game(int level) {
         this.players = new ArrayList<>();
@@ -79,9 +80,12 @@ public class Game {
             this.visibleCards3.addAll(level2Cards.subList(4, 6));
             this.deck.addAll(level1Cards.subList(0, 4));  // indice finale è escluso
             this.deck.addAll(level2Cards.subList(0, 8));
+
+            firstPositions = new int[]{8, 5, 3, 2};
         }
         else {
             this.deck.addAll(CardFactory.generateTrialCards());
+            firstPositions = new int[]{6, 4, 3, 2};
         }
 
         Collections.shuffle(this.deck);
@@ -120,6 +124,10 @@ public class Game {
 
     public int getNumRequestedPlayers() {
         return numRequestedPlayers;
+    }
+
+    public int[] getFirstPositions() {
+        return firstPositions;
     }
 
     /** Player per rimanere in partita deve avere almeno un umano e non essere stato doppiato */
@@ -345,6 +353,10 @@ public class Game {
      * @return a copy of the visible deck if access is granted, otherwise null
      */
     public ArrayList<Card> getVisibleDeck1(Player player){
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         String nickname = player.getNickname();
         synchronized (visibleCards1) {
             if (gameStatus == GameStatus.Building && deck1Owner == null && player.getTruck().isWelded() && (deck2Owner == null || !deck2Owner.equals(nickname)) && (deck3Owner == null || !deck3Owner.equals(nickname))) {
@@ -356,6 +368,10 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck2(Player player){
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         String nickname = player.getNickname();
         synchronized (visibleCards2) {
             if(gameStatus == GameStatus.Building && deck2Owner == null && player.getTruck().isWelded() && (deck3Owner == null || !deck3Owner.equals(nickname)) && (deck1Owner == null || !deck1Owner.equals(nickname))) {
@@ -368,6 +384,10 @@ public class Game {
     }
 
     public ArrayList<Card> getVisibleDeck3(Player player) {
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         String nickname = player.getNickname();
         synchronized (visibleCards3) {
             if (gameStatus == GameStatus.Building && deck3Owner == null && player.getTruck().isWelded() && (deck1Owner == null || !deck1Owner.equals(nickname)) && (deck2Owner == null || !deck2Owner.equals(nickname))) {
@@ -384,6 +404,10 @@ public class Game {
      * @throws IllegalStateException if the player is not the current owner
      */
     public void releaseVisibleDeck1(Player player){
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         synchronized (visibleCards1) {
             if (player.getNickname().equals(deck1Owner)) {
                 deck1Owner = null;
@@ -394,6 +418,10 @@ public class Game {
     }
 
     public void releaseVisibleDeck2(Player player){
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         synchronized (visibleCards2) {
             if (player.getNickname().equals(deck2Owner)) {
                 deck2Owner = null;
@@ -404,6 +432,10 @@ public class Game {
     }
 
     public void releaseVisibleDeck3(Player player){
+        if (level == 0) {
+            throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
+        }
+
         synchronized (visibleCards3) {
             if (player.getNickname().equals(deck3Owner)) {
                 deck3Owner = null;
@@ -421,9 +453,19 @@ public class Game {
      * receive only half of goods sales and penalties for lost components.
      * */
     public void calculateFinalScores() {
+        int []arrivalPrize;
+        int bestShipPrize;
+        if (level == 0) {
+            arrivalPrize = new int[]{4, 3, 2, 1};
+            bestShipPrize = 2;
+        }
+        else {
+            arrivalPrize = new int[]{8, 6, 4, 2};
+            bestShipPrize = 4;
+        }
 
-        // lista già ordinata: calcolo ricompense per ordine di arrivo
-        int []arrivalPrize = {8, 6, 4, 2};
+        // ordino lista e calcolo ricompense per ordine di arrivo
+        sortPlayersByPosition();
         for (int i = 0; i < players.size(); i++) {
             players.get(i).updateMoney(arrivalPrize[i]);
         }
@@ -438,7 +480,7 @@ public class Game {
             int lostComponents = player.getTruck().getGarbage();
             player.updateMoney(-lostComponents);
             if (player.getTruck().calculateExposedConnectors() == minExposedConnectors)
-                player.updateMoney(4);
+                player.updateMoney(bestShipPrize);
         }
 
         // considero giocatori che hanno abbandonato la corsa: non partecipano all'ordine di arrivo e alla nave più bella.
