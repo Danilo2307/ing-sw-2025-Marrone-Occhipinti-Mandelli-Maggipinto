@@ -74,6 +74,9 @@ public class AbandonedShip extends Card {
      */
     public void buyShip(String username) {
         Game game = Game.getInstance();
+        if(isSold != null){
+            throw new CardException("Ship was bought by " + isSold );
+        }
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
             throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
         }
@@ -81,8 +84,9 @@ public class AbandonedShip extends Card {
             throw new CardException("User '" + username + "' is not the current player");
         }
         Player p = game.getPlayerFromNickname(username);
-        if (p.getTruck().calculateCrew() < numMembers) {
-            throw new CardException("User '" + username + "' does not have enough crew");
+        int crew = p.getTruck().calculateCrew();
+        if (crew < numMembers) {
+            throw new CardException("User '" + username + "' can't buy ship, he does not have enough crew");
         }
         isSold = username;
         game.fireEvent(new AbandonedShipOccupation(game.getGameStatus()));
@@ -90,6 +94,7 @@ public class AbandonedShip extends Card {
         p.updateMoney(cosmicCredits);
         game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), isSold);
         game.setGameStatus(GameStatus.END_ABANDONEDSHIP);
+        game.setCurrentPlayer(game.getPlayerFromNickname(isSold));
     }
 
     /**

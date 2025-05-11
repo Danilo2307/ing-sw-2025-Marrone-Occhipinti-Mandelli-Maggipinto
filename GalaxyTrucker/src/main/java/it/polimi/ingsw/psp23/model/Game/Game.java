@@ -316,14 +316,9 @@ public class Game {
             setGameStatus(GameStatus.End);
             calculateFinalScores();
         }else{
-            turn = 0;
-            currentPlayer = players.getFirst();
-            setCurrentPlayer(currentPlayer);
-            setCurrentPlayerIndex(0);
             // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
             // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
             // Controller.getInstance().onGameEvent(e);
-
             Visitor visitor = new InitPlayVisitor();
             currentCard.call(visitor);
         }
