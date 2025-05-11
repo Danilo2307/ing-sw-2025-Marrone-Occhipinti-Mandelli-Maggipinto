@@ -43,7 +43,7 @@ public class Game {
     private int numRequestedPlayers;
     private int turn;
     int level;
-    int []firstPositions = new int[4];
+    int []firstPositions;
 
     private Game(int level) {
         this.players = new ArrayList<>();

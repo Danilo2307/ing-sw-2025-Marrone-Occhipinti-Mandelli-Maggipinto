@@ -63,11 +63,11 @@ public class TuiApplication {
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta"),
-            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta"),
+            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto"),
+            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto"),
             TuiState.ENDGAME, Set.of()
     );
 
@@ -104,6 +104,29 @@ public class TuiApplication {
 
         switch (keyword) {
             // eventi inviati dal client controller via socket/rmi e verranno gestiti dal ServerHandlerEvent
+            case "accetta" -> {
+                if (words.length != 2) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                }
+                else {
+                    int number;
+                    number = Integer.parseInt(words[1]);
+                    boolean error = false;
+                    while (number < 2 || number > 4 || error) {
+
+                        io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
+
+                        try {
+                            number = Integer.parseInt(io.read());
+                            error = false;
+                        } catch (NumberFormatException e) {
+                            error = true;
+                        }
+
+                    }
+                    sendAction(new RegisterNumPlayers(number));
+                }
+            }
             case "pesca" -> {
                 if (words.length != 2) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
@@ -240,6 +263,9 @@ public class TuiApplication {
                     sendAction(new RequestTileInfo(x, y));
                 }
             }
+            case "rotta" -> {
+                sendAction(new ShowPlayersPositions());
+            }
             case "attiva" -> {
                 if (words.length != 6) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
@@ -299,30 +325,6 @@ public class TuiApplication {
                     }
                 }
             }
-            case "accetta" -> {
-                if (words.length != 2) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    int number;
-                    number = Integer.parseInt(words[1]);
-                    boolean error = false;
-                    while (number < 2 || number > 4 || error) {
-
-                        io.error("Il numero di giocatori deve essere compreso  tra 2 e 4, inserisci un numero valido!\n");
-
-                        try {
-                            number = Integer.parseInt(io.read());
-                            error = false;
-                        } catch (NumberFormatException e) {
-                            error = true;
-                        }
-
-                    }
-                    sendAction(new RegisterNumPlayers(number));
-                }
-            }
-
             case "passa" -> {
                 sendAction(new NextTurn());
             }
