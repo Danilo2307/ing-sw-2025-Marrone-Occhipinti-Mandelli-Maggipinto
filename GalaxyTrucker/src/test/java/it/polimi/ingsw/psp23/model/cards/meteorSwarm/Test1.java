@@ -166,7 +166,7 @@ public class Test1 {
     }
 
     @Test
-    void testOpenSpace() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testMeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
         assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());

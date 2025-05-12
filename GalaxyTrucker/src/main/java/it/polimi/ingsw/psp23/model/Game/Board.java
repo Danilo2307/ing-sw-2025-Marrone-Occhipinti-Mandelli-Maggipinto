@@ -283,7 +283,7 @@ public class Board {
 
         // elimino component e aggiorno la pila degli scarti se necessario
         ship[i][j] = null;
-        if (Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() != 0 ) {
+        if (!(Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() == 0)) {
             garbage++;
         }
 
@@ -425,8 +425,12 @@ public class Board {
         int realImpactLine;
         if (cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
             realImpactLine = impactLine - 4;
+            if (realImpactLine < 0 || realImpactLine >= COLS)
+                return;
         } else {
             realImpactLine = impactLine - 5;
+            if (realImpactLine < 0 || realImpactLine >= ROWS)
+                return;
         }
 
         //gestisco separatamente il caso in cui la cannonata sia grossa e quello in cui sia piccola
@@ -525,8 +529,12 @@ public class Board {
         int realImpactLine;
         if (meteor.getDirection() == Direction.UP || meteor.getDirection() == Direction.DOWN) {
             realImpactLine = impactLine - 4;
+            if (realImpactLine < 0 || realImpactLine >= COLS)
+                return;
         } else {
             realImpactLine = impactLine - 5;
+            if (realImpactLine < 0 || realImpactLine >= ROWS)
+                return;
         }
 
         if (!meteor.isBig()) {
