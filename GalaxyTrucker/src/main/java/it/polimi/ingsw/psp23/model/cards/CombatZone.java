@@ -136,7 +136,7 @@ public class CombatZone extends Card {
         List<Player> players = Game.getInstance().getPlayers();
         double minStrength = players.getFirst().getTruck().calculateCannonStrength();
         Player minPlayer = players.getFirst();
-        for (Player p : players) {
+        for (Player p : players.subList(1, players.size())) {
             double strength = p.getTruck().calculateCannonStrength();
             if (strength < minStrength) {
                 minPlayer = p;
@@ -155,7 +155,7 @@ public class CombatZone extends Card {
         List<Player> players = Game.getInstance().getPlayers();
         int minPower = players.getFirst().getTruck().calculateEngineStrength();
         Player minPlayer = players.getFirst();
-        for (Player p : players) {
+        for (Player p : players.subList(1, players.size())) {
             int power = p.getTruck().calculateEngineStrength();
             if (power < minPower) {
                 minPlayer = p;
@@ -198,10 +198,10 @@ public class CombatZone extends Card {
     public void activeShield(String username, int i, int j) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.ENDTHIRD_COMBATZONE) {
-            throw new CardException("Cannot activate shield now: phase is"  + game.getGameStatus());
+            throw new CardException("Cannot activate shield now: phase is "  + game.getGameStatus());
         }
         if (!loserThirdChallenge.equals(username)) {
-            throw new CardException("The loser of the third challenge is" + loserThirdChallenge);
+            throw new CardException("The loser of the third challenge is " + loserThirdChallenge);
         }
         game.getPlayerFromNickname(username).getTruck().activeShield(i, j);
     }
@@ -234,15 +234,22 @@ public class CombatZone extends Card {
         if (!loserThirdChallenge.equals(username)) {
             throw new CardException("The loser of the third challenge is" + loserThirdChallenge);
         }
-        CannonShot shot = cannonShot.get(cannonShotIndex);
-        int impactLine = Utility.roll2to12();
-        game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, shot.getDirection()), loserThirdChallenge);
-        game.getPlayerFromNickname(loserThirdChallenge)
-                .getTruck().handleCannonShot(shot, impactLine);
-        cannonShotIndex++;
-        if (cannonShotIndex == cannonShot.size()) {
-            cannonShotIndex = 0;
+        if(cannonShot.size() - cannonShotIndex == 2){
+            for(CannonShot c : cannonShot.subList(cannonShotIndex, cannonShot.size())){
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()), loserThirdChallenge);
+                game.getPlayerFromNickname(loserThirdChallenge)
+                        .getTruck().handleCannonShot(c, impactLine);
+            }
             game.nextCard();
+        }
+        else{
+            CannonShot shot = cannonShot.get(cannonShotIndex);
+            int impactLine = Utility.roll2to12();
+            game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, shot.getDirection()), loserThirdChallenge);
+            game.getPlayerFromNickname(loserThirdChallenge)
+                    .getTruck().handleCannonShot(shot, impactLine);
+            cannonShotIndex++;
         }
     }
 
@@ -298,6 +305,9 @@ public class CombatZone extends Card {
         if (!username.equals(loserSecondChallenge)) {
             throw new CardException("User '" + username + "' is not the loser of the second challenge");
         }
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() < num){
+            throw new CardException("You can only lose batteries");
+        }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
@@ -311,6 +321,33 @@ public class CombatZone extends Card {
         catch (IllegalArgumentException | ComponentMismatchException | ContainerException |
                TypeMismatchException e){
             throw new ItemException("Scaricamento non valido", e);
+        }
+    }
+
+    public void removeBatteries(String username, int i, int j, int num){
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.SECOND_COMBATZONE || goodsLost <= 0) {
+            throw new CardException("It's not required to remove goods");
+        }
+        if (!username.equals(loserSecondChallenge)) {
+            throw new CardException("User '" + username + "' is not the loser of the second challenge");
+        }
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() > 0){
+            throw new CardException("You have to lose items");
+        }
+        try {
+            Board board = game.getPlayerFromNickname(username).getTruck();
+            board.reduceBatteries(i, j, num);
+            countGood += num;
+            if (countGood == goodsLost) {
+                resolvers.clear();
+                loserThirdChallenge = findMinMembers().getNickname();
+                game.setGameStatus(GameStatus.ENDTHIRD_COMBATZONE);
+            }
+        }
+        catch (InvalidCoordinatesException | ComponentMismatchException | BatteryOperationException |
+               TypeMismatchException e){
+            throw new ItemException("Perdita batterie non valido", e);
         }
     }
 

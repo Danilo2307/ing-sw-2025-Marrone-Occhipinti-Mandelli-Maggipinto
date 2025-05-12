@@ -214,7 +214,7 @@ public class Smugglers extends Card {
      * @param username  the losing player's nickname
      * @param i       the row index of the container
      * @param j       the column index of the container
-     * @param item the index of the item to remove
+     * @param num the index of the item to remove
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
     public void removePreciousItem(String username, int i, int j, int num) {
@@ -225,7 +225,7 @@ public class Smugglers extends Card {
         if (!losers.contains(username)) {
             throw new CardException("You are not loser");
         }
-        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() == 0){
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() < num){
             throw new CardException("You can only lose batteries");
         }
         try {
@@ -354,7 +354,7 @@ public class Smugglers extends Card {
             case INIT_SMUGGLERS:
                 return "Available commands: ACTIVECANNON, READY";
             case END_SMUGGLERS:
-                return "Available commands: LOADGOOD, PASS, PERDI";
+                return "Available commands: LOADGOOD, PASS, PERDI, BATTERIE";
             default:
                 return "No commands available in current phase: " + status;
         }
