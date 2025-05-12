@@ -283,7 +283,7 @@ public class Board {
 
         // elimino component e aggiorno la pila degli scarti se necessario
         ship[i][j] = null;
-        if (Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() != 0 ) {
+        if (!(Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() == 0)) {
             garbage++;
         }
 
@@ -425,8 +425,12 @@ public class Board {
         int realImpactLine;
         if (cannonShot.getDirection() == Direction.UP || cannonShot.getDirection() == Direction.DOWN) {
             realImpactLine = impactLine - 4;
+            if (realImpactLine < 0 || realImpactLine >= COLS)
+                return;
         } else {
             realImpactLine = impactLine - 5;
+            if (realImpactLine < 0 || realImpactLine >= ROWS)
+                return;
         }
 
         //gestisco separatamente il caso in cui la cannonata sia grossa e quello in cui sia piccola
@@ -525,8 +529,12 @@ public class Board {
         int realImpactLine;
         if (meteor.getDirection() == Direction.UP || meteor.getDirection() == Direction.DOWN) {
             realImpactLine = impactLine - 4;
+            if (realImpactLine < 0 || realImpactLine >= COLS)
+                return;
         } else {
             realImpactLine = impactLine - 5;
+            if (realImpactLine < 0 || realImpactLine >= ROWS)
+                return;
         }
 
         if (!meteor.isBig()) {
@@ -1076,22 +1084,35 @@ public class Board {
         return ship;
     }
 
-    public void removeGood(int i, int j, Color color){
+    public void removeGood(int i, int j, int index){
         if(!isValid(i,j)){
             throw new ContainerException("Not a valid position for a component");
         }
+        Component tile = ship[i][j];
 
-        Component c = ship[i][j];
-        if(!containers.contains(c)){
-            throw new ContainerException("Not a container in "+ i + " " + j + "position");
-        }
-        Container container = containers.get(containers.indexOf(c));
-        for(Item item: container.getItems()){
-            if(item.getColor() == color){
-                container.getItems().remove(item);
-                return;
+        switch (tile) {
+            case Container c -> {
+                if (index <= 0) {
+                    throw new ComponentMismatchException("Invalid index of item. Please insert a positive index");
+                }
+                // Trovo l'indice del container corrispondente a ship[i][j] nella lista dei container
+                // L'oggetto in ship[i][j] è lo stesso oggetto (stesso riferimento) inserito in containers, quindi indexOf funziona correttamente.
+                int container = containers.indexOf(ship[i][j]);
+                // Controllo che l'indice sia valido: se è -1, significa che ship[i][j] non è un container noto
+                if (container == -1) {
+                    throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
+                }
+                Item itemToRemove = containers.get(index).getItems().get(index - 1);
+
+                // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
+                try {
+                    containers.get(container).loseItem(itemToRemove);
+                }
+                catch (ContainerException e) {
+                    throw new ContainerException("Cannon remove precious item in Container at Ship["+i+"]["+j+"]:" + e.getMessage());
+                }
             }
+            default -> throw new TypeMismatchException("Component at ["+i+"]["+j+"] is not a container");
         }
-        throw new ContainerException("There is no " + color + " good in that container");
     }
 }

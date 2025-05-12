@@ -73,6 +73,7 @@ public class AbandonedStation extends Card {
         isSold = username;
         game.fireEvent(new AbandonedStationOccupation(game.getGameStatus()));
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
+        game.sortPlayersByPosition();
         game.fireEvent(new ItemsEarned(game.getGameStatus()), isSold);
         game.setGameStatus(GameStatus.END_ABANDONEDSTATION);
         game.setCurrentPlayer(game.getPlayerFromNickname(isSold));
@@ -138,7 +139,7 @@ public class AbandonedStation extends Card {
         GameStatus status = Game.getInstance().getGameStatus();
         return switch (status) {
             case INIT_ABANDONEDSTATION -> "Available commands: ATTRACCA, PASSA";
-            case END_ABANDONEDSTATION -> "Available commands: LOADGOODS";
+            case END_ABANDONEDSTATION -> "Available commands: LOADGOODS, PERDI, PASSA";
             default -> "No commands available in current phase.";
         };
     }

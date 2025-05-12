@@ -158,6 +158,7 @@ public class Smugglers extends Card {
             loadedCount++;
             if (loadedCount == prize.size()) {
                 if (allItemsStolen()) {
+                    game.sortPlayersByPosition();
                     game.nextCard();
                 }
             }
@@ -184,6 +185,7 @@ public class Smugglers extends Card {
         }
         loadedCount = prize.size();
         if (allItemsStolen()) {
+            game.sortPlayersByPosition();
             game.nextCard();
         }
     }
@@ -352,7 +354,7 @@ public class Smugglers extends Card {
             case INIT_SMUGGLERS:
                 return "Available commands: ACTIVECANNON, READY";
             case END_SMUGGLERS:
-                return "Available commands: LOADGOOD, PASS, REMOVEITEM";
+                return "Available commands: LOADGOOD, PASS, PERDI";
             default:
                 return "No commands available in current phase: " + status;
         }
