@@ -1080,7 +1080,6 @@ public class Board {
         if(!isValid(i,j)){
             throw new ContainerException("Not a valid position for a component");
         }
-
         Component c = ship[i][j];
         if(!containers.contains(c)){
             throw new ContainerException("Not a container in "+ i + " " + j + "position");

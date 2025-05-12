@@ -10,9 +10,10 @@ import it.polimi.ingsw.psp23.model.Game.Utility;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class OpenSpace extends Card {
-    private final Set<String> resolvers = new HashSet<>();
+    private final Set<Player> resolvers = new HashSet<>();
 
     public OpenSpace(int level) {
         super(level);
@@ -26,6 +27,9 @@ public class OpenSpace extends Card {
         if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
             throw new CardException("Cannot activate engine now: phase is " + game.getGameStatus());
         }
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+        }
         game.getPlayerFromNickname(username).getTruck().activeEngine(i, j);
     }
 
@@ -36,6 +40,7 @@ public class OpenSpace extends Card {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_OPENSPACE);
         game.fireEvent(new EventForOpenSpace(game.getGameStatus()));
+        game.setCurrentPlayer(game.getPlayers().getFirst());
         resolvers.clear();
     }
 
@@ -48,22 +53,22 @@ public class OpenSpace extends Card {
         if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
         }
-        if (game.getPlayers().stream().noneMatch(p -> p.getNickname().equals(username))) {
-            throw new CardException("Unknown player: " + username);
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-        resolvers.add(username);
-        if (resolvers.size() < game.getPlayers().size()) {
-            return; // wait for all players
-        }
-        // All ready: apply effect
+        Player p = game.getPlayerFromNickname(username);
+        resolvers.add(p);
         List<Player> players = game.getPlayers();
-        for (Player p : players) {
-            int strength = p.getTruck().calculateEngineStrength();
-            Utility.updatePosition(players, players.indexOf(p), strength);
+        int strength = p.getTruck().calculateEngineStrength();
+        Utility.updatePosition(players, players.indexOf(p), strength);
+        if (!resolvers.containsAll(players)) {
+            game.getNextPlayer();
         }
-        // Reset state
-        resolvers.clear();
-        game.nextCard();
+        else{
+            game.sortPlayersByPosition();
+            resolvers.clear();
+            game.nextCard();
+        }
     }
 
     /**
@@ -71,7 +76,7 @@ public class OpenSpace extends Card {
      */
     public String help() {
         if (Game.getInstance().getGameStatus() == GameStatus.INIT_OPENSPACE) {
-            return "Available commands: ACTIVEENGINE, READY";
+            return "Available commands: ATTIVA CANNONE, PRONTO";
         }
         return "No commands available in current phase.";
     }

@@ -23,7 +23,7 @@ public final class Utility {
         int playerLocation = giocatore.getPosition();
         int saltiEffettivi = positionsToJump;
         if (positionsToJump > 0) {
-            for (int offset = 0; offset < saltiEffettivi; offset++) {
+            for (int offset = 0; offset <= saltiEffettivi; offset++) {
                 for (int k = 0; k < players.size(); k++) {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi++;
@@ -38,7 +38,7 @@ public final class Utility {
             }
         } else {
             for (int offset = 0; offset > saltiEffettivi; offset--) {
-                for (int k = 0; k < players.size(); k++) {
+                for (int k = 0; k <= players.size(); k++) {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi--;
                         offset--;
