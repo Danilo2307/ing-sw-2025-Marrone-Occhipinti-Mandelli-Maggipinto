@@ -342,10 +342,10 @@ public class Controller {
         Game.getInstance().getCurrentCard().call(landOnPlanet, username, i);
     }
 
-    public void removeItem(String username, int i, int j, Color color){
+    public void removeItem(String username, int i, int j, int index){
         if(!Game.getInstance().getGameStatus().equals(GameStatus.Playing))
             throw new RuntimeException("Not a possible instruction in this game state");
-        Game.getInstance().getPlayerFromNickname(username).getTruck().removeGood(i, j, color);
+        Game.getInstance().getPlayerFromNickname(username).getTruck().removeGood(i, j, index);
     }
 
 

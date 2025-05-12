@@ -68,4 +68,8 @@ public interface ActionVisitor<T> {
 
     public T visitForShowPlayersPositions(ShowPlayersPositions showPlayersPositions, String username);
 
+    public T visitForLoseGood(LoseGood loseGood, String username);
+
+    public T visitForMoveGood(MoveGood moveGood, String username);
+
 }

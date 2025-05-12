@@ -67,7 +67,7 @@ public class TuiApplication {
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta"),
             TuiState.NOTYOURTURN, Set.of(),
             // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto"),
+            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta"),
             TuiState.ENDGAME, Set.of()
     );
 
@@ -366,6 +366,31 @@ public class TuiApplication {
             }
             case "corretta" -> {
                 sendAction(new Fixed());
+            }
+            case "perdi" -> {
+                if (words.length != 4) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                }
+                else {
+                    int i = Integer.parseInt(words[1]);
+                    int j = Integer.parseInt(words[2]);
+                    int itemIndex = Integer.parseInt(words[3]);
+                    sendAction(new LoseGood(i, j, itemIndex));
+                }
+            }
+            case "sposta" -> {
+                if (words.length != 7) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                }
+                else {
+                    int fromX = Integer.parseInt(words[1]);
+                    int fromY = Integer.parseInt(words[2]);
+                    int index = Integer.parseInt(words[3]);
+                    int toX = Integer.parseInt(words[4]);
+                    int toY = Integer.parseInt(words[5]);
+                    int itemIndex = Integer.parseInt(words[6]);
+                    sendAction(new MoveGood(fromX, fromY, index, toX, toY));
+                }
             }
             default -> throw new TuiInputException("Comando sconosciuto");
         }
