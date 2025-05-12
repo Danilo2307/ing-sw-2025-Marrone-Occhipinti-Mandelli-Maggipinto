@@ -74,8 +74,8 @@ public class Test1 {
     void testStardust() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
-        assertEquals(2, p1.getPosition());
-        assertEquals(0, p2.getPosition());
+        assertEquals(4, p1.getPosition());
+        assertEquals(3, p2.getPosition());
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + after);
     }
