@@ -3,6 +3,9 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 /**
  * Event triggered when the user wants to release the tile currently held in hand.
@@ -19,6 +22,7 @@ public record ReleaseTile() implements Action {
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         p.discardComponent();
+        Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Hai scartato la tile\n")));
     }
 
     @Override

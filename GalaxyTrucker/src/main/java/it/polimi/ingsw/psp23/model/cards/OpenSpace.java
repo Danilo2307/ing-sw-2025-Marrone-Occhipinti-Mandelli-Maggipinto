@@ -48,7 +48,7 @@ public class OpenSpace extends Card {
         if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
         }
-        if (!game.getPlayers().contains(username)) {
+        if (game.getPlayers().stream().noneMatch(p -> p.getNickname().equals(username))) {
             throw new CardException("Unknown player: " + username);
         }
         resolvers.add(username);
