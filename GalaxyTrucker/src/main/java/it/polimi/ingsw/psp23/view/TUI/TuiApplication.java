@@ -128,7 +128,7 @@ public class TuiApplication {
                 }
             }
             case "pesca" -> {
-                if (words.length != 2) {
+                if (words.length > 3) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
                 }
                 else{
