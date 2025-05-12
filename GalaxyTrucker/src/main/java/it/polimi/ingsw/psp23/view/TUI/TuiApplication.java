@@ -182,36 +182,35 @@ public class TuiApplication {
                 sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
-                if (words[1].equals("equipaggio")) {
-                    if (words.length != 5) {
-                        io.error("Non hai inviato il numero corretto di parametri, riprova");
-                    }
-                    else {
-                        int hx = Integer.parseInt(words[2]);
-                        int hy = Integer.parseInt(words[3]);
-                        int num = Integer.parseInt(words[4]);
-                        sendAction(new ReduceCrew(hx, hy, num));
-                    }
-                }
-                else if(words[1].equals("merce")){
-                    if (words.length != 5) {
-                        io.error("Non hai inviato il numero corretto di parametri, riprova");
-                    }
-                    else {
-                        int cx = Integer.parseInt(words[2]);
-                        int cy = Integer.parseInt(words[3]);
-                        int num = Integer.parseInt(words[4]);
-                        sendAction(new RemovePreciousItem(cx, cy, num));
-                    }
-                }
-                else{
-                    if (words.length != 3) {
-                        io.error("Non hai inviato il numero corretto di parametri, riprova");
-                    }
-                    else {
-                        int x = Integer.parseInt(words[1]);
-                        int y = Integer.parseInt(words[2]);
-                        sendAction(new RemoveTile(x, y));
+                if (words.length != 3) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                }else {
+                    if (words[1].equals("equipaggio")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int hx = Integer.parseInt(words[2]);
+                            int hy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            sendAction(new ReduceCrew(hx, hy, num));
+                        }
+                    } else if (words[1].equals("merce")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int cx = Integer.parseInt(words[2]);
+                            int cy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            sendAction(new RemovePreciousItem(cx, cy, num));
+                        }
+                    } else {
+                        if (words.length != 3) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int x = Integer.parseInt(words[1]);
+                            int y = Integer.parseInt(words[2]);
+                            sendAction(new RemoveTile(x, y));
+                        }
                     }
                 }
             }
