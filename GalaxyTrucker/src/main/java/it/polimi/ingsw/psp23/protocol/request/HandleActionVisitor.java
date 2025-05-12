@@ -200,4 +200,16 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForLoseGood(LoseGood loseGood, String username) {
+        loseGood.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForMoveGood(MoveGood moveGood, String username) {
+        moveGood.handle(username);
+        return null;
+    }
+
 }
