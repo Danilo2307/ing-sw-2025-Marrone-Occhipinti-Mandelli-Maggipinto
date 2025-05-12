@@ -29,7 +29,7 @@ public class Test1 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance();
+        this.game = Game.getInstance(2);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -64,6 +64,10 @@ public class Test1 {
         p2.getTruck().addComponent(h6, 1, 4);
         p2.getTruck().addComponent(c1, 1, 5);
 
+        p1.setPosition(12);
+        p2.setPosition(10);
+
+        card = new AbandonedStation(1,1,5,List.of(new Item(Color.Yellow), new Item(Color.Green)));
 
     }
 
@@ -79,17 +83,17 @@ public class Test1 {
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attracca
+//        card.pass("Fede");
         card.dockStation("Fede");
         assertEquals(GameStatus.END_ABANDONEDSTATION, game.getGameStatus());
 
-        // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());
         assertEquals(9, p2.getPosition());
 
-        //Riduzione crew Fede
+        //Caricamento
         GameStatus before = game.getGameStatus();
         card.loadGoods("Fede", 1, 5);
-        card.loadGoods("Fede", 1, 5);
+        card.pass("Fede");
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
