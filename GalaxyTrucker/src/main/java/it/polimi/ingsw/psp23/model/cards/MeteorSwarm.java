@@ -23,8 +23,8 @@ import java.util.*;
  */
 public class MeteorSwarm extends Card {
     private final List<Meteor> meteors;
-    private final Set<String> resolvers = new HashSet<>();
-    private int currentIndex;
+    private final Set<Player> resolvers = new HashSet<>();
+    private int currentIndex = 0;
 
     public MeteorSwarm(int level, List<Meteor> meteors) {
         super(level);
@@ -57,12 +57,12 @@ public class MeteorSwarm extends Card {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
         resolvers.clear();
-        currentIndex = 0;
         for (Meteor m : meteors) {
             int line = Utility.roll2to12();
             m.setImpactLine(line);
             game.fireEvent(new EventForMeteorSwarm(game.getGameStatus(), List.of(m), line));
         }
+        game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
     /**
@@ -73,6 +73,9 @@ public class MeteorSwarm extends Card {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
+        }
+        if(resolvers.contains(game.getPlayerFromNickname(username))){
+            throw new CardException("You must wait other players!");
         }
         game.getPlayerFromNickname(username).getTruck().activeCannon(i, j);
     }
@@ -86,7 +89,10 @@ public class MeteorSwarm extends Card {
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot activate shield now: phase is " + game.getGameStatus());
         }
-        game.getPlayerFromNickname(username).getTruck().activeShield(i, j);
+        if(resolvers.contains(game.getPlayerFromNickname(username))){
+            throw new CardException("You must wait other players!");
+        }
+       game.getPlayerFromNickname(username).getTruck().activeShield(i, j);
     }
 
     /**
@@ -96,22 +102,26 @@ public class MeteorSwarm extends Card {
      */
     public void ready(String username) {
         Game game = Game.getInstance();
+        Player p = game.getPlayerFromNickname(username);
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
         }
-        if (!game.getPlayers().contains(username)) {
+        if (!game.getPlayers().contains(p)) {
             throw new CardException("Unknown player: " + username);
         }
-        resolvers.add(username);
-        if (resolvers.size() < game.getPlayers().size()) {
+        if(resolvers.contains(p)){
+            throw new CardException("You must wait other players!");
+        }
+        resolvers.add(p);
+        if (!resolvers.containsAll(game.getPlayers())) {
             return; // wait for all
         }
         // All ready: impact one meteor
         Meteor meteor = meteors.get(currentIndex);
         int line = meteor.getImpactLine();
         game.fireEvent(new MeteorIncoming(game.getGameStatus(), line, meteor.getDirection()));
-        for (Player p : game.getPlayers()) {
-            p.getTruck().handleMeteor(meteor, line);
+        for (Player player : game.getPlayers()) {
+            player.getTruck().handleMeteor(meteor, line);
         }
         currentIndex++;
         resolvers.clear();

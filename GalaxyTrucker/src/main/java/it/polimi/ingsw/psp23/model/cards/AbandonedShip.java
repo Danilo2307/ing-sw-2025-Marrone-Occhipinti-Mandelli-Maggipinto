@@ -94,6 +94,7 @@ public class AbandonedShip extends Card {
         isSold = username;
         game.fireEvent(new AbandonedShipOccupation(game.getGameStatus()));
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
+        game.sortPlayersByPosition();
         p.updateMoney(cosmicCredits);
         game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), isSold);
         game.setGameStatus(GameStatus.END_ABANDONEDSHIP);

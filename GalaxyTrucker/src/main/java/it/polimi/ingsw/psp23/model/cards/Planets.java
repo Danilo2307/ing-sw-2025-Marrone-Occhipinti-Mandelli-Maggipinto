@@ -97,6 +97,7 @@ public class Planets extends Card {
                     Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
                 }
             }
+            game.sortPlayersByPosition();
             game.setGameStatus(GameStatus.END_PLANETS);
         }
     }
@@ -236,7 +237,7 @@ public class Planets extends Card {
             case INIT_PLANETS:
                 return "Available commands: LAND, PASS";
             case END_PLANETS:
-                return "Available commands: LOADGOODS";
+                return "Available commands: LOADGOODS, PERDI";
             default:
                 return "No commands available in current phase: " + status;
         }
