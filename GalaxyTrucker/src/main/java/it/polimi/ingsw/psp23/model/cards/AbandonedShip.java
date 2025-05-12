@@ -63,8 +63,8 @@ public class AbandonedShip extends Card {
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
-            String currentPlayerNickname = game.getCurrentPlayer().getNickname();
-            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
+            // String currentPlayerNickname = game.getCurrentPlayer().getNickname();
+            // game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
         } else {
             game.nextCard();
         }
