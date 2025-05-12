@@ -182,7 +182,7 @@ public class TuiApplication {
                 sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
-                if (words.length != 3) {
+                if (words.length > 5) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
                 }else {
                     if (words[1].equals("equipaggio")) {
