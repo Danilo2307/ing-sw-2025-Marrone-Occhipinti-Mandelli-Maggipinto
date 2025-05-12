@@ -106,21 +106,27 @@ public class AbandonedStation extends Card {
 
     /**
      * Allows passing during INIT_ABANDONEDSTATION: moves to next player or next card.
+     * Allows passing during END_ABANDONEDSTATION: moves to next card.
      */
     public void pass(String username) {
         Game game = Game.getInstance();
-        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION) {
-            throw new CardException("User '" + username + "' cannot dock station in phase: " + game.getGameStatus());
+        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
+            throw new CardException("User '" + username + "' cannot pass in phase: " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
-            game.getNextPlayer();
-            String currentPlayerNickname = game.getCurrentPlayer().getNickname();
-            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
-        } else {
+        if (game.getGameStatus() == GameStatus.END_ABANDONEDSTATION){
             game.nextCard();
+        }
+        else{
+            if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
+                game.getNextPlayer();
+//            String currentPlayerNickname = game.getCurrentPlayer().getNickname();
+//            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
+            } else {
+                game.nextCard();
+            }
         }
     }
 
