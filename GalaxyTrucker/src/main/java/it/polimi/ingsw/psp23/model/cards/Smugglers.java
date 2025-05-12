@@ -217,7 +217,7 @@ public class Smugglers extends Card {
      * @param item the index of the item to remove
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
-    public void removePreciousItem(String username, int i, int j, int item) {
+    public void removePreciousItem(String username, int i, int j, int num) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
@@ -230,7 +230,7 @@ public class Smugglers extends Card {
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
-            board.removePreciousItem(i, j, item);
+            board.removePreciousItem(i, j, num);
             int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
             lostCount.set(pidx, lostCount.get(pidx) + 1);
             if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {

@@ -21,15 +21,15 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
-    //TEST CON CARTA DI SOLI METEORITI PICCOLI
+public class Test3 {
+    //TEST CON CARTA DI LIVELLO 1 CON METEORITE GROSSO LATERALE E VOLO DI PROVA
     Game game;
     Player p1, p2, p3;
     MeteorSwarm card;
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        this.game = Game.getInstance(0);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -82,9 +82,9 @@ public class Test1 {
         Engine ea3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         ea3.moveToHand();
         p1.getTruck().addComponent(ea3, 3, 1);
-        Shield sa1 = new Shield(Side.SHIELD, Side.SHIELD, Side.SHIELD, Side.SHIELD);
-        sa1.moveToHand();
-        p1.getTruck().addComponent(sa1, 1, 5);
+//        Shield sa1 = new Shield(Side.SHIELD, Side.SHIELD, Side.SHIELD, Side.SHIELD);
+//        sa1.moveToHand();
+//        p1.getTruck().addComponent(sa1, 1, 5);
 
         Item ia1 = new Item(Color.Yellow);
         ca1.loadItem(ia1);
@@ -162,11 +162,11 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new MeteorSwarm(1, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT), new Meteor(false, Direction.DOWN)));
+        card = new MeteorSwarm(1, List.of(new Meteor(true, Direction.UP), new Meteor(false, Direction.UP), new Meteor(true, Direction.UP)));
     }
 
     @Test
-    void testMeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
+    void test3MeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
         assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());
@@ -177,7 +177,7 @@ public class Test1 {
         card.activeCannon("Albi", 2,4);
         card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
         card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
@@ -188,7 +188,7 @@ public class Test1 {
         card.activeCannon("Albi", 2,4);
         card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
         card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
@@ -199,29 +199,7 @@ public class Test1 {
         card.activeCannon("Albi", 2,4);
         card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
-
-        // QUARTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
-
-        // QUINTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
         card.activeCannon("Gigi", 1,3);
         GameStatus before = game.getGameStatus();

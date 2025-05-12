@@ -106,9 +106,6 @@ public class MeteorSwarm extends Card {
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
         }
-        if (!game.getPlayers().contains(p)) {
-            throw new CardException("Unknown player: " + username);
-        }
         if(resolvers.contains(p)){
             throw new CardException("You must wait other players!");
         }

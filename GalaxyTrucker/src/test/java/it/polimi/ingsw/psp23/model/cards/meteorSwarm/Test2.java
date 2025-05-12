@@ -21,8 +21,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
-    //TEST CON CARTA DI SOLI METEORITI PICCOLI
+public class Test2 {
+    //TEST CON CARTA DI LIVELLO 2 CON METEORITE GROSSO LATERALE
     Game game;
     Player p1, p2, p3;
     MeteorSwarm card;
@@ -162,7 +162,7 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new MeteorSwarm(1, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT), new Meteor(false, Direction.DOWN)));
+        card = new MeteorSwarm(2, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(true, Direction.LEFT), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.LEFT)));
     }
 
     @Test
