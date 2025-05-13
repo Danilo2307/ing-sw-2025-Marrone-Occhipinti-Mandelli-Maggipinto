@@ -1,10 +1,11 @@
-package it.polimi.ingsw.psp23.model.cards.pirates;
+package it.polimi.ingsw.psp23.model.cards.epidemic;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Epidemic;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -21,11 +22,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test2 {
-    //CARTA LIVELLO 1
+public class Test1 {
     Game game;
     Player p1, p2, p3;
-    Pirates card;
+    Epidemic card;
 
     @BeforeEach
     void setUp() {
@@ -133,6 +133,7 @@ public class Test2 {
         p3.getTruck().addComponent(eg1, 3, 2);
         Item ig1 = new Item(Color.Blue);
         cg1.loadItem(ig1);
+        hg2.setAstronaut();
 
         //SET POS INIZIALI
         p1.setPosition(12);
@@ -140,48 +141,21 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Pirates(1, 4, 1, 4, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)));
+        card = new Epidemic(2);
     }
 
     @Test
     void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
+        assertEquals(4, p3.getTruck().calculateCrew());
         card.initPlay();
-        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
-
-        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
-        card.activeCannon("Albi", 1, 4);
-//        assertEquals(4, p1.getTruck().calculateCannonStrength());
-//        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
-        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
-
-        // Fede viene sconfitto
-        assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
-        card.ready("Fede");
-        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
-
-        //Gigi attiva tutto ma perde
-        card.activeCannon("Gigi", 1, 3);
-        card.ready("Gigi");
-        assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
-
-        assertEquals(12, p1.getPosition());
-        assertEquals(10, p2.getPosition());
-        assertEquals(8, p3.getPosition());
-
-        card.ready("Gigi");
-        card.ready("Fede");
-        assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
-
-        card.ready("Gigi");
-        GameStatus before = game.getGameStatus();
-        card.ready("Fede");
+        //SOLO GIGI NE RISENTE
+        assertEquals(2, p1.getTruck().calculateCrew());
+        assertEquals(2, p2.getTruck().calculateCrew());
+        assertEquals(2, p3.getTruck().calculateCrew());
         GameStatus after = game.getGameStatus();
-        System.out.println("GameStatus: " + before + " → " + after);
+        System.out.println("GameStatus: " + after);
 
-        //PASSA ALLA CARTA SUCCESSIVA
-        assertNotEquals(before, after);
 
     }
 }

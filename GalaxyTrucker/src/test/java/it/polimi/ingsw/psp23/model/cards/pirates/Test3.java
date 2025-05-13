@@ -21,8 +21,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test2 {
-    //CARTA LIVELLO 1
+public class Test3 {
+    //CARTA LIVELLO 2
     Game game;
     Player p1, p2, p3;
     Pirates card;
@@ -140,7 +140,7 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Pirates(1, 4, 1, 4, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)));
+        card = new Pirates(2, 5, 1, 4, List.of(new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP)));
     }
 
     @Test
@@ -171,12 +171,10 @@ public class Test2 {
         assertEquals(8, p3.getPosition());
 
         card.ready("Gigi");
-        card.ready("Fede");
         assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
-
-        card.ready("Gigi");
         GameStatus before = game.getGameStatus();
         card.ready("Fede");
+
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
 

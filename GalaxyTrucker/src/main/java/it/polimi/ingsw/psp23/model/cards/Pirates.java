@@ -228,6 +228,17 @@ public class Pirates extends Card {
                     game.getPlayerFromNickname(losers.getFirst())
             );
             game.setGameStatus(GameStatus.END_PIRATES);
+            if(getLevel() == 2){
+                CannonShot c = cannonShot.get(countCannonShot);
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+                countCannonShot++;
+            }
         }
         else{
             game.getNextPlayer();
@@ -240,6 +251,9 @@ public class Pirates extends Card {
      */
     private void readyResolutionPhase(String username) {
         Game game = Game.getInstance();
+        if (!losers.contains(username)) {
+            throw new CardException("You are not a loser");
+        }
         resolvers.add(username);
         if (!resolvers.containsAll(losers)) {
             return;
@@ -267,6 +281,7 @@ public class Pirates extends Card {
                                 .handleCannonShot(c, impactLine);
                     }
                     countCannonShot++;
+                    resolvers.clear();
                 }
             } else {
                 CannonShot c = cannonShot.get(countCannonShot);
@@ -279,9 +294,6 @@ public class Pirates extends Card {
                 }
                 game.nextCard();
             }
-        }
-        if (countCannonShot == cannonShot.size() - 1 && winner == null) {
-            game.nextCard();
         }
     }
 
