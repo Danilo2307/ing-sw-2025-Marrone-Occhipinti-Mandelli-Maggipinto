@@ -24,6 +24,6 @@ public class EventForStardust extends Event {
     public String describe() {
         // Assuming the UI simply informs of the status change
         return "Evento Polvere di stelle: lo stato di gioco cambia in '"
-                + getNewStatus().toString() + "'.";
+                + getNewStatus().toString() + "'.\n";
     }
 }

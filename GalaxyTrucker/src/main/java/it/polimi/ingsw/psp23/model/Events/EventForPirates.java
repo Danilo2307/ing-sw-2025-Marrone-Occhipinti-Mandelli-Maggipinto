@@ -76,7 +76,7 @@ public class EventForPirates extends Event {
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Potenza di fuoco nemica: ").append(firepower).append("\n")
                 .append("  Crediti cosmici in premio: ").append(cosmicCreditsPrize).append("\n")
-                .append("  Colpi di cannone da risolvere: ").append(cannonShotsDescription());
+                .append("  Colpi di cannone da risolvere: ").append(cannonShotsDescription()).append("\n");
         return sb.toString();
     }
 }
