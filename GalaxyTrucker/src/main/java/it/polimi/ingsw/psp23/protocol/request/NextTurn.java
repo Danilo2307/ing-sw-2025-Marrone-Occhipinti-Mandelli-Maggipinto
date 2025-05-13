@@ -9,7 +9,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 public record NextTurn() implements Action {
     public void handle(String username){
         Game game = Game.getInstance();
-        if(game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP && game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION && game.getGameStatus()!= GameStatus.END_PIRATES && game.getGameStatus() != GameStatus.INIT_PLANETS && game.getGameStatus()!= GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.END_SMUGGLERS && game.getGameStatus() != GameStatus.END_ABANDONEDSTATION){
+        if(game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP && game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION && game.getGameStatus()!= GameStatus.END_PIRATES && game.getGameStatus() != GameStatus.INIT_PLANETS && game.getGameStatus()!= GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.END_SMUGGLERS && game.getGameStatus() != GameStatus.END_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_PLANETS){
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
         Card currentCard = game.getCurrentCard();

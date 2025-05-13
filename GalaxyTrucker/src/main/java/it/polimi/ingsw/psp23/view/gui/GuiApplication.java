@@ -4,7 +4,11 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
+import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -12,11 +16,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
 // la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
 // da cui viene effettivamente fatta partire la gui
 public class GuiApplication extends Application implements ViewAPI {
+
+    private Client client;
+
+    public GuiApplication() {
+
+    }
+
+
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -36,13 +53,14 @@ public class GuiApplication extends Application implements ViewAPI {
         launch();
     }
 
-    @Override
-    public void init() {
-
-    }
 
     @Override
     public void setClient(Client client) {
+        this.client = client;
+    }
+
+    @Override
+    public void init() {
 
     }
 
