@@ -56,7 +56,7 @@ public class EventForMeteorSwarm extends Event {
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Sciame di Meteoriti:\n")
                 .append("  Riga di impatto: ").append(impactLine).append("\n")
-                .append("  Meteoriti coinvolti: ").append(meteorsDescription());
+                .append("  Meteoriti coinvolti: ").append(meteorsDescription()).append("\n");
         return sb.toString();
     }
 }

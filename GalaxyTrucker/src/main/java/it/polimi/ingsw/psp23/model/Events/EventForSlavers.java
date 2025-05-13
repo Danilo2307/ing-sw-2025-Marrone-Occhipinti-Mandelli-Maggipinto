@@ -62,7 +62,7 @@ public class EventForSlavers extends Event {
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Potenza di fuoco: ").append(firepower).append("\n")
                 .append("  Membri di equipaggio rubati: ").append(membersStolen).append("\n")
-                .append("  Crediti cosmici in premio: ").append(cosmicCreditsPrize);
+                .append("  Crediti cosmici in premio: ").append(cosmicCreditsPrize).append("\n");
         return sb.toString();
     }
 }

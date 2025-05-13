@@ -24,6 +24,6 @@ public class EventForEpidemic extends Event {
     public String describe() {
         // Assuming the UI simply informs of the status change
         return "Evento Epidemia: lo stato di gioco cambia in '"
-                + getNewStatus().toString() + "'.";
+                + getNewStatus().toString() + "'.\n";
     }
 }
