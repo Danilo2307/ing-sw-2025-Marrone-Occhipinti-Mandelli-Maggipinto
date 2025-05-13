@@ -49,12 +49,12 @@ public class Smugglers extends Card {
     /**
      * Nicknames of players who failed to defeat smugglers.
      */
-    private final List<String> losers = new ArrayList<>();
+    private String loser = null;
 
     /**
      * Tracks how many items have been stolen per player index.
      */
-    private List<Integer> lostCount = new ArrayList<>();
+    private int lostCount = 0;
 
     /**
      * Tracks how many prize items have been loaded by the winner.
@@ -157,10 +157,8 @@ public class Smugglers extends Card {
             board.loadGoods(prize.get(loadedCount), i, j);
             loadedCount++;
             if (loadedCount == prize.size()) {
-                if (allItemsStolen()) {
-                    game.sortPlayersByPosition();
-                    game.nextCard();
-                }
+                game.sortPlayersByPosition();
+                game.nextCard();
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
@@ -184,28 +182,8 @@ public class Smugglers extends Card {
             throw new CardException("You did not defeat the smugglers: " + username);
         }
         loadedCount = prize.size();
-        if (allItemsStolen()) {
-            game.sortPlayersByPosition();
-            game.nextCard();
-        }
-    }
-
-    /**
-     * Checks if all items have been stolen from losing players.
-     *
-     * @return true if each player's lostCount >= numItemsStolen
-     */
-    private boolean allItemsStolen() {
-        Game game = Game.getInstance();
-        for (String p : losers) {
-            Player player = game.getPlayerFromNickname(p);
-            if(player.getTruck().calculateGoods() > 0 || player.getTruck().calculateBatteriesAvailable() > 0) {
-                if (lostCount.get(game.getPlayers().indexOf(player)) < numItemsStolen) {
-                    return false;
-                }
-            }
-        }
-        return true;
+        game.sortPlayersByPosition();
+        game.nextCard();
     }
 
     /**
@@ -222,7 +200,7 @@ public class Smugglers extends Card {
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
         }
-        if (!losers.contains(username)) {
+        if (!loser.equals(username)) {
             throw new CardException("You are not loser");
         }
         if(game.getPlayerFromNickname(username).getTruck().calculateGoods() < num){
@@ -231,10 +209,18 @@ public class Smugglers extends Card {
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
-            int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
-            lostCount.set(pidx, lostCount.get(pidx) + 1);
-            if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {
-                game.nextCard();
+            lostCount += num;
+            if(lostCount == numItemsStolen){
+                if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
+                    game.nextCard();
+                }
+                else{
+                    game.setGameStatus(GameStatus.INIT_SMUGGLERS);
+                    loser = null;
+                    lostCount = 0;
+                    game.getNextPlayer();
+                    game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+                }
             }
         }
         catch (IllegalArgumentException | ComponentMismatchException | ContainerException |
@@ -248,7 +234,7 @@ public class Smugglers extends Card {
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove batteries");
         }
-        if (!losers.contains(username)) {
+        if (!loser.equals(username)) {
             throw new CardException("You are not loser");
         }
         if(game.getPlayerFromNickname(username).getTruck().calculateGoods() > 0){
@@ -257,10 +243,18 @@ public class Smugglers extends Card {
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.reduceBatteries(i, j, num);
-            int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
-            lostCount.set(pidx, lostCount.get(pidx) + num);
-            if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {
-                game.nextCard();
+            lostCount += num;
+            if(lostCount == numItemsStolen){
+                if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
+                    game.nextCard();
+                }
+                else{
+                    game.setGameStatus(GameStatus.INIT_SMUGGLERS);
+                    loser = null;
+                    lostCount = 0;
+                    game.getNextPlayer();
+                    game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+                }
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | BatteryOperationException |
@@ -284,8 +278,6 @@ public class Smugglers extends Card {
      */
     public void initPlay() {
         Game game = Game.getInstance();
-        int playerCount = Game.getInstance().getPlayers().size();
-        lostCount = new ArrayList<>(Collections.nCopies(playerCount, 0));
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
         game.fireEvent(new EventForSmugglers(
                 game.getGameStatus(),
@@ -334,13 +326,16 @@ public class Smugglers extends Card {
             game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else if (power < firePower){
-            losers.add(username);
-        }
-        if (game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1) {
+            loser = username;
             game.setGameStatus(GameStatus.END_SMUGGLERS);
-        } else {
-            game.getNextPlayer();
-            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+        }
+        else{
+            if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
+                game.nextCard();
+            }
+            else{
+                game.getNextPlayer();
+            }
         }
     }
     /**

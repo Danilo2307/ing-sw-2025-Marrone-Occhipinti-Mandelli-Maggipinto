@@ -131,12 +131,17 @@ public class Planets extends Card {
             game.getNextPlayer();
             game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         } else {
-            for (Player p : game.getPlayers().reversed()) {
-                if(p != null && planetsOccupied.contains(p.getNickname())) {
-                    Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
+            if(!planetsOccupied.isEmpty()){
+                for (Player p : game.getPlayers().reversed()) {
+                    if(p != null && planetsOccupied.contains(p.getNickname())) {
+                        Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
+                    }
                 }
+                game.setGameStatus(GameStatus.END_PLANETS);
             }
-            game.setGameStatus(GameStatus.END_PLANETS);
+            else{
+                game.nextCard();
+            }
         }
     }
 

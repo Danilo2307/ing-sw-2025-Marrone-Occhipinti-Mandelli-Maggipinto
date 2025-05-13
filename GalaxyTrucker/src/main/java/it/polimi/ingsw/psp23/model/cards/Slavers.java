@@ -1,11 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
+import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
 import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Utility;
-import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForSlavers;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -31,11 +31,11 @@ public class Slavers extends Card {
     /** days lost penalty for the winner */
     private final int days;
     /** count of removed crew members */
-    private int counterMember;
+    private int counterMember = 0;
     /** nickname of the encounter winner */
     private String winner = null;
     /** list of nicknames of players who lost */
-    private List<String> losers = new ArrayList<>();
+    private String loser = null;
 
     /**
      * Constructs the Slavers card with specified parameters.
@@ -83,11 +83,6 @@ public class Slavers extends Card {
         this.winner = winner;
     }
 
-    /** @return list of loser nicknames */
-    public List<String> getLosers() {
-        return losers;
-    }
-
     @Override
     public <T> T call(Visitor<T> visitor) {
         return visitor.visitForSlavers(this);
@@ -116,6 +111,7 @@ public class Slavers extends Card {
         Game.getInstance().fireEvent(new EventForSlavers(
                 Game.getInstance().getGameStatus(),
                 cannonStrength, membersStolen, prize, days));
+        Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().getFirst());
     }
 
     /**
@@ -149,16 +145,12 @@ public class Slavers extends Card {
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the slavers: " + username);
         }
-
         game.getPlayerFromNickname(winner).updateMoney(prize);
         int idx = game.getPlayers().indexOf(
                 game.getPlayerFromNickname(username));
         Utility.updatePosition(game.getPlayers(), idx, -days);
-
-        winner = null;
-        if (counterMember == membersStolen) {
-            game.nextCard();
-        }
+        game.sortPlayersByPosition();
+        game.nextCard();
     }
 
     /**
@@ -173,11 +165,7 @@ public class Slavers extends Card {
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the slavers: " + username);
         }
-
-        winner = null;
-        if (counterMember == membersStolen) {
-            game.nextCard();
-        }
+        game.nextCard();
     }
 
     /**
@@ -186,11 +174,14 @@ public class Slavers extends Card {
      */
     public void ready(String username) {
         Game game = Game.getInstance();
+        if (!game.getCurrentPlayer().getNickname().equals(username)) {
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+        }
         if (game.getGameStatus() == GameStatus.INIT_SLAVERS) {
             readyStartPhase(username);
         }
         else{
-            throw new CardException("Errore di stato!");
+            throw new CardException("Invalid phase for READY:" + game.getGameStatus());
         }
     }
 
@@ -211,16 +202,18 @@ public class Slavers extends Card {
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
             game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SLAVERS);
-        } else {
-            losers.add(username);
-        }
-
-        if (game.getCurrentPlayerIndex() >= game.getPlayers().size()) {
+        } else if (playerFirepower < cannonStrength){
+            loser = username;
             game.setGameStatus(GameStatus.END_SLAVERS);
         }
         else{
-            game.getNextPlayer();
-            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+            if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
+                game.nextCard();
+            }
+            else{
+                game.getNextPlayer();
+                game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+            }
         }
     }
 
@@ -236,31 +229,29 @@ public class Slavers extends Card {
         if (game.getGameStatus() != GameStatus.END_SLAVERS) {
             throw new CardException("User '" + username + "' cannot remove crew in phase: " + game.getGameStatus());
         }
-        if (!losers.contains(username)) {
+        if (!loser.equals(username)) {
             throw new CardException("User '" + username + "' is not loser");
         }
         Board board = game.getPlayerFromNickname(username).getTruck();
-        if (!board.isValid(i, j) || board.isFree(i, j)) {
-            throw new CardException("Invalid coordinates or empty cell: [" + i + "][" + j + "]");
-        }
-        Component tile = board.getShip()[i][j];
-        switch (tile) {
-            case HousingUnit cabin -> {
-                int idx = board.getHousingUnits().indexOf(cabin);
-                if (idx == -1) {
-                    throw new CardException("HousingUnit not found in list");
+        try{
+            board.reduceCrew(i, j, num);
+            counterMember += num;
+            if(counterMember == membersStolen){
+                if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
+                    game.nextCard();
                 }
-                try {
-                    board.getHousingUnits().get(idx).reduceOccupants(num);
-                    counterMember += num;
-                    if (counterMember == membersStolen && winner == null) {
-                        game.nextCard();
-                    }
-                } catch (IllegalArgumentException e) {
-                    throw new CardException("Failed to remove " + num + " members: " + e.getMessage());
+                else{
+                    game.setGameStatus(GameStatus.INIT_SLAVERS);
+                    loser = null;
+                    counterMember = 0;
+                    game.getNextPlayer();
+                    game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
                 }
             }
-            default -> throw new CardException("Component at [" + i + "][" + j + "] is not a housing unit");
+        }
+        catch (InvalidCoordinatesException | ComponentMismatchException | CrewOperationException |
+               TypeMismatchException e){
+            throw new CrewOperationException("Errore nella scelta dell'equipaggio", e);
         }
     }
 

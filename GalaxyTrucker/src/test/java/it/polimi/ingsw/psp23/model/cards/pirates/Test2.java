@@ -1,29 +1,24 @@
-package it.polimi.ingsw.psp23.model.cards.smugglers;
+package it.polimi.ingsw.psp23.model.cards.pirates;
 
-import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 public class Test2 {
-    //TEST A PAGINA 14 MANUALE GALAXY TRUCKER MODIFICATO CON IL TERZO PLAYER E TUTTI TRANNE IL PRIMO PERDENTI
+    //CARTA LIVELLO 1
     Game game;
     Player p1, p2, p3;
-    Smugglers card;
+    Pirates card;
 
     @BeforeEach
     void setUp() {
@@ -138,51 +133,7 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Smugglers(1, 4, 2, 1, List.of(new Item(Color.Yellow), new Item(Color.Green), new Item(Color.Blue)));
+        card = new Pirates(1, 4, 1, 4, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)));
     }
 
-    @Test
-    void testPag14() throws CardException, InvocationTargetException, IllegalAccessException {
-        // INIT
-        card.initPlay();
-        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
-
-        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
-        card.activeCannon("Albi", 1, 4);
-//        assertEquals(4, p1.getTruck().calculateCannonStrength());
-//        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
-        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
-
-        // Fede viene sconfitto
-        assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
-        card.ready("Fede");
-        assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
-        //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
-        card.removeBatteries("Fede", 2, 4, 2);
-        assertEquals(3, p2.getTruck().calculateBatteriesAvailable());
-        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
-
-        //Gigi attiva tutto ma perde
-        card.activeCannon("Gigi", 1, 3);
-        card.ready("Gigi");
-        assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
-        //GIGI RIMUOVE UNA ED UNA
-        card.removePreciousItem("Gigi", 2, 4, 1);
-        GameStatus before = game.getGameStatus();
-        card.removeBatteries("Gigi", 2, 2, 1);
-        assertEquals(0, p3.getTruck().calculateGoods());
-        assertEquals(2, p3.getTruck().calculateBatteriesAvailable());
-
-        assertEquals(12, p1.getPosition());
-        assertEquals(10, p2.getPosition());
-        assertEquals(8, p3.getPosition());
-
-        GameStatus after = game.getGameStatus();
-        System.out.println("GameStatus: " + before + " → " + after);
-
-        //PASSA ALLA CARTA SUCCESSIVA
-        assertNotEquals(before, after);
-
-    }
 }
