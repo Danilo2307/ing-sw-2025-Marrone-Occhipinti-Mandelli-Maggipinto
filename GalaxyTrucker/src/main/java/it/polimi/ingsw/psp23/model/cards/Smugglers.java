@@ -61,6 +61,8 @@ public class Smugglers extends Card {
      */
     private int loadedCount;
 
+    private List<String> noGoods = new ArrayList<>();
+
     /**
      * Constructs a Smugglers card with the specified parameters.
      *
@@ -211,7 +213,7 @@ public class Smugglers extends Card {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
             lostCount += num;
-            if(lostCount == numItemsStolen){
+            if(lostCount == numItemsStolen || board.calculateGoods() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.nextCard();
                 }
@@ -288,6 +290,11 @@ public class Smugglers extends Card {
                 days
         ));
         game.setCurrentPlayer(game.getPlayers().getFirst());
+        for(Player p : game.getPlayers()){
+            if(p.getTruck().calculateGoods() == 0){
+                noGoods.add(p.getNickname());
+            }
+        }
     }
 
     /**
@@ -328,7 +335,17 @@ public class Smugglers extends Card {
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else if (power < firePower){
             loser = username;
-            game.setGameStatus(GameStatus.END_SMUGGLERS);
+            if(noGoods.contains(loser)){
+                if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
+                    game.nextCard();
+                }
+                else{
+                    game.getNextPlayer();
+                }
+            }
+            else {
+                game.setGameStatus(GameStatus.END_SMUGGLERS);
+            }
         }
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){

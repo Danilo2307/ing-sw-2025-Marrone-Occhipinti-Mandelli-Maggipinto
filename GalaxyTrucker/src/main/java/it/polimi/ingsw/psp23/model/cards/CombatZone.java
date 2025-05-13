@@ -37,6 +37,8 @@ public class CombatZone extends Card {
     private String loserThirdChallenge;
     private int cannonShotIndex;
     private final Set<Player> resolvers = new HashSet<>();
+    private List<String> noGoods = new ArrayList<>();
+    private List<String> noCrew = new ArrayList<>();
 
     /**
      * Constructs a CombatZone with specified difficulty and penalty sequence.
@@ -237,7 +239,7 @@ public class CombatZone extends Card {
         if(cannonShot.size() - cannonShotIndex == 2){
             for(CannonShot c : cannonShot.subList(cannonShotIndex, cannonShot.size())){
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()), loserThirdChallenge);
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()), loserThirdChallenge);
                 game.getPlayerFromNickname(loserThirdChallenge)
                         .getTruck().handleCannonShot(c, impactLine);
             }
@@ -246,7 +248,7 @@ public class CombatZone extends Card {
         else{
             CannonShot shot = cannonShot.get(cannonShotIndex);
             int impactLine = Utility.roll2to12();
-            game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, shot.getDirection()), loserThirdChallenge);
+            game.fireEvent(new CannonShotIncoming(game.getGameStatus(), shot.isBig(), impactLine, shot.getDirection()), loserThirdChallenge);
             game.getPlayerFromNickname(loserThirdChallenge)
                     .getTruck().handleCannonShot(shot, impactLine);
             cannonShotIndex++;
@@ -275,7 +277,7 @@ public class CombatZone extends Card {
         try{
             board.reduceCrew(i, j, num);
             countMember += num;
-            if (countMember == membersLost) {
+            if (countMember == membersLost || board.calculateCrew() == 0) {
                 if (penalties.get(2) == Challenge.Members) {
                     loserThirdChallenge = findMinMembers().getNickname();
                 }
@@ -312,7 +314,7 @@ public class CombatZone extends Card {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
             countGood += num;
-            if (countGood == goodsLost) {
+            if (countGood == goodsLost || board.calculateGoods() == 0) {
                 resolvers.clear();
                 loserThirdChallenge = findMinMembers().getNickname();
                 game.setGameStatus(GameStatus.ENDTHIRD_COMBATZONE);
@@ -397,6 +399,14 @@ public class CombatZone extends Card {
         Game game = Game.getInstance();
         game.fireEvent(new EventForCombatZone(
                 game.getGameStatus(), daysLost, goodsLost, membersLost, penalties, cannonShot));
+        for(Player p : game.getPlayers()){
+            if(p.getTruck().calculateCrew() == 0){
+                noCrew.add(p.getNickname());
+            }
+            if(p.getTruck().calculateGoods() == 0){
+                noGoods.add(p.getNickname());
+            }
+        }
         if (penalties.getFirst() == Challenge.CannonStrength) {
             game.setGameStatus(GameStatus.FIRST_COMBATZONE);
             game.setCurrentPlayer(game.getPlayers().getFirst());
@@ -462,6 +472,9 @@ public class CombatZone extends Card {
         else{
             resolvers.clear();
             loserSecondChallenge = findMinEngineStrength().getNickname();
+            if((noCrew.contains(loserSecondChallenge) && membersLost > 0) || (noGoods.contains(loserSecondChallenge) && goodsLost > 0)){
+                game.setGameStatus(GameStatus.THIRD_COMBATZONE);
+            }
             game.setCurrentPlayer(game.getPlayers().getFirst());
         }
     }

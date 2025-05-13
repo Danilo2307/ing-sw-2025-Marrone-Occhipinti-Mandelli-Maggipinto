@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /*
@@ -39,7 +40,7 @@ public class Game {
     private String deck2Owner = null;
     private String deck3Owner = null;
     private Consumer<Event> eventListener;
-    private Consumer<Event> eventListener2;
+    private BiConsumer<Event, String> eventListener2;
     private int numRequestedPlayers;
     private int turn;
     int level;
@@ -503,7 +504,7 @@ public class Game {
         this.eventListener = listener;
     }
 
-    public void setEventListener2(Consumer<Event> listener) {
+    public void setEventListener2(BiConsumer<Event, String> listener) {
         this.eventListener2 = listener;
     }
 
@@ -515,7 +516,7 @@ public class Game {
 
     public void fireEvent(Event event, String username) {
         if(eventListener != null) {
-            eventListener2.accept(event);
+            eventListener2.accept(event, username);
         }
     }
 

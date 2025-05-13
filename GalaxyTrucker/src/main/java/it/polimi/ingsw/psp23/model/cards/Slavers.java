@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
 import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.model.Events.EventForSlavers;
 import it.polimi.ingsw.psp23.model.Game.Game;
@@ -36,6 +37,7 @@ public class Slavers extends Card {
     private String winner = null;
     /** list of nicknames of players who lost */
     private String loser = null;
+    private List<String> noCrew = new ArrayList<>();
 
     /**
      * Constructs the Slavers card with specified parameters.
@@ -112,6 +114,11 @@ public class Slavers extends Card {
                 Game.getInstance().getGameStatus(),
                 cannonStrength, membersStolen, prize, days));
         Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().getFirst());
+        for(Player player : Game.getInstance().getPlayers()) {
+            if(player.getTruck().calculateCrew() == 0){
+                noCrew.add(player.getNickname());
+            }
+        }
     }
 
     /**
@@ -204,7 +211,18 @@ public class Slavers extends Card {
             game.setGameStatus(GameStatus.END_SLAVERS);
         } else if (playerFirepower < cannonStrength){
             loser = username;
-            game.setGameStatus(GameStatus.END_SLAVERS);
+            if(noCrew.contains(loser)){
+                if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
+                    game.nextCard();
+                }
+                else{
+                    game.getNextPlayer();
+                    game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
+                }
+            }
+            else {
+                game.setGameStatus(GameStatus.END_SLAVERS);
+            }
         }
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
@@ -236,7 +254,7 @@ public class Slavers extends Card {
         try{
             board.reduceCrew(i, j, num);
             counterMember += num;
-            if(counterMember == membersStolen){
+            if(counterMember == membersStolen || board.calculateCrew() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.nextCard();
                 }

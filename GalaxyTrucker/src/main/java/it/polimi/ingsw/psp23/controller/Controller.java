@@ -39,7 +39,7 @@ public class Controller {
         isFirstBuildingPhaseEnded = false;
         currentPosition = 0;
         Game.getInstance().setEventListener(this::onGameEvent);
-        Game.getInstance().setEventListener2(this::onGameEvent);
+        Game.getInstance().setEventListener2(this::onGameEventString);
     }
 
     public static synchronized Controller getInstance() {
@@ -272,7 +272,7 @@ public class Controller {
     }
 
     // Questo onGameEvent inoltra gli eventi rivolti ad un solo client
-    public void onGameEvent(Event event, String playerUsername) {
+    public void onGameEventString(Event event, String playerUsername) {
         Game.getInstance().setGameStatus(event.getNewStatus());
 
         Message message = new DirectMessage(new UpdateFromCard(event.describe()));

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.Events;
 
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
 /**
@@ -52,7 +53,7 @@ public class EventForAbandonedShip extends Event {
         sb.append("Evento Nave abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Crediti cosmici ottenuti: ").append(cosmicCredits).append("\n")
-                .append("  Membri di equipaggio recuperati: ").append(numMembers).append("\nSi parte dal leader\n");
+                .append("  Membri di equipaggio persi: ").append(numMembers).append("\nSi parte dal leader, ovvero " + Game.getInstance().getPlayers().getFirst().getNickname() + "\n");
         return sb.toString();
     }
 }

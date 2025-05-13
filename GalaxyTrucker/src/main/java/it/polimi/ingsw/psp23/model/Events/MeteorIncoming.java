@@ -9,17 +9,25 @@ public class MeteorIncoming extends Event {
 
     int indice;
     Direction direction;
+    boolean grande;
 
-    public MeteorIncoming(GameStatus newStatus, int indice, Direction direction) {
+
+    public MeteorIncoming(GameStatus newStatus, boolean grande, int indice, Direction direction) {
         super(newStatus);
         this.indice = indice;
         this.direction = direction;
+        this.grande = grande;
     }
 
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("È in arrivo un meteorite da ").append(direction).append(" all'indice ").append(indice).append("\n");
+        if(grande) {
+            sb.append("È in arrivo un meteorite grosso da ").append(direction).append(" all'indice ").append(indice).append("\n");
+        }
+        else{
+            sb.append("È in arrivo un meteorite piccolo da ").append(direction).append(" all'indice ").append(indice).append("\n");
+        }
         return sb.toString();
     }
 

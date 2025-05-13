@@ -241,7 +241,7 @@ public class Planets extends Card {
             case INIT_PLANETS:
                 return "Available commands: LAND, PASS";
             case END_PLANETS:
-                return "Available commands: LOADGOODS, PERDI";
+                return "Available commands: LOADGOODS, PERDI, PASS";
             default:
                 return "No commands available in current phase: " + status;
         }

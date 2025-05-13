@@ -143,7 +143,7 @@ public class Pirates extends Card {
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
@@ -176,7 +176,7 @@ public class Pirates extends Card {
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
@@ -231,7 +231,7 @@ public class Pirates extends Card {
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
@@ -261,7 +261,7 @@ public class Pirates extends Card {
         if(getLevel() == 2){
             for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size())){
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
@@ -274,7 +274,7 @@ public class Pirates extends Card {
             if (countCannonShot == 0) {
                 for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size() - 1)) {
                     int impactLine = Utility.roll2to12();
-                    game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                    game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                     for (String player : losers) {
                         game.getPlayerFromNickname(player)
                                 .getTruck()
@@ -286,7 +286,7 @@ public class Pirates extends Card {
             } else {
                 CannonShot c = cannonShot.get(countCannonShot);
                 int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()

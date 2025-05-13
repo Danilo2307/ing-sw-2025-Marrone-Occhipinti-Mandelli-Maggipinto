@@ -61,7 +61,7 @@ public class MeteorSwarm extends Card {
         for (Meteor m : meteors) {
             int line = Utility.roll2to12();
             m.setImpactLine(line);
-            game.fireEvent(new MeteorIncoming(game.getGameStatus(), line, m.getDirection()));
+            game.fireEvent(new MeteorIncoming(game.getGameStatus(),m.isBig(), line, m.getDirection()));
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
     }
@@ -117,7 +117,7 @@ public class MeteorSwarm extends Card {
         // All ready: impact one meteor
         Meteor meteor = meteors.get(currentIndex);
         int line = meteor.getImpactLine();
-        game.fireEvent(new MeteorIncoming(game.getGameStatus(), line, meteor.getDirection()));
+        game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));
         for (Player player : game.getPlayers()) {
             player.getTruck().handleMeteor(meteor, line);
         }
