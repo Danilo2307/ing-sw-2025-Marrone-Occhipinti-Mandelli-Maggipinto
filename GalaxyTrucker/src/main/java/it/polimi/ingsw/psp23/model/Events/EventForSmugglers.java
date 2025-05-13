@@ -75,7 +75,7 @@ public class EventForSmugglers extends Event {
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Potenza di fuoco nemica: ").append(firepower).append("\n")
                 .append("  Oggetti rubati: ").append(itemsStolen).append("\n")
-                .append("  Oggetti premio: ").append(prizeDescription());
+                .append("  Oggetti premio: ").append(prizeDescription()).append("\n");
         return sb.toString();
     }
 }

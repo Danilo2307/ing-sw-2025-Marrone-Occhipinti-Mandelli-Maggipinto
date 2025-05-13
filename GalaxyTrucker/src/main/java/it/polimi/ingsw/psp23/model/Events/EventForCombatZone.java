@@ -84,7 +84,7 @@ public class EventForCombatZone extends Event {
                 .append("  Merci perse: ").append(goodsLost).append("\n")
                 .append("  Membri persi: ").append(membersLost).append("\n")
                 .append("  Sfide: ").append(challDesc).append("\n")
-                .append("  Colpi di cannone: ").append(cannonDesc);
+                .append("  Colpi di cannone: ").append(cannonDesc).append("\n");
         return sb.toString();
     }
 }

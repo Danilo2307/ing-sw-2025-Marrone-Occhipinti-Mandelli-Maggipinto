@@ -1,9 +1,10 @@
-package it.polimi.ingsw.psp23.model.cards.smugglers;
+package it.polimi.ingsw.psp23.model.cards.slavers;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.cards.Slavers;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -19,11 +20,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test2 {
-    //TEST A PAGINA 14 MANUALE GALAXY TRUCKER MODIFICATO CON IL TERZO PLAYER E TUTTI TRANNE IL PRIMO PERDENTI
+public class Test1 {
     Game game;
     Player p1, p2, p3;
-    Smugglers card;
+    Slavers card;
 
     @BeforeEach
     void setUp() {
@@ -138,42 +138,37 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Smugglers(1, 4, 2, 1, List.of(new Item(Color.Yellow), new Item(Color.Green), new Item(Color.Blue)));
+        card = new Slavers(1, 4, 3, 5,1);
     }
 
     @Test
-    void testPag14() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testSlavers() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
-        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
+        assertEquals(GameStatus.INIT_SLAVERS, game.getGameStatus());
 
-        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
+        // Albi attiva i cannoni doppi e raggiunge la potenza di fuoco minima
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         card.ready("Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
-        // Fede viene sconfitto
-        assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
+        // Fede attiva due cannoni e sconfigge il nemico
+        card.activeCannon("Fede", 1, 4);
+        card.activeCannon("Fede", 1, 3);
+//        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
-        assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
-        //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
-        card.removeBatteries("Fede", 2, 4, 2);
-        assertEquals(3, p2.getTruck().calculateBatteriesAvailable());
-        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
+        assertEquals(GameStatus.END_SLAVERS, game.getGameStatus());
 
-        //Gigi attiva tutto ma perde
-        card.activeCannon("Gigi", 1, 3);
-        card.ready("Gigi");
-        assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
-        //GIGI RIMUOVE UNA ED UNA
-        card.removePreciousItem("Gigi", 2, 4, 1);
+        //FEDE RISCUOTE
         GameStatus before = game.getGameStatus();
-        card.removeBatteries("Gigi", 2, 2, 1);
-        assertEquals(0, p3.getTruck().calculateGoods());
-        assertEquals(2, p3.getTruck().calculateBatteriesAvailable());
+//        card.getCosmicCredits("Fede");
+//        assertEquals(5, p2.getMoney());
+        card.pass("Fede");
+        assertEquals(0, p2.getMoney());
 
+        // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());
         assertEquals(10, p2.getPosition());
         assertEquals(8, p3.getPosition());

@@ -19,12 +19,10 @@ public class Pirates extends Card {
     private final int days;                  // Days of rest to apply
     private final int firepower;             // Pirates' firepower strength
     private final List<CannonShot> cannonShot; // Sequence of cannon shots
-
-    private Game game;                       // Game instance
-    private List<String> losers;             // Players who lost initial encounters
-    private final Set<String> resolvers;     // Players who confirmed READY
-    private int countCannonShot;             // Index of the current cannon shot
-    private String winner;                   // Winner of the challenge
+    private List<String> losers = new ArrayList<>();             // Players who lost initial encounters
+    private final Set<String> resolvers = new HashSet<String>();      ;     // Players who confirmed READY
+    private int countCannonShot = 0;             // Index of the current cannon shot
+    private String winner = null;                   // Winner of the challenge
 
     /**
      * Constructs a Pirates card with specified level and encounter parameters.
@@ -41,8 +39,6 @@ public class Pirates extends Card {
         this.days = days;
         this.firepower = firepower;
         this.cannonShot = cannonShot;
-        this.losers = new ArrayList<>();
-        this.resolvers = new HashSet<>();
         this.countCannonShot = 0;
         this.winner = null;
     }
@@ -72,11 +68,12 @@ public class Pirates extends Card {
      * Starts the pirate encounter by setting the game status and firing the event.
      */
     public void initPlay() {
-        game = Game.getInstance();
+        Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_PIRATES);
         game.fireEvent(new EventForPirates(
                 game.getGameStatus(), days, firepower, prize, cannonShot
         ));
+        Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().getFirst());
     }
 
     /**
@@ -87,6 +84,7 @@ public class Pirates extends Card {
      * @param j the column position for the cannon
      */
     public void activeCannon(String username, int i, int j) {
+        Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
@@ -106,6 +104,7 @@ public class Pirates extends Card {
      * @param j the column position for the shield
      */
     public void activeShield(String username, int i, int j) {
+        Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_PIRATES) {
             throw new CardException("Cannot activate shield now: phase is " + game.getGameStatus());
         }
@@ -124,20 +123,34 @@ public class Pirates extends Card {
      * @param username the nickname of the winning player
      */
     public void getCosmicCredits(String username) {
-        if (game.getGameStatus() != GameStatus.END_PIRATES) {
-            throw new CardException("Winner has not been determined yet");
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+            throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the pirates: " + username);
         }
-
         game.getPlayerFromNickname(winner).updateMoney(prize);
         int idx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
         Utility.updatePosition(game.getPlayers(), idx, -days);
-
-        winner = null;
-        if (countCannonShot == cannonShot.size() - 1) {
+        game.sortPlayersByPosition();
+        if (losers.isEmpty()) {
             game.nextCard();
+        }
+        else{
+            game.setGameStatus(GameStatus.END_PIRATES);
+            game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
+            if(getLevel() == 2){
+                CannonShot c = cannonShot.get(countCannonShot);
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+                countCannonShot++;
+            }
         }
     }
 
@@ -147,16 +160,30 @@ public class Pirates extends Card {
      * @param username the nickname of the winning player
      */
     public void pass(String username) {
-        if (game.getGameStatus() != GameStatus.END_PIRATES) {
-            throw new CardException("Winner has not been determined yet");
+        Game game = Game.getInstance();
+        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+            throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the pirates: " + username);
         }
-
-        winner = null;
-        if (countCannonShot == cannonShot.size() - 1) {
+        if (losers.isEmpty()) {
             game.nextCard();
+        }
+        else{
+            game.setGameStatus(GameStatus.END_PIRATES);
+            game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
+            if(getLevel() == 2){
+                CannonShot c = cannonShot.get(countCannonShot);
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+                countCannonShot++;
+            }
         }
     }
 
@@ -166,10 +193,14 @@ public class Pirates extends Card {
      * @param username the nickname of the player issuing READY
      */
     public void ready(String username) {
+        Game game = Game.getInstance();
         if (game.getGameStatus() == GameStatus.INIT_PIRATES) {
             readyStartPhase(username);
         } else if (game.getGameStatus() == GameStatus.END_PIRATES) {
             readyResolutionPhase(username);
+        }
+        else{
+            throw new CardException("Invalid phase for READY:" + game.getGameStatus());
         }
     }
 
@@ -177,35 +208,37 @@ public class Pirates extends Card {
      * Handles the READY logic for the INIT_PIRATES phase.
      */
     private void readyStartPhase(String username) {
+        Game game = Game.getInstance();
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("User '" + username + "' is not the current player");
+            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         double playerFirepower = game.getPlayerFromNickname(username)
                 .getTruck()
                 .calculateCannonStrength();
-
         if (playerFirepower > firepower) {
             winner = username;
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
             game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), winner);
-            /*TODO: il metodo getCosmicCredits attualmente è collegato con il comando CREDIT dalla view ma secondo me
-            è meglio farlo in automatico in questo punto*/
-            if (!losers.isEmpty()) {
-                game.setCurrentPlayer(
-                        game.getPlayerFromNickname(losers.getFirst())
-                );
-            }
-            game.setGameStatus(GameStatus.END_PIRATES);
-        } else {
+        } else if(playerFirepower < firepower){
             game.fireEvent(new DefeatedFromPirates(game.getGameStatus()), username);
             losers.add(username);
         }
-
-        if (game.getCurrentPlayerIndex() >= game.getPlayers().size()) {
+        if (game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1) {
             game.setCurrentPlayer(
                     game.getPlayerFromNickname(losers.getFirst())
             );
             game.setGameStatus(GameStatus.END_PIRATES);
+            if(getLevel() == 2){
+                CannonShot c = cannonShot.get(countCannonShot);
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+                countCannonShot++;
+            }
         }
         else{
             game.getNextPlayer();
@@ -217,23 +250,50 @@ public class Pirates extends Card {
      * Handles the READY logic for the END_PIRATES resolution phase.
      */
     private void readyResolutionPhase(String username) {
+        Game game = Game.getInstance();
+        if (!losers.contains(username)) {
+            throw new CardException("You are not a loser");
+        }
         resolvers.add(username);
-        if (resolvers.size() < losers.size()) {
+        if (!resolvers.containsAll(losers)) {
             return;
         }
-
-        CannonShot c = cannonShot.get(countCannonShot);
-        int impactLine = Utility.roll2to12();
-        game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
-        for (String player : losers) {
-            game.getPlayerFromNickname(player)
-                    .getTruck()
-                    .handleCannonShot(c, impactLine);
-        }
-        countCannonShot++;
-
-        if (countCannonShot == cannonShot.size() - 1 && winner == null) {
+        if(getLevel() == 2){
+            for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size())){
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+            }
             game.nextCard();
+        }
+        else {
+            if (countCannonShot == 0) {
+                for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size() - 1)) {
+                    int impactLine = Utility.roll2to12();
+                    game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                    for (String player : losers) {
+                        game.getPlayerFromNickname(player)
+                                .getTruck()
+                                .handleCannonShot(c, impactLine);
+                    }
+                    countCannonShot++;
+                    resolvers.clear();
+                }
+            } else {
+                CannonShot c = cannonShot.get(countCannonShot);
+                int impactLine = Utility.roll2to12();
+                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), impactLine, c.getDirection()));
+                for (String player : losers) {
+                    game.getPlayerFromNickname(player)
+                            .getTruck()
+                            .handleCannonShot(c, impactLine);
+                }
+                game.nextCard();
+            }
         }
     }
 
@@ -243,6 +303,7 @@ public class Pirates extends Card {
      * @return available commands as a string
      */
     public String help() {
+        Game game = Game.getInstance();
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_PIRATES:

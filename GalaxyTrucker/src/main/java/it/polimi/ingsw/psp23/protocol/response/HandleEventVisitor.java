@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import javafx.css.Match;
 
 public class HandleEventVisitor implements EventVisitor<Void>{
 
@@ -120,6 +121,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
 
     public Void visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication){
         selectLevel.handle(tuiApplication);
+        return null;
+    }
+
+    public Void visitForMatchFinished(MatchFinished matchFinished, TuiApplication tuiApplication){
+        matchFinished.handle(tuiApplication);
         return null;
     }
 

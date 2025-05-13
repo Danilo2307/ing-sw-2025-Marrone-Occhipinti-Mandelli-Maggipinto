@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.model.Events;
 
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 
@@ -66,7 +67,7 @@ public class EventForAbandonedStation extends Event {
         sb.append("Evento Stazione abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Membri di equipaggio recuperati: ").append(numMembers).append("\n")
-                .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader\n");
+                .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader, ovvero " + Game.getInstance().getPlayers().getFirst().getNickname() + "\n");
         return sb.toString();
     }
 }

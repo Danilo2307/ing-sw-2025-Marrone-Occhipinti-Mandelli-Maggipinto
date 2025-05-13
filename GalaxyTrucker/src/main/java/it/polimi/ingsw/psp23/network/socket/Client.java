@@ -79,4 +79,8 @@ public class Client {
     public Socket getSocket() {
         return socketHandler.socket;
     }
+
+    public void stopListeningForServerThread() {
+        startListeningForServerThread.stopThread();
+    }
 }

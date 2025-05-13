@@ -212,4 +212,10 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForRemoveBatteries(RemoveBatteries removeBatteries, String username) {
+        removeBatteries.handle(username);
+        return null;
+    }
+
 }
