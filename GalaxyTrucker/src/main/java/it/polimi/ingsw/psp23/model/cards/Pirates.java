@@ -33,8 +33,8 @@ public class Pirates extends Card {
      * @param firepower the firepower threshold to beat
      * @param cannonShot list of cannon shots for damage resolution
      */
-    public Pirates(int level, int prize, int days, int firepower, List<CannonShot> cannonShot) {
-        super(level);
+    public Pirates(int level, int prize, int days, int firepower, List<CannonShot> cannonShot, int id) {
+        super(level, id);
         this.prize = prize;
         this.days = days;
         this.firepower = firepower;

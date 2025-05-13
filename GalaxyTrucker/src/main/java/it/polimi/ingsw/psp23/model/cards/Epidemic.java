@@ -20,8 +20,8 @@ public class Epidemic extends Card {
      *
      * @param level the difficulty level of the card
      */
-    public Epidemic(int level) {
-        super(level);
+    public Epidemic(int level, int id) {
+        super(level, id);
     }
 
     /**

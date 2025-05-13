@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class OpenSpace extends Card {
     private final Set<Player> resolvers = new HashSet<>();
 
-    public OpenSpace(int level) {
-        super(level);
+    public OpenSpace(int level, int id) {
+        super(level, id);
     }
 
     /**

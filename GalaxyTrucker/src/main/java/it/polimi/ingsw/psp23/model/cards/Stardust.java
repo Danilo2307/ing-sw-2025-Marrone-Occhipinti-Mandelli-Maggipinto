@@ -23,8 +23,8 @@ public class Stardust extends Card {
      *
      * @param level the difficulty level of this card
      */
-    public Stardust(int level) {
-        super(level);
+    public Stardust(int level, int id) {
+        super(level, id);
     }
 
     /**

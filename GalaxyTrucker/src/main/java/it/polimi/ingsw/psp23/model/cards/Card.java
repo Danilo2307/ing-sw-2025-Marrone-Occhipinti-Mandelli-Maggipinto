@@ -4,9 +4,11 @@ public class Card implements CardInterface, CardInterfaceParametrica, CardInterf
     private int level;
     private boolean turned = false; // quando è false noi vediamo il retro della carta
     private String description;
+    private final int id;
 
-    Card(int level) {
+    Card(int level, int id) {
         this.level = level;
+        this.id = id;
     }
 
     // we are using a getter because we want to know the level of the card later(for example when we have to create the small decks)
@@ -21,6 +23,10 @@ public class Card implements CardInterface, CardInterfaceParametrica, CardInterf
     @Override
     public String toString() {
         throw new RuntimeException("Not Override of To string");
+    }
+
+    public int getId() {
+        return id;
     }
 
 
