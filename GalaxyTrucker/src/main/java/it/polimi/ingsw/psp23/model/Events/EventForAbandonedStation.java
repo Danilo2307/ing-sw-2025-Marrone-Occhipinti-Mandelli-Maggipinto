@@ -66,7 +66,7 @@ public class EventForAbandonedStation extends Event {
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Stazione abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
-                .append("  Membri di equipaggio recuperati: ").append(numMembers).append("\n")
+                .append("  Membri di equipaggio persi: ").append(numMembers).append("\n")
                 .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader, ovvero " + Game.getInstance().getPlayers().getFirst().getNickname() + "\n");
         return sb.toString();
     }
