@@ -1,23 +1,12 @@
 package it.polimi.ingsw.psp23;
 
-import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
-import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
-import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
-import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
+import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 
-import javax.smartcardio.CardException;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class MainClient {
