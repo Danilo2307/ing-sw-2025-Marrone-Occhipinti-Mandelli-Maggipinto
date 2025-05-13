@@ -13,7 +13,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-
+// carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
+// la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
+// da cui viene effettivamente fatta partire la gui
 public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void start(Stage stage) throws Exception {
