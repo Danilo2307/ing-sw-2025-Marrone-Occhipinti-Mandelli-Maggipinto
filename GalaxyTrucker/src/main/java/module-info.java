@@ -12,6 +12,7 @@ module it.polimi.ingsw.psp23 {
     opens it.polimi.ingsw.psp23 to javafx.fxml;
     exports it.polimi.ingsw.psp23;
     exports it.polimi.ingsw.psp23.model.cards;
+    exports it.polimi.ingsw.psp23.exceptions;
     opens it.polimi.ingsw.psp23.model.cards to javafx.fxml;
     exports it.polimi.ingsw.psp23.model.components;
     opens it.polimi.ingsw.psp23.model.components to javafx.fxml;

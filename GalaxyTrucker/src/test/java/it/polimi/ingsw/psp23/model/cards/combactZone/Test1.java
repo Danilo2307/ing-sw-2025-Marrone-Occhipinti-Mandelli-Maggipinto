@@ -1,16 +1,15 @@
-package it.polimi.ingsw.psp23.model.cards.meteorSwarm;
+package it.polimi.ingsw.psp23.model.cards.combatZone;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.CombatZone;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
-import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.model.enumeration.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class Test1 {
-    //TEST CON CARTA DI SOLI METEORITI PICCOLI
+    //TEST SU CARTA LIVELLO 1
     Game game;
     Player p1, p2, p3;
-    MeteorSwarm card;
+    CombatZone card;
 
     @BeforeEach
     void setUp() {
@@ -152,6 +151,7 @@ public class Test1 {
         Engine eg3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         eg3.moveToHand();
         p3.getTruck().addComponent(eg3, 3, 1);
+        hg2.setAstronaut();
 
         Item ig1 = new Item(Color.Blue);
         cg1.loadItem(ig1);
@@ -162,75 +162,58 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new MeteorSwarm(1, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT), new Meteor(false, Direction.DOWN)));
+        card = new CombatZone(1,3,0,2, List.of(Challenge.Members, Challenge.EngineStrength, Challenge.CannonStrength), List.of(new CannonShot(false, Direction.DOWN), new CannonShot(true, Direction.DOWN)));
     }
 
     @Test
-    void testMeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
-        assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());
+        //ALBI HA PERSO LA PRIMA SFIDA
+        assertEquals(2, p1.getTruck().calculateCrew());
+        assertEquals(7, p1.getPosition());
+        //FEDE DIVENTA IL LEADER, POI GIGI E ALBI
+        assertEquals("Fede", game.getCurrentPlayer().getNickname());
+        //SI PASSA ALLA SECONDA SFIDA
+        assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
 
-        // PRIMO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+        //SECONDA SFIDA
+        //FEDE ATTIVA I SUOI MOTORI
+        card.activeEngine("Fede", 3,1);
+        card.activeEngine("Fede", 3,5);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+
+        //GIGI NON NE ATTIVA E PERDE
         card.ready("Gigi");
 
-        // SECONDO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+        //ALBI NE ATTIVA SOLO UNO
+        card.activeEngine("Albi", 3,1);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
 
-        // TERZO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
+        //GIGI DEVE SCONTARE LA PENALITA'
+        card.reduceCrew("Gigi", 3, 3, 2);
+        assertEquals(2, p3.getTruck().calculateCrew());
 
-        // QUARTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
+        //SI PASSA ALLA TERZA CON FEDE IN TESTA
+        assertEquals("Fede", game.getCurrentPlayer().getNickname());
+        assertEquals(GameStatus.THIRD_COMBATZONE, game.getGameStatus());
 
-        // QUINTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+        //TUTTI SONO PRONTI, E' FEDE AD AVERE POTENZA DI 0,5 A PERDERE
+        assertEquals(2, p1.getTruck().calculateCannonStrength());
+        assertEquals(0.5, p2.getTruck().calculateCannonStrength());
+        assertEquals(1, p3.getTruck().calculateCannonStrength());
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+        card.ready("Gigi");
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+
+        //FEDE DEVE AFFRONTARE I CANNONI SENZA SCUDI
+        assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
         GameStatus before = game.getGameStatus();
-        card.ready("Gigi");
-
-        GameStatus after = game.getGameStatus();
-        System.out.println("GameStatus: " + before + " → " + after);
+        card.ready("Fede");
 
         //PASSA ALLA CARTA SUCCESSIVA
+        GameStatus after = game.getGameStatus();
+        System.out.println("GameStatus: " + before + " → " + after);
         assertNotEquals(before, after);
 
     }

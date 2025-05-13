@@ -53,13 +53,12 @@ public class Stardust extends Card {
      */
     private void applyEffect() {
         Game game = Game.getInstance();
-        List<Player> players = new ArrayList<>(game.getPlayers());
-        Collections.reverse(players);
-        List<Player> original = game.getPlayers();
-        for (Player p : players) {
+        List<Player> players = game.getPlayers();
+        for (Player p : players.reversed()) {
             int penalty = p.getTruck().calculateExposedConnectors();
-            Utility.updatePosition(original, original.indexOf(p), -penalty);
+            Utility.updatePosition(players, players.indexOf(p), -penalty);
         }
+        game.sortPlayersByPosition();
         game.nextCard();
     }
     /**

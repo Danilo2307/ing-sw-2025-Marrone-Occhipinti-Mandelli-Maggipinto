@@ -1,16 +1,13 @@
-package it.polimi.ingsw.psp23.model.cards.meteorSwarm;
+package it.polimi.ingsw.psp23.model.cards.combactZone;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.CombatZone;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
-import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.model.enumeration.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +18,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
-    //TEST CON CARTA DI SOLI METEORITI PICCOLI
+public class Test2 {
+    //TEST SU CARTA LIVELLO 2
     Game game;
     Player p1, p2, p3;
-    MeteorSwarm card;
+    CombatZone card;
 
     @BeforeEach
     void setUp() {
@@ -152,6 +149,7 @@ public class Test1 {
         Engine eg3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
         eg3.moveToHand();
         p3.getTruck().addComponent(eg3, 3, 1);
+        hg2.setAstronaut();
 
         Item ig1 = new Item(Color.Blue);
         cg1.loadItem(ig1);
@@ -162,75 +160,67 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new MeteorSwarm(1, List.of(new Meteor(false, Direction.UP), new Meteor(false, Direction.UP), new Meteor(false, Direction.LEFT), new Meteor(false, Direction.RIGHT), new Meteor(false, Direction.DOWN)));
+        card = new CombatZone(2,4,3,0, List.of(Challenge.CannonStrength, Challenge.EngineStrength, Challenge.Members), List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN)));
     }
 
     @Test
-    void testMeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay();
-        assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());
-
-        // PRIMO METEORE
+        //SI PARTE CON LA PRIMA SFIDA
+        assertEquals(GameStatus.FIRST_COMBATZONE, game.getGameStatus());
+        //ALBI ATTIVA UNO DEI SUOI CANNONI
         card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
         card.ready("Albi");
+
+        //FEDE NE ATTIVA 1 E PERDE
+        card.activeCannon("Fede", 1,4);
+        card.ready("Fede");
+
+        //GIGI ATTIVA 1
         card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
-        // SECONDO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+        //FEDE HA PERSO LA PRIMA SFIDA
+        assertEquals(5, p2.getPosition());
+        //ALBI DIVENTA IL LEADER, POI GIGI E ALBI
+        assertEquals("Albi", game.getCurrentPlayer().getNickname());
+        //SI PASSA ALLA SECONDA SFIDA
+        assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
+
+        //SECONDA SFIDA
+        //ALBI ATTIVA I SUOI MOTORI
+        card.activeEngine("Albi", 3,1);
+        card.activeEngine("Albi", 3,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+
+        //GIGI NON NE ATTIVA E PERDE
         card.ready("Gigi");
 
-        // TERZO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+        //FEDE NE ATTIVA SOLO UNO
+        card.activeEngine("Fede", 3,1);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
 
-        // QUARTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
-        card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
+        //GIGI DEVE SCONTARE LA PENALITA'
+        card.removePreciousItem("Gigi", 2, 4, 1);
+        card.removeBatteries("Gigi", 2, 2, 2);
+        assertEquals(0, p3.getTruck().calculateGoods());
+        assertEquals(1, p3.getTruck().calculateBatteriesAvailable());
 
-        // QUINTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
-        card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+        //SI PASSA ALLA TERZA CON ALBU IN TESTA
+        assertEquals("Albi", game.getCurrentPlayer().getNickname());
+        assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
+
+        //ALBI PERDE LA SFIDA E AFFRONTA IL PRIMO CANNONE CON LO SCUDO
+        card.activeShield("Albi", 1, 5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+        card.ready("Albi");
         GameStatus before = game.getGameStatus();
-        card.ready("Gigi");
-
-        GameStatus after = game.getGameStatus();
-        System.out.println("GameStatus: " + before + " → " + after);
+        card.ready("Albi");
 
         //PASSA ALLA CARTA SUCCESSIVA
+        GameStatus after = game.getGameStatus();
+        System.out.println("GameStatus: " + before + " → " + after);
         assertNotEquals(before, after);
 
     }

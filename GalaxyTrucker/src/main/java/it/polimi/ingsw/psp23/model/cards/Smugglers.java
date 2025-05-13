@@ -214,10 +214,10 @@ public class Smugglers extends Card {
      * @param username  the losing player's nickname
      * @param i       the row index of the container
      * @param j       the column index of the container
-     * @param item the index of the item to remove
+     * @param num the index of the item to remove
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
-    public void removePreciousItem(String username, int i, int j, int item) {
+    public void removePreciousItem(String username, int i, int j, int num) {
         Game game = Game.getInstance();
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
@@ -225,12 +225,12 @@ public class Smugglers extends Card {
         if (!losers.contains(username)) {
             throw new CardException("You are not loser");
         }
-        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() == 0){
+        if(game.getPlayerFromNickname(username).getTruck().calculateGoods() < num){
             throw new CardException("You can only lose batteries");
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
-            board.removePreciousItem(i, j, item);
+            board.removePreciousItem(i, j, num);
             int pidx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
             lostCount.set(pidx, lostCount.get(pidx) + 1);
             if (allItemsStolen() && (winner == null || loadedCount == prize.size())) {
@@ -354,7 +354,7 @@ public class Smugglers extends Card {
             case INIT_SMUGGLERS:
                 return "Available commands: ACTIVECANNON, READY";
             case END_SMUGGLERS:
-                return "Available commands: LOADGOOD, PASS, PERDI";
+                return "Available commands: LOADGOOD, PASS, PERDI, BATTERIE";
             default:
                 return "No commands available in current phase: " + status;
         }
