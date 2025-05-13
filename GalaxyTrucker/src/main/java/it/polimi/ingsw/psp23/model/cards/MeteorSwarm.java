@@ -56,11 +56,12 @@ public class MeteorSwarm extends Card {
     public void initPlay() {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
+        game.fireEvent(new EventForMeteorSwarm(game.getGameStatus()));
         resolvers.clear();
         for (Meteor m : meteors) {
             int line = Utility.roll2to12();
             m.setImpactLine(line);
-            game.fireEvent(new EventForMeteorSwarm(game.getGameStatus(), List.of(m), line));
+            game.fireEvent(new MeteorIncoming(game.getGameStatus(), line, m.getDirection()));
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
     }

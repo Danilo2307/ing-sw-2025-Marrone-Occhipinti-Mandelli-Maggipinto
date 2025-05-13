@@ -180,6 +180,9 @@ public class Controller {
         // game.setCurrentPlayer(game.getPlayerFromNickname(username));
         game.getPlayerFromNickname(username).setPosition(game.getFirstPositions()[currentPosition]);
         currentPosition++;
+        Game.getInstance().sortPlayersByPosition();
+        int playerPlacement = Game.getInstance().getPlayers().stream().map(player -> player.getNickname()).toList().indexOf(username) + 1;
+        Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Pedina posizionata! Sei in posizione " + playerPlacement +"\n")));
         if(currentPosition == game.getPlayers().size()) {
             startCheckBoard();
         }

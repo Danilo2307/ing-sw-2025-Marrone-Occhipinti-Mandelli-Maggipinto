@@ -79,7 +79,7 @@ public class Planets extends Card {
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
-        if (i < 0 || i >= planetsOccupied.size()) {
+        if (i <= 0 || i > planetsOccupied.size()) {
             throw new CardException("Planet index out of bounds: " + i);
         }
         if (planetsOccupied.get(i-1) == null) {
