@@ -1,37 +1,83 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
+import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
+import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.request.*;
+import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
+import it.polimi.ingsw.psp23.view.ViewAPI;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.*;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
-public class TuiApplication {
+public class TuiApplication implements ViewAPI {
     private Client client;
-    // private ClientController cc;  ora useless perchè sendAction è in questa classe
     private int lastUncoveredVersion;
     private final IOManager io;
     private TuiState currentTuiState;
 
-    /// TODO: capire costruttore (client=null)
     public TuiApplication() {
         io = new IOManager();
         lastUncoveredVersion = 0;
         currentTuiState = TuiState.PRELOBBY;
     }
 
+    @Override
     public void setClient(Client client) {
         this.client = client;
     }
 
     public IOManager getIOManager() {
         return io;
+    }
+
+    @Override
+    public void init() {
+        Socket socket = client.getSocket();
+        Scanner scanner = new Scanner(System.in);
+
+        try {
+            socket.setSoTimeout(1000);
+            Message messaggio = client.readMessage();
+            messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), this);
+
+            int livello = scanner.nextInt();
+            scanner.nextLine();
+            messaggio = new LevelSelectionMessage(livello);
+            client.sendMessage(messaggio);
+
+            client.avvia();
+            socket.setSoTimeout(0);
+        } catch (SocketTimeoutException ste) {
+            try {
+                socket.setSoTimeout(0);
+                client.avvia();
+            }
+            catch (SocketException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
+
+        System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
+        String username = scanner.nextLine();
+        client.setUsername(username);
+        // setClient(client);
+        runGame();
     }
 
     /** ciclo infinito che rimane in ascolto degli input dell'utente */
@@ -203,7 +249,17 @@ public class TuiApplication {
                             int num = Integer.parseInt(words[4]);
                             sendAction(new RemovePreciousItem(cx, cy, num));
                         }
-                    } else {
+                    }else if (words[1].equals("batterie")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int cx = Integer.parseInt(words[2]);
+                            int cy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            sendAction(new RemoveBatteries(cx, cy, num));
+                        }
+                    }
+                    else {
                         if (words.length != 3) {
                             io.error("Non hai inviato il numero corretto di parametri, riprova");
                         } else {
@@ -398,5 +454,124 @@ public class TuiApplication {
 
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public void showRequestNumPlayers() {
+        io.print("Inserisci il numero di giocatori che faranno parte della partita:\n");
+    }
+
+    @Override
+    public void showAppropriateUsername(String username) {
+        client.getSocketHandler().setUsername(username);
+        io.print("Benvenuto in Galaxy Trucker!!\n");
+        setState(TuiState.LOBBY);
+    }
+
+    @Override
+    public void showWrongUsername() {
+        io.print("Username errato, inseriscine uno nuovo:\n");
+    }
+
+    @Override
+    public void showRequestLevel() {
+        io.print("Inserisci il livello di difficoltà a cui vuoi giocare (0 o 2): ");
+    }
+
+    @Override
+    public void showTile(Component requested) {
+        io.printInfoTile(requested);
+    }
+
+    @Override
+    public void showShip(Component[][] ship, int[][] validCoordinates) {
+        io.printShip(ship, validCoordinates);
+    }
+
+    @Override
+    public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
+        setLastUncoveredVersion(lastVersion);
+        for (Component component : uncovered) {
+            io.print(io.getSymbol(component));
+            io.print("\t");
+        }
+        io.print("\n");
+    }
+
+    @Override
+    public void showError(String error) {
+        io.error(error);
+    }
+
+    @Override
+    public void showMessage(String message) {
+        io.print(message);
+    }
+
+    @Override
+    public void stateChanged(GameStatus newState) {
+        io.print("Stato modificato a: " + newState + "\n");
+        switch (newState){
+            case Building -> setState(TuiState.BUILDING);
+            case CheckBoards -> setState(TuiState.CHECK);
+            case SetCrew -> setState(TuiState.ADDCREW);
+            case Playing -> setState(TuiState.PLAY);
+        }
+    }
+
+    @Override
+    public void showTurn(String player) {
+        io.print("Turno di " + player + " iniziato");
+    }
+
+    @Override
+    public void showStart() {
+        io.print("Partita iniziata");
+    }
+
+    @Override
+    public void showIllegalTruck() {
+        io.error("La tua nave non rispetta i criteri di Galaxy Trucker, sistemala e poi digita 'corretta'\n");
+    }
+
+    @Override
+    public void showPlayerLanded(String username, int index){
+        io.print("Il giocatore " + username + " e' atterrato sul pianeta numero " + (index + 1));
+    }
+
+    @Override
+    public void showTimeExpired() {
+        io.print("Tempo scaduto");
+    }
+
+    @Override
+    public void showEndTurn(String username) {
+        io.print("Turno di " + username + " finito");
+    }
+
+    @Override
+    public void showEnd() {
+        io.print("Partita terminata");
+    }
+
+    @Override
+    public void endMatch(String message) {
+        getClient().stopListeningForServerThread();
+        io.print(message);
+    }
+
+    @Override
+    public void showCardUpdate(String message) {
+        io.print(message);
+    }
+
+    @Override
+    public void showMeteor(Meteor meteor) {
+        io.print("Sta arrivando una meteora " + meteor.isBig() + " dalla direzione " + meteor.getDirection());
+    }
+
+    @Override
+    public void showCannonShot(int coord, CannonShot cannonShot) {
+        io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
 }

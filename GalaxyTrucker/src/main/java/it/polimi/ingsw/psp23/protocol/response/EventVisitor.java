@@ -1,49 +1,50 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.view.ViewAPI;
 
 public interface EventVisitor<T> {
 
-    public T visitForShipResponse(ShipResponse shipResponse, TuiApplication tuiApplication);
+    public T visitForShipResponse(ShipResponse shipResponse, ViewAPI viewAPI);
 
-    public T visitForTileResponse(TileResponse tileResponse, TuiApplication tuiApplication);
+    public T visitForTileResponse(TileResponse tileResponse, ViewAPI viewAPI);
 
-    public T visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, TuiApplication tuiApplication);
+    public T visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, ViewAPI viewAPI);
 
-    public T visitForStringResponse(StringResponse stringResponse, TuiApplication tuiApplication);
+    public T visitForStringResponse(StringResponse stringResponse, ViewAPI viewAPI);
 
-    public T visitForStartGame(StartGame startGame, TuiApplication tuiApplication);
+    public T visitForStartGame(StartGame startGame, ViewAPI viewAPI);
 
-    public T visitForEndGame(EndGame endGame, TuiApplication tuiApplication);
+    public T visitForEndGame(EndGame endGame, ViewAPI viewAPI);
 
-    public T visitForTimeExpired(TimeExpired timeExpired, TuiApplication tuiApplication);
+    public T visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI);
 
-    public T visitForEndTurn(EndTurn endTurn, TuiApplication tuiApplication);
+    public T visitForEndTurn(EndTurn endTurn, ViewAPI viewAPI);
 
-    public T visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication);
+    public T visitForStateChanged(StateChanged stateChanged, ViewAPI viewAPI);
 
-    public T visitForStartTurn(StartTurn startTurn, TuiApplication tuiApplication);
+    public T visitForStartTurn(StartTurn startTurn, ViewAPI viewAPI);
 
-    public T visitForErrorResponse(ErrorResponse errorResponse, TuiApplication tuiApplication);
+    public T visitForErrorResponse(ErrorResponse errorResponse, ViewAPI viewAPI);
 
-    public T visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, TuiApplication tuiApplication);
+    public T visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, ViewAPI viewAPI);
 
-    public T visitForMeteorIncoming(MeteorIncoming meteorIncoming, TuiApplication tuiApplication);
+    public T visitForMeteorIncoming(MeteorIncoming meteorIncoming, ViewAPI viewAPI);
 
-    public T visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication);
+    public T visitForPlayerLanded(PlayerLanded playerLanded, ViewAPI viewAPI);
 
-    public T visitForWrongUsername(WrongUsername wrongUsername, TuiApplication tuiApplication);
+    public T visitForWrongUsername(WrongUsername wrongUsername, ViewAPI viewAPI);
 
-    public T visitForAppropriateUsername(AppropriateUsername appropriateUsername, TuiApplication tuiApplication);
+    public T visitForAppropriateUsername(AppropriateUsername appropriateUsername, ViewAPI viewAPI);
 
-    public T visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, TuiApplication tuiApplication);
+    public T visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, ViewAPI viewAPI);
 
-    public T visitForIllegalTruck(IllegalTruck illegalTruck, TuiApplication tuiApplication);
+    public T visitForIllegalTruck(IllegalTruck illegalTruck, ViewAPI viewAPI);
 
-    public T visitForUpdateFromCard(UpdateFromCard updateFromCard, TuiApplication tuiApplication);
+    public T visitForUpdateFromCard(UpdateFromCard updateFromCard, ViewAPI viewAPI);
 
-    public T visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication);
+    public T visitForSelectLevel(SelectLevel selectLevel, ViewAPI viewAPI);
 
-    public T visitForMatchFinished(MatchFinished matchFinished, TuiApplication tuiApplication);
+    public T visitForMatchFinished(MatchFinished matchFinished, ViewAPI viewAPI);
 
 }

@@ -1,131 +1,132 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.view.ViewAPI;
 import javafx.css.Match;
 
 public class HandleEventVisitor implements EventVisitor<Void>{
 
     @Override
-    public Void visitForShipResponse(ShipResponse shipResponse, TuiApplication tuiApplication){
-        shipResponse.handle(tuiApplication);
+    public Void visitForShipResponse(ShipResponse shipResponse, ViewAPI viewAPI){
+        shipResponse.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForTileResponse(TileResponse tileResponse, TuiApplication tuiApplication){
-        tileResponse.handle(tuiApplication);
+    public Void visitForTileResponse(TileResponse tileResponse, ViewAPI viewAPI){
+        tileResponse.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, TuiApplication tuiApplication){
-        uncoveredListResponse.handle(tuiApplication);
+    public Void visitForUncoveredListResponse(UncoveredListResponse uncoveredListResponse, ViewAPI viewAPI){
+        uncoveredListResponse.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForStringResponse(StringResponse stringResponse, TuiApplication tuiApplication){
-        stringResponse.handle(tuiApplication);
+    public Void visitForStringResponse(StringResponse stringResponse, ViewAPI viewAPI){
+        stringResponse.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForStartGame(StartGame startGame, TuiApplication tuiApplication){
-        startGame.handle(tuiApplication);
+    public Void visitForStartGame(StartGame startGame, ViewAPI viewAPI){
+        startGame.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForEndGame(EndGame endGame, TuiApplication tuiApplication){
-        endGame.handle(tuiApplication);
+    public Void visitForEndGame(EndGame endGame, ViewAPI viewAPI){
+        endGame.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForTimeExpired(TimeExpired timeExpired, TuiApplication tuiApplication){
-        timeExpired.handle(tuiApplication);
+    public Void visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI){
+        timeExpired.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForEndTurn(EndTurn endTurn, TuiApplication tuiApplication){
-        endTurn.handle(tuiApplication);
+    public Void visitForEndTurn(EndTurn endTurn, ViewAPI viewAPI){
+        endTurn.handle(viewAPI);
         return null;
 
     }
 
     @Override
-    public Void visitForStateChanged(StateChanged stateChanged, TuiApplication tuiApplication){
-        stateChanged.handle(tuiApplication);
+    public Void visitForStateChanged(StateChanged stateChanged, ViewAPI viewAPI){
+        stateChanged.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForStartTurn(StartTurn startTurn, TuiApplication tuiApplication){
-        startTurn.handle(tuiApplication);
+    public Void visitForStartTurn(StartTurn startTurn, ViewAPI viewAPI){
+        startTurn.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForErrorResponse(ErrorResponse errorResponse, TuiApplication tuiApplication){
-        errorResponse.handle(tuiApplication);
+    public Void visitForErrorResponse(ErrorResponse errorResponse, ViewAPI viewAPI){
+        errorResponse.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, TuiApplication tuiApplication){
-        cannonShotIncoming.handle(tuiApplication);
+    public Void visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, ViewAPI viewAPI){
+        cannonShotIncoming.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForMeteorIncoming(MeteorIncoming meteorIncoming, TuiApplication tuiApplication){
-        meteorIncoming.handle(tuiApplication);
+    public Void visitForMeteorIncoming(MeteorIncoming meteorIncoming, ViewAPI viewAPI){
+        meteorIncoming.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForPlayerLanded(PlayerLanded playerLanded, TuiApplication tuiApplication){
-        playerLanded.handle(tuiApplication);
+    public Void visitForPlayerLanded(PlayerLanded playerLanded, ViewAPI viewAPI){
+        playerLanded.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForWrongUsername(WrongUsername wrongUsername, TuiApplication tuiApplication){
-        wrongUsername.handle(tuiApplication);
+    public Void visitForWrongUsername(WrongUsername wrongUsername, ViewAPI viewAPI){
+        wrongUsername.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForAppropriateUsername(AppropriateUsername appropriateUsername, TuiApplication tuiApplication){
-        appropriateUsername.handle(tuiApplication);
+    public Void visitForAppropriateUsername(AppropriateUsername appropriateUsername, ViewAPI viewAPI){
+        appropriateUsername.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, TuiApplication tuiApplication){
-        requestNumPlayers.handle(tuiApplication);
+    public Void visitForRequestNumPlayers(RequestNumPlayers requestNumPlayers, ViewAPI viewAPI){
+        requestNumPlayers.handle(viewAPI);
         return null;
     }
 
     @Override
-    public Void visitForIllegalTruck(IllegalTruck illegalTruck, TuiApplication tuiApplication){
-        illegalTruck.handle(tuiApplication);
+    public Void visitForIllegalTruck(IllegalTruck illegalTruck, ViewAPI viewAPI){
+        illegalTruck.handle(viewAPI);
         return null;
     }
 
-    public Void visitForUpdateFromCard(UpdateFromCard updateFromCard, TuiApplication tuiApplication){
-        updateFromCard.handle(tuiApplication);
+    public Void visitForUpdateFromCard(UpdateFromCard updateFromCard, ViewAPI viewAPI){
+        updateFromCard.handle(viewAPI);
         return null;
     }
 
-    public Void visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication){
-        selectLevel.handle(tuiApplication);
+    public Void visitForSelectLevel(SelectLevel selectLevel, ViewAPI viewAPI){
+        selectLevel.handle(viewAPI);
         return null;
     }
 
-    public Void visitForMatchFinished(MatchFinished matchFinished, TuiApplication tuiApplication){
-        matchFinished.handle(tuiApplication);
+    public Void visitForMatchFinished(MatchFinished matchFinished, ViewAPI viewAPI){
+        matchFinished.handle(viewAPI);
         return null;
     }
 

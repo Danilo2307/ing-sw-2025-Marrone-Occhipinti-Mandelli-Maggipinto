@@ -4,17 +4,20 @@ package it.polimi.ingsw.psp23.view.TUI;
 import it.polimi.ingsw.psp23.protocol.response.*;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.socket.MessageObserver;
+import it.polimi.ingsw.psp23.view.ViewAPI;
+
+import javax.swing.text.View;
 
 public class ClientEventHandler implements MessageObserver {
-    private TuiApplication tui;
+    private final ViewAPI view;
 
-    public ClientEventHandler(TuiApplication tui) {
-        this.tui = tui;
+    public ClientEventHandler(ViewAPI view) {
+        this.view = view;
     }
 
     public void handle(Event e) {
 
-        e.call(new HandleEventVisitor(), tui);
+        e.call(new HandleEventVisitor(), view);
 
     }
 

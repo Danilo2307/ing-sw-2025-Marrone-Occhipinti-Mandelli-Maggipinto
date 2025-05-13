@@ -7,18 +7,19 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.view.TUI.IOManager;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import java.util.Scanner;
 
 public record WrongUsername() implements Event {
 
-    public void handle(TuiApplication tui) {
-        tui.getIOManager().print("Username errato, inseriscine uno nuovo:\n");
+    public void handle(ViewAPI view) {
+        view.showWrongUsername();
     }
 
     @Override
-    public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
-        return eventVisitor.visitForWrongUsername(this, tuiApplication);
+    public <T> T call(EventVisitor<T> eventVisitor, ViewAPI viewAPI){
+        return eventVisitor.visitForWrongUsername(this, viewAPI);
     }
 
 }
