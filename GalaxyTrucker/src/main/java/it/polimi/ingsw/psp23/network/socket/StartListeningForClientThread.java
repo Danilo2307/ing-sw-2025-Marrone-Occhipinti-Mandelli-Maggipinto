@@ -12,6 +12,7 @@ public class StartListeningForClientThread extends Thread {
     private boolean haveToListen = true;
     private final Object lock = new Object();
     private String connectionID = null;
+    private boolean running = true;
 
     StartListeningForClientThread(String connectionID) {
         this.connectionID = connectionID;
@@ -26,7 +27,7 @@ public class StartListeningForClientThread extends Thread {
 
     @Override
     public void run() {
-        while(true){
+        while(running){
 
             synchronized (lock) {
                 if (!haveToListen) {
@@ -35,7 +36,12 @@ public class StartListeningForClientThread extends Thread {
             }
             Message receivedMessage = Server.getInstance().receiveMessage(connectionID);
             System.out.println("Message read in class StartListeningForClientThread: " + receivedMessage);
-            Users.getInstance().getClientHandler(connectionID).handleMessage(receivedMessage);
+            if(receivedMessage != null) {
+                Users.getInstance().getClientHandler(connectionID).handleMessage(receivedMessage);
+            }
+            else{
+                running = false;
+            }
 
             synchronized (Server.getInstance().getClients()) {
                 if (Server.getInstance().getClients().size() == 1 && Server.getInstance().getServerSocket().isClosed()) {
@@ -48,4 +54,9 @@ public class StartListeningForClientThread extends Thread {
 
         }
     }
+
+    public void stopThread(){
+        running = false;
+    }
+
 }

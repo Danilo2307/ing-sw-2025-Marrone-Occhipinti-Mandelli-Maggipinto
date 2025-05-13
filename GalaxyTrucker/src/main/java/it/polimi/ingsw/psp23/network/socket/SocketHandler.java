@@ -1,9 +1,12 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
+import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
+import it.polimi.ingsw.psp23.protocol.response.MatchFinished;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -68,15 +71,20 @@ public class SocketHandler {
                 received = (Message)in.readObject();
                 return received;
 
-            } catch (IOException e) {
-                //e.printStackTrace();
-                throw new SocketTimeoutException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
+            }catch(SocketTimeoutException e){
+                throw new SocketTimeoutException("Problema(SocketTimeoutException) in readMessage in SocketHandler " + e.getMessage());
+            }
+            catch (IOException e) {
+                // e.printStackTrace();
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata")));
+                Server.getInstance().disconnectAll();
+                // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Problema(ClassNotFoundException) in readMessage in SocketHandler " + e.getMessage());
             }
         }
-
+        return null;
     }
 
 

@@ -44,4 +44,6 @@ public interface EventVisitor<T> {
 
     public T visitForSelectLevel(SelectLevel selectLevel, TuiApplication tuiApplication);
 
+    public T visitForMatchFinished(MatchFinished matchFinished, TuiApplication tuiApplication);
+
 }

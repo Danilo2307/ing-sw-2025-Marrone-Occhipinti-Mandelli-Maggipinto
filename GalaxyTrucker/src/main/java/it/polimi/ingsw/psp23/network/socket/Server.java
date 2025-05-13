@@ -101,6 +101,21 @@ public class Server {
         }
     }
 
+    public void disconnectAll() {
+        synchronized (clients) {
+            for (String stringa : clients.keySet()) {
+                try {
+                    SocketHandler socketHandler = clients.get(stringa);
+                    socketHandler.close();
+                    System.out.println("Chiuso client: " + stringa);
+                } catch (Exception e) {
+                    System.err.println("Errore chiudendo il client" + stringa + ": " + e.getMessage());
+                }
+            }
+            clients.clear();
+        }
+    }
+
     public synchronized ServerSocket getServerSocket() {
         return serverSocket;
     }
@@ -256,7 +271,11 @@ public class Server {
     public void notifyAllObservers(Message message) {
         synchronized (clients) {
             for (String connection : clients.keySet()) {
-                sendMessage(message, connection);
+                try {
+                    sendMessage(message, connection);
+                } catch (RuntimeException e) {
+                    System.out.println("Eccezione lanciata nel notifyAllObservers di Server. Se si è disconnesso inaspettatamente un player questo messaggio è del tutto normale, altrimenti c'è un problema!!" + e.getMessage());
+                }
                 System.out.println("Notify observer: " + getUsernameForConnection(connection) + " with message: " + message.toString());
             }
         }
