@@ -279,6 +279,7 @@ public class Game {
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
         currentPlayerIndex = players.indexOf(player);
+        fireEvent(new TurnOf(getGameStatus(), currentPlayer.getNickname()));
     }
 
     public void setCurrentPlayerIndex(int index){
@@ -291,7 +292,6 @@ public class Game {
         if(currentPlayerIndex < size - 1){
             turn ++;
             setCurrentPlayer(players.get(currentPlayerIndex+1));
-            fireEvent(new TurnOf(getGameStatus(), currentPlayer.getNickname()));
             return currentPlayer;
         } else{
             return null;
