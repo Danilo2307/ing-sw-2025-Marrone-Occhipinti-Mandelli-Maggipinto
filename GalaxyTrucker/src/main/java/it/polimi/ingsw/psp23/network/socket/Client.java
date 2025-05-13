@@ -1,18 +1,14 @@
 // Questa classe rappresenta il player lato client
 package it.polimi.ingsw.psp23.network.socket;
 
-import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
+import it.polimi.ingsw.psp23.view.ClientEventHandler;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.net.UnknownHostException;
 
 public class Client {
 
