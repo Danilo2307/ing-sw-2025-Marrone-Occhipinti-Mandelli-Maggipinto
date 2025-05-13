@@ -26,8 +26,8 @@ public class MeteorSwarm extends Card {
     private final Set<Player> resolvers = new HashSet<>();
     private int currentIndex = 0;
 
-    public MeteorSwarm(int level, List<Meteor> meteors) {
-        super(level);
+    public MeteorSwarm(int level, List<Meteor> meteors, int id) {
+        super(level, id);
         this.meteors = new ArrayList<>(meteors);
     }
 

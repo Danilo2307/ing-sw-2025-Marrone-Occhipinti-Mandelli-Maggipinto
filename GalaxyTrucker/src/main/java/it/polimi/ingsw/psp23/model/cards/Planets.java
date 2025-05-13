@@ -42,8 +42,8 @@ public class Planets extends Card {
      * @param daysLost days lost for each landed player
      * @param planetGoods goods lists per planet
      */
-    public Planets(int level, int daysLost, List<List<Item>> planetGoods) {
-        super(level);
+    public Planets(int level, int daysLost, List<List<Item>> planetGoods, int id) {
+        super(level, id);
         this.daysLost = daysLost;
         this.planetGoods = planetGoods;
         this.planetsOccupied = new ArrayList<>(Collections.nCopies(planetGoods.size(), null));

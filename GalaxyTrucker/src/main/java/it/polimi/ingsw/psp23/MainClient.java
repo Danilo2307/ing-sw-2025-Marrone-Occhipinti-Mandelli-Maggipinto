@@ -7,6 +7,8 @@ import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.TUI.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.view.ViewAPI;
+import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 
 import javax.smartcardio.CardException;
 import java.net.Socket;
@@ -21,40 +23,32 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class MainClient {
     public static void main(String[] args) {
         try {
-            TuiApplication tui = new TuiApplication();
-            ClientEventHandler clientEventHandler = new ClientEventHandler(tui);
-            Client client = new Client("localhost", 8000, null, clientEventHandler);
+            System.out.println("Vuoi usare un'interfaccia testuale o grafica?");
+            System.out.println("Digita 1 per TUI, 2 per GUI:");
+            Scanner scanner = new Scanner(System.in);
+            int interfaceChosen = scanner.nextInt();
+            scanner.nextLine();  // Consuma il newline
 
-            Socket socket = client.getSocket();
+            ViewAPI view;  // Uso l'interfaccia per garantire flessibilità
+            ClientEventHandler clientEventHandler;
+            Client client;
 
-            Scanner scanner = new Scanner(System.in);;
-
-            try {
-
-                socket.setSoTimeout(1000);
-                Message messaggio = client.readMessage();
-
-                messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), tui);
-
-                int livello = scanner.nextInt();
-                scanner.nextLine();
-
-                messaggio = new LevelSelectionMessage(livello);
-                client.sendMessage(messaggio);
-
-                client.avvia();
-                socket.setSoTimeout(0);
-
-            } catch (SocketTimeoutException ste) {
-                socket.setSoTimeout(0);
-                client.avvia();
+            // Scelta dell'interfaccia
+            if (interfaceChosen == 1) {
+                view = new TuiApplication();  // Assegno direttamente alla variabile generica
+            } else if (interfaceChosen == 2) {
+                view = new GuiApplication();  // Assegno direttamente alla variabile generica
+            } else {
+                System.out.println("Scelta non valida. Riprova.");
+                return;
             }
 
-            System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
-            String username = scanner.nextLine();
-            client.setUsername(username);
-            tui.setClient(client);
-            tui.runGame();
+            // Usa la variabile generica view per l'handler e il client
+            clientEventHandler = new ClientEventHandler(view);
+            client = new Client("localhost", 8000, null, clientEventHandler);
+            view.setClient(client);
+            view.init();  // Avvio della view scelta
+
         } catch (Exception e) {
             System.out.println("ERRORE in mainClient: " + e.getMessage());
         }

@@ -49,8 +49,8 @@ public class CombatZone extends Card {
      * @param cannonShot  sequence of cannon shots for final resolution
      */
     public CombatZone(int level, int daysLost, int goodsLost, int membersLost,
-                      List<Challenge> penalties, List<CannonShot> cannonShot) {
-        super(level);
+                      List<Challenge> penalties, List<CannonShot> cannonShot, int id) {
+        super(level, id);
         this.daysLost       = daysLost;
         this.goodsLost      = goodsLost;
         this.membersLost    = membersLost;

@@ -45,8 +45,8 @@ public class Slavers extends Card {
      * @param prize credits awarded to the winner
      * @param days days lost penalty for the winner
      */
-    public Slavers(int level, int cannonStrength, int membersStolen, int prize, int days) {
-        super(level);
+    public Slavers(int level, int cannonStrength, int membersStolen, int prize, int days, int id) {
+        super(level, id);
         this.cannonStrength = cannonStrength;
         this.membersStolen = membersStolen;
         this.prize = prize;

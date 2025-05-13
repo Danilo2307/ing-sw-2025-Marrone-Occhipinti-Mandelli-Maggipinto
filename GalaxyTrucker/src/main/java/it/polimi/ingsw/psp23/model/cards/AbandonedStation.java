@@ -24,8 +24,8 @@ public class AbandonedStation extends Card {
     private String isSold = null;
     private int counterItem = 0;
 
-    public AbandonedStation(int level, int days, int numMembers, List<Item> prize) {
-        super(level);
+    public AbandonedStation(int level, int days, int numMembers, List<Item> prize, int id) {
+        super(level, id);
         this.days = days;
         this.numMembers = numMembers;
         this.prize = prize;

@@ -1,16 +1,17 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.view.ViewAPI;
 
 public record RequestNumPlayers() implements Event {
 
-    public void handle(TuiApplication tui) {
-        tui.getIOManager().print("Inserisci il numero di giocatori che faranno parte della partita:\n");
+    public void handle(ViewAPI view) {
+        view.showRequestNumPlayers();
     }
 
     @Override
-    public <T> T call(EventVisitor<T> eventVisitor, TuiApplication tuiApplication){
-        return eventVisitor.visitForRequestNumPlayers(this, tuiApplication);
+    public <T> T call(EventVisitor<T> eventVisitor, ViewAPI viewAPI){
+        return eventVisitor.visitForRequestNumPlayers(this, viewAPI);
     }
 
 }
