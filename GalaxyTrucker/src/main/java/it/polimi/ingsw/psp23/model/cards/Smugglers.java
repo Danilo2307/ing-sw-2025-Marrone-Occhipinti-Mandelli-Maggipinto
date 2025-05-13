@@ -74,8 +74,9 @@ public class Smugglers extends Card {
                      int firePower,
                      int numItemsStolen,
                      int days,
-                     List<Item> prize) {
-        super(level);
+                     List<Item> prize,
+                     int id) {
+        super(level, id);
         this.firePower = firePower;
         this.numItemsStolen = numItemsStolen;
         this.days = days;
