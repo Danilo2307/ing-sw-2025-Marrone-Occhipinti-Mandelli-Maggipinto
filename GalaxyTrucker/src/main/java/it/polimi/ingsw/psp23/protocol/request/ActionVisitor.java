@@ -72,4 +72,6 @@ public interface ActionVisitor<T> {
 
     public T visitForMoveGood(MoveGood moveGood, String username);
 
+    public T visitForRemoveBatteries(RemoveBatteries removeBatteries, String username);
+
 }
