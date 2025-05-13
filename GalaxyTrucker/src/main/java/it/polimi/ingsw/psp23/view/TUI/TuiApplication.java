@@ -174,7 +174,7 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "pesca" -> {
-                if (words.length > 3) {
+                if (words.length <= 1 || words.length > 3) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
                 }
                 else{
