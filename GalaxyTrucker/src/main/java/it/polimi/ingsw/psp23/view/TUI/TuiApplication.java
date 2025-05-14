@@ -193,7 +193,7 @@ public class TuiApplication implements ViewAPI {
                 sendAction(new RequestUncovered());
             }
             case "salda" -> {
-                // TODO: inserire controlli interi ovunque
+                // TODO: inserire controlli interi ovunque e rendere gli indici delle tiles nella ship 1-based
                 try {
                     if (words.length != 3) {
                         io.error("Non hai inviato il numero corretto di parametri, riprova");
