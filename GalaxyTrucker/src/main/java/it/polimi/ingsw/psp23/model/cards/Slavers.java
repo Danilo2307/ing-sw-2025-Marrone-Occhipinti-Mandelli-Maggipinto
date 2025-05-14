@@ -282,11 +282,11 @@ public class Slavers extends Card {
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_SLAVERS:
-                return "Available commands: ACTIVECANNON, READY";
+                return "Available commands: ACTIVECANNON, READY\n";
             case END_SLAVERS:
-                return "Available commands: CREW, PASS, CREDIT";
+                return "Available commands: CREW, PASS, CREDIT\n";
             default:
-                return "No commands available in current phase.";
+                return "No commands available in current phase.\n";
         }
     }
 

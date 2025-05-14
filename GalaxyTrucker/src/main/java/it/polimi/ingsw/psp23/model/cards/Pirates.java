@@ -307,11 +307,11 @@ public class Pirates extends Card {
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_PIRATES:
-                return "Available commands: ACTIVECANNON, READY";
+                return "Available commands: ACTIVECANNON, READY\n";
             case END_PIRATES:
-                return "Available commands: ACTIVESHIELD, READY, PASS, CREDIT";
+                return "Available commands: ACTIVESHIELD, READY, PASS, CREDIT\n";
             default:
-                return "No commands available in current phase.";
+                return "No commands available in current phase.\n";
         }
     }
 

@@ -239,11 +239,11 @@ public class Planets extends Card {
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_PLANETS:
-                return "Available commands: LAND, PASS";
+                return "Available commands: LAND, PASS\n";
             case END_PLANETS:
-                return "Available commands: LOADGOODS, PERDI, PASS";
+                return "Available commands: LOADGOODS, PERDI, PASS\n";
             default:
-                return "No commands available in current phase: " + status;
+                return "No commands available in current phase: " + status + "\n";
         }
     }
 

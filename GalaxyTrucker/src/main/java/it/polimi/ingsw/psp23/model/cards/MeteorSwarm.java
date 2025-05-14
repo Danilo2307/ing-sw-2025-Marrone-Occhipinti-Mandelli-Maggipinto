@@ -133,9 +133,9 @@ public class MeteorSwarm extends Card {
      */
     public String help() {
         if (Game.getInstance().getGameStatus() == GameStatus.INIT_METEORSWARM) {
-            return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY";
+            return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY\n";
         }
-        return "No commands available in current phase.";
+        return "No commands available in current phase.\n";
     }
 
     @Override

@@ -138,9 +138,9 @@ public class AbandonedStation extends Card {
     public String help() {
         GameStatus status = Game.getInstance().getGameStatus();
         return switch (status) {
-            case INIT_ABANDONEDSTATION -> "Available commands: ATTRACCA, PASSA";
-            case END_ABANDONEDSTATION -> "Available commands: LOADGOODS, PERDI, PASSA";
-            default -> "No commands available in current phase.";
+            case INIT_ABANDONEDSTATION -> "Available commands: ATTRACCA, PASSA\n";
+            case END_ABANDONEDSTATION -> "Available commands: LOADGOODS, PERDI, PASSA\n";
+            default -> "No commands available in current phase.\n";
         };
     }
 

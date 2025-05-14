@@ -135,9 +135,9 @@ public class AbandonedShip extends Card {
         Game game = Game.getInstance();
         GameStatus status = game.getGameStatus();
         return switch (status) {
-            case INIT_ABANDONEDSHIP -> "Available commands: COMPRANAVE, PASSA";
-            case END_ABANDONEDSHIP -> "Available commands: REDUCECREW";
-            default -> "No commands available in current phase.";
+            case INIT_ABANDONEDSHIP -> "Available commands: COMPRANAVE, PASSA\n";
+            case END_ABANDONEDSHIP -> "Available commands: REDUCECREW\n";
+            default -> "No commands available in current phase.\n";
         };
     }
 

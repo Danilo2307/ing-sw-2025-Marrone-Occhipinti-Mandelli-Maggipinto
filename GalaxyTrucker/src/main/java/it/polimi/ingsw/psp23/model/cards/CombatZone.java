@@ -514,11 +514,11 @@ public class CombatZone extends Card {
     public String help() {
         GameStatus status = Game.getInstance().getGameStatus();
         return switch (status) {
-            case FIRST_COMBATZONE   -> "Available commands: ATTIVACANNONE, READY";
-            case SECOND_COMBATZONE  -> "Available commands: ATTIVAMOTORE, READY, REMOVEITEM, CREW";
-            case THIRD_COMBATZONE   -> "Available commands: ATTIVAMOTORE, READY";
-            case ENDTHIRD_COMBATZONE -> "Available commands: ATTIVASCUDO, READY";
-            default                 -> "No commands available in current phase.";
+            case FIRST_COMBATZONE   -> "Available commands: ATTIVACANNONE, READY\n";
+            case SECOND_COMBATZONE  -> "Available commands: ATTIVAMOTORE, READY, REMOVEITEM, CREW\n";
+            case THIRD_COMBATZONE   -> "Available commands: ATTIVAMOTORE, READY\n";
+            case ENDTHIRD_COMBATZONE -> "Available commands: ATTIVASCUDO, READY\n";
+            default                 -> "No commands available in current phase.\n";
         };
     }
 

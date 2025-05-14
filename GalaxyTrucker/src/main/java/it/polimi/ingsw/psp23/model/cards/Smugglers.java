@@ -365,11 +365,11 @@ public class Smugglers extends Card {
         GameStatus status = Game.getInstance().getGameStatus();
         switch (status) {
             case INIT_SMUGGLERS:
-                return "Available commands: ACTIVECANNON, READY";
+                return "Available commands: ACTIVECANNON, READY\n";
             case END_SMUGGLERS:
-                return "Available commands: LOADGOOD, PASS, PERDI, BATTERIE";
+                return "Available commands: LOADGOOD, PASS, PERDI, BATTERIE\n";
             default:
-                return "No commands available in current phase: " + status;
+                return "No commands available in current phase: " + status + "\n";
         }
     }
 
