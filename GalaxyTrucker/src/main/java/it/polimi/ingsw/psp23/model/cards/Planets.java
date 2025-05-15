@@ -17,6 +17,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents the Planets card in the game.
@@ -130,16 +131,16 @@ public class Planets extends Card {
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
         } else {
-            if(!planetsOccupied.isEmpty()){
+            if (planetsOccupied.stream().allMatch(Objects::isNull)) {
+                game.nextCard();
+            }
+            else{
                 for (Player p : game.getPlayers().reversed()) {
                     if(p != null && planetsOccupied.contains(p.getNickname())) {
                         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
                     }
                 }
                 game.setGameStatus(GameStatus.END_PLANETS);
-            }
-            else{
-                game.nextCard();
             }
         }
     }
