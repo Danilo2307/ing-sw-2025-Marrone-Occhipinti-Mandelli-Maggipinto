@@ -3,6 +3,7 @@ import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Events.ShowCurrentCard;
+import it.polimi.ingsw.psp23.model.Events.ShowWinners;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
@@ -336,6 +337,7 @@ public class Game {
         if(currentCard == null || players.size() <= 1){
             setGameStatus(GameStatus.End);
             calculateFinalScores();
+            fireEvent(new ShowWinners(getGameStatus()));
         }else{
             // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
             // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);

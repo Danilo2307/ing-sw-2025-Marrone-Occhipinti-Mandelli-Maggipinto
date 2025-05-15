@@ -1,9 +1,11 @@
 package it.polimi.ingsw.psp23.controller;
 
+import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.inizializzazioneNave;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
@@ -65,6 +67,8 @@ public class Controller {
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
         game.setGameStatus(GameStatus.Building);
+        game.getPlayers().forEach(player -> {
+            inizializzazioneNave.getInstance().popolaNave(player);});
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Building)));
 
         if (game.getLevel() != 0) {
@@ -303,9 +307,17 @@ public class Controller {
     }
 
     public void activeCannon(String username, int i , int j, int iBattery, int jBattery){
-        ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
-        Game.getInstance().getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
-        Game.getInstance().getCurrentCard().call(activeCannon, username, i, j);
+        Board truck = Game.getInstance().getCurrentPlayer().getTruck();
+        Component[][] nave = truck.getShip();
+        int cannonIndex = truck.getCannons().indexOf(nave[i][j]);
+        if(truck.getCannons().get(cannonIndex).isActive()){
+            throw new InvalidActionException("Cannon already activated");
+        }
+        else {
+            ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
+            Game.getInstance().getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery, jBattery, 1);
+            Game.getInstance().getCurrentCard().call(activeCannon, username, i, j);
+        }
     }
 
     public void activeEngine(String username, int i, int j, int iBattery, int jBattery){
@@ -347,7 +359,7 @@ public class Controller {
 
     public void removeItem(String username, int i, int j, int index){
         if(!Game.getInstance().getGameStatus().equals(GameStatus.Playing))
-            throw new RuntimeException("Not a possible instruction in this game state");
+            throw new InvalidActionException("Not a possible instruction in this game state");
         Game.getInstance().getPlayerFromNickname(username).getTruck().removeGood(i, j, index);
     }
 
