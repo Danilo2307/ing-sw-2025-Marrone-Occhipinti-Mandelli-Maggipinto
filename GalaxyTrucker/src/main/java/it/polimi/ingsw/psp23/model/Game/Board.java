@@ -1060,6 +1060,11 @@ public class Board {
         return List.copyOf(cannons);
     }
 
+    public List<Shield> getShields() {
+        // ritorno copia immutabile così è solo read-only ed evito side-effects esterni
+        return List.copyOf(shields);
+    }
+
     public List<Container> getContainers() {
         return List.copyOf(containers);
     }
