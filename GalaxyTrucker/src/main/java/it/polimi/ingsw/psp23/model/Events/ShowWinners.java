@@ -20,7 +20,7 @@ public class ShowWinners extends Event {
                 sb.append(" -> Ha vinto!").append("\n");
             }
             else{
-                sb.append(" -> Ha perso");
+                sb.append(" -> Ha perso").append("\n");
             }
         }
         sb.append("Ecco i crediti cosmici dei giocatori costretti ad abbandonare:\n");
@@ -30,7 +30,7 @@ public class ShowWinners extends Event {
                 sb.append(" -> Ha vinto!").append("\n");
             }
             else{
-                sb.append(" -> Ha perso");
+                sb.append(" -> Ha perso").append("\n");
             }
         }
         return sb.toString();
