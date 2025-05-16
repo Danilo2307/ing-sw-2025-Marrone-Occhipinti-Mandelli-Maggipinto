@@ -247,7 +247,6 @@ public class Pirates extends Card {
         }
         else{
             game.getNextPlayer();
-            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         }
     }
 
