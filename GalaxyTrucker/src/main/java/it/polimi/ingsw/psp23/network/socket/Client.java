@@ -1,6 +1,7 @@
 // Questa classe rappresenta il player lato client
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -78,5 +79,11 @@ public class Client {
 
     public void stopListeningForServerThread() {
         startListeningForServerThread.stopThread();
+    }
+
+    public void sendAction(Action action) {
+        ActionMessage actionMessage = new ActionMessage(action);
+        sendMessage(actionMessage);
+
     }
 }

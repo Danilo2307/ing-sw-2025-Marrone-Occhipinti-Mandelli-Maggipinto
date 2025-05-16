@@ -93,12 +93,6 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
-    public void sendAction(Action action) {
-        ActionMessage actionMessage = new ActionMessage(action);
-        if (client != null) {
-            client.sendMessage(actionMessage);
-        }
-    }
 
     public void setLastUncoveredVersion(int lastUncoveredVersion) {
         this.lastUncoveredVersion = lastUncoveredVersion;
@@ -144,7 +138,7 @@ public class TuiApplication implements ViewAPI {
         // durante lo stato di prelobby sia letta come uno username. Tramite la return siamo sicuri di non entrare nello
         // switch
         if(currentTuiState == TuiState.PRELOBBY) {
-            sendAction(new SetUsername(keyword));
+            client.sendAction(new SetUsername(keyword));
             return;
         }
 
@@ -170,7 +164,7 @@ public class TuiApplication implements ViewAPI {
                         }
 
                     }
-                    sendAction(new RegisterNumPlayers(number));
+                    client.sendAction(new RegisterNumPlayers(number));
                 }
             }
             case "pesca" -> {
@@ -179,18 +173,18 @@ public class TuiApplication implements ViewAPI {
                 }
                 else{
                 if (words[1].equals("mucchio")) {
-                    sendAction(new DrawFromHeap());
+                    client.sendAction(new DrawFromHeap());
                 }
                 else if (words[1].equals("scoperta")) {
                     int index = Integer.parseInt(words[2]);
-                    sendAction(new DrawFromFaceUp(index - 1, lastUncoveredVersion));
+                    client.sendAction(new DrawFromFaceUp(index - 1, lastUncoveredVersion));
                 }
                 else
                     throw new TuiInputException("Comando non valido");
                 }
             }
             case "scoperte" -> {
-                sendAction(new RequestUncovered());
+                client.sendAction(new RequestUncovered());
             }
             case "salda" -> {
                 // TODO: inserire controlli interi ovunque e rendere gli indici delle tiles nella ship 1-based
@@ -201,7 +195,7 @@ public class TuiApplication implements ViewAPI {
                     else {
                         int x = Integer.parseInt(words[1]);
                         int y = Integer.parseInt(words[2]);
-                        sendAction(new AddTile(x, y));
+                        client.sendAction(new AddTile(x, y));
                     }
                 }
                 catch (NumberFormatException e) {
@@ -215,17 +209,17 @@ public class TuiApplication implements ViewAPI {
                 }
                 else {
                     int index = Integer.parseInt(words[2]);
-                    sendAction(new TakeReservedTile(index - 1));
+                    client.sendAction(new TakeReservedTile(index - 1));
                 }
             }
             case "scarta" -> {
-                sendAction(new ReleaseTile());
+                client.sendAction(new ReleaseTile());
             }
             case "ruota" -> {
-                sendAction(new RotateTile());
+                client.sendAction(new RotateTile());
             }
             case "prenota" -> {
-                sendAction(new ReserveTile());
+                client.sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
                 if (words.length > 5) {
@@ -238,7 +232,7 @@ public class TuiApplication implements ViewAPI {
                             int hx = Integer.parseInt(words[2]);
                             int hy = Integer.parseInt(words[3]);
                             int num = Integer.parseInt(words[4]);
-                            sendAction(new ReduceCrew(hx, hy, num));
+                            client.sendAction(new ReduceCrew(hx, hy, num));
                         }
                     } else if (words[1].equals("merce")) {
                         if (words.length != 5) {
@@ -247,7 +241,7 @@ public class TuiApplication implements ViewAPI {
                             int cx = Integer.parseInt(words[2]);
                             int cy = Integer.parseInt(words[3]);
                             int num = Integer.parseInt(words[4]);
-                            sendAction(new RemovePreciousItem(cx, cy, num));
+                            client.sendAction(new RemovePreciousItem(cx, cy, num));
                         }
                     }else if (words[1].equals("batterie")) {
                         if (words.length != 5) {
@@ -256,7 +250,7 @@ public class TuiApplication implements ViewAPI {
                             int cx = Integer.parseInt(words[2]);
                             int cy = Integer.parseInt(words[3]);
                             int num = Integer.parseInt(words[4]);
-                            sendAction(new RemoveBatteries(cx, cy, num));
+                            client.sendAction(new RemoveBatteries(cx, cy, num));
                         }
                     }
                     else {
@@ -265,13 +259,13 @@ public class TuiApplication implements ViewAPI {
                         } else {
                             int x = Integer.parseInt(words[1]);
                             int y = Integer.parseInt(words[2]);
-                            sendAction(new RemoveTile(x, y));
+                            client.sendAction(new RemoveTile(x, y));
                         }
                     }
                 }
             }
             case "gira" -> {
-                sendAction(new TurnHourglass());
+                client.sendAction(new TurnHourglass());
             }
             case "mazzetto" -> {
                 if (words.length != 2) {
@@ -281,7 +275,7 @@ public class TuiApplication implements ViewAPI {
                     int x = Integer.parseInt(words[1]);
                     if (x < 1 || x > 3)
                         throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                    sendAction(new TakeVisibleDeck(x));
+                    client.sendAction(new TakeVisibleDeck(x));
                 }
             }
             case "rilascia" -> {
@@ -292,7 +286,7 @@ public class TuiApplication implements ViewAPI {
                     int x = Integer.parseInt(words[1]);
                     if (x < 1 || x > 3)
                         throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                    sendAction(new ReleaseDeck(x));
+                    client.sendAction(new ReleaseDeck(x));
                 }
             }
             case "mostra" -> {
@@ -301,10 +295,10 @@ public class TuiApplication implements ViewAPI {
                 }
                 else {
                     if (words.length == 1) {
-                        sendAction(new RequestShip(client.getSocketHandler().getUsername()));
+                        client.sendAction(new RequestShip(client.getSocketHandler().getUsername()));
                     } else {
                         String nickname = words[1];
-                        sendAction(new RequestShip(nickname));
+                        client.sendAction(new RequestShip(nickname));
                     }
                 }
             }
@@ -315,11 +309,11 @@ public class TuiApplication implements ViewAPI {
                 else {
                     int x = Integer.parseInt(words[1]);
                     int y = Integer.parseInt(words[2]);
-                    sendAction(new RequestTileInfo(x, y));
+                    client.sendAction(new RequestTileInfo(x, y));
                 }
             }
             case "rotta" -> {
-                sendAction(new ShowPlayersPositions());
+                client.sendAction(new ShowPlayersPositions());
             }
             case "attiva" -> {
                 if (words.length != 6) {
@@ -333,21 +327,21 @@ public class TuiApplication implements ViewAPI {
                             int cy = Integer.parseInt(words[3]);
                             int bx = Integer.parseInt(words[4]);
                             int by = Integer.parseInt(words[5]);
-                            sendAction(new ActivateCannon(cx, cy, bx, by));
+                            client.sendAction(new ActivateCannon(cx, cy, bx, by));
                         }
                         case "motore" -> {
                             int ex = Integer.parseInt(words[2]);
                             int ey = Integer.parseInt(words[3]);
                             int bx = Integer.parseInt(words[4]);
                             int by = Integer.parseInt(words[5]);
-                            sendAction(new ActivateEngine(ex, ey, bx, by));
+                            client.sendAction(new ActivateEngine(ex, ey, bx, by));
                         }
                         case "scudo" -> {
                             int sx = Integer.parseInt(words[2]);
                             int sy = Integer.parseInt(words[3]);
                             int bx = Integer.parseInt(words[4]);
                             int by = Integer.parseInt(words[5]);
-                            sendAction(new ActivateShield(sx, sy, bx, by));
+                            client.sendAction(new ActivateShield(sx, sy, bx, by));
                         }
                     }
                 }
@@ -361,7 +355,7 @@ public class TuiApplication implements ViewAPI {
                     if (words.length == 3) {
                         int x = Integer.parseInt(words[1]);
                         int y = Integer.parseInt(words[2]);
-                        sendAction(new SetCrew(x, y, false, null));
+                        client.sendAction(new SetCrew(x, y, false, null));
                     }
                     // alieno: equipaggio alieno <colore> <x> <y>
                     else if (words.length == 5 && words[1].equalsIgnoreCase("alieno")) {
@@ -370,7 +364,7 @@ public class TuiApplication implements ViewAPI {
                             throw new TuiInputException("Alieno può essere solo viola o marrone!");
                         int x = Integer.parseInt(words[3]);
                         int y = Integer.parseInt(words[4]);
-                        sendAction(new SetCrew(x, y, true, color));
+                        client.sendAction(new SetCrew(x, y, true, color));
                     } else {
                         throw new TuiInputException(
                                 "Uso corretto:\n" +
@@ -381,16 +375,16 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "passa" -> {
-                sendAction(new NextTurn());
+                client.sendAction(new NextTurn());
             }
             case "compra" -> {
-                sendAction(new BuyShip());
+                client.sendAction(new BuyShip());
             }
             case "aiuto" -> {
-                sendAction(new Help());
+                client.sendAction(new Help());
             }
             case "attracca" -> {
-                sendAction(new DockStation());
+                client.sendAction(new DockStation());
             }
             case "carica" -> {
                 if (words.length != 3) {
@@ -399,11 +393,11 @@ public class TuiApplication implements ViewAPI {
                 else {
                     int lx = Integer.parseInt(words[1]);
                     int ly = Integer.parseInt(words[2]);
-                    sendAction(new LoadGood(lx, ly));
+                    client.sendAction(new LoadGood(lx, ly));
                 }
             }
             case "pronto" -> {
-                sendAction(new Ready());
+                client.sendAction(new Ready());
             }
             case "atterra" -> {
                 if (words.length != 2) {
@@ -411,17 +405,17 @@ public class TuiApplication implements ViewAPI {
                 }
                 else {
                     int pi = Integer.parseInt(words[1]);
-                    sendAction(new Land(pi));
+                    client.sendAction(new Land(pi));
                 }
             }
             case "finito" -> {
-                sendAction(new Finished());
+                client.sendAction(new Finished());
             }
             case "posiziona" -> {
-                sendAction(new Put());
+                client.sendAction(new Put());
             }
             case "corretta" -> {
-                sendAction(new Fixed());
+                client.sendAction(new Fixed());
             }
             case "perdi" -> {
                 if (words.length != 4) {
@@ -431,7 +425,7 @@ public class TuiApplication implements ViewAPI {
                     int i = Integer.parseInt(words[1]);
                     int j = Integer.parseInt(words[2]);
                     int itemIndex = Integer.parseInt(words[3]);
-                    sendAction(new LoseGood(i, j, itemIndex));
+                    client.sendAction(new LoseGood(i, j, itemIndex));
                 }
             }
             case "sposta" -> {
@@ -445,7 +439,7 @@ public class TuiApplication implements ViewAPI {
                     int toX = Integer.parseInt(words[4]);
                     int toY = Integer.parseInt(words[5]);
                     int itemIndex = Integer.parseInt(words[6]);
-                    sendAction(new MoveGood(fromX, fromY, index, toX, toY));
+                    client.sendAction(new MoveGood(fromX, fromY, index, toX, toY));
                 }
             }
             default -> throw new TuiInputException("Comando sconosciuto");
