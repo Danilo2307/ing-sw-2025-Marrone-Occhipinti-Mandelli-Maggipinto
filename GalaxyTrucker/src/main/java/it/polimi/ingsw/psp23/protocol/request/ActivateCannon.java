@@ -27,13 +27,17 @@ public record ActivateCannon(int cx, int cy, int bx, int by) implements Action {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
         Card currentCard = game.getCurrentCard();
-        if(truck.getCannons().get(cannonIndex).isActive()){
-            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il cannone è già stato attivato!\n")));
+        if(cannonIndex == -1){
+            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Non hai selezionato un cannone\n")));
         }
         else {
-            ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
-            currentCard.call(activeCannon, username, cx, cy);
-            game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            if (truck.getCannons().get(cannonIndex).isActive()) {
+                Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il cannone è già stato attivato!\n")));
+            } else {
+                ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
+                currentCard.call(activeCannon, username, cx, cy);
+                game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            }
         }
     }
 

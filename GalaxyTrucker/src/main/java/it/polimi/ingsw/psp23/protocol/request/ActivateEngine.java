@@ -22,13 +22,17 @@ public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
         Card currentCard = game.getCurrentCard();
-        if(truck.getEngines().get(engineIndex).isActive()){
-            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il motore è già stato attivato!\n")));
+        if(engineIndex == -1){
+            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Non hai selezionato un motore\n")));
         }
         else {
-            ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
-            currentCard.call(activeEngine, username, ex, ey);
-            game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            if (truck.getEngines().get(engineIndex).isActive()) {
+                Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il motore è già stato attivato!\n")));
+            } else {
+                ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
+                currentCard.call(activeEngine, username, ex, ey);
+                game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            }
         }
     }
 

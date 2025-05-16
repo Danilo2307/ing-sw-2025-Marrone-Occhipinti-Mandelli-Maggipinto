@@ -22,13 +22,17 @@ public record ActivateShield(int sx, int sy, int bx, int by) implements Action{
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
         Card currentCard = game.getCurrentCard();
-        if(truck.getShields().get(shieldIndex).isActive()){
-            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Lo scudo è già stato attivato!\n")));
+        if(shieldIndex == -1){
+            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Non hai selezionato uno scudo\n")));
         }
         else {
-            ActiveShieldVisitor activeShield = new ActiveShieldVisitor();
-            currentCard.call(activeShield, username, sx, sy);
-            game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            if (truck.getShields().get(shieldIndex).isActive()) {
+                Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Lo scudo è già stato attivato!\n")));
+            } else {
+                ActiveShieldVisitor activeShield = new ActiveShieldVisitor();
+                currentCard.call(activeShield, username, sx, sy);
+                game.getPlayerFromNickname(username).getTruck().reduceBatteries(bx, by, 1);
+            }
         }
     }
 

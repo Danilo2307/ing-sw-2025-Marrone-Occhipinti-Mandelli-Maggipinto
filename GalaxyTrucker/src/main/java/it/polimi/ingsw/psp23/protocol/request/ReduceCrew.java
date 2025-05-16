@@ -9,7 +9,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 public record ReduceCrew(int hx, int hy, int num) implements Action {
     public void handle(String username){
         Game game = Game.getInstance();
-        if(game.getGameStatus() != GameStatus.END_ABANDONEDSHIP && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.SECOND_COMBATZONE){
+        if(game.getGameStatus() != GameStatus.END_ABANDONEDSHIP && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SLAVERS){
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
         Card currentCard = game.getCurrentCard();

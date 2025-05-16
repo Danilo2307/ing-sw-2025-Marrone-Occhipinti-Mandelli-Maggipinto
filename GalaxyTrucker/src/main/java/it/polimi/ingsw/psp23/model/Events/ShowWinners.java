@@ -13,8 +13,18 @@ public class ShowWinners extends Event {
     @Override
     public String describe() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Il volo è terminato. Ecco i crediti cosmici guadagnati:\n");
+        sb.append("Il volo è terminato. Ecco i crediti cosmici guadagnati dai giocatori rimasti in partita:\n");
         for(Player player : Game.getInstance().getPlayers()) {
+            sb.append(player.getNickname()).append(": ").append(player.getMoney());
+            if(player.getMoney() > 0){
+                sb.append(" -> Ha vinto!").append("\n");
+            }
+            else{
+                sb.append(" -> Ha perso");
+            }
+        }
+        sb.append("Ecco i crediti cosmici dei giocatori costretti ad abbandonare:\n");
+        for(Player player : Game.getInstance().getPlayersNotOnFlight()) {
             sb.append(player.getNickname()).append(": ").append(player.getMoney());
             if(player.getMoney() > 0){
                 sb.append(" -> Ha vinto!").append("\n");

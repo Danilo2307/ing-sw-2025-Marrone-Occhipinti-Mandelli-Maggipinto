@@ -190,6 +190,10 @@ public class Game {
         return players;
     }
 
+    public ArrayList<Player> getPlayersNotOnFlight() {
+        return playersNotOnFlight;
+    }
+
     public GameStatus getGameStatus() {
         return gameStatus;
     }
