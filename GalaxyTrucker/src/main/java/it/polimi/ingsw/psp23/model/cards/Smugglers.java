@@ -9,6 +9,9 @@ import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,7 +164,8 @@ public class Smugglers extends Card {
             loadedCount++;
             if (loadedCount == prize.size()) {
                 game.sortPlayersByPosition();
-                game.nextCard();
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
@@ -186,7 +190,8 @@ public class Smugglers extends Card {
         }
         loadedCount = prize.size();
         game.sortPlayersByPosition();
-        game.nextCard();
+        game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
     }
 
     /**
@@ -215,7 +220,8 @@ public class Smugglers extends Card {
             lostCount += num;
             if(lostCount == numItemsStolen || board.calculateGoods() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
-                    game.nextCard();
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SMUGGLERS);
@@ -249,7 +255,8 @@ public class Smugglers extends Card {
             lostCount += num;
             if(lostCount == numItemsStolen){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
-                    game.nextCard();
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SMUGGLERS);
@@ -337,7 +344,8 @@ public class Smugglers extends Card {
             loser = username;
             if(noGoods.contains(loser)){
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
-                    game.nextCard();
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
                 else{
                     game.getNextPlayer();
@@ -349,7 +357,8 @@ public class Smugglers extends Card {
         }
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
-                game.nextCard();
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
             else{
                 game.getNextPlayer();

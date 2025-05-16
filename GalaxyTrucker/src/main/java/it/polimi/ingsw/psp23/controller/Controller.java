@@ -196,7 +196,8 @@ public class Controller {
         Game game = Game.getInstance();
         game.setGameStatus(GameStatus.Playing);
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Playing)));
-        game.nextCard();
+        game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la prima carta\n")));
     }
 
 

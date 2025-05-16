@@ -7,6 +7,9 @@ import it.polimi.ingsw.psp23.model.Events.EventForEpidemic;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.List;
 
@@ -74,7 +77,8 @@ public class Epidemic extends Card {
             }
         }
         // finalize
-        game.nextCard();
+        game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
     }
 
     /**

@@ -12,6 +12,9 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -157,7 +160,8 @@ public class Slavers extends Card {
                 game.getPlayerFromNickname(username));
         Utility.updatePosition(game.getPlayers(), idx, -days);
         game.sortPlayersByPosition();
-        game.nextCard();
+        game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
     }
 
     /**
@@ -172,7 +176,8 @@ public class Slavers extends Card {
         if (!username.equals(winner)) {
             throw new CardException("You did not defeat the slavers: " + username);
         }
-        game.nextCard();
+        game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
     }
 
     /**
@@ -213,7 +218,8 @@ public class Slavers extends Card {
             loser = username;
             if(noCrew.contains(loser)){
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
-                    game.nextCard();
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
                 else{
                     game.getNextPlayer();
@@ -226,7 +232,8 @@ public class Slavers extends Card {
         }
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
-                game.nextCard();
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
             else{
                 game.getNextPlayer();
@@ -256,7 +263,8 @@ public class Slavers extends Card {
             counterMember += num;
             if(counterMember == membersStolen || board.calculateCrew() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
-                    game.nextCard();
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SLAVERS);

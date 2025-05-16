@@ -14,6 +14,9 @@ import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -243,7 +246,8 @@ public class CombatZone extends Card {
                 game.getPlayerFromNickname(loserThirdChallenge)
                         .getTruck().handleCannonShot(c, impactLine);
             }
-            game.nextCard();
+            game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else{
             CannonShot shot = cannonShot.get(cannonShotIndex);

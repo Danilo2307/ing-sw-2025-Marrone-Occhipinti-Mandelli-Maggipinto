@@ -5,6 +5,9 @@ import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -135,7 +138,8 @@ public class Pirates extends Card {
         Utility.updatePosition(game.getPlayers(), idx, -days);
         game.sortPlayersByPosition();
         if (losers.isEmpty()) {
-            game.nextCard();
+            game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else{
             game.setGameStatus(GameStatus.END_PIRATES);
@@ -168,7 +172,8 @@ public class Pirates extends Card {
             throw new CardException("You did not defeat the pirates: " + username);
         }
         if (losers.isEmpty()) {
-            game.nextCard();
+            game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else{
             game.setGameStatus(GameStatus.END_PIRATES);
@@ -268,7 +273,8 @@ public class Pirates extends Card {
                             .handleCannonShot(c, impactLine);
                 }
             }
-            game.nextCard();
+            game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else {
             if (countCannonShot == 0) {
@@ -292,7 +298,8 @@ public class Pirates extends Card {
                             .getTruck()
                             .handleCannonShot(c, impactLine);
                 }
-                game.nextCard();
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
         }
     }

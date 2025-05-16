@@ -99,16 +99,16 @@ public class TuiApplication implements ViewAPI {
     }
 
     private static final Map<TuiState, Set<String>> aliasMap = Map.of(
-            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio"),
+            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "abbandona"),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
-            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta"),
-            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta"),
-            TuiState.NOTYOURTURN, Set.of(),
+            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta","abbandona"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona"),
+            TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
+            TuiState.NOTYOURTURN, Set.of("abbandona"),
             // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta"),
-            TuiState.ENDGAME, Set.of()
+            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta"),
+            TuiState.ENDGAME, Set.of("abbandona")
     );
 
     private boolean isCommandLegal(String keyword) {
@@ -429,7 +429,7 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "sposta" -> {
-                if (words.length != 7) {
+                if (words.length != 6) {
                     io.error("Non hai inviato il numero corretto di parametri, riprova");
                 }
                 else {
@@ -438,9 +438,19 @@ public class TuiApplication implements ViewAPI {
                     int index = Integer.parseInt(words[3]);
                     int toX = Integer.parseInt(words[4]);
                     int toY = Integer.parseInt(words[5]);
-                    int itemIndex = Integer.parseInt(words[6]);
                     client.sendAction(new MoveGood(fromX, fromY, index, toX, toY));
                 }
+            }
+            case "abbandona" -> {
+                if (words.length != 1) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                }
+                else {
+                    client.sendAction(new LeaveFlight());
+                }
+            }
+            case "carta" -> {
+                client.sendAction(new DrawCard());
             }
             default -> throw new TuiInputException("Comando sconosciuto");
         }

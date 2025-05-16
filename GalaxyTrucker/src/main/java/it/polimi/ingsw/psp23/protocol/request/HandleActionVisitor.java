@@ -218,4 +218,14 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    public Void visitForLeaveFlight(LeaveFlight leaveFlight, String username){
+        leaveFlight.handle(username);
+        return null;
+    }
+
+    public Void visitForDrawCard(DrawCard drawCard, String username){
+        drawCard.handle(username);
+        return null;
+    }
+
 }

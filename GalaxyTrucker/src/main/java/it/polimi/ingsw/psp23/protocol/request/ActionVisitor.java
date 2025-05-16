@@ -74,4 +74,8 @@ public interface ActionVisitor<T> {
 
     public T visitForRemoveBatteries(RemoveBatteries removeBatteries, String username);
 
+    public T visitForLeaveFlight(LeaveFlight leaveFlight, String username);
+
+    public T visitForDrawCard(DrawCard drawCard, String username);
+
 }

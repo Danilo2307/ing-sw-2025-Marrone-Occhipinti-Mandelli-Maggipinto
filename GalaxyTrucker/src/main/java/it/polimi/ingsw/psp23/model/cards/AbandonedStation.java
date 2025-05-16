@@ -13,6 +13,9 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,7 +99,8 @@ public class AbandonedStation extends Card {
             board.loadGoods(prize.get(counterItem), i, j);
             counterItem++;
             if (counterItem == prize.size()) {
-                game.nextCard();
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
@@ -118,7 +122,8 @@ public class AbandonedStation extends Card {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
         if (game.getGameStatus() == GameStatus.END_ABANDONEDSTATION){
-            game.nextCard();
+            game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else{
             if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
