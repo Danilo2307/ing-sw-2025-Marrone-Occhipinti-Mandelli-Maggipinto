@@ -1,0 +1,17 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/main_menu.jpeg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+
+}
+
+.main-button {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.main-button:hover {
+    -fx-background-color: #66FF66;
+    -fx-cursor: hand;
+}
