@@ -13,8 +13,8 @@ public class DrawCard implements Action{
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD){
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
-        if(!username.equals(game.getPlayers().getFirst().getNickname())){
-            throw new InvalidActionException("Solo il leader può eseguire questa azione!");
+        if(!game.getPlayers().isEmpty() && !username.equals(game.getPlayers().getFirst().getNickname())){
+            throw new InvalidActionException("Solo il leader può eseguire questa azione!(se non ci sono giocatori in volo dovrà essere il vecchio leader a pescare)");
         }
         else {
             game.nextCard();
