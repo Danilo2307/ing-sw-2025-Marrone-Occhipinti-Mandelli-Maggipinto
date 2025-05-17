@@ -67,6 +67,10 @@ public class MeteorSwarm extends Card {
             game.fireEvent(new MeteorIncoming(game.getGameStatus(),m.isBig(), line, m.getDirection()));
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
+
+        Meteor meteor = meteors.getFirst();
+        int line = meteor.getImpactLine();
+        game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));
     }
 
     /**
@@ -120,15 +124,18 @@ public class MeteorSwarm extends Card {
         // All ready: impact one meteor
         Meteor meteor = meteors.get(currentIndex);
         int line = meteor.getImpactLine();
-        game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));
         for (Player player : game.getPlayers()) {
             player.getTruck().handleMeteor(meteor, line);
         }
         currentIndex++;
+        meteor = meteors.get(currentIndex);
         resolvers.clear();
         if (currentIndex >= meteors.size()) {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+        }
+        else{
+            game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));
         }
     }
 
