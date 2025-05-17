@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.view.gui;
 
+import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
+import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -28,9 +30,20 @@ import java.util.Scanner;
 public class GuiApplication extends Application implements ViewAPI {
 
     private Client client;
+    private BuildingPhaseController buildingPhaseController;
+    private CardDialogController cardDialogController;
+    private CheckBoardController checkBoardController;
+    private FlightPhaseController flightPhaseController;
+    private LobbyController lobbyController;
+    private TimerController timerController;
 
     public GuiApplication() {
-
+        BuildingPhaseController buildingPhaseController = new BuildingPhaseController();
+        CardDialogController cardDialogController = new CardDialogController();
+        CheckBoardController checkBoardController = new CheckBoardController();
+        FlightPhaseController flightPhaseController = new FlightPhaseController();
+        LobbyController lobbyController = new LobbyController();
+        TimerController timerController = new TimerController();
     }
 
 
@@ -57,6 +70,12 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void setClient(Client client) {
         this.client = client;
+        this.buildingPhaseController.setClient(client);
+        this.cardDialogController.setClient(client);
+        this.checkBoardController.setClient(client);
+        this.flightPhaseController.setClient(client);
+        this.lobbyController.setClient(client);
+        this.timerController.setClient(client);
     }
 
     @Override

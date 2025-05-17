@@ -13,10 +13,16 @@ public class LobbyController {
     @FXML
     private TextField usernameField;
 
+    private Client client;
+
 
     @FXML
     public void onButtonClicked(javafx.event.ActionEvent actionEvent) {
-        String username = usernameField.getText();
+        client.setUsername(usernameField.getText());
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }
 
