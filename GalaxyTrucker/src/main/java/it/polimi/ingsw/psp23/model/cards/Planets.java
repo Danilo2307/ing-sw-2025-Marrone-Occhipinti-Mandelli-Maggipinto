@@ -125,27 +125,31 @@ public class Planets extends Card {
                         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                     }
-                    return;
                 }
-            }
-        }
-        if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
-        }
-        if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
-            game.getNextPlayer();
-        } else {
-            if (planetsOccupied.stream().allMatch(Objects::isNull)) {
-                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
             }
             else{
-                for (Player p : game.getPlayers().reversed()) {
-                    if(p != null && planetsOccupied.contains(p.getNickname())) {
-                        Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
-                    }
+                throw new CardException("You did not occupied any planets!");
+            }
+        }
+        else{
+            if (!game.getCurrentPlayer().getNickname().equals(username)) {
+                throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+            }
+            if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
+                game.getNextPlayer();
+            } else {
+                if (planetsOccupied.stream().allMatch(Objects::isNull)) {
+                    game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
                 }
-                game.setGameStatus(GameStatus.END_PLANETS);
+                else{
+                    for (Player p : game.getPlayers().reversed()) {
+                        if(p != null && planetsOccupied.contains(p.getNickname())) {
+                            Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -daysLost);
+                        }
+                    }
+                    game.setGameStatus(GameStatus.END_PLANETS);
+                }
             }
         }
     }
