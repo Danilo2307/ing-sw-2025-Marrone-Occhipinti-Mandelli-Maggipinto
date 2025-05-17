@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<AnchorPane prefHeight="721.0" prefWidth="956.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.BuildingPhaseController">
+   <children>
+      <ToolBar layoutX="12.0" layoutY="569.0" prefHeight="129.0" prefWidth="932.0">
+        <items>
+          <Button fx:id="drawHeapBtn" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio" />
+            <Button fx:id="rotateBtn" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota" />
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="rilascia" />
+            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="26.0" prefWidth="76.0" text="posiziona" textFill="#151414" />
+            <Button fx:id="leaveBtn" mnemonicParsing="false" onAction="#onLeaveClicked" text="abbandona" />
+            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" text="gira" />
+            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" text="prenota" />
+        </items>
+      </ToolBar>
+      <StackPane fx:id="boardStack" layoutX="236.0" layoutY="69.0">
+         <children>
+            <ImageView fx:id="board" fitHeight="500.0" fitWidth="692.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg" />
+               </image>
+            </ImageView>
+            <GridPane fx:id="ship" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="665.0">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" percentWidth="14.2857" prefWidth="79.4000244140625" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.1999755859375" minWidth="10.0" prefWidth="105.1999755859375" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="14.2857" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="14.2857" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="14.2857" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+            </GridPane>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>
