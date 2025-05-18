@@ -1,0 +1,12 @@
+package it.polimi.ingsw.psp23.network.rmi;
+
+import it.polimi.ingsw.psp23.network.messages.Message;
+
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
+public interface ClientCallbackInterface extends Remote {
+        void sendMessage(Message msg) throws RemoteException;
+        void onReceivedMessage(Message msg) throws RemoteException;
+        void onError(String message);
+}
