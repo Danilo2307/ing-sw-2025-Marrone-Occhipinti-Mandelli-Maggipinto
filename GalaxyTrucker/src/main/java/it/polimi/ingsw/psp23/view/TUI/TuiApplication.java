@@ -99,7 +99,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     private static final Map<TuiState, Set<String>> aliasMap = Map.of(
-            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "abbandona"),
+            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "abbandona", "", " ", "  "),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta","abbandona"),

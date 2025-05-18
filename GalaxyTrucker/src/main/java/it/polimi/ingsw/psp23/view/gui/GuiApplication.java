@@ -16,8 +16,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -36,6 +38,8 @@ public class GuiApplication extends Application implements ViewAPI {
     private final FlightPhaseController flightPhaseController;
     private final LobbyController lobbyController;
     private final TimerController timerController;
+    private Stage stage;
+    private StageManager stageManager;
 
     public GuiApplication() {
         this.buildingPhaseController = new BuildingPhaseController();
@@ -55,11 +59,12 @@ public class GuiApplication extends Application implements ViewAPI {
         );
         Parent root = loader.load();
 
-
         Scene scene = new Scene(root, 400, 300);
         stage.setTitle("Galaxy Trucker");
         stage.setScene(scene);
         stage.show();
+        this.stage = stage;
+        stageManager = new StageManager(stage);
     }
 
 
@@ -106,17 +111,22 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showRequestNumPlayers() {
-
+        lobbyController.showNumPlayers();
     }
 
     @Override
     public void showAppropriateUsername(String username) {
-
+        lobbyController.hideUserChoice();
     }
 
     @Override
     public void showWrongUsername() {
-
+        lobbyController.flushText();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Username non valido");
+        alert.setHeaderText(null);
+        alert.setContentText("Inseriscine un altro");
+        alert.showAndWait();
     }
 
     @Override
@@ -146,7 +156,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void stateChanged(GameStatus newState) {
-
+        switch(newState) {
+            case GameStatus.Building -> stageManager.toBuildingPhase();
+        }
     }
 
     @Override

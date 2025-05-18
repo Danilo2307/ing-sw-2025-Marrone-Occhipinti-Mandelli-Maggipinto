@@ -59,6 +59,16 @@ public class LobbyController {
         usernameLabel.setManaged(true);
     }
 
+    public void hideUserChoice() {
+        usernameField.setVisible(false);
+        usernameField.setManaged(false);
+        done.setVisible(false);
+        done.setManaged(false);
+        usernameLabel.setVisible(false);
+        usernameLabel.setManaged(false);
+    }
+
+    @FXML
     public void onTrialLevel() {
         Message message = new LevelSelectionMessage(0);
         client.sendMessage(message);
@@ -67,6 +77,7 @@ public class LobbyController {
         showUserChoice();
     }
 
+    @FXML
     public void onTwoLevel() {
         Message message = new LevelSelectionMessage(2);
         client.sendMessage(message);
@@ -78,6 +89,17 @@ public class LobbyController {
     @FXML
     public void onDoneClicked(javafx.event.ActionEvent actionEvent) {
         client.setUsername(usernameField.getText());
+    }
+
+    public void showNumPlayers() {
+        selectPlayersLabel.setVisible(true);
+        twoPlayersButton.setVisible(true);
+        threePlayersButton.setVisible(true);
+        fourPlayersButton.setVisible(true);
+        selectPlayersLabel.setManaged(true);
+        twoPlayersButton.setManaged(true);
+        threePlayersButton.setManaged(true);
+        fourPlayersButton.setManaged(true);
     }
 
     private void hideNumPlayers() {
@@ -108,6 +130,11 @@ public class LobbyController {
         client.sendAction(new RegisterNumPlayers(4));
         hideNumPlayers();
     }
+
+    public void flushText() {
+        usernameField.setText("");
+    }
+
 
 
 
