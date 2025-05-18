@@ -85,6 +85,10 @@ public class LobbyController {
         twoPlayersButton.setVisible(false);
         threePlayersButton.setVisible(false);
         fourPlayersButton.setVisible(false);
+        selectPlayersLabel.setManaged(false);
+        twoPlayersButton.setManaged(false);
+        threePlayersButton.setManaged(false);
+        fourPlayersButton.setManaged(false);
     }
 
     @FXML

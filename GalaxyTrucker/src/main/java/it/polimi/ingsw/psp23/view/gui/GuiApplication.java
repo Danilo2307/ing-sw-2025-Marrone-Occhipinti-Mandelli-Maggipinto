@@ -51,7 +51,7 @@ public class GuiApplication extends Application implements ViewAPI {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/hello-view.fxml")
+                getClass().getResource("/fxml/lobby-view.fxml")
         );
         Parent root = loader.load();
 
@@ -60,10 +60,6 @@ public class GuiApplication extends Application implements ViewAPI {
         stage.setTitle("Galaxy Trucker");
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
     }
 
 
@@ -81,7 +77,7 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void init() {
         Socket socket = client.getSocket();
-
+        launch();
         try {
             socket.setSoTimeout(1000);
             Message messaggio = client.readMessage();
