@@ -30,20 +30,20 @@ import java.util.Scanner;
 public class GuiApplication extends Application implements ViewAPI {
 
     private Client client;
-    private BuildingPhaseController buildingPhaseController;
-    private CardDialogController cardDialogController;
-    private CheckBoardController checkBoardController;
-    private FlightPhaseController flightPhaseController;
-    private LobbyController lobbyController;
-    private TimerController timerController;
+    private final BuildingPhaseController buildingPhaseController;
+    private final CardDialogController cardDialogController;
+    private final CheckBoardController checkBoardController;
+    private final FlightPhaseController flightPhaseController;
+    private final LobbyController lobbyController;
+    private final TimerController timerController;
 
     public GuiApplication() {
-        BuildingPhaseController buildingPhaseController = new BuildingPhaseController();
-        CardDialogController cardDialogController = new CardDialogController();
-        CheckBoardController checkBoardController = new CheckBoardController();
-        FlightPhaseController flightPhaseController = new FlightPhaseController();
-        LobbyController lobbyController = new LobbyController();
-        TimerController timerController = new TimerController();
+        this.buildingPhaseController = new BuildingPhaseController();
+        this.cardDialogController = new CardDialogController();
+        this.checkBoardController = new CheckBoardController();
+        this.flightPhaseController = new FlightPhaseController();
+        this.lobbyController = new LobbyController();
+        this.timerController = new TimerController();
     }
 
 

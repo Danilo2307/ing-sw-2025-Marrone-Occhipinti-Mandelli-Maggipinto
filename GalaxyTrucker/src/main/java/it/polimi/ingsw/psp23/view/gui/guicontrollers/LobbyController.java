@@ -11,18 +11,21 @@ import javafx.scene.control.TextField;
 public class LobbyController {
     private Client client;
 
+    // username
     @FXML private Button done;
     @FXML private TextField usernameField;
     @FXML private Label usernameLabel;
 
+    // selezione livello
     @FXML private Label selectLevel;
     @FXML private Button trialLevel;
     @FXML private Button twoLevel;
+
+    // selezione numero giocatori
     @FXML private Label selectPlayersLabel;
     @FXML private Button twoPlayersButton;
     @FXML private Button threePlayersButton;
     @FXML private Button fourPlayersButton;
-
 
 
     public void setClient(Client client) {
@@ -77,20 +80,32 @@ public class LobbyController {
         client.setUsername(usernameField.getText());
     }
 
+    private void hideNumPlayers() {
+        selectPlayersLabel.setVisible(false);
+        twoPlayersButton.setVisible(false);
+        threePlayersButton.setVisible(false);
+        fourPlayersButton.setVisible(false);
+    }
+
     @FXML
     public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) {
         client.sendAction(new RegisterNumPlayers(2));
+        hideNumPlayers();
     }
 
     @FXML
     public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) {
         client.sendAction(new RegisterNumPlayers(3));
+        hideNumPlayers();
     }
 
     @FXML
     public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) {
         client.sendAction(new RegisterNumPlayers(4));
+        hideNumPlayers();
     }
+
+
 
 
 }
