@@ -1,28 +1,75 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
+import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
-import java.awt.event.ActionEvent;
-
 public class LobbyController {
-    @FXML
-    private Button button;
-
-    @FXML
-    private TextField usernameField;
-
     private Client client;
 
+    @FXML private Button done;
+    @FXML private TextField usernameField;
+    @FXML private Label usernameLabel;
 
-    @FXML
-    public void onButtonClicked(javafx.event.ActionEvent actionEvent) {
-        client.setUsername(usernameField.getText());
-    }
+    @FXML private Label selectLevel;
+    @FXML private Button trialLevel;
+    @FXML private Button twoLevel;
+
+
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public void showLevelChoice() {
+        selectLevel.setVisible(true);
+        trialLevel.setVisible(true);
+        twoLevel.setVisible(true);
+        selectLevel.setManaged(true);
+        trialLevel.setManaged(true);
+        twoLevel.setManaged(true);
+    }
+
+    private void hideLevelChoice() {
+        selectLevel.setVisible(false);
+        trialLevel.setVisible(false);
+        twoLevel.setVisible(false);
+        selectLevel.setManaged(false);
+        trialLevel.setManaged(false);
+        twoLevel.setManaged(false);
+    }
+
+    public void showUserChoice() {
+        usernameField.setVisible(true);
+        done.setVisible(true);
+        usernameField.setManaged(true);
+        done.setManaged(true);
+        usernameLabel.setVisible(true);
+        usernameLabel.setManaged(true);
+    }
+
+    public void onTrialLevel() {
+        Message message = new LevelSelectionMessage(0);
+        client.sendMessage(message);
+
+        hideLevelChoice();
+        showUserChoice();
+    }
+
+    public void onTwoLevel() {
+        Message message = new LevelSelectionMessage(2);
+        client.sendMessage(message);
+
+        hideLevelChoice();
+        showUserChoice();
+    }
+
+    @FXML
+    public void onDoneClicked(javafx.event.ActionEvent actionEvent) {
+        client.setUsername(usernameField.getText());
     }
 }
 
