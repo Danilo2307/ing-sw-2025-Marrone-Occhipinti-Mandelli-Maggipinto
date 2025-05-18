@@ -24,10 +24,25 @@
             <Font name="Arial Black" size="15.0" />
          </font>
       </Label>
-      <Label layoutX="144.0" layoutY="219.0" prefHeight="58.0" prefWidth="291.0" text="Scegli il numero di giocatori:" textFill="#faf5f5">
+      <Label fx:id="selectPlayersLabel" alignment="CENTER" contentDisplay="CENTER" layoutY="219.0" managed="false" prefHeight="58.0" prefWidth="291.0" text="Scegli il numero di giocatori:" textFill="#faf5f5" visible="false">
          <font>
             <Font name="Arial Black" size="17.0" />
          </font>
       </Label>
+      <Button fx:id="twoPlayersButton" layoutX="155.0" managed="false" mnemonicParsing="false" onAction="#onSelectTwoPlayers" text="2 players" visible="false">
+         <font>
+            <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="threePlayersButton" layoutX="260.0" managed="false" mnemonicParsing="false" onAction="#onSelectThreePlayers" text="3 players" visible="false">
+         <font>
+            <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
+      <Button fx:id="fourPlayersButton" layoutX="365.0" managed="false" mnemonicParsing="false" onAction="#onSelectFourPlayers" text="4 players" visible="false">
+         <font>
+            <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

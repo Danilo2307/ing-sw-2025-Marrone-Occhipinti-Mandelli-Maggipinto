@@ -16,7 +16,7 @@
         <items>
           <Button fx:id="drawHeapBtn" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio" />
             <Button fx:id="rotateBtn" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota" />
-            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="rilascia" />
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="scarta" />
             <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="26.0" prefWidth="76.0" text="posiziona" textFill="#151414" />
             <Button fx:id="leaveBtn" mnemonicParsing="false" onAction="#onLeaveClicked" text="abbandona" />
             <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" text="gira" />

@@ -16,8 +16,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -30,20 +32,22 @@ import java.util.Scanner;
 public class GuiApplication extends Application implements ViewAPI {
 
     private Client client;
-    private BuildingPhaseController buildingPhaseController;
-    private CardDialogController cardDialogController;
-    private CheckBoardController checkBoardController;
-    private FlightPhaseController flightPhaseController;
-    private LobbyController lobbyController;
-    private TimerController timerController;
+    private final BuildingPhaseController buildingPhaseController;
+    private final CardDialogController cardDialogController;
+    private final CheckBoardController checkBoardController;
+    private final FlightPhaseController flightPhaseController;
+    private final LobbyController lobbyController;
+    private final TimerController timerController;
+    private Stage stage;
+    private StageManager stageManager;
 
     public GuiApplication() {
-        BuildingPhaseController buildingPhaseController = new BuildingPhaseController();
-        CardDialogController cardDialogController = new CardDialogController();
-        CheckBoardController checkBoardController = new CheckBoardController();
-        FlightPhaseController flightPhaseController = new FlightPhaseController();
-        LobbyController lobbyController = new LobbyController();
-        TimerController timerController = new TimerController();
+        this.buildingPhaseController = new BuildingPhaseController();
+        this.cardDialogController = new CardDialogController();
+        this.checkBoardController = new CheckBoardController();
+        this.flightPhaseController = new FlightPhaseController();
+        this.lobbyController = new LobbyController();
+        this.timerController = new TimerController();
     }
 
 
@@ -51,19 +55,16 @@ public class GuiApplication extends Application implements ViewAPI {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/hello-view.fxml")
+                getClass().getResource("/fxml/lobby-view.fxml")
         );
         Parent root = loader.load();
-
 
         Scene scene = new Scene(root, 400, 300);
         stage.setTitle("Galaxy Trucker");
         stage.setScene(scene);
         stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch();
+        this.stage = stage;
+        stageManager = new StageManager(stage);
     }
 
 
@@ -81,7 +82,7 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void init() {
         Socket socket = client.getSocket();
-
+        launch();
         try {
             socket.setSoTimeout(1000);
             Message messaggio = client.readMessage();
@@ -110,17 +111,22 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showRequestNumPlayers() {
-
+        lobbyController.showNumPlayers();
     }
 
     @Override
     public void showAppropriateUsername(String username) {
-
+        lobbyController.hideUserChoice();
     }
 
     @Override
     public void showWrongUsername() {
-
+        lobbyController.flushText();
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Username non valido");
+        alert.setHeaderText(null);
+        alert.setContentText("Inseriscine un altro");
+        alert.showAndWait();
     }
 
     @Override
@@ -150,7 +156,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void stateChanged(GameStatus newState) {
-
+        switch(newState) {
+            case GameStatus.Building -> stageManager.toBuildingPhase();
+        }
     }
 
     @Override

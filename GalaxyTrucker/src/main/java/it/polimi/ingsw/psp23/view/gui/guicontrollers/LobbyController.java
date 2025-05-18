@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.protocol.request.RegisterNumPlayers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -10,14 +11,21 @@ import javafx.scene.control.TextField;
 public class LobbyController {
     private Client client;
 
+    // username
     @FXML private Button done;
     @FXML private TextField usernameField;
     @FXML private Label usernameLabel;
 
+    // selezione livello
     @FXML private Label selectLevel;
     @FXML private Button trialLevel;
     @FXML private Button twoLevel;
 
+    // selezione numero giocatori
+    @FXML private Label selectPlayersLabel;
+    @FXML private Button twoPlayersButton;
+    @FXML private Button threePlayersButton;
+    @FXML private Button fourPlayersButton;
 
 
     public void setClient(Client client) {
@@ -51,6 +59,16 @@ public class LobbyController {
         usernameLabel.setManaged(true);
     }
 
+    public void hideUserChoice() {
+        usernameField.setVisible(false);
+        usernameField.setManaged(false);
+        done.setVisible(false);
+        done.setManaged(false);
+        usernameLabel.setVisible(false);
+        usernameLabel.setManaged(false);
+    }
+
+    @FXML
     public void onTrialLevel() {
         Message message = new LevelSelectionMessage(0);
         client.sendMessage(message);
@@ -59,6 +77,7 @@ public class LobbyController {
         showUserChoice();
     }
 
+    @FXML
     public void onTwoLevel() {
         Message message = new LevelSelectionMessage(2);
         client.sendMessage(message);
@@ -71,5 +90,54 @@ public class LobbyController {
     public void onDoneClicked(javafx.event.ActionEvent actionEvent) {
         client.setUsername(usernameField.getText());
     }
+
+    public void showNumPlayers() {
+        selectPlayersLabel.setVisible(true);
+        twoPlayersButton.setVisible(true);
+        threePlayersButton.setVisible(true);
+        fourPlayersButton.setVisible(true);
+        selectPlayersLabel.setManaged(true);
+        twoPlayersButton.setManaged(true);
+        threePlayersButton.setManaged(true);
+        fourPlayersButton.setManaged(true);
+    }
+
+    private void hideNumPlayers() {
+        selectPlayersLabel.setVisible(false);
+        twoPlayersButton.setVisible(false);
+        threePlayersButton.setVisible(false);
+        fourPlayersButton.setVisible(false);
+        selectPlayersLabel.setManaged(false);
+        twoPlayersButton.setManaged(false);
+        threePlayersButton.setManaged(false);
+        fourPlayersButton.setManaged(false);
+    }
+
+    @FXML
+    public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(2));
+        hideNumPlayers();
+    }
+
+    @FXML
+    public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(3));
+        hideNumPlayers();
+    }
+
+    @FXML
+    public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(4));
+        hideNumPlayers();
+    }
+
+    public void flushText() {
+        usernameField.setText("");
+    }
+
+
+
+
+
 }
 
