@@ -80,12 +80,32 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void init() {
+        Socket socket = client.getSocket();
 
+        try {
+            socket.setSoTimeout(1000);
+            Message messaggio = client.readMessage();
+            messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), this);
+            client.avvia();
+            socket.setSoTimeout(0);
+        } catch (SocketTimeoutException ste) {
+            try {
+                socket.setSoTimeout(0);
+                client.avvia();
+                lobbyController.showUserChoice();
+            }
+            catch (SocketException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        catch (SocketException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void showRequestLevel() {
-
+        lobbyController.showLevelChoice();
     }
 
     @Override
