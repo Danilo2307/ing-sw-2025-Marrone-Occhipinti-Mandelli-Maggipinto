@@ -6,7 +6,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface ClientCallbackInterface extends Remote {
-        void sendMessage(Message msg) throws RemoteException;
-        void onReceivedMessage(Message msg) throws RemoteException;
-        void onError(String message);
+        void onReceivedMessage(String msg) throws RemoteException;
+        void onError(String message) throws RemoteException;
 }
