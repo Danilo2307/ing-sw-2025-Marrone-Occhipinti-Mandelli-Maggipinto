@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.protocol.request.RegisterNumPlayers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -17,6 +18,10 @@ public class LobbyController {
     @FXML private Label selectLevel;
     @FXML private Button trialLevel;
     @FXML private Button twoLevel;
+    @FXML private Label selectPlayersLabel;
+    @FXML private Button twoPlayersButton;
+    @FXML private Button threePlayersButton;
+    @FXML private Button fourPlayersButton;
 
 
 
@@ -71,5 +76,22 @@ public class LobbyController {
     public void onDoneClicked(javafx.event.ActionEvent actionEvent) {
         client.setUsername(usernameField.getText());
     }
+
+    @FXML
+    public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(2));
+    }
+
+    @FXML
+    public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(3));
+    }
+
+    @FXML
+    public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) {
+        client.sendAction(new RegisterNumPlayers(4));
+    }
+
+
 }
 
