@@ -63,7 +63,8 @@ public class Controller {
     public void startBuildingPhase() {
         Game game = Game.getInstance();
         for (Player player : game.getPlayers()) {
-            player.getTruck().addComponent(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true), 2, 3);
+            // TODO: bisogna cambiare l'id messo momentaneamente a meno 1!!
+            player.getTruck().addComponent(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true, -1), 2, 3);
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
         game.setGameStatus(GameStatus.Building);
