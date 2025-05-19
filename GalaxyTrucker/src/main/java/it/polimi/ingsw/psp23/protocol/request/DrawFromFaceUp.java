@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 
@@ -21,7 +22,7 @@ public record DrawFromFaceUp (int x, int version) implements Action {
             Server.getInstance().sendMessage(username, dm);
         }
         catch (NoTileException | IndexOutOfBoundsException exception) {
-            DirectMessage dm = new DirectMessage(new StringResponse(exception.getMessage()));
+            DirectMessage dm = new DirectMessage(new ErrorResponse(exception.getMessage()));
             Server.getInstance().sendMessage(username, dm);
         }
     }
