@@ -131,7 +131,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showTile(Component requested) {
-
+        buildingPhaseController.showTile(requested);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
-
+        buildingPhaseController.showUncovered(uncovered);
     }
 
     @Override
