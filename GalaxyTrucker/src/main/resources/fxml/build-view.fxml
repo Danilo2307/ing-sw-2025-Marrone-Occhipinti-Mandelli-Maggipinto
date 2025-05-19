@@ -7,12 +7,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
 <AnchorPane prefHeight="737.0" prefWidth="966.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.BuildingPhaseController">
    <children>
-      <ToolBar layoutX="744.0" layoutY="348.0" orientation="VERTICAL" prefHeight="323.0" prefWidth="168.0">
+      <ToolBar layoutX="733.0" layoutY="345.0" orientation="VERTICAL" prefHeight="323.0" prefWidth="168.0">
         <items>
           <Button fx:id="drawHeapBtn" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio" />
             <Button fx:id="rotateBtn" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota" />
@@ -24,7 +25,7 @@
       </ToolBar>
       <StackPane fx:id="boardStack" layoutY="196.0" prefHeight="540.0" prefWidth="721.0">
          <children>
-            <ImageView fx:id="board" fitHeight="500.0" fitWidth="692.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="board" fitHeight="520.0" fitWidth="726.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg" />
                </image>
@@ -50,10 +51,11 @@
          </children>
       </StackPane>
       <Button fx:id="leaveBtn" layoutX="846.0" layoutY="688.0" mnemonicParsing="false" onAction="#onLeaveClicked" text="abbandona" />
-      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="744.0" layoutY="219.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="744.0" layoutY="219.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../it/polimi/ingsw/psp23/images/tiles/31.jpg" />
          </image>
       </ImageView>
+      <HBox layoutX="14.0" layoutY="14.0" prefHeight="100.0" prefWidth="912.0" />
    </children>
 </AnchorPane>
