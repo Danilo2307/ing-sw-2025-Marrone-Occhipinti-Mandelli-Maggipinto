@@ -10,8 +10,8 @@ public final class Shield extends Component{
     // necessario per gestire attivazione cannoni doppi
     private boolean isActive = false;
 
-    public Shield(Side up, Side down, Side left, Side right) {
-        super(up, down, left, right);
+    public Shield(Side up, Side down, Side left, Side right, int id) {
+        super(up, down, left, right, id);
     }
 
     public void activeShield(){

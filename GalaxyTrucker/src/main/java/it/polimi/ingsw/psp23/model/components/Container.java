@@ -12,8 +12,8 @@ public final class Container extends Component {
     private final Color colorContainer;
     private final ArrayList<Item> goods;   // il riferimento è immutabile, ma posso fare add/remove
 
-    public Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods) {
-        super(up,down,left,right);
+    public Container(Side up, Side down, Side left, Side right, int size, Color colorContainer, ArrayList<Item> goods, int id) {
+        super(up,down,left,right, id);
         this.size = size;
         this.colorContainer = colorContainer;
         this.goods = goods;

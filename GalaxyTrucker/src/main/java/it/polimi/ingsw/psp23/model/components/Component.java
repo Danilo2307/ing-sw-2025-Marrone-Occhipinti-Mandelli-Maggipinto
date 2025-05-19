@@ -15,9 +15,10 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
     private Side right;
     private int x;
     private int y;
+    private final int id;
 
     // lo chiamo sempre tramite super(...) quando istanzio le sottoclassi
-    public Component(Side up, Side down, Side left, Side right) {
+    public Component(Side up, Side down, Side left, Side right, int id) {
         state = ComponentLocation.PILE;  // inizialmente stanno tutti nel mucchio a faccia in giù
         this.up = up;
         this.down = down;
@@ -25,6 +26,7 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
         this.right = right;
         this.x = -1;   // assumeranno valori positivi solo se e quando Component passerà in status ON_TRUCK
         this.y = -1;
+        this.id = id;
     }
 
     // player prende in mano il component
@@ -109,5 +111,9 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
 
     public String getInfo() {
         return null;
+    }
+
+    public int getId() {
+        return id;
     }
 }

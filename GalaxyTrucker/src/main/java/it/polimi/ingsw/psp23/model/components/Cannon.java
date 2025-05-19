@@ -8,8 +8,8 @@ public final class Cannon extends Component {
     // necessario per gestire attivazione cannoni doppi
     private boolean isActive = false;
 
-    public Cannon (Side up, Side down, Side left, Side right, boolean isDouble) {
-        super(up, down, left, right);
+    public Cannon (Side up, Side down, Side left, Side right, boolean isDouble, int id) {
+        super(up, down, left, right, id);
         this.isDouble = isDouble;
     }
 

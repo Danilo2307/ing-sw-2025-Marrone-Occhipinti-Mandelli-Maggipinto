@@ -33,32 +33,31 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
         // ordine Side: up, down, left, right
         // tutti container blu
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container( Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>() ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 11));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 12));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 13 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(), 14 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(), 15 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 16 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 17 ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 18 ));
+        subComponents.add(new Container(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(), 19 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 110 ));
+        subComponents.add(new Container(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 111 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 112 ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 113 ));
+        subComponents.add(new Container( Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 114 ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 115 ));
         // tutti container rossi
-        subComponents.add(new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Red, new ArrayList<>() ));
-        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, 2, Color.Red, new ArrayList<>() ));
+        subComponents.add(new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 116 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 1, Color.Red, new ArrayList<>(), 117 ));
+        subComponents.add(new Container(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 118 ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 119 ));
+        subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 120 ));
+        subComponents.add(new Container(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 1, Color.Red, new ArrayList<>(), 121 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Red, new ArrayList<>(), 122 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Red, new ArrayList<>(), 123 ));
+        subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, 2, Color.Red, new ArrayList<>(), 124 ));
 
         return subComponents;
     }
@@ -67,23 +66,23 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
         // ordine Side: up, down, left, right
         // cabine normali (quelle speciali le istanzio da un'altra parte perchè non finiranno nel "mucchio" heap
-        subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 21));
+        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 22));
+        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 23));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 24));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 25));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 26));
+        subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 27));
+        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 28));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 29));
+        subComponents.add(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false, 210));
+        subComponents.add(new HousingUnit(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, false, 211));
+        subComponents.add(new HousingUnit(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, false, 212));
+        subComponents.add(new HousingUnit(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 213));
+        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 214));
+        subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 215));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 216));
+        subComponents.add(new HousingUnit(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 217));
 
         return subComponents;
     }
@@ -92,44 +91,44 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
 
         // genero tutti i singoli
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 31));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 32));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 33));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 34));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, false, 35));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false, 36));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, false, 37));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, false, 38));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false, 39));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, false, 310));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 311));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 312));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 313));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 314));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 315));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 316));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false, 317));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false, 318));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false, 319));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, false, 320));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 321));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 322));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 323));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 324));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 325));
 
         // genero tutti i doppi
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, true));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
-        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
-        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true, 326));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true, 327));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, true, 328));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true, 329));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true, 330));
+        subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true, 331));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true, 332));
+        subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, true, 333));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true, 334));
+        subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true, 335));
+        subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true, 336));
 
         return subComponents;
     }
@@ -138,38 +137,38 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
 
         //genero tutti i singoli
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 41));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 42));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false, 43));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false, 44));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, false, 45));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false, 46));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false, 47));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 48));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.DOUBLE_CONNECTOR, false, 49));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false, 410));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 411));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 412));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 413));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 414));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 415));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, false, 416));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, false, 417));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 418));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 419));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 420));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 421));
 
         // genero tutti i doppi
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, true));
-        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true));
-        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, true));
-        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true));
-        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true, 422));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true, 423));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true, 424));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, true, 425));
+        subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true, 426));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, true, 427));
+        subComponents.add(new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.DOUBLE_CONNECTOR, Side.EMPTY, true, 428));
+        subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true, 429));
+        subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, true, 430));
 
         return subComponents;
     }
@@ -177,14 +176,14 @@ public class ComponentFactory {
     private static ArrayList<Component> generateShields() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR));
-        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD));
-        subComponents.add(new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR));
-        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD));
-        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
-        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
-        subComponents.add(new Shield(Side.SHIELD, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD));
-        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR));
+        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR, 51));
+        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD, 52));
+        subComponents.add(new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR, 53));
+        subComponents.add(new Shield(Side.SHIELD, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD, 54));
+        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR, 55));
+        subComponents.add(new Shield(Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR, 56));
+        subComponents.add(new Shield(Side.SHIELD, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD, 57));
+        subComponents.add(new Shield(Side.SHIELD, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SHIELD_DOUBLE_CONNECTOR, 58));
 
         return subComponents;
     }
@@ -193,14 +192,14 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
 
         // ordine Side: up, down, left, right
-        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.DOUBLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR));
-        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 61));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 62));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 63));
+        subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 64));
+        subComponents.add(new StructuralComponent(Side.DOUBLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 65));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 66));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 67));
+        subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 68));
 
         return subComponents;
     }
@@ -209,25 +208,25 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
 
         // genero tutte quelle da 2
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
-        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
-        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2));
-        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, 71));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2, 72));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2, 73));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2, 74));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, 75));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2, 76));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, 77));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, 78));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, 79));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, 710));
+        subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, 711));
 
         // genero i pacchi da 3 batterie
-        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3));
-        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 3));
-        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3));
-        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 3));
-        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 3));
-        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 3));
+        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, 712));
+        subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 3, 713));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, 714));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 3, 715));
+        subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 3, 716));
+        subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, 717));
 
         return subComponents;
     }
@@ -236,20 +235,20 @@ public class ComponentFactory {
         ArrayList<Component> subComponents = new ArrayList<>();
 
         // genero i supporti marroni
-        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown));
-        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Brown));
-        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown));
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown, 81));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown, 82));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown, 83));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown, 84));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Brown, 85));
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown, 86));
 
         // genero tutti i supporti viola
-        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple));
-        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
-        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Purple));
-        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple));
+        subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple, 87));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple, 88));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple, 89));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple, 810));
+        subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Purple, 811));
+        subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple, 812));
 
         return subComponents;
     }
