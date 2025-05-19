@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -20,6 +21,7 @@ import java.util.Objects;
 
 public class BuildingPhaseController {
     private Client client;
+    int lastVersion;
 
     @FXML private StackPane boardStack;
     @FXML private ImageView board;
@@ -33,6 +35,7 @@ public class BuildingPhaseController {
     @FXML private Button reserveBtn;
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
+    @FXML private ScrollPane uncoveredScrollPane;
 
     public void setClient(Client client) {
         this.client = client;
@@ -105,7 +108,10 @@ public class BuildingPhaseController {
         tileInHand.setVisible(true);
     }
 
-    public void showUncovered(ArrayList<Component> uncovered) {
+    public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
+        // aggiorno attributo che indica l'ultima versione
+        this.lastVersion = lastVersion;
+
         // pulisco immagini precedenti
         uncoveredBox.getChildren().clear();
 
@@ -114,8 +120,23 @@ public class BuildingPhaseController {
             String imagePath = "it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             ImageView imageView = new ImageView(image);
+
+            // aggiungo la tile all'HBox
             uncoveredBox.getChildren().add(imageView);
+            // associo un listener di ClickEvent ad ogni imageview creata
+            imageView.setOnMouseClicked(mouseEvent -> drawUncovered(imageView));
         }
+        // forzo aggiornamento all'inizio della lista
+        uncoveredScrollPane.setHvalue(0.0);
+    }
+
+    private void drawUncovered(ImageView imageView) {
+        // ottengo la posizione della tile nell'HBox
+        int index = uncoveredBox.getChildren().indexOf(imageView);
+        /// TODO: discuti con danilo
+        uncoveredBox.getChildren().remove(index); ///
+
+        client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
 
     // codice che fissa la tile dopo il drop e la leva dalla mano
