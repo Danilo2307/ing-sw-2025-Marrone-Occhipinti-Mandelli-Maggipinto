@@ -236,4 +236,10 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForAccessMatch(AccessMatch accessMatch, String username){
+        accessMatch.handle(username);
+        return null;
+    }
+
 }

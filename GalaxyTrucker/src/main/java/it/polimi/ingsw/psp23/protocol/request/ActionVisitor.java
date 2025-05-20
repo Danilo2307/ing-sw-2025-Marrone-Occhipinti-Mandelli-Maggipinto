@@ -80,4 +80,6 @@ public interface ActionVisitor<T> {
 
     public T visitForCreateNewMatch(CreateNewMatch createNewMatch, String username);
 
+    public T visitForAccessMatch(AccessMatch accessMatch, String username);
+
 }

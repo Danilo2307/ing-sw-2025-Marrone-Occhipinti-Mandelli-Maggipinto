@@ -24,7 +24,7 @@ public record AccessMatch(int matchChoice) implements Action {
 
     @Override
     public <T> T call(ActionVisitor<T> actionVisitor, String username){
-        return actionVisitor.visitForActivateCannon(this, username);
+        return actionVisitor.visitForAccessMatch(this, username);
     }
 
     @Override
