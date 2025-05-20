@@ -1,0 +1,15 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/background_image.jpeg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.firstDeck {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/cards/back2.png");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-padding: 10; /* opzionale */
+    -fx-background-color: transparent; /* per rimuovere sfondo grigio */
+    -fx-border-color: transparent;     /* opzionale */
+}

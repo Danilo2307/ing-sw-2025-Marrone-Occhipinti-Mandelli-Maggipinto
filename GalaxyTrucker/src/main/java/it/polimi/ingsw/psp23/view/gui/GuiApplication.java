@@ -1,14 +1,12 @@
 package it.polimi.ingsw.psp23.view.gui;
 
-import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
-import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
@@ -19,19 +17,17 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
 // la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
 // da cui viene effettivamente fatta partire la gui
 public class GuiApplication extends Application implements ViewAPI {
 
-    private Client client;
+    private ClientSocket client;
     private final BuildingPhaseController buildingPhaseController;
     private final CardDialogController cardDialogController;
     private final CheckBoardController checkBoardController;
@@ -40,6 +36,11 @@ public class GuiApplication extends Application implements ViewAPI {
     private final TimerController timerController;
     private Stage stage;
     private StageManager stageManager;
+    private static GuiApplication instance;
+
+    public static GuiApplication getInstance() {
+        return instance;
+    }
 
     public GuiApplication() {
         this.buildingPhaseController = new BuildingPhaseController();
@@ -48,6 +49,7 @@ public class GuiApplication extends Application implements ViewAPI {
         this.flightPhaseController = new FlightPhaseController();
         this.lobbyController = new LobbyController();
         this.timerController = new TimerController();
+        instance = this;
     }
 
 
@@ -55,7 +57,7 @@ public class GuiApplication extends Application implements ViewAPI {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/lobby-view.fxml")
+                getClass().getResource("fxml/lobby-view.fxml")
         );
         Parent root = loader.load();
 
@@ -66,10 +68,12 @@ public class GuiApplication extends Application implements ViewAPI {
         this.stage = stage;
         stageManager = new StageManager(stage);
     }
-
+    public static void main(String[] args) {
+        launch(args);
+    }
 
     @Override
-    public void setClient(Client client) {
+    public void setClient(ClientSocket client) {
         this.client = client;
         this.buildingPhaseController.setClient(client);
         this.cardDialogController.setClient(client);
@@ -80,9 +84,8 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     @Override
-    public void init() {
+    public void setup() {
         Socket socket = client.getSocket();
-        launch();
         try {
             socket.setSoTimeout(1000);
             Message messaggio = client.readMessage();

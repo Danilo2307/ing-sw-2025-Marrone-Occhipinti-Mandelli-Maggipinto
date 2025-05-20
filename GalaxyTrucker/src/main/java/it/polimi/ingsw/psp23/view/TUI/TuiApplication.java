@@ -6,11 +6,10 @@ import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.network.messages.ActionMessage;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
@@ -23,7 +22,7 @@ import java.util.*;
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication implements ViewAPI {
-    private Client client;
+    private ClientSocket client;
     private int lastUncoveredVersion;
     private final IOManager io;
     private TuiState currentTuiState;
@@ -35,7 +34,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void setClient(Client client) {
+    public void setClient(ClientSocket client) {
         this.client = client;
     }
 
@@ -44,7 +43,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void init() {
+    public void setup() {
         Socket socket = client.getSocket();
         Scanner scanner = new Scanner(System.in);
 
@@ -456,7 +455,7 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
-    public Client getClient() {
+    public ClientSocket getClient() {
         return client;
     }
 

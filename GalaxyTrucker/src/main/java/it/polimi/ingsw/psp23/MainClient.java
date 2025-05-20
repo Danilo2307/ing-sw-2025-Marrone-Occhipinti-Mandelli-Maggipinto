@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.GuiApplication;
+import javafx.application.Application;
 
 import java.util.Scanner;
 
@@ -48,8 +49,11 @@ public class MainClient {
                 ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
             } else if (protocol == 2) {
                 client = new Client("localhost", 8000, null, clientEventHandler);
+                if(interfaceChosen == 2) {
+                    Application.launch(GuiApplication.class);
+                }
                 view.setClient(client);
-                view.init();  // Avvio della view scelta
+                view.setup();  // Avvio della view scelta
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;
@@ -57,6 +61,7 @@ public class MainClient {
 
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("ERRORE in mainClient: " + e.getMessage());
         }
     }
