@@ -218,13 +218,21 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
     public Void visitForLeaveFlight(LeaveFlight leaveFlight, String username){
         leaveFlight.handle(username);
         return null;
     }
 
+    @Override
     public Void visitForDrawCard(DrawCard drawCard, String username){
         drawCard.handle(username);
+        return null;
+    }
+
+    @Override
+    public Void visitForCreateNewMatch(CreateNewMatch createNewMatch, String username){
+        createNewMatch.handle(username);
         return null;
     }
 
