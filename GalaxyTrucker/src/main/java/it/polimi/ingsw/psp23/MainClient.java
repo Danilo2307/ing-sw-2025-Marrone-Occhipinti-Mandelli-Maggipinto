@@ -49,7 +49,7 @@ public class MainClient {
             } else if (protocol == 2) {
                 client = new ClientSocket("localhost", 8000, null, clientEventHandler);
                 view.setClient(client);
-                view.init();  // Avvio della view scelta
+                view.setup();  // Avvio della view scelta
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;
