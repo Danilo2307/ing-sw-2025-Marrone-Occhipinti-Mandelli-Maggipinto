@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23;
 
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
-import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
@@ -28,7 +28,7 @@ public class MainClient {
 
             ViewAPI view;  // Uso l'interfaccia per garantire flessibilità
             ClientEventHandler clientEventHandler;
-            Client client;
+            ClientSocket client;
 
             // Scelta dell'interfaccia
             if (interfaceChosen == 1) {
@@ -47,7 +47,7 @@ public class MainClient {
             if (protocol == 1) {
                 ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
             } else if (protocol == 2) {
-                client = new Client("localhost", 8000, null, clientEventHandler);
+                client = new ClientSocket("localhost", 8000, null, clientEventHandler);
                 view.setClient(client);
                 view.init();  // Avvio della view scelta
             } else {

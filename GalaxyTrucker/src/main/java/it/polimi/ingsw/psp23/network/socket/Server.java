@@ -3,6 +3,8 @@ package it.polimi.ingsw.psp23.network.socket;
 import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -18,7 +20,9 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Server {
 
@@ -143,11 +147,14 @@ public class Server {
 
                 SocketHandler socketHandler = new SocketHandler(socket);
 
-                synchronized (clients) {
+                List<String> usersConnected = UsersConnected.getInstance().getClients();
+
+                synchronized (usersConnected) {
                     clients.put(nameConnection, socketHandler);
+                    UsersConnected.getInstance().addClient(nameConnection);
                     System.out.println("Client connected: " + nameConnection);
 
-                    if(clients.size() == 1){
+                    if(UsersConnected.getInstance().getClients().size() == 1){
 
                         socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
 
@@ -184,6 +191,9 @@ public class Server {
                 } while(error);
 
                 socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
+                int indiceUsernameDaCambiare = usersConnected.indexOf(nameConnection);
+                usersConnected.remove(indiceUsernameDaCambiare);
+                usersConnected.add(indiceUsernameDaCambiare, username);
                 socketHandler.setUsername(username);
 
 

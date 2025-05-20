@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
 import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class BuildingPhaseController {
-    private Client client;
+    private ClientSocket client;
     int lastVersion;
 
     @FXML private StackPane boardStack;
@@ -38,7 +38,7 @@ public class BuildingPhaseController {
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
 
-    public void setClient(Client client) {
+    public void setClient(ClientSocket client) {
         this.client = client;
     }
 

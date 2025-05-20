@@ -1,16 +1,20 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
 import it.polimi.ingsw.psp23.exceptions.GameException;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
+import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,8 +27,34 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     }
 
     @Override
-    public void registerClient(String username, ClientCallbackInterface callback) throws RemoteException{
+    public void registerClient(String username, String nameConnection, ClientCallbackInterface callback) throws RemoteException{
+
+        List<String> usersConnected = UsersConnected.getInstance().getClients();
+
+        synchronized (usersConnected) {
+            UsersConnected.getInstance().addClient(nameConnection);
+            System.out.println("Client connected: " + nameConnection);
+
+            if(UsersConnected.getInstance().getClients().size() == 1){
+
+                //socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
+                Message message = (new DirectMessage(new SelectLevel()));
+
+                callback.onReceivedMessage(message.toString());
+
+                System.out.println(message.toString());
+
+                Game.getInstance(Integer.parseInt(message.toString()));
+
+                System.out.println("arrivato a questo punto");
+
+            }
+        }
+
         registry.registerClient(username, callback);
+
+
+
     }
 
     @Override
