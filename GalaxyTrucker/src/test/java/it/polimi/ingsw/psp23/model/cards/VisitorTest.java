@@ -46,8 +46,8 @@ public class VisitorTest {
         cannonShotList1.add(cannonata1);
         cannonShotList1.add(cannonata2);
 
-        Card carta1 = new Smugglers(2, 3, 3, 3, prizes1);
-        Card carta2 = new Planets(2, 2, pianeti);
+        Card carta1 = new Smugglers(2, 3, 3, 3, prizes1,1);
+        Card carta2 = new Planets(2, 2, pianeti,1);
 
         List<Card> deck = new ArrayList<>();
         deck.add(carta1);

@@ -15,7 +15,7 @@ public class ContainerTest {
     @Test
     public void testLoadItem() {
         // Creo un container rosso: può contenere solo merci rosse o verdi
-        Container c = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 2, Color.Red, new ArrayList<>());
+        Container c = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 2, Color.Red, new ArrayList<>(),1);
 
         // Caso 1: carico merce verde -> deve essere accettata
         Item itemGreen = new Item(Color.Green);
@@ -40,7 +40,7 @@ public class ContainerTest {
 
     @Test
     public void testLoseItem() {
-        Container c = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(),1);
 
         // caso 1: container vuoto -> non posso rimuovere nulla
         Item itemGreen = new Item(Color.Green);

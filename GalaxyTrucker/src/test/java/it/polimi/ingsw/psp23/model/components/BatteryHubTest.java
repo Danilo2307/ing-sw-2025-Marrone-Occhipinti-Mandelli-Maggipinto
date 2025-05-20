@@ -10,7 +10,7 @@ public class BatteryHubTest {
 
     @Test
     public void testReduceBatteries() {
-        BatteryHub b = new BatteryHub(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3);
+        BatteryHub b = new BatteryHub(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3,1);
 
         // caso 1: verifico effettiva riduzione da 3 a 1
         b.removeBatteries(2);

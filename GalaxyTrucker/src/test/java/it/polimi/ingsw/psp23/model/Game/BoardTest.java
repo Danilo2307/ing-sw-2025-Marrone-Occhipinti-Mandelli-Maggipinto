@@ -27,12 +27,12 @@ public class BoardTest {
     @Test
     public void testAddComponent() {
         Board truck = new Board(2);
-        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
         // la cabina centrale non richiede adiacenza
         truck.addComponent(cabin, 2, 3);
 
-        Cannon cannon = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true);
+        Cannon cannon = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, true,1);
 
         // Simula il prelievo del componente dalla mano (obbligatorio prima della saldatura)
         cannon.moveToHand();
@@ -64,18 +64,18 @@ public class BoardTest {
     public void testInvalidCoordinates() {
         Board truck = new Board(2);
 
-        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
         // la cabina centrale non richiede adiacenza
         truck.addComponent(cabin, 2, 3);
 
-        Container c = new Container(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() );
+        Container c = new Container(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 2, Color.Blue, new ArrayList<>() ,1);
         c.moveToHand();
         // check coordinate non valide: devo lanciare eccezione --> isValid funziona
         assertThrows(InvalidCoordinatesException.class, () -> truck.addComponent(c, 0, 1));
 
         truck.addComponent(c, 2, 2);
-        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false);
+        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false,1);
         // check coordinate già occupate: devo lanciare eccezione --> isFree funziona
         assertThrows(InvalidCoordinatesException.class, () -> { truck.addComponent(e, 2, 2); } );
 
@@ -88,12 +88,12 @@ public class BoardTest {
     public void testReduceBatteries() {
         // setup
         Board truck = new Board(2);
-        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
         truck.addComponent(cabin, 2, 3);
 
         // battery hub con 3 batterie
-        BatteryHub b = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3);
+        BatteryHub b = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3,1);
         b.moveToHand();
         truck.addComponent(b, 3, 3);
 
@@ -109,19 +109,19 @@ public class BoardTest {
     public void testCalculateEngineStrength() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // aggiungo vari motori: 2 singoli e 1 doppio (attivandolo)
-        Engine e1 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        Engine e1 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         e1.moveToHand();
         truck.addComponent(e1, 3, 3);
-        Engine e2 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, true);
+        Engine e2 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, true,1);
         e2.moveToHand();
         truck.addComponent(e2, 2, 2);
         e2.activeEngine();
-        Engine e3 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        Engine e3 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         e3.moveToHand();
         truck.addComponent(e3, 2, 4);
 
@@ -133,10 +133,10 @@ public class BoardTest {
         assertEquals(2, truck.calculateEngineStrength());
 
         // inserisco alieno marrone
-        HousingUnit alienCabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        HousingUnit alienCabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         alienCabin.moveToHand();
         truck.addComponent(alienCabin, 2, 5);
-        AlienAddOns alienAddOns = new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, Color.Brown);
+        AlienAddOns alienAddOns = new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, Color.Brown,1);
         alienAddOns.moveToHand();
         truck.addComponent(alienAddOns, 2, 6);
         truck.updateAllowedAliens();
@@ -153,26 +153,26 @@ public class BoardTest {
     public void testCalculateCannonStrength() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo e saldo vari cannoni
         // singolo puntato in avanti
-        Cannon c1 = new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
         // doppio puntato di lato verso destra
-        Cannon c2 = new Cannon(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.GUN, true);
+        Cannon c2 = new Cannon(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.GUN, true,1);
         c2.moveToHand();
         truck.addComponent(c2, 2, 4);
         truck.activeCannon(2,4);
         // singolo verso sinistra
-        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.GUN, Side.EMPTY, false);
+        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.GUN, Side.EMPTY, false,1);
         c3.moveToHand();
         truck.addComponent(c3, 2, 2);
         // doppio verso il basso
-        Cannon c4 = new Cannon(Side.EMPTY, Side.GUN, Side.EMPTY, Side.EMPTY, true);
+        Cannon c4 = new Cannon(Side.EMPTY, Side.GUN, Side.EMPTY, Side.EMPTY, true,1);
         c4.moveToHand();
         truck.addComponent(c4, 3, 3);
         truck.activeCannon(3,3);
@@ -185,12 +185,12 @@ public class BoardTest {
         assertFalse(c4.isActive());
 
         // aggiungo singolo verso il basso
-        Cannon e5 = new Cannon(Side.EMPTY, Side.GUN, Side.EMPTY, Side.EMPTY, false);
+        Cannon e5 = new Cannon(Side.EMPTY, Side.GUN, Side.EMPTY, Side.EMPTY, false,1);
         e5.moveToHand();
         truck.addComponent(e5, 3, 2);
 
         // aggiungo doppio che punta verso l'alto e lo attivo
-        Cannon e6 = new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.EMPTY,  true);
+        Cannon e6 = new Cannon(Side.GUN, Side.EMPTY, Side.EMPTY, Side.EMPTY,  true,1);
         e6.moveToHand();
         truck.addComponent(e6, 1, 2);
         truck.activeCannon(1,2);
@@ -200,10 +200,10 @@ public class BoardTest {
         assertFalse(e6.isActive());
 
         // RICALCOLO CON ALIENO viola
-        HousingUnit alienCabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        HousingUnit alienCabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         alienCabin.moveToHand();
         truck.addComponent(alienCabin, 3, 4);
-        AlienAddOns alienAddOns = new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, Color.Purple);
+        AlienAddOns alienAddOns = new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, Color.Purple,1);
         alienAddOns.moveToHand();
         truck.addComponent(alienAddOns, 4, 4);
         truck.updateAllowedAliens();
@@ -219,15 +219,15 @@ public class BoardTest {
     public void testCalculateGoodsSales() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo e saldo due container
-        Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Red, new ArrayList<>(List.of(new Item(Color.Red), new Item(Color.Green))));
+        Container c1 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Red, new ArrayList<>(List.of(new Item(Color.Red), new Item(Color.Green))),1);
         c1.moveToHand();
         truck.addComponent(c1, 2, 4);
-        Container c2 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 2, Color.Blue, new ArrayList<>(List.of(new Item(Color.Blue), new Item(Color.Yellow))));
+        Container c2 = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 2, Color.Blue, new ArrayList<>(List.of(new Item(Color.Blue), new Item(Color.Yellow))),1);
         c2.moveToHand();
         truck.addComponent(c2, 3, 4);
 
@@ -238,38 +238,38 @@ public class BoardTest {
     public void testCalculateExposedConnectors() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo e saldo vari componenti
-        Cannon c1 = new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
 
-        Container ctn1 = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR,2,Color.Red, new ArrayList<>());
+        Container ctn1 = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR,2,Color.Red, new ArrayList<>(),1);
         ctn1.moveToHand();
         truck.addComponent(ctn1, 1, 2);
 
-        HousingUnit cabin = new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false);
+        HousingUnit cabin = new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         cabin.moveToHand();
         truck.addComponent(cabin, 2, 2);
 
-        BatteryHub hb = new BatteryHub(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2);
+        BatteryHub hb = new BatteryHub(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2,1);
         hb.moveToHand();
         truck.addComponent(hb, 2, 4);
 
-        Cannon c2 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c2 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 3, 3);
 
         assertEquals(4, truck.calculateExposedConnectors());
 
         // saldo due componenti per coprire connettori esposti laterali
-        Engine e1 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, false);
+        Engine e1 = new Engine(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, false,1);
         e1.moveToHand();
         truck.addComponent(e1, 2, 1);
-        Engine e2 = new Engine(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Engine e2 = new Engine(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         e2.moveToHand();
         truck.addComponent(e2, 2, 5);
 
@@ -283,20 +283,20 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale obbligatoria per una nave valida
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // struttura valida a destra della cabina
-        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>());
+        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
 
         // battery hub e cannone sotto container: il cannone ha GUN rivolto verso il container
-        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2);
+        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2,1);
         bh.moveToHand();
         truck.addComponent(bh, 3, 3);
-        Cannon cannon = new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false); // GUN rivolto verso l’alto
+        Cannon cannon = new Cannon(Side.GUN, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1); // GUN rivolto verso l’alto
         cannon.moveToHand();
         truck.addComponent(cannon, 3, 4);
 
@@ -309,22 +309,22 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // battery hub per collegare container a destra
-        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2);
+        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2,1);
         bh.moveToHand();
         truck.addComponent(bh, 3, 3);
 
         // motore rivolto verso il basso (ENGINE nel lato down)
-        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false);
+        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 2, 4);
 
         // componente sotto il motore → violazione del regolamento
-        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>());
+        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 3, 4);
 
@@ -337,17 +337,17 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // container con connettore singolo a destra
-        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>());
+        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
 
         // cabina con connettore doppio a sinistra -> nave illegale
-        HousingUnit cabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false);
+        HousingUnit cabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.EMPTY, false,1);
         cabin.moveToHand();
         truck.addComponent(cabin, 2, 5);
 
@@ -359,12 +359,12 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // container senza connettore a sinistra -> nave illegale
-        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>());
+        Container ctn = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
 
@@ -376,12 +376,12 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // motore può essere rivolto solo verso il basso. Qui è verso destra -> nave illegale
-        Engine e = new Engine(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.ENGINE, false);
+        Engine e = new Engine(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.ENGINE, false,1);
         e.moveToHand();
         truck.addComponent(e, 2, 4);
 
@@ -393,35 +393,35 @@ public class BoardTest {
         Board truck = new Board(2);
 
         // cabina centrale
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo nave elaborata ma corretta
-        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2);
+        BatteryHub bh = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 2,1);
         bh.moveToHand();
         truck.addComponent(bh, 2, 4);
 
-        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false);
+        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 3);
 
-        HousingUnit cabin = new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, false);
+        HousingUnit cabin = new HousingUnit(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
         cabin.moveToHand();
         truck.addComponent(cabin, 3, 4);
 
-        Cannon c = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Cannon c = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         c.moveToHand();
         truck.addComponent(c, 1, 4);
 
-        Shield shield = new Shield(Side.SHIELD, Side.EMPTY, Side.EMPTY, Side.SHIELD_DOUBLE_CONNECTOR);
+        Shield shield = new Shield(Side.SHIELD, Side.EMPTY, Side.EMPTY, Side.SHIELD_DOUBLE_CONNECTOR,1);
         shield.moveToHand();
         truck.addComponent(shield, 2, 2);
 
         assertTrue(truck.check());
 
         // aggiungo tile irraggiungibile
-        Cannon c2 = new Cannon(Side.EMPTY, Side.EMPTY, Side.GUN, Side.EMPTY, false);
+        Cannon c2 = new Cannon(Side.EMPTY, Side.EMPTY, Side.GUN, Side.EMPTY, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 1, 2);
         assertFalse(truck.check());
@@ -432,12 +432,12 @@ public class BoardTest {
     public void testDeleteNormal() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // saldo cannone
-        Cannon c = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c.moveToHand();
         truck.addComponent(c, 1, 3);
 
@@ -450,17 +450,17 @@ public class BoardTest {
     @Test
     public void testDeleteGuns() {
         Board truck = new Board(2);
-        HousingUnit h = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit h = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         h.moveToHand();
         truck.addComponent(h, 2, 3);
 
-        Cannon c1 = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
-        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.GUN, false);
+        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.GUN, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 2, 4);
-        Cannon c3 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.EMPTY, Side.EMPTY, false);
+        Cannon c3 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.EMPTY, Side.EMPTY, false,1);
         c3.moveToHand();
         truck.addComponent(c3, 3, 3);
 
@@ -475,23 +475,23 @@ public class BoardTest {
     public void testDeleteUnreachableTiles() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo e saldo container che eliminerò e a cui saranno legati tutte le altre tiles
-        Container c = new Container(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
         c.moveToHand();
         truck.addComponent(c, 2, 2);
 
         // creo tiles unicamente collegate ad esso
-        Cannon cannon = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon cannon = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         cannon.moveToHand();
         truck.addComponent(cannon, 1, 2);
-        AlienAddOns a = new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Color.Purple);
+        AlienAddOns a = new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Color.Purple,1);
         a.moveToHand();
         truck.addComponent(a, 3, 2);
-        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, false);
+        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.SINGLE_CONNECTOR, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 1);
 
@@ -515,23 +515,23 @@ public class BoardTest {
     public void testDeleteUnreachableTile() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // creo e saldo container che eliminerò e a cui sarà collegato cannon
-        Container c = new Container(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
         c.moveToHand();
         truck.addComponent(c, 2, 2);
 
         // creo e saldo altre tiles: ora solo cannon è legata a container
-        Cannon cannon = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon cannon = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         cannon.moveToHand();
         truck.addComponent(cannon, 1, 2);
-        AlienAddOns a = new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Color.Purple);
+        AlienAddOns a = new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Color.Purple,1);
         a.moveToHand();
         truck.addComponent(a, 3, 3);
-        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Engine e = new Engine(Side.EMPTY, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 4);
 
@@ -555,21 +555,21 @@ public class BoardTest {
     public void testCheckDeleteTileMultiplePaths() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // tile che eliminerò
-        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(),1);
         c.moveToHand();
         truck.addComponent(c, 2, 4);
 
-        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 3, 3);
 
         // 'e' è raggiungibile sia da 's' che da 'c'
-        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 4);
 
@@ -588,29 +588,29 @@ public class BoardTest {
     public void testDeleteGeneral() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // configuro nave
-        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
-        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false);
+        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 3, 3);
-        Shield s = new Shield(Side.SHIELD, Side.EMPTY, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD, Side.EMPTY, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 2, 2);
-        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3);
+        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3,1);
         bh.moveToHand();
         truck.addComponent(bh, 1, 4);
 
 
-        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>());
+        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
-        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false);
+        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false,1);
         c3.moveToHand();
         truck.addComponent(c3, 2, 5);
 
@@ -630,19 +630,19 @@ public class BoardTest {
     public void testCannonShotBig() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // configurazione nave test precedente
-        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(),1);
         c.moveToHand();
         truck.addComponent(c, 2, 4);
-        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 3, 3);
         // 'e' è raggiungibile sia da 's' che da 'c'
-        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 4);
 
@@ -673,19 +673,19 @@ public class BoardTest {
     public void testCannonShotSmall() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // configurazione nave test precedente
-        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>());
+        Container c = new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 2, Color.Blue, new ArrayList<>(),1);
         c.moveToHand();
         truck.addComponent(c, 2, 4);
-        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.SHIELD, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD_DOUBLE_CONNECTOR, Side.EMPTY, Side.SHIELD, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 3, 3);
         // 'e' è raggiungibile sia da 's' che da 'c'
-        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false);
+        Engine e = new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.SINGLE_CONNECTOR, Side.EMPTY, false,1);
         e.moveToHand();
         truck.addComponent(e, 3, 4);
 
@@ -717,27 +717,27 @@ public class BoardTest {
     public void testBigMeteor() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // configuro nave
-        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
-        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false);
+        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 3, 3);
-        Shield s = new Shield(Side.SHIELD, Side.EMPTY, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD, Side.EMPTY, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 2, 2);
-        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>());
+        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
-        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false);
+        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false,1);
         c3.moveToHand();
         truck.addComponent(c3, 2, 5);
-        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3);
+        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3,1);
         bh.moveToHand();
         truck.addComponent(bh, 1, 4);
 
@@ -768,7 +768,7 @@ public class BoardTest {
         assertNull(truck.getTile(1,3));
 
         // al posto di c1 metto cannone doppio
-        Cannon c4 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true);
+        Cannon c4 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true,1);
         c4.moveToHand();
         truck.addComponent(c4, 1, 3);
 
@@ -792,27 +792,27 @@ public class BoardTest {
     public void testSmallMeteor() {
         // setup
         Board truck = new Board(2);
-        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true);
+        HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
 
         // configuro nave
-        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false);
+        Cannon c1 = new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false,1);
         c1.moveToHand();
         truck.addComponent(c1, 1, 3);
-        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false);
+        Cannon c2 = new Cannon(Side.SINGLE_CONNECTOR, Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, false,1);
         c2.moveToHand();
         truck.addComponent(c2, 3, 3);
-        Shield s = new Shield(Side.SHIELD, Side.SHIELD_DOUBLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR);
+        Shield s = new Shield(Side.SHIELD, Side.SHIELD_DOUBLE_CONNECTOR, Side.SHIELD_SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR,1);
         s.moveToHand();
         truck.addComponent(s, 2, 2);
-        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>());
+        Container ctn = new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR,2,Color.Red, new ArrayList<>(),1);
         ctn.moveToHand();
         truck.addComponent(ctn, 2, 4);
-        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false);
+        Cannon c3 = new Cannon(Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.GUN, false,1);
         c3.moveToHand();
         truck.addComponent(c3, 2, 5);
-        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3);
+        BatteryHub bh = new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3,1);
         bh.moveToHand();
         truck.addComponent(bh, 1, 4);
 
