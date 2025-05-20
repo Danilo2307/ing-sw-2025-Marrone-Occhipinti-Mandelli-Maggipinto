@@ -1,16 +1,19 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 public class ClientCallback extends UnicastRemoteObject implements ClientCallbackInterface {
+    private final ClientEventHandler handler;
     private final ViewAPI view;
 
-    protected ClientCallback(ViewAPI view) throws RemoteException {
+    protected ClientCallback(ClientEventHandler handler) throws RemoteException {
         super();
-        this.view = view;
+        this.handler = handler;
+        this.view = handler.getView();
     }
 
     @Override

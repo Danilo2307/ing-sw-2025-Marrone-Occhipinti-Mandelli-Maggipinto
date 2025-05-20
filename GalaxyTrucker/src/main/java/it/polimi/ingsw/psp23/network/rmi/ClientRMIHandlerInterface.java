@@ -8,6 +8,8 @@ import java.rmi.RemoteException;
 
 public interface ClientRMIHandlerInterface extends Remote{
     void registerClient(String username, ClientCallbackInterface stub) throws RemoteException;
-    void sendAction(Action action, String username) throws RemoteException;
     void heartbeat(String username) throws RemoteException;
+    void sendToAllClients(Message msg) throws RemoteException;
+    void sendToUser(String username, Message msg) throws RemoteException;
+    void sendAction(String username, Action action) throws RemoteException;
 }

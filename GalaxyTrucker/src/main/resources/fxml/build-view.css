@@ -1,0 +1,20 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/background_image.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.transparent-scrollpane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.transparent-scrollpane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-hbox {
+    -fx-background-color: transparent;
+}
+
