@@ -1,15 +1,21 @@
 module it.polimi.ingsw.psp23 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.rmi;
+
+    // (if you have other reflective needs you can open more packages similarly)
 
     requires org.controlsfx.controls;
     requires java.desktop;
-    requires java.rmi;
     requires jdk.jfr;
     requires jdk.jshell;
     requires java.smartcardio;
 
     opens it.polimi.ingsw.psp23 to javafx.fxml;
+    // allow code in other modules to compile‐against your RMI interfaces:
+    exports it.polimi.ingsw.psp23.network.rmi;
+    // open the package reflectively to the RMI runtime:
+    opens it.polimi.ingsw.psp23.network.rmi to java.rmi;
     exports it.polimi.ingsw.psp23;
     exports it.polimi.ingsw.psp23.model.cards;
     exports it.polimi.ingsw.psp23.exceptions;

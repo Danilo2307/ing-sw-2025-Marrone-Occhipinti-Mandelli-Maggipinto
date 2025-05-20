@@ -131,11 +131,7 @@ public class BuildingPhaseController {
     }
 
     private void drawUncovered(ImageView imageView) {
-        // ottengo la posizione della tile nell'HBox
         int index = uncoveredBox.getChildren().indexOf(imageView);
-        /// TODO: discuti con danilo
-        uncoveredBox.getChildren().remove(index); ///
-
         client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
 

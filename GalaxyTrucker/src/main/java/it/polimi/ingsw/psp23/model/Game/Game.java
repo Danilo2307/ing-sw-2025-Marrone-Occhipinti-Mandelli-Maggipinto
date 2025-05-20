@@ -241,7 +241,7 @@ public class Game {
             }
             // qualche altro player ha pescato dalla lista --> quella che stava vedendo il giocatore noon era aggiornata
             if (version != lastUncoveredVersion)
-                throw new NoTileException("La lista di tessere scoperte che vedi non è aggiornata. Scrivi 'mostra scoperte' per aggiornarla");
+                throw new NoTileException("La lista di tessere scoperte che vedi non è aggiornata.\nEcco la versione aggiornata:\n");
             Component c = uncovered.get(position);
             uncovered.remove(c);
             lastUncoveredVersion++;
