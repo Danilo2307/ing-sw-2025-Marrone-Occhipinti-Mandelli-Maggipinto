@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23;
 
+import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.Client;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
@@ -18,6 +19,13 @@ public class MainClient {
             int interfaceChosen = scanner.nextInt();
             scanner.nextLine();  // Consuma il newline
 
+            System.out.println("Vuoi usare il protocollo di connessione RMI o Socket?");
+            System.out.println("Digita 1 per RMI, 2 per Socket:");
+            scanner = new Scanner(System.in);
+            int protocol = scanner.nextInt();
+            scanner.nextLine();  // Consuma il newline
+
+
             ViewAPI view;  // Uso l'interfaccia per garantire flessibilità
             ClientEventHandler clientEventHandler;
             Client client;
@@ -34,9 +42,19 @@ public class MainClient {
 
             // Usa la variabile generica view per l'handler e il client
             clientEventHandler = new ClientEventHandler(view);
-            client = new Client("localhost", 8000, null, clientEventHandler);
-            view.setClient(client);
-            view.init();  // Avvio della view scelta
+
+            // Scelta del protocollo
+            if (protocol == 1) {
+                ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
+            } else if (protocol == 2) {
+                client = new Client("localhost", 8000, null, clientEventHandler);
+                view.setClient(client);
+                view.init();  // Avvio della view scelta
+            } else {
+                System.out.println("Scelta non valida. Riprova.");
+                return;
+            }
+
 
         } catch (Exception e) {
             System.out.println("ERRORE in mainClient: " + e.getMessage());

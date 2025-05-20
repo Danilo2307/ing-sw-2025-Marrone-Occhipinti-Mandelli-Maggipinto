@@ -22,4 +22,7 @@ public class ClientEventHandler implements MessageObserver {
         /** qui arrivranno i messaggi diretti a tutti i client */
     }
 
+    public ViewAPI getView() {
+        return view;
+    }
 }

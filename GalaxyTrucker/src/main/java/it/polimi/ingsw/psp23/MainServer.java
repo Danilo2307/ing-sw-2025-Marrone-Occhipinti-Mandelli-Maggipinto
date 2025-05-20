@@ -3,17 +3,37 @@ package it.polimi.ingsw.psp23;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
+import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.network.socket.Users;
 import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
 
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.UUID;
 
 
 public class MainServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         Server.getInstance("localhost", 8000);
+
+        // 2) --- Avvio del registry RMI sulla 1099 ---
+        Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+
+        // 3) --- Bind del ClientRegistry (mantiene gli stub callback) ---
+        ClientRegistryInterface clientRegistry = new ClientRegistry();
+        rmiRegistry.rebind("ClientRegistry", clientRegistry);
+
+        // 4) --- Bind del GameServer RMI (deleghe a clientRegistry) ---
+        ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+        rmiRegistry.rebind("GameServer", rmiServer);
+
+        System.out.println("RMI registry avviato su port 1099");
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
