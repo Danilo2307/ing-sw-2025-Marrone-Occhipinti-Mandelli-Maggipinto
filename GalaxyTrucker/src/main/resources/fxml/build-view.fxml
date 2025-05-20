@@ -70,7 +70,7 @@
             </GridPane>
          </children>
       </StackPane>
-      <Button fx:id="leaveBtn" layoutX="823.0" layoutY="694.0" mnemonicParsing="false" onAction="#onLeaveClicked" text="abbandona" textFill="RED">
+      <Button fx:id="leaveBtn" layoutX="823.0" layoutY="694.0" mnemonicParsing="false" onAction="#onLeaveClicked" styleClass="quit-button" text="abbandona" textFill="RED">
          <font>
             <Font name="Arial Black" size="13.0" />
          </font></Button>
