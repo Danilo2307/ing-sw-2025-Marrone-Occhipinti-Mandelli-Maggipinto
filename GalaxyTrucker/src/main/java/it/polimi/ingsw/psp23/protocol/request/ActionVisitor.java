@@ -78,4 +78,8 @@ public interface ActionVisitor<T> {
 
     public T visitForDrawCard(DrawCard drawCard, String username);
 
+    public T visitForCreateNewMatch(CreateNewMatch createNewMatch, String username);
+
+    public T visitForAccessMatch(AccessMatch accessMatch, String username);
+
 }
