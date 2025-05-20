@@ -9,6 +9,9 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
+import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
+
+import java.util.ArrayList;
 
 /** Event triggered when the user wants to draw a face-up component at position x. */
 public record DrawFromFaceUp (int x, int version) implements Action {
@@ -24,6 +27,12 @@ public record DrawFromFaceUp (int x, int version) implements Action {
         catch (NoTileException | IndexOutOfBoundsException exception) {
             DirectMessage dm = new DirectMessage(new ErrorResponse(exception.getMessage()));
             Server.getInstance().sendMessage(username, dm);
+        }
+        finally {
+            ArrayList<Component> uncovered = game.getUncovered();
+            int updatedVersion = game.getLastUncoveredVersion();
+            DirectMessage dm1 = new DirectMessage(new UncoveredListResponse(uncovered, updatedVersion));
+            Server.getInstance().sendMessage(username, dm1);
         }
     }
 
