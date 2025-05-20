@@ -46,6 +46,8 @@ public class MainClient {
             // Scelta del protocollo
             if (protocol == 1) {
                 ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
+                view.setClient(clientRmi);
+                view.setupRMI();
             } else if (protocol == 2) {
                 client = new ClientSocket("localhost", 8000, null, clientEventHandler);
                 view.setClient(client);
@@ -57,7 +59,8 @@ public class MainClient {
 
 
         } catch (Exception e) {
-            System.out.println("ERRORE in mainClient: " + e.getMessage());
+            // System.out.println("ERRORE in mainClient: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

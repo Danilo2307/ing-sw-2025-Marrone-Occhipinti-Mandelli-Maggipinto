@@ -16,6 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHandlerInterface {
@@ -40,18 +41,16 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
                 //socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
                 Message message = (new DirectMessage(new SelectLevel()));
 
-                callback.onReceivedMessage(message.toString());
+                callback.onReceivedMessage(message);
 
-                System.out.println(message.toString());
-
-                Game.getInstance(Integer.parseInt(message.toString()));
+                // System.out.println(message.toString());
 
                 System.out.println("arrivato a questo punto");
 
             }
         }
 
-        registry.registerClient(username, callback);
+        registry.registerClient(nameConnection, callback);
 
 
 
@@ -68,7 +67,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public void sendToAllClients(Message msg) throws RemoteException {
         for (ClientCallbackInterface cb : registry.getAllClients()) {
             try {
-                cb.onReceivedMessage(msg.toString());
+                cb.onReceivedMessage(msg);
             } catch (RemoteException e) {
                 // il client probabilmente è offline: deregistralo
                 System.err.println("Client non risponde, rimuovo dallo stub list.");
@@ -88,7 +87,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             return;
         }
         try {
-            callback.onReceivedMessage(msg.toString());
+            callback.onReceivedMessage(msg);
         } catch (RemoteException e) {
             // Se il client non risponde, rimuovilo dalla lista
             System.err.println("sendToUser: impossibile inviare a \"" + username + "\": " + e.getMessage());
@@ -108,6 +107,11 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             DirectMessage dm = new DirectMessage(new ErrorResponse(e.getMessage()));
             sendToUser(username, dm);
         }
+    }
+
+    @Override
+    public void setGameLevel(int level) throws RemoteException {
+        Game.getInstance(level);
     }
 
 }

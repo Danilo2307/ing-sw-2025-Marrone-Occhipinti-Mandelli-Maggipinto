@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
@@ -81,6 +83,11 @@ public class GuiApplication extends Application implements ViewAPI {
         this.flightPhaseController.setClient(client);
         this.lobbyController.setClient(client);
         this.timerController.setClient(client);
+    }
+
+    @Override
+    public void setClient(ClientRMI clientRMI){
+
     }
 
     @Override
@@ -221,6 +228,11 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
+
+    }
+
+    @Override
+    public void setupRMI() throws RemoteException {
 
     }
 }

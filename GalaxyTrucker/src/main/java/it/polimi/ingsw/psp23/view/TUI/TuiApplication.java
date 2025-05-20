@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
@@ -17,12 +18,14 @@ import it.polimi.ingsw.psp23.view.ViewAPI;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.rmi.RemoteException;
 import java.util.*;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication implements ViewAPI {
     private ClientSocket client;
+    private ClientRMI clientRMI;
     private int lastUncoveredVersion;
     private final IOManager io;
     private TuiState currentTuiState;
@@ -36,6 +39,11 @@ public class TuiApplication implements ViewAPI {
     @Override
     public void setClient(ClientSocket client) {
         this.client = client;
+    }
+
+    @Override
+    public void setClient(ClientRMI clientRMI) {
+        this.clientRMI = clientRMI;
     }
 
     public IOManager getIOManager() {
@@ -77,6 +85,16 @@ public class TuiApplication implements ViewAPI {
         client.setUsername(username);
         // setClient(client);
         runGame();
+    }
+
+    public void setupRMI() throws RemoteException {
+
+        Scanner scanner = new Scanner(System.in);
+        int level = scanner.nextInt();
+        scanner.nextLine();
+
+        clientRMI.getGameServer().setGameLevel(level);
+
     }
 
     /** ciclo infinito che rimane in ascolto degli input dell'utente */

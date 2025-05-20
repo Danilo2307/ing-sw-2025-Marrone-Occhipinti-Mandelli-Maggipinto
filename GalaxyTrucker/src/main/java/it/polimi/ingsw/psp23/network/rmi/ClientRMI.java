@@ -29,16 +29,21 @@ public class ClientRMI implements Client {
         Registry registry = LocateRegistry.getRegistry(host, port);
 
         this.clientRegistry = (ClientRegistryInterface) registry.lookup("ClientRegistry");
-        this.gameServer = (ClientRMIHandler) registry.lookup("GameServer");
+        this.gameServer = (ClientRMIHandlerInterface) registry.lookup("GameServer");
 
         // 3. Esporta il callback del client
         ClientCallback callback = new ClientCallback(handler);
-        ClientCallbackInterface callbackStub = (ClientCallbackInterface) UnicastRemoteObject.exportObject(callback, 0);
+        // ClientCallbackInterface callbackStub = (ClientCallbackInterface) UnicastRemoteObject.exportObject(callback, 0);
+        ClientCallbackInterface callbackStub = callback;
 
         // 4. Registra il callback nel ClientRegistry
         this.nameConnection = UUID.randomUUID().toString();
         gameServer.registerClient(username, nameConnection, callbackStub);
 
+    }
+
+    public ClientRMIHandlerInterface getGameServer() {
+        return gameServer;
     }
 
 }

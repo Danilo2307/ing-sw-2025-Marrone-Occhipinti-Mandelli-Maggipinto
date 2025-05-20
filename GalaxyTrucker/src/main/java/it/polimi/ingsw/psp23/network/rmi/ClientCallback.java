@@ -1,5 +1,9 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
+import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.protocol.response.Event;
+import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
@@ -17,8 +21,9 @@ public class ClientCallback extends UnicastRemoteObject implements ClientCallbac
     }
 
     @Override
-    public void onReceivedMessage(String msg) throws RemoteException{
-        view.showMessage(msg);
+    public void onReceivedMessage(Message message) throws RemoteException{
+        Event e = message.call(new GetEventVisitor());
+        e.call(new HandleEventVisitor(), view);
     }
 
     @Override
