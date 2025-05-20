@@ -36,6 +36,7 @@ public class BuildingPhaseController {
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
+    @FXML private Button uncoveredRefresh;
 
     public void setClient(Client client) {
         this.client = client;
@@ -169,6 +170,11 @@ public class BuildingPhaseController {
 
         event.setDropCompleted(success);
         event.consume();
+    }
+
+    @FXML
+    public void onUncoveredRefresh() {
+        client.sendAction(new RequestUncovered());
     }
 
 

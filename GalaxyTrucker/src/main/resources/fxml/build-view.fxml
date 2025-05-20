@@ -74,15 +74,24 @@
          <font>
             <Font name="Arial Black" size="13.0" />
          </font></Button>
-      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="774.0" layoutY="197.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="769.0" layoutY="207.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../it/polimi/ingsw/psp23/images/tiles/31.jpg" />
          </image>
       </ImageView>
-      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" styleClass="transparent-scrollpane" layoutX="9.0" layoutY="8.0" prefHeight="126.0" prefWidth="927.0" vbarPolicy="NEVER" >
+      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="9.0" layoutY="8.0" prefHeight="126.0" prefWidth="927.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
          <content>
-            <HBox fx:id="uncoveredBox" styleClass="transparent-hbox" prefHeight="124.0" prefWidth="922.0" spacing="5.0" />
+            <HBox fx:id="uncoveredBox" prefHeight="124.0" prefWidth="922.0" spacing="5.0" styleClass="transparent-hbox" />
          </content>
       </ScrollPane>
+      <Button fx:id="uncoveredRefresh" layoutX="14.0" layoutY="146.0" mnemonicParsing="false" onAction="#onUncoveredRefresh" prefHeight="28.0" prefWidth="35.0">
+         <graphic>
+            <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../it/polimi/ingsw/psp23/images/utility/refresh-button-icon.jpg" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Button>
    </children>
 </AnchorPane>
