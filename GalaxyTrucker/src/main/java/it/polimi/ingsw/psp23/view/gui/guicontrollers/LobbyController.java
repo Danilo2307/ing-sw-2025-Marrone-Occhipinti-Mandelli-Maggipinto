@@ -1,7 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Client;
+import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.RegisterNumPlayers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,7 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
 public class LobbyController {
-    private Client client;
+    private ClientSocket client;
 
     // username
     @FXML private Button done;
@@ -28,7 +28,7 @@ public class LobbyController {
     @FXML private Button fourPlayersButton;
 
 
-    public void setClient(Client client) {
+    public void setClient(ClientSocket client) {
         this.client = client;
     }
 

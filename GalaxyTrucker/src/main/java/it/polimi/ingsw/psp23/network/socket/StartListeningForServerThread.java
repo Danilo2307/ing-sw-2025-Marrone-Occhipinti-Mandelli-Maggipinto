@@ -17,10 +17,10 @@ public class StartListeningForServerThread extends Thread {
 
     private final SocketHandler socketHandler;
     private final ClientEventHandler clientEventHandler;
-    private final Client client;
+    private final ClientSocket client;
     private boolean running = true;
 
-    public StartListeningForServerThread(SocketHandler socketHandler, ClientEventHandler clientEventHandler, Client client) {
+    public StartListeningForServerThread(SocketHandler socketHandler, ClientEventHandler clientEventHandler, ClientSocket client) {
         this.socketHandler = socketHandler;
         this.clientEventHandler = clientEventHandler;
         this.client = client;

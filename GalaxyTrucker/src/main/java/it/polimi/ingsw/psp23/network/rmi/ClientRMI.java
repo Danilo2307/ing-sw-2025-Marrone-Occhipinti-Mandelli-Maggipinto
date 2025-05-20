@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
@@ -7,11 +8,13 @@ import javax.swing.text.View;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.UUID;
 
-public class ClientRMI {
+public class ClientRMI implements Client {
     private final ClientRMIHandlerInterface gameServer;
     private final ClientRegistryInterface clientRegistry;
     private final String username;
+    private final String nameConnection;
 
     /**
      * Costruisce e registra il client RMI.
@@ -33,7 +36,9 @@ public class ClientRMI {
         ClientCallbackInterface callbackStub = (ClientCallbackInterface) UnicastRemoteObject.exportObject(callback, 0);
 
         // 4. Registra il callback nel ClientRegistry
-        clientRegistry.registerClient(username, callbackStub);
+        this.nameConnection = UUID.randomUUID().toString();
+        gameServer.registerClient(username, nameConnection, callbackStub);
+
     }
 
 }
