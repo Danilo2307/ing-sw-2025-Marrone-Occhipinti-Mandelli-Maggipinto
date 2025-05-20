@@ -11,10 +11,10 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 public record CreateNewMatch() implements Action {
 
     public void handle(String username){
-        synchronized (Server.getInstance().getGames()) {
+        /*synchronized (Server.getInstance().getGames()) {
             int size = Server.getInstance().getGames().size();
             Server.getInstance().getGames().put(size, new Game());
-        }
+        }*/
     }
 
     @Override
