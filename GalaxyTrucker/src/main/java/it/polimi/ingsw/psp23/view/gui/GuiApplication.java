@@ -62,8 +62,8 @@ public class GuiApplication extends Application implements ViewAPI {
                 getClass().getResource("/fxml/lobby-view.fxml")
         );
         Parent root = loader.load();
-
-        Scene scene = new Scene(root, 400, 300);
+        stage.setResizable(false);
+        Scene scene = new Scene(root,1152,768);
         stage.setTitle("Galaxy Trucker");
         stage.setScene(scene);
         stage.show();
