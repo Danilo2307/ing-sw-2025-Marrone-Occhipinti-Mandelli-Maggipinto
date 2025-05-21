@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -170,9 +171,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void stateChanged(GameStatus newState) {
-        switch(newState) {
-            case GameStatus.Building -> stageManager.toBuildingPhase();
-        }
+        Platform.runLater(() -> {
+            switch(newState) {
+                case GameStatus.Building -> stageManager.toBuildingPhase();
+            }
+        });
+
     }
 
     @Override
