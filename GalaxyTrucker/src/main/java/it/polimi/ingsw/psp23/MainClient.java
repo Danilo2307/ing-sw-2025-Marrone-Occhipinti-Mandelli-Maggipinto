@@ -61,7 +61,9 @@ public class MainClient {
             } else if (protocol == 2) {
                 client = new ClientSocket("localhost", 8000, null, clientEventHandler);
                 view.setClient(client);
-                GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
+                if(interfaceChosen == 2) {
+                    GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
+                }
                 view.setup();  // Avvio della view scelta
             } else {
                 System.out.println("Scelta non valida. Riprova.");
