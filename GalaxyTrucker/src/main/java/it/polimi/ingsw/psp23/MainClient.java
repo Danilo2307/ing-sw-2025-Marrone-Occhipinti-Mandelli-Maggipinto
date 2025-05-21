@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.GuiApplication;
+import javafx.application.Application;
 
 import java.util.Scanner;
 
@@ -34,7 +35,8 @@ public class MainClient {
             if (interfaceChosen == 1) {
                 view = new TuiApplication();  // Assegno direttamente alla variabile generica
             } else if (interfaceChosen == 2) {
-                view = new GuiApplication();  // Assegno direttamente alla variabile generica
+                Application.launch(GuiApplication.class);  // Assegno direttamente alla variabile generica
+                view = GuiApplication.getInstance();
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;

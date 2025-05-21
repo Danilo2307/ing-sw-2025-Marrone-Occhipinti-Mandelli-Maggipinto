@@ -25,6 +25,7 @@ module it.polimi.ingsw.psp23 {
     exports it.polimi.ingsw.psp23.model.enumeration;
     opens it.polimi.ingsw.psp23.model.enumeration to javafx.fxml;
     exports it.polimi.ingsw.psp23.model.Game;
+    opens it.polimi.ingsw.psp23.view.gui.guicontrollers to javafx.fxml;
     opens it.polimi.ingsw.psp23.view.gui to javafx.graphics, javafx.fxml;
     opens it.polimi.ingsw.psp23.model.Game to javafx.fxml;
 

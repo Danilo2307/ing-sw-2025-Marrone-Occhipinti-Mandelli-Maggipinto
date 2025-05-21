@@ -59,7 +59,7 @@ public class GuiApplication extends Application implements ViewAPI {
     public void start(Stage stage) throws Exception {
 
         FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("fxml/lobby-view.fxml")
+                getClass().getResource("/fxml/lobby-view.fxml")
         );
         Parent root = loader.load();
 
