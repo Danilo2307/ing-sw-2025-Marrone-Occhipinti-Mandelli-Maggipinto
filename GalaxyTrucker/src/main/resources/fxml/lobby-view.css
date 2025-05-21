@@ -5,13 +5,31 @@
 
 }
 
-.main-button {
+.done-button {
     -fx-background-color: #4CAF50;
     -fx-text-fill: white;
-    -fx-font-weight: bold;
+    -fx-font-size: 17px;
+    -fx-font-family: "Arial Black";
 }
 
-.main-button:hover {
+.done-button:hover {
     -fx-background-color: #66FF66;
     -fx-cursor: hand;
+    -fx-font-size: 17px;
+    -fx-font-family: "Arial Black";
 }
+.generic-button {
+    -fx-background-color: #c5c0c0;
+    -fx-text-fill: white;
+}
+
+.generic-button:hover {
+    -fx-background-color: #5773ff;
+    -fx-cursor: hand;
+}
+
+#usernameField {
+    -fx-font-size: 17px;
+    -fx-font-family: "Arial Black";
+}
+

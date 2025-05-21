@@ -23,12 +23,13 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
 // la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
 // da cui viene effettivamente fatta partire la gui
 public class GuiApplication extends Application implements ViewAPI {
-
+    private static final CountDownLatch latch = new CountDownLatch(1);
     private ClientSocket client;
     private  BuildingPhaseController buildingPhaseController;
     private  CardDialogController cardDialogController;
@@ -39,6 +40,10 @@ public class GuiApplication extends Application implements ViewAPI {
     private Stage stage;
     private StageManager stageManager;
     private static GuiApplication instance;
+
+    public static void awaitStart() throws InterruptedException {
+        latch.await(); // aspetta finché start() non ha finito
+    }
 
     public static GuiApplication getInstance() {
         return instance;
@@ -68,6 +73,7 @@ public class GuiApplication extends Application implements ViewAPI {
         stage.show();
         this.stage = stage;
         stageManager = new StageManager(stage);
+        latch.countDown();
     }
     public static void main(String[] args) {
         launch(args);
