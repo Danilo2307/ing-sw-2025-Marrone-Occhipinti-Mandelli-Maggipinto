@@ -30,12 +30,12 @@ import java.util.ArrayList;
 public class GuiApplication extends Application implements ViewAPI {
 
     private ClientSocket client;
-    private final BuildingPhaseController buildingPhaseController;
-    private final CardDialogController cardDialogController;
-    private final CheckBoardController checkBoardController;
-    private final FlightPhaseController flightPhaseController;
-    private final LobbyController lobbyController;
-    private final TimerController timerController;
+    private  BuildingPhaseController buildingPhaseController;
+    private  CardDialogController cardDialogController;
+    private  CheckBoardController checkBoardController;
+    private  FlightPhaseController flightPhaseController;
+    private  LobbyController lobbyController;
+    private  TimerController timerController;
     private Stage stage;
     private StageManager stageManager;
     private static GuiApplication instance;
@@ -45,12 +45,6 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     public GuiApplication() {
-        this.buildingPhaseController = new BuildingPhaseController();
-        this.cardDialogController = new CardDialogController();
-        this.checkBoardController = new CheckBoardController();
-        this.flightPhaseController = new FlightPhaseController();
-        this.lobbyController = new LobbyController();
-        this.timerController = new TimerController();
         instance = this;
     }
 
@@ -61,7 +55,12 @@ public class GuiApplication extends Application implements ViewAPI {
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/fxml/lobby-view.fxml")
         );
+
         Parent root = loader.load();
+
+        this.lobbyController = loader.getController();
+        lobbyController.setClient(client);
+
         stage.setResizable(false);
         Scene scene = new Scene(root,1152,768);
         stage.setTitle("Galaxy Trucker");
@@ -77,12 +76,6 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void setClient(ClientSocket client) {
         this.client = client;
-        this.buildingPhaseController.setClient(client);
-        this.cardDialogController.setClient(client);
-        this.checkBoardController.setClient(client);
-        this.flightPhaseController.setClient(client);
-        this.lobbyController.setClient(client);
-        this.timerController.setClient(client);
     }
 
     @Override

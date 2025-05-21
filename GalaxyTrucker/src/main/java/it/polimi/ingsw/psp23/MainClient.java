@@ -35,7 +35,15 @@ public class MainClient {
             if (interfaceChosen == 1) {
                 view = new TuiApplication();  // Assegno direttamente alla variabile generica
             } else if (interfaceChosen == 2) {
-                Application.launch(GuiApplication.class);  // Assegno direttamente alla variabile generica
+                // 1) lancio JavaFX in un thread separato
+                Thread fxThread = new Thread(() -> Application.launch(GuiApplication.class));
+                fxThread.setDaemon(false);
+                fxThread.start();
+
+                // 2) attendo che GuiApplication.instance sia inizializzata in start()
+                while (GuiApplication.getInstance() == null) {
+                    Thread.sleep(50);
+                }
                 view = GuiApplication.getInstance();
             } else {
                 System.out.println("Scelta non valida. Riprova.");
