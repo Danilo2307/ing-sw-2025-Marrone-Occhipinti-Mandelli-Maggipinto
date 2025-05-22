@@ -24,7 +24,7 @@ public class StageManager {
         );
         try {
             Parent root = loader.load();
-            Scene scene = new Scene(root, 400, 300);
+            Scene scene = new Scene(root, 1152, 768);
             stage.setScene(scene);
         }
         catch(IOException e) {
