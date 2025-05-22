@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 
@@ -11,8 +12,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 public interface ViewAPI {
-    void setClient(ClientSocket client);
-    void setClient(ClientRMI clientRMI);
+    void setClient(Client client);
     void setup();
     void setupRMI() throws RemoteException;
     void showRequestLevel();

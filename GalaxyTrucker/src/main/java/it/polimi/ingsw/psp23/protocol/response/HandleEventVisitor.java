@@ -115,18 +115,27 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
     public Void visitForUpdateFromCard(UpdateFromCard updateFromCard, ViewAPI viewAPI){
         updateFromCard.handle(viewAPI);
         return null;
     }
 
+    @Override
     public Void visitForSelectLevel(SelectLevel selectLevel, ViewAPI viewAPI){
         selectLevel.handle(viewAPI);
         return null;
     }
 
+    @Override
     public Void visitForMatchFinished(MatchFinished matchFinished, ViewAPI viewAPI){
         matchFinished.handle(viewAPI);
+        return null;
+    }
+
+    @Override
+    public Void visitForLobbyUnavailable(LobbyUnavailable lobbyUnavailable, ViewAPI viewAPI){
+        lobbyUnavailable.handle(viewAPI);
         return null;
     }
 

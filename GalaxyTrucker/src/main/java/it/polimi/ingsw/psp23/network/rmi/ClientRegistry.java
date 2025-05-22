@@ -17,15 +17,15 @@ public class ClientRegistry extends UnicastRemoteObject implements ClientRegistr
         }
 
         @Override
-        public void registerClient(String username, ClientCallbackInterface callback) throws RemoteException {
-            clients.put(username, callback);
-            System.out.println("ClientRegistry: registrato " + username);
+        public void registerClient(String nameConnection, ClientCallbackInterface callback) throws RemoteException {
+            clients.put(nameConnection, callback);
+            System.out.println("ClientRegistry: registrato " + nameConnection);
         }
 
         @Override
-        public void unregisterClient(String username) throws RemoteException {
-            clients.remove(username);
-            System.out.println("ClientRegistry: deregistrato " + username);
+        public void unregisterClient(String nameConnection) throws RemoteException {
+            clients.remove(nameConnection);
+            System.out.println("ClientRegistry: deregistrato " + nameConnection);
         }
 
         @Override
@@ -34,7 +34,7 @@ public class ClientRegistry extends UnicastRemoteObject implements ClientRegistr
         }
 
         @Override
-        public ClientCallbackInterface getClient(String username) throws RemoteException {
-            return clients.get(username);
+        public ClientCallbackInterface getClient(String nameConnection) throws RemoteException {
+            return clients.get(nameConnection);
         }
 }

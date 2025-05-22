@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23;
 
 import it.polimi.ingsw.psp23.exceptions.GameException;
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
@@ -59,13 +60,12 @@ public class MainClient {
 
             // Scelta del protocollo
             if (protocol == 1) {
-                ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
-                if(clientRmi.getGameServer().getNumPlayersConnected() == 1){
-                    try {
-                        clientRmi.close();
-                    }catch (NotBoundException e){
-                        throw new RemoteException("eccezione in main di MainClient a seguito di close()");
-                    }
+                ClientRMI clientRmi = null;
+                try {
+                    clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
+                }
+                catch (LobbyUnavailableException e) {
+                    System.out.println("Lobby unavailable");
                 }
                 view.setClient(clientRmi);
                 view.setupRMI();

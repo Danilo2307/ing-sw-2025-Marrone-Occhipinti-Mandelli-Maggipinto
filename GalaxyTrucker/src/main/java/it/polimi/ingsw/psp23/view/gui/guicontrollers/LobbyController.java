@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
@@ -8,8 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+
 public class LobbyController {
-    private ClientSocket client;
+    private Client client;
 
     // username
     @FXML private Button done;
@@ -28,7 +32,7 @@ public class LobbyController {
     @FXML private Button fourPlayersButton;
 
 
-    public void setClient(ClientSocket client) {
+    public void setClient(Client client) {
         this.client = client;
     }
 
@@ -114,19 +118,19 @@ public class LobbyController {
     }
 
     @FXML
-    public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) {
+    public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(2));
         hideNumPlayers();
     }
 
     @FXML
-    public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) {
+    public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(3));
         hideNumPlayers();
     }
 
     @FXML
-    public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) {
+    public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(4));
         hideNumPlayers();
     }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.network.rmi;
 
 import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.GameException;
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
+import it.polimi.ingsw.psp23.view.TUI.TuiState;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -35,6 +37,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
 
         synchronized (usersConnected) {
             UsersConnected.getInstance().addClient(nameConnection);
+            registry.registerClient(nameConnection, callback);
             System.out.println("Client connected: " + nameConnection);
 
             if(UsersConnected.getInstance().getClients().size() == 1){
@@ -48,12 +51,15 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
 
                 System.out.println("arrivato a questo punto");
 
-
-
+            }
+            else if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
+                UsersConnected.getInstance().removeClient(nameConnection);
+                throw new LobbyUnavailableException("lobby is unavailable");
+            }
+            else if(getNumPlayersConnected() == Game.getInstance().getNumRequestedPlayers()){
+                Controller.getInstance().startBuildingPhase();
             }
         }
-
-        registry.registerClient(nameConnection, callback);
 
 
 
@@ -83,24 +89,24 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
      * Se il client non è registrato o non risponde, viene loggato e rimosso.
      */
     @Override
-    public void sendToUser(String username, Message msg) throws RemoteException {
-        ClientCallbackInterface callback = registry.getClient(username);
+    public void sendToUser(String nameConnection, Message msg) throws RemoteException {
+        ClientCallbackInterface callback = registry.getClient(nameConnection);
         if (callback == null) {
-            System.err.println("sendToUser: nessun client registrato con username \"" + username + "\"");
+            System.err.println("sendToUser: nessun client registrato con username \"" + nameConnection + "\"");
             return;
         }
         try {
             callback.onReceivedMessage(msg);
         } catch (RemoteException e) {
             // Se il client non risponde, rimuovilo dalla lista
-            System.err.println("sendToUser: impossibile inviare a \"" + username + "\": " + e.getMessage());
+            System.err.println("sendToUser: impossibile inviare a \"" + nameConnection + "\": " + e.getMessage());
         }
     }
 
     @Override
-    public void sendAction(String username, Action action) throws RemoteException{
+    public void sendAction(String nameConnection, Action action) throws RemoteException{
         try {
-            action.call(new HandleActionVisitor(), username);
+            action.call(new HandleActionVisitor(), nameConnection);
         }
         /// TODO: raccolgo eccezioni lanciate dalla call
         // Catch all game-related exceptions triggered by invalid player actions.
@@ -108,7 +114,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
         // The server sends an error message back to the client to notify them, without stopping the game flow.
         catch(GameException e) {
             DirectMessage dm = new DirectMessage(new ErrorResponse(e.getMessage()));
-            sendToUser(username, dm);
+            sendToUser(nameConnection, dm);
         }
     }
 
@@ -127,4 +133,13 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
         Controller.getInstance().addPlayerToGame(username);
     }
 
+    @Override
+    public void setNumRequestedPlayers(int num) throws RemoteException{
+        Game.getInstance().setNumRequestedPlayers(num);
+    }
+
+    @Override
+    public int getNumRequestedPlayers() throws RemoteException{
+        return Game.getInstance().getNumRequestedPlayers();
+    }
 }

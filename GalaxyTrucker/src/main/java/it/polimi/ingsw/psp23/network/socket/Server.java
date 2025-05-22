@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.controller.Controller;
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
+import it.polimi.ingsw.psp23.protocol.response.LobbyUnavailable;
 import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
 
@@ -37,6 +39,9 @@ public class Server {
 
             serverSocket = new ServerSocket(port, 10, InetAddress.getByName("localhost"));
 
+            this.serverSocket.setReuseAddress(true);
+
+
             clients = new HashMap<>();
 
             System.out.println("Server started at port " + port + " and with address " + serverSocket.getInetAddress());
@@ -50,6 +55,8 @@ public class Server {
         try {
 
             serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
+
+            this.serverSocket.setReuseAddress(true);
 
             clients = new HashMap<>();
 
@@ -133,13 +140,7 @@ public class Server {
 
                 Socket socket = serverSocket.accept();
 
-                synchronized (clients) {
-                    // Nel caso in cui si sia registrato solo il primo client dobbiamo chiudere la connessione con altri
-                    // client perchè prima il "leader" della partita deve dichiarare quanti giocatori possono entrare
-                    if(clients.isEmpty()){
-                        close();
-                    }
-                }
+
 
                 // Questa istruzione serve per non andare avanti all'infinito ma, nel caso in cui dopo aver stabilito
                 // la connessione il client non dovesse mandare niente per 5 sec, questa istruzione lancerà un'eccezione
@@ -154,7 +155,15 @@ public class Server {
                     UsersConnected.getInstance().addClient(nameConnection);
                     System.out.println("Client connected: " + nameConnection);
 
-                    if(UsersConnected.getInstance().getClients().size() == 1){
+
+                    if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance() == null){
+                        socketHandler.sendMessage(new DirectMessage(new LobbyUnavailable()));
+                        clients.remove(nameConnection);
+                        UsersConnected.getInstance().removeClient(nameConnection);
+                        throw new LobbyUnavailableException("Lobby unavailable");
+                    }
+
+                    else if(UsersConnected.getInstance().getClients().size() == 1){
 
                         socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
 
@@ -198,8 +207,7 @@ public class Server {
 
 
 
-                if(clients.size() == Game.getInstance().getNumRequestedPlayers()){
-                    close();
+                if(UsersConnected.getInstance().getClients().size() == Game.getInstance().getNumRequestedPlayers()){
                     Controller.getInstance().startBuildingPhase();
                 }
 

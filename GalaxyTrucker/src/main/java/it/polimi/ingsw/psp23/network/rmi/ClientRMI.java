@@ -1,9 +1,13 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.network.socket.SocketHandler;
 import it.polimi.ingsw.psp23.protocol.request.Action;
+import it.polimi.ingsw.psp23.protocol.response.LobbyUnavailable;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
@@ -46,7 +50,12 @@ public class ClientRMI extends Client {
 
         // 4. Registra il callback nel ClientRegistry
         this.nameConnection = UUID.randomUUID().toString();
-        gameServer.registerClient(username, nameConnection, callbackStub);
+        try {
+            gameServer.registerClient(username, nameConnection, callbackStub);
+        }
+        catch (LobbyUnavailableException e) {
+            gameServer.sendToUser(nameConnection, new DirectMessage(new LobbyUnavailable()));
+        }
 
     }
 
@@ -56,6 +65,11 @@ public class ClientRMI extends Client {
 
     public void close() throws RemoteException, NotBoundException {
         registry.unbind("GameServer");
+        try {
+            Server.getInstance().close();
+        } catch (RuntimeException e) {
+
+        }
     }
 
     @Override
@@ -71,6 +85,7 @@ public class ClientRMI extends Client {
     @Override
     public void open() throws RemoteException {
         registry.rebind("GameServer", gameServer);
+//        Server.getInstance().setServerSocket("localhost", 8000);
     }
 
 }

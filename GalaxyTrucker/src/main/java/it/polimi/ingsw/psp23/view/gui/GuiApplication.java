@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
@@ -31,7 +32,7 @@ import java.util.concurrent.CountDownLatch;
 // da cui viene effettivamente fatta partire la gui
 public class GuiApplication extends Application implements ViewAPI {
     private static final CountDownLatch latch = new CountDownLatch(1);
-    private ClientSocket client;
+    private Client client;
     private  BuildingPhaseController buildingPhaseController;
     private  CardDialogController cardDialogController;
     private  CheckBoardController checkBoardController;
@@ -81,13 +82,8 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     @Override
-    public void setClient(ClientSocket client) {
+    public void setClient(Client client) {
         this.client = client;
-    }
-
-    @Override
-    public void setClient(ClientRMI clientRMI){
-
     }
 
     @Override

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.psp23;
 
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
@@ -37,18 +39,27 @@ public class MainServer {
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
-        Server.getInstance().connectClients(connectionId);
 
-        Users.getInstance().createClientHandler(connectionId);
-        Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
+        try{
+            Server.getInstance().connectClients(connectionId);
+            Users.getInstance().createClientHandler(connectionId);
+            if(UsersConnected.getInstance().getClients().size() == 1) {
+                Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
+            }
 
-        try {
-            ConnectionThread.getInstance().join(40000);
+            try {
+                ConnectionThread.getInstance().join(40000);
+            }
+            catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Game.getInstance().getPlayers().forEach(player -> {System.out.println(player.getNickname());});
         }
-        catch (InterruptedException e) {
-            e.printStackTrace();
+        catch (LobbyUnavailableException e){
+            System.out.println(e.getMessage());
         }
-        Game.getInstance().getPlayers().forEach(player -> {System.out.println(player.getNickname());});
+
+
 
     }
 }

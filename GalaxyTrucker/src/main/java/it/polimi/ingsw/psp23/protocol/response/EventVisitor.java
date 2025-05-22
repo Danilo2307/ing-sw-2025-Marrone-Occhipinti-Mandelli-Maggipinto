@@ -47,4 +47,6 @@ public interface EventVisitor<T> {
 
     public T visitForMatchFinished(MatchFinished matchFinished, ViewAPI viewAPI);
 
+    public T visitForLobbyUnavailable(LobbyUnavailable lobbyUnavailable, ViewAPI viewAPI);
+
 }

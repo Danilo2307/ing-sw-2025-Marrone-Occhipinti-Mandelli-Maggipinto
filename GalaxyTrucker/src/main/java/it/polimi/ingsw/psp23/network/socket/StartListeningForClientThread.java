@@ -46,7 +46,9 @@ public class StartListeningForClientThread extends Thread {
             synchronized (Server.getInstance().getClients()) {
                 if (Server.getInstance().getClients().size() == 1 && Server.getInstance().getServerSocket().isClosed()) {
                     // Se è chiusa e siamo nel primo player riapriamo la serversocket
-                    Server.getInstance().setServerSocket("localhost", 8000);
+
+                    //Server.getInstance().setServerSocket("localhost", 8000);
+
                     // In questo punto permettiamo al Server di accettare nuovi client
                     ConnectionThread.getInstance().start();
                 }

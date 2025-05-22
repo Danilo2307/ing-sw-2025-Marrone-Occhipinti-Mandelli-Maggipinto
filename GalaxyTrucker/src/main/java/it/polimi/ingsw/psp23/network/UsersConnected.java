@@ -25,6 +25,10 @@ public class UsersConnected {
         clients.add(username);
     }
 
+    public void removeClient(String username){
+        clients.remove(username);
+    }
+
     public List<String> getClients(){
         return clients;
     }

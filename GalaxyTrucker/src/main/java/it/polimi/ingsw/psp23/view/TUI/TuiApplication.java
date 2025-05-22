@@ -1,8 +1,10 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
+import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
@@ -14,6 +16,7 @@ import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
+import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.view.ViewAPI;
@@ -107,6 +110,19 @@ public class TuiApplication implements ViewAPI {
                 client.getGameServer().setPlayerUsername(username);
                 error = false;
                 io.print("Username settato correttamente\n");
+                if(client.getGameServer().getNumPlayersConnected() == 1){
+                    io.print("Inserisci il numero di giocatori presenti nella partita (minimo 2 massimo 4): ");
+                    int avversari;
+                    do {
+                        avversari = scanner.nextInt();
+                        if(avversari <= 1 || avversari > 4) {
+                            io.error("Inserisci un numero valido di players");
+                        }
+                        scanner.nextLine();
+                    }while(avversari <= 1 || avversari > 4);
+                    client.getGameServer().setNumRequestedPlayers(avversari);
+//                    client.open();
+                }
                 runGame();
             } catch (PlayerExistsException e) {
                 io.error("Questo username è già in uso, scegline un altro!!");
@@ -114,6 +130,9 @@ public class TuiApplication implements ViewAPI {
             }
         } while (error);
 
+        if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
+            setState(TuiState.PRELOBBY);
+        }
 
     }
 
@@ -206,9 +225,6 @@ public class TuiApplication implements ViewAPI {
 
                     }
                     client.sendAction(new RegisterNumPlayers(number));
-                    if(client.isRmi()){
-                        client.open();
-                    }
                 }
             }
             case "pesca" -> {
