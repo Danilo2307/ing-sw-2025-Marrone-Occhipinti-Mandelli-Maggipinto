@@ -1,11 +1,14 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
+import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
+import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -24,8 +27,7 @@ import java.util.*;
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
 public class TuiApplication implements ViewAPI {
-    private ClientSocket client;
-    private ClientRMI clientRMI;
+    private Client client;
     private int lastUncoveredVersion;
     private final IOManager io;
     private TuiState currentTuiState;
@@ -37,13 +39,8 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void setClient(ClientSocket client) {
+    public void setClient(Client client) {
         this.client = client;
-    }
-
-    @Override
-    public void setClient(ClientRMI clientRMI) {
-        this.clientRMI = clientRMI;
     }
 
     public IOManager getIOManager() {
@@ -89,11 +86,34 @@ public class TuiApplication implements ViewAPI {
 
     public void setupRMI() throws RemoteException {
 
-        Scanner scanner = new Scanner(System.in);
-        int level = scanner.nextInt();
-        scanner.nextLine();
+        if(client.getGameServer().getNumPlayersConnected() == 1) {
+            Scanner scanner = new Scanner(System.in);
+            int level = scanner.nextInt();
+            scanner.nextLine();
 
-        clientRMI.getGameServer().setGameLevel(level);
+            client.getGameServer().setGameLevel(level);
+        }
+
+        io.print("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
+
+        Scanner scanner;
+        String username;
+
+        boolean error;
+        do {
+            try {
+                scanner = new Scanner(System.in);
+                username = scanner.nextLine();
+                client.getGameServer().setPlayerUsername(username);
+                error = false;
+                io.print("Username settato correttamente\n");
+                runGame();
+            } catch (PlayerExistsException e) {
+                io.error("Questo username è già in uso, scegline un altro!!");
+                error = true;
+            }
+        } while (error);
+
 
     }
 
@@ -102,7 +122,11 @@ public class TuiApplication implements ViewAPI {
         while (true) {
             try {
                 String command = io.read();
-                executeCommand(command);
+                try {
+                    executeCommand(command);
+                }catch (RemoteException e) {
+                    e.getStackTrace();
+                }
             }
             catch (TuiInputException e) {
                 io.error(e.getMessage());
@@ -142,7 +166,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
-    public void executeCommand(String command) {
+    public void executeCommand(String command) throws RemoteException {
         String[] words = command.split(" ");
 
         String keyword = words[0];
@@ -182,6 +206,9 @@ public class TuiApplication implements ViewAPI {
 
                     }
                     client.sendAction(new RegisterNumPlayers(number));
+                    if(client.isRmi()){
+                        client.open();
+                    }
                 }
             }
             case "pesca" -> {
@@ -473,7 +500,7 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
-    public ClientSocket getClient() {
+    public Client getClient() {
         return client;
     }
 

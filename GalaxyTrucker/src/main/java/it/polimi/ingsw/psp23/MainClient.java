@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23;
 
+import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
@@ -8,6 +9,9 @@ import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.application.Application;
 
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 
@@ -56,6 +60,13 @@ public class MainClient {
             // Scelta del protocollo
             if (protocol == 1) {
                 ClientRMI clientRmi = new ClientRMI("localhost", 1099, null, clientEventHandler);
+                if(clientRmi.getGameServer().getNumPlayersConnected() == 1){
+                    try {
+                        clientRmi.close();
+                    }catch (NotBoundException e){
+                        throw new RemoteException("eccezione in main di MainClient a seguito di close()");
+                    }
+                }
                 view.setClient(clientRmi);
                 view.setupRMI();
             } else if (protocol == 2) {

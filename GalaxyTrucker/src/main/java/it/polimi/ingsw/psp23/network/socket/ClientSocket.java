@@ -2,6 +2,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.network.messages.ActionMessage;
@@ -11,8 +12,9 @@ import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.rmi.RemoteException;
 
-public class ClientSocket implements Client {
+public class ClientSocket extends Client {
 
     SocketHandler socketHandler;
     StartListeningForServerThread startListeningForServerThread;
@@ -82,9 +84,11 @@ public class ClientSocket implements Client {
         startListeningForServerThread.stopThread();
     }
 
-    public void sendAction(Action action) {
+    @Override
+    public void sendAction(Action action){
         ActionMessage actionMessage = new ActionMessage(action);
         sendMessage(actionMessage);
 
     }
+
 }

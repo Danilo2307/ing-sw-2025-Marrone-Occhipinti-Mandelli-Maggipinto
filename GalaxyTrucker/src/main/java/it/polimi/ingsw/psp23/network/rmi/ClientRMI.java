@@ -1,20 +1,28 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.socket.SocketHandler;
+import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import javax.swing.text.View;
+import java.net.Socket;
+import java.net.SocketTimeoutException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
-public class ClientRMI implements Client {
+public class ClientRMI extends Client {
     private final ClientRMIHandlerInterface gameServer;
     private final ClientRegistryInterface clientRegistry;
     private final String username;
     private final String nameConnection;
+    private final Registry registry;
 
     /**
      * Costruisce e registra il client RMI.
@@ -26,7 +34,7 @@ public class ClientRMI implements Client {
     public ClientRMI(String host, int port, String username, ClientEventHandler handler) throws Exception {
         this.username = username;
 
-        Registry registry = LocateRegistry.getRegistry(host, port);
+        registry = LocateRegistry.getRegistry(host, port);
 
         this.clientRegistry = (ClientRegistryInterface) registry.lookup("ClientRegistry");
         this.gameServer = (ClientRMIHandlerInterface) registry.lookup("GameServer");
@@ -44,6 +52,25 @@ public class ClientRMI implements Client {
 
     public ClientRMIHandlerInterface getGameServer() {
         return gameServer;
+    }
+
+    public void close() throws RemoteException, NotBoundException {
+        registry.unbind("GameServer");
+    }
+
+    @Override
+    public void sendAction(Action action) throws RemoteException {
+        gameServer.sendAction(username, action);
+    }
+
+    @Override
+    public boolean isRmi() throws RemoteException {
+        return true;
+    }
+
+    @Override
+    public void open() throws RemoteException {
+        registry.rebind("GameServer", gameServer);
     }
 
 }

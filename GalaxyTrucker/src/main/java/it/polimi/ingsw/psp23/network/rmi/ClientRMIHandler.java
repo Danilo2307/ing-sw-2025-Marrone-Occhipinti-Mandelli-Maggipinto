@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
+import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -46,6 +47,8 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
                 // System.out.println(message.toString());
 
                 System.out.println("arrivato a questo punto");
+
+
 
             }
         }
@@ -112,6 +115,16 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     @Override
     public void setGameLevel(int level) throws RemoteException {
         Game.getInstance(level);
+    }
+
+    @Override
+    public int getNumPlayersConnected() throws RemoteException {
+        return UsersConnected.getInstance().getClients().size();
+    }
+
+    @Override
+    public void setPlayerUsername(String username) throws RemoteException{
+        Controller.getInstance().addPlayerToGame(username);
     }
 
 }

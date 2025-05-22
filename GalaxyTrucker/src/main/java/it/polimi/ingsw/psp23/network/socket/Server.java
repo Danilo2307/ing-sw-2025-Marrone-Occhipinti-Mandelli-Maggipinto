@@ -199,6 +199,7 @@ public class Server {
 
 
                 if(clients.size() == Game.getInstance().getNumRequestedPlayers()){
+                    close();
                     Controller.getInstance().startBuildingPhase();
                 }
 
