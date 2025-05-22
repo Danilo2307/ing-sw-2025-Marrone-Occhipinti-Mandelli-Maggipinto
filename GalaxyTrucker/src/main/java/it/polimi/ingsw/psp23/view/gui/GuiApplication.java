@@ -131,12 +131,14 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showWrongUsername() {
-        lobbyController.flushText();
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Username non valido");
-        alert.setHeaderText(null);
-        alert.setContentText("Inseriscine un altro");
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            lobbyController.flushText();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Username non valido");
+            alert.setHeaderText(null);
+            alert.setContentText("Inseriscine un altro");
+            alert.showAndWait();
+        });
     }
 
     @Override
@@ -158,15 +160,20 @@ public class GuiApplication extends Application implements ViewAPI {
     public void showError(String error) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setContentText(error);
-        // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
+            alert.showAndWait();
+        });
     }
 
     @Override
     public void showMessage(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setContentText(message);
-
+        Platform.runLater(() -> {
+            // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
+            alert.showAndWait();
+        });
     }
 
     @Override
