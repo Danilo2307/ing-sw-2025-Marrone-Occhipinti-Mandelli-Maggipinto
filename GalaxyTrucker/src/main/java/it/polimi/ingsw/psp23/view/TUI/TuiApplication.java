@@ -11,6 +11,7 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -19,6 +20,7 @@ import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
+import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import java.net.Socket;
@@ -131,7 +133,8 @@ public class TuiApplication implements ViewAPI {
         } while (error);
 
         if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
-            setState(TuiState.PRELOBBY);
+            client.getGameServer().startBuildingPhase();
+            client.getGameServer().sendToAllClients(new BroadcastMessage(new StateChanged(GameStatus.Building)));
         }
 
     }

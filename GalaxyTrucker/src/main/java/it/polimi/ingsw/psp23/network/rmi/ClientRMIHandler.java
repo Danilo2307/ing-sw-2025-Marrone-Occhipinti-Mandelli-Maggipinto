@@ -4,7 +4,9 @@ import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
@@ -12,6 +14,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
+import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.view.TUI.TuiState;
 
 import java.rmi.RemoteException;
@@ -55,9 +58,6 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             else if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
                 UsersConnected.getInstance().removeClient(nameConnection);
                 throw new LobbyUnavailableException("lobby is unavailable");
-            }
-            else if(getNumPlayersConnected() == Game.getInstance().getNumRequestedPlayers()){
-                Controller.getInstance().startBuildingPhase();
             }
         }
 
@@ -141,5 +141,10 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     @Override
     public int getNumRequestedPlayers() throws RemoteException{
         return Game.getInstance().getNumRequestedPlayers();
+    }
+
+    @Override
+    public void startBuildingPhase() throws RemoteException{
+        Controller.getInstance().startBuildingPhase();
     }
 }
