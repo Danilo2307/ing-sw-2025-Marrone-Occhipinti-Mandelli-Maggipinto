@@ -25,7 +25,7 @@ public abstract class Client {
     public Message readMessage() throws SocketTimeoutException{return null;}
     public void close() throws RemoteException, NotBoundException{};
     public void avvia(){};
-    public void setUsername(String username){};
+    public void setUsername(String username) throws RemoteException{};
     public ClientRMIHandlerInterface getGameServer() throws RemoteException{return null;};
     public SocketHandler getSocketHandler(){return null;};
     public void stopListeningForServerThread(){};

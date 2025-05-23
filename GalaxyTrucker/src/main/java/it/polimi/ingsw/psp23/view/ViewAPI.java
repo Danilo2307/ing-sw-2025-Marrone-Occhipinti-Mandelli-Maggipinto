@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public interface ViewAPI {
     void setClient(Client client);
-    void setup();
+    void setup() throws RemoteException;
     void setupRMI() throws RemoteException;
     void showRequestLevel();
     void showRequestNumPlayers();

@@ -11,7 +11,7 @@ public interface ClientRMIHandlerInterface extends Remote{
     void heartbeat(String username) throws RemoteException;
     void sendToAllClients(Message msg) throws RemoteException;
     void sendToUser(String username, Message msg) throws RemoteException;
-    void sendAction(String username, Action action) throws RemoteException;
+    void sendAction(String username, String nameConnection, Action action) throws RemoteException;
     void setGameLevel(int level) throws RemoteException;
     int getNumPlayersConnected() throws RemoteException;
     void setPlayerUsername(String username) throws RemoteException;

@@ -104,9 +104,9 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     }
 
     @Override
-    public void sendAction(String nameConnection, Action action) throws RemoteException{
+    public void sendAction(String username, String nameConnection, Action action) throws RemoteException{
         try {
-            action.call(new HandleActionVisitor(), nameConnection);
+            action.call(new HandleActionVisitor(), username);
         }
         /// TODO: raccolgo eccezioni lanciate dalla call
         // Catch all game-related exceptions triggered by invalid player actions.

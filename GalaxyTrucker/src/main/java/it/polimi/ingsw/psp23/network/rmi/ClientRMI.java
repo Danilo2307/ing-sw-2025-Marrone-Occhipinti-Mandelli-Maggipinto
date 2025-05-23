@@ -3,28 +3,21 @@ package it.polimi.ingsw.psp23.network.rmi;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
-import it.polimi.ingsw.psp23.network.socket.SocketHandler;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.response.LobbyUnavailable;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;
-import it.polimi.ingsw.psp23.view.ViewAPI;
 
-import javax.swing.text.View;
-import java.net.Socket;
-import java.net.SocketTimeoutException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 
 public class ClientRMI extends Client {
     private final ClientRMIHandlerInterface gameServer;
     private final ClientRegistryInterface clientRegistry;
-    private final String username;
+    private String username;
     private final String nameConnection;
     private final Registry registry;
 
@@ -74,7 +67,7 @@ public class ClientRMI extends Client {
 
     @Override
     public void sendAction(Action action) throws RemoteException {
-        gameServer.sendAction(username, action);
+        gameServer.sendAction(username, nameConnection, action);
     }
 
     @Override
@@ -86,6 +79,10 @@ public class ClientRMI extends Client {
     public void open() throws RemoteException {
         registry.rebind("GameServer", gameServer);
 //        Server.getInstance().setServerSocket("localhost", 8000);
+    }
+    @Override
+    public void setUsername(String username) throws RemoteException {
+        this.username = username;
     }
 
 }

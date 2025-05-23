@@ -53,7 +53,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void setup() {
+    public void setup() throws RemoteException {
         Socket socket = client.getSocket();
         Scanner scanner = new Scanner(System.in);
 
@@ -112,6 +112,7 @@ public class TuiApplication implements ViewAPI {
                 client.getGameServer().setPlayerUsername(username);
                 error = false;
                 io.print("Username settato correttamente\n");
+                client.setUsername(username);
                 if(client.getGameServer().getNumPlayersConnected() == 1){
                     io.print("Inserisci il numero di giocatori presenti nella partita (minimo 2 massimo 4): ");
                     int avversari;
@@ -125,18 +126,16 @@ public class TuiApplication implements ViewAPI {
                     client.getGameServer().setNumRequestedPlayers(avversari);
 //                    client.open();
                 }
-                runGame();
             } catch (PlayerExistsException e) {
                 io.error("Questo username è già in uso, scegline un altro!!");
                 error = true;
             }
         } while (error);
-
         if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
             client.getGameServer().startBuildingPhase();
             client.getGameServer().sendToAllClients(new BroadcastMessage(new StateChanged(GameStatus.Building)));
         }
-
+        runGame();
     }
 
     /** ciclo infinito che rimane in ascolto degli input dell'utente */
