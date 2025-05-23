@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import javafx.fxml.FXML;
@@ -16,11 +17,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class BuildingPhaseController {
-    private ClientSocket client;
+    private Client client;
     int lastVersion;
 
     @FXML private StackPane boardStack;
@@ -38,7 +40,7 @@ public class BuildingPhaseController {
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
 
-    public void setClient(ClientSocket client) {
+    public void setClient(Client client) {
         this.client = client;
     }
 
@@ -65,39 +67,39 @@ public class BuildingPhaseController {
     }
 
     @FXML
-    public void onDrawHeapClicked() {
+    public void onDrawHeapClicked() throws RemoteException {
         client.sendAction(new DrawFromHeap());
     }
 
     @FXML
-    public void onReleaseClicked() {
+    public void onReleaseClicked() throws RemoteException{
         client.sendAction(new ReleaseTile());
         tileInHand.setImage(null);
     }
 
     @FXML
-    public void onRotateClicked() {
+    public void onRotateClicked() throws RemoteException{
         client.sendAction(new RotateTile());
         tileInHand.setRotate(tileInHand.getRotate() + 90);
     }
 
     @FXML
-    public void onPutClicked() {
+    public void onPutClicked() throws RemoteException{
         client.sendAction(new Put());
     }
 
     @FXML
-    public void onLeaveClicked() {
+    public void onLeaveClicked() throws RemoteException{
         client.sendAction(new LeaveFlight());
     }
 
     @FXML
-    public void onTurnClicked() {
+    public void onTurnClicked() throws RemoteException{
         client.sendAction(new TurnHourglass());
     }
 
     @FXML
-    public void onReserveClicked() {
+    public void onReserveClicked() throws RemoteException{
         client.sendAction(new ReserveTile());
         tileInHand.setImage(null);
     }
@@ -125,20 +127,26 @@ public class BuildingPhaseController {
             // aggiungo la tile all'HBox
             uncoveredBox.getChildren().add(imageView);
             // associo un listener di ClickEvent ad ogni imageview creata
-            imageView.setOnMouseClicked(mouseEvent -> drawUncovered(imageView));
+            imageView.setOnMouseClicked(mouseEvent -> {
+                try {
+                    drawUncovered(imageView);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            });
         }
         // forzo aggiornamento all'inizio della lista
         uncoveredScrollPane.setHvalue(0.0);
     }
 
-    private void drawUncovered(ImageView imageView) {
+    private void drawUncovered(ImageView imageView) throws RemoteException {
         int index = uncoveredBox.getChildren().indexOf(imageView);
         client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
 
     // codice che fissa la tile dopo il drop e la leva dalla mano
     @FXML
-    private void handleTileDrop(DragEvent event) {
+    private void handleTileDrop(DragEvent event) throws RemoteException{
         Dragboard db = event.getDragboard();
         boolean success = false;
 
@@ -173,7 +181,7 @@ public class BuildingPhaseController {
     }
 
     @FXML
-    public void onUncoveredRefresh() {
+    public void onUncoveredRefresh() throws RemoteException{
         client.sendAction(new RequestUncovered());
     }
 

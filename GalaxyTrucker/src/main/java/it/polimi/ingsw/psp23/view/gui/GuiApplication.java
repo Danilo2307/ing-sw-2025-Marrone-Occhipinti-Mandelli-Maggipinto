@@ -20,6 +20,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
@@ -40,7 +41,6 @@ public class GuiApplication extends Application implements ViewAPI {
     private  LobbyController lobbyController;
     private  TimerController timerController;
     private Stage stage;
-    private StageManager stageManager;
     private static GuiApplication instance;
 
     public static void awaitStart() throws InterruptedException {
@@ -74,7 +74,6 @@ public class GuiApplication extends Application implements ViewAPI {
         stage.setScene(scene);
         stage.show();
         this.stage = stage;
-        stageManager = new StageManager(stage);
         latch.countDown();
     }
     public static void main(String[] args) {
@@ -107,6 +106,23 @@ public class GuiApplication extends Application implements ViewAPI {
         }
         catch (SocketException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public void toBuildingPhase() {
+
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/build-view.fxml")
+        );
+        try {
+            Parent root = loader.load();
+            this.buildingPhaseController = loader.getController();
+            buildingPhaseController.setClient(client);
+            Scene scene = new Scene(root, 1152, 768);
+            stage.setScene(scene);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -176,7 +192,7 @@ public class GuiApplication extends Application implements ViewAPI {
     public void stateChanged(GameStatus newState) {
         Platform.runLater(() -> {
             switch(newState) {
-                case GameStatus.Building -> stageManager.toBuildingPhase();
+                case GameStatus.Building -> toBuildingPhase();
             }
         });
 

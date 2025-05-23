@@ -91,7 +91,7 @@ public class LobbyController {
     }
 
     @FXML
-    public void onDoneClicked(javafx.event.ActionEvent actionEvent) {
+    public void onDoneClicked(javafx.event.ActionEvent actionEvent) throws RemoteException{
         client.setUsername(usernameField.getText());
     }
 
