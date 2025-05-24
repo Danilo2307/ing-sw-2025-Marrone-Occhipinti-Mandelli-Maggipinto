@@ -1,6 +1,10 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.controller.Controller;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+
+import java.util.List;
 
 /** event triggered when a user wants to turn the hourglass during the building phase */
 public record TurnHourglass() implements Action {
@@ -16,6 +20,14 @@ public record TurnHourglass() implements Action {
 
     @Override
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
+    public List<DirectMessage> getDm(){
+        return null;
+    }
+
+    public List<BroadcastMessage> getBm(){
         return null;
     }
 

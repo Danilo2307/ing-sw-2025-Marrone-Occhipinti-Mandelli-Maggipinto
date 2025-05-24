@@ -7,11 +7,19 @@ import it.polimi.ingsw.psp23.model.cards.ActiveEngineVisitor;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
+
+    private static List<DirectMessage> dm = new ArrayList<>();
+    private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username){
         Game game = Game.getInstance();
@@ -23,11 +31,13 @@ public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
         }
         Card currentCard = game.getCurrentCard();
         if(engineIndex == -1){
-            Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Non hai selezionato un motore\n")));
+            // Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Non hai selezionato un motore\n")));
+            dm.add(new DirectMessage(new StringResponse("Non hai selezionato un motore\n")));
         }
         else {
             if (truck.getEngines().get(engineIndex).isActive()) {
-                Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il motore è già stato attivato!\n")));
+                // Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse("Il motore è già stato attivato!\n")));
+                dm.add(new DirectMessage(new StringResponse("Il motore è già stato attivato!\n")));
             } else {
                 ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
                 currentCard.call(activeEngine, username, ex, ey);
@@ -44,6 +54,14 @@ public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
     @Override
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
         return null;
+    }
+
+    public List<DirectMessage> getDm() {
+        return dm;
+    }
+
+    public List<BroadcastMessage> getBm() {
+        return bm;
     }
 
 }

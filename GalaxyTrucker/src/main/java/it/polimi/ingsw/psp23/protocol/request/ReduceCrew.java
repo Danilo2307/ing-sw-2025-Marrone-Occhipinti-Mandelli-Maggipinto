@@ -5,6 +5,10 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.ReduceCrewVisitorNum;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+
+import java.util.List;
 
 public record ReduceCrew(int hx, int hy, int num) implements Action {
     public void handle(String username){
@@ -26,4 +30,13 @@ public record ReduceCrew(int hx, int hy, int num) implements Action {
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
         return null;
     }
+
+    public List<DirectMessage> getDm(){
+        return null;
+    }
+
+    public List<BroadcastMessage> getBm(){
+        return null;
+    }
+
 }

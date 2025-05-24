@@ -5,6 +5,10 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+
+import java.util.List;
 
 /** event triggered when the user wants to remove the tile at ship[x][y] .
  * ServerActionHandler will call getPlayerFromNickname().getBoard().delete(x,y) */
@@ -27,6 +31,14 @@ public record RemoveBatteries(int x, int y, int num) implements Action {
 
     @Override
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
+        return null;
+    }
+
+    public List<DirectMessage> getDm(){
+        return null;
+    }
+
+    public List<BroadcastMessage> getBm(){
         return null;
     }
 

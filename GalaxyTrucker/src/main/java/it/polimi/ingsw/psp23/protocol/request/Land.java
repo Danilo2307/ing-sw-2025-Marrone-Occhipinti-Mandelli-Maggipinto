@@ -6,6 +6,10 @@ import it.polimi.ingsw.psp23.model.cards.ActiveCannonVisitor;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.LandOnPlanetVisitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+
+import java.util.List;
 
 public record Land(int pi) implements Action {
     public void handle(String username){
@@ -27,4 +31,13 @@ public record Land(int pi) implements Action {
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
         return null;
     }
+
+    public List<DirectMessage> getDm(){
+        return null;
+    }
+
+    public List<BroadcastMessage> getBm(){
+        return null;
+    }
+
 }

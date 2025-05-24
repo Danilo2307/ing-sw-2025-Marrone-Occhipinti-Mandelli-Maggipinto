@@ -4,9 +4,14 @@ package it.polimi.ingsw.psp23.protocol.request;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.ShipResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Event triggered when a client wants to view their current ship layout.
@@ -17,13 +22,17 @@ import it.polimi.ingsw.psp23.protocol.response.ShipResponse;
  */
 public record RequestShip(String nickname) implements Action {
 
+    private static List<DirectMessage> dm = new ArrayList<>();
+    private static List<BroadcastMessage> bm = new ArrayList<>();
+
     public void handle(String username) {
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(nickname);
         Component[][] ship = p.getTruck().getShip();
         int[][] validCoordinates = p.getTruck().getValidCoords();
-        DirectMessage dm = new DirectMessage(new ShipResponse(ship, validCoordinates));
-        Server.getInstance().sendMessage(username, dm);
+        DirectMessage m = new DirectMessage(new ShipResponse(ship, validCoordinates));
+        // Server.getInstance().sendMessage(username, dm);
+        dm.add(m);
     }
 
     @Override
@@ -36,4 +45,11 @@ public record RequestShip(String nickname) implements Action {
         return null;
     }
 
+    public List<DirectMessage> getDm() {
+        return dm;
+    }
+
+    public List<BroadcastMessage> getBm() {
+        return bm;
+    }
 }

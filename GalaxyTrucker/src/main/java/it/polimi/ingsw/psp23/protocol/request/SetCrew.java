@@ -9,9 +9,14 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Event triggered when the user wants to add crew to a housing unit located at ship[x][y].
@@ -23,6 +28,9 @@ import it.polimi.ingsw.psp23.protocol.response.TileResponse;
  * Note: the Color enum used here must be serializable (which is true by default in Java).
  */
 public record SetCrew(int x, int y, boolean alien, Color color) implements Action {
+
+    private static List<DirectMessage> dm = new ArrayList<>();
+    private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
         Game game = Game.getInstance();
@@ -49,7 +57,8 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         else {
             housingUnit.setAstronaut();
         }
-        Server.getInstance().sendMessage(username, new DirectMessage(new TileResponse(tile)));
+        // Server.getInstance().sendMessage(username, new DirectMessage(new TileResponse(tile)));
+        dm.add(new DirectMessage(new TileResponse(tile)));
     }
 
     @Override
@@ -62,4 +71,11 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         return null;
     }
 
+    public List<DirectMessage> getDm() {
+        return dm;
+    }
+
+    public List<BroadcastMessage> getBm() {
+        return bm;
+    }
 }

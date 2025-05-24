@@ -6,6 +6,10 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+
+import java.util.List;
 
 public record MoveGood(int fromX, int fromY, int index, int toX, int toY) implements Action {
     public void handle(String username){
@@ -31,4 +35,13 @@ public record MoveGood(int fromX, int fromY, int index, int toX, int toY) implem
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
         return null;
     }
+
+    public List<DirectMessage> getDm(){
+        return null;
+    }
+
+    public List<BroadcastMessage> getBm(){
+        return null;
+    }
+
 }
