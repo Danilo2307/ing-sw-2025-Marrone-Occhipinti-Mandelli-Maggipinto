@@ -71,18 +71,9 @@ public class ClientRMI extends Client {
     }
 
     @Override
-    public boolean isRmi() throws RemoteException {
-        return true;
-    }
-
-    @Override
-    public void open() throws RemoteException {
-        registry.rebind("GameServer", gameServer);
-//        Server.getInstance().setServerSocket("localhost", 8000);
-    }
-    @Override
     public void setUsername(String username) throws RemoteException {
         this.username = username;
+        clientRegistry.addPlayer(username, nameConnection);
     }
 
 }

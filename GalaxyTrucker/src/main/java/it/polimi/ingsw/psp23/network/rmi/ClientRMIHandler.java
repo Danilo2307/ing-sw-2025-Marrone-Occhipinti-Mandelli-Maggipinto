@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
@@ -107,11 +108,26 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public void sendAction(String username, String nameConnection, Action action) throws RemoteException{
         try {
             action.call(new HandleActionVisitor(), username);
+            List<DirectMessage> dm = action.getDm();
+            List<BroadcastMessage> bm = action.getBm();
+
+            if(dm != null && !dm.isEmpty()){
+                for(Message m : dm) {
+                    sendToUser(nameConnection, m);
+                }
+                dm.clear();
+            }
+            if(bm != null && !bm.isEmpty()){
+                for(Message m : bm) {
+                    for(Player p : Game.getInstance().getPlayers()) {
+                        if(registry.getAllPlayers().contains(p.getNickname()))
+                            sendToUser(registry.getPlayerConnectionFromNickname(p.getNickname()), m);
+                    }
+                }
+                bm.clear();
+            }
+
         }
-        /// TODO: raccolgo eccezioni lanciate dalla call
-        // Catch all game-related exceptions triggered by invalid player actions.
-        // These are not recoverable errors but rule violations (e.g., wrong component state or illegal move).
-        // The server sends an error message back to the client to notify them, without stopping the game flow.
         catch(GameException e) {
             DirectMessage dm = new DirectMessage(new ErrorResponse(e.getMessage()));
             sendToUser(nameConnection, dm);
