@@ -23,4 +23,6 @@ public interface ClientRegistryInterface extends Remote {
     ClientCallbackInterface getClient(String username) throws RemoteException;
 
     String getPlayerConnectionFromNickname(String nickname) throws RemoteException;
+
+    String getPlayerNicknameFromConnection(String connection) throws RemoteException;
 }

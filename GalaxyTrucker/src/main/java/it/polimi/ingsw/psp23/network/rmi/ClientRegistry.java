@@ -59,4 +59,9 @@ public class ClientRegistry extends UnicastRemoteObject implements ClientRegistr
                     .findFirst()
                     .orElse(null);
         }
+
+        @Override
+        public String getPlayerNicknameFromConnection(String connection) throws RemoteException{
+            return  players.get(connection);
+        }
 }

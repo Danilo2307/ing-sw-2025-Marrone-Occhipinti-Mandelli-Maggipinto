@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
@@ -22,6 +23,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +33,7 @@ public class Server {
     private static Server instance;
     private ServerSocket serverSocket;
     private final HashMap<String, SocketHandler> clients;
+    private final ClientRMIHandlerInterface rmiServer;
 
 
     // Qui creo il server
@@ -41,6 +44,7 @@ public class Server {
 
             this.serverSocket.setReuseAddress(true);
 
+            this.rmiServer = null;
 
             clients = new HashMap<>();
 
@@ -51,8 +55,10 @@ public class Server {
         }
     }
 
-    Server(int port, String host) {
+    Server(int port, String host, ClientRMIHandlerInterface rmiServer) {
         try {
+
+            this.rmiServer = rmiServer;
 
             serverSocket = new ServerSocket(port, 10, InetAddress.getByName(host));
 
@@ -84,9 +90,9 @@ public class Server {
         return instance;
     }
 
-    public static synchronized Server getInstance(String host, int port) {
+    public static synchronized Server getInstance(String host, int port, ClientRMIHandlerInterface serverRMI) {
         if (instance == null) {
-            instance = new Server(port, host);
+            instance = new Server(port, host, serverRMI);
         }
         return instance;
     }
@@ -244,17 +250,29 @@ public class Server {
     // socket bisogna considerare
     public void sendMessage(Message message, String nameConnection) {
 
-        SocketHandler socketHandler = null;
+        if(clients.containsKey(nameConnection)){
+            SocketHandler socketHandler = null;
 
-        synchronized (clients) {
-            socketHandler = clients.get(nameConnection);
+            synchronized (clients) {
+                socketHandler = clients.get(nameConnection);
+            }
+
+            if (socketHandler != null) {
+                System.out.println("Messaggio inviato con esito: " + socketHandler.sendMessage(message));
+            } else {
+                throw new RuntimeException("No client with name " + nameConnection);
+            }
         }
 
-        if (socketHandler != null) {
-            System.out.println("Messaggio inviato con esito: " + socketHandler.sendMessage(message));
-        } else {
-            throw new RuntimeException("No client with name " + nameConnection);
+        else{
+            try{
+                rmiServer.sendToUser(nameConnection, message);
+            }
+            catch(RemoteException e){
+                System.out.println("Messaggio inviato con esito negativo");
+            }
         }
+
     }
 
     /* Questo metodo permette di inviare messaggi conoscendo lo username e non il connectionID
@@ -272,7 +290,17 @@ public class Server {
                     }
                 }
             }
-            sendMessage(message, connectionID);
+            if(connectionID != null){
+                sendMessage(message, connectionID);
+            }
+            else{
+                try{
+                    rmiServer.sendToNickname(username, message);
+                } catch (RemoteException e) {
+                    System.out.println("Messaggio inviato con esito negativo");
+                }
+            }
+
         } else {
             throw new RuntimeException("message or username in Server.sendMessage(username, message) are null (tried to send: " + message.toString() + ")");
         }
@@ -307,6 +335,11 @@ public class Server {
                 }
                 System.out.println("Notify observer: " + getUsernameForConnection(connection) + " with message: " + message.toString());
             }
+        }
+        try{
+            rmiServer.sendToAllClients(message);
+        } catch (RemoteException e) {
+            System.out.println("Messaggio inviato con esito negativo");
         }
     }
 

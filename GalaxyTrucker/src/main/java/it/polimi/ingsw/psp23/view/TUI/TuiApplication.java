@@ -133,7 +133,6 @@ public class TuiApplication implements ViewAPI {
         } while (error);
         if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
             client.getGameServer().startBuildingPhase();
-            client.getGameServer().sendToAllClients(new BroadcastMessage(new StateChanged(GameStatus.Building)));
         }
         runGame();
     }

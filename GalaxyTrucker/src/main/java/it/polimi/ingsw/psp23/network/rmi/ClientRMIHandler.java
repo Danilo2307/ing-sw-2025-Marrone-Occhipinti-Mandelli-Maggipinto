@@ -5,26 +5,18 @@ import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
-import it.polimi.ingsw.psp23.protocol.response.StateChanged;
-import it.polimi.ingsw.psp23.view.TUI.TuiState;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHandlerInterface {
     private final ClientRegistryInterface registry;
@@ -91,6 +83,22 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
      */
     @Override
     public void sendToUser(String nameConnection, Message msg) throws RemoteException {
+        ClientCallbackInterface callback = registry.getClient(nameConnection);
+        if (callback == null) {
+            System.err.println("sendToUser: nessun client registrato con username \"" + nameConnection + "\"");
+            return;
+        }
+        try {
+            callback.onReceivedMessage(msg);
+        } catch (RemoteException e) {
+            // Se il client non risponde, rimuovilo dalla lista
+            System.err.println("sendToUser: impossibile inviare a \"" + nameConnection + "\": " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void sendToNickname(String username, Message msg) throws RemoteException {
+        String nameConnection = registry.getPlayerConnectionFromNickname(username);
         ClientCallbackInterface callback = registry.getClient(nameConnection);
         if (callback == null) {
             System.err.println("sendToUser: nessun client registrato con username \"" + nameConnection + "\"");
