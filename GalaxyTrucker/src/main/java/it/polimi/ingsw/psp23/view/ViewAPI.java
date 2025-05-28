@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public interface ViewAPI {
     void setClient(Client client);
     void setup() throws RemoteException;
-    void setupRMI() throws RemoteException;
+    void setupRMI(String nameConnection) throws RemoteException;
     void showRequestLevel();
     void showRequestNumPlayers();
     void showAppropriateUsername(String username);

@@ -68,7 +68,10 @@ public class MainClient {
                     System.out.println("Lobby unavailable");
                 }
                 view.setClient(clientRmi);
-                view.setupRMI();
+                if(interfaceChosen == 2) {
+                    GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
+                }
+                view.setupRMI(clientRmi.getNameConnection());
             } else if (protocol == 2) {
                 client = new ClientSocket("localhost", 8000, null, clientEventHandler);
                 view.setClient(client);

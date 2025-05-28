@@ -5,11 +5,13 @@ import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
+import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
 import javafx.application.Application;
@@ -26,6 +28,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
@@ -109,6 +112,18 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
+    @Override
+    public void setupRMI(String nameConnection) throws RemoteException{
+        if(client.getGameServer().getNumPlayersConnected() == 1) {
+
+            Message msg = (new DirectMessage(new SelectLevel()));
+            client.getGameServer().sendToUser(nameConnection, msg);
+        }
+        else{
+            lobbyController.showUserChoice();
+        }
+    }
+
     public void toBuildingPhase() {
 
         FXMLLoader loader = new FXMLLoader(
@@ -139,6 +154,15 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void showAppropriateUsername(String username) {
         lobbyController.hideUserChoice();
+        try{
+            if(client.isRmi()) {
+                if (client.getGameServer().getNumPlayersConnected() != 1 && client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()) {
+                    client.getGameServer().startBuildingPhase();
+                }
+            }
+        }catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -253,8 +277,4 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
-    @Override
-    public void setupRMI() throws RemoteException {
-
-    }
 }

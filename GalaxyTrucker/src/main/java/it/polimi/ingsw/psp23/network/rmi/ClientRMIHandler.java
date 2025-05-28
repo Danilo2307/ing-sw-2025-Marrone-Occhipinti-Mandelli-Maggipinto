@@ -36,7 +36,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             registry.registerClient(nameConnection, callback);
             System.out.println("Client connected: " + nameConnection);
 
-            if(UsersConnected.getInstance().getClients().size() == 1){
+            /*if(UsersConnected.getInstance().getClients().size() == 1){
 
                 //socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
                 Message message = (new DirectMessage(new SelectLevel()));
@@ -45,10 +45,8 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
 
                 // System.out.println(message.toString());
 
-                System.out.println("arrivato a questo punto");
-
-            }
-            else if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
+            }*/
+            if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
                 UsersConnected.getInstance().removeClient(nameConnection);
                 throw new LobbyUnavailableException("lobby is unavailable");
             }

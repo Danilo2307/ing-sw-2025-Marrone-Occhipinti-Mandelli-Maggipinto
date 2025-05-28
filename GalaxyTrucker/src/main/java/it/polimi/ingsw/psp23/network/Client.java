@@ -29,4 +29,5 @@ public abstract class Client {
     public ClientRMIHandlerInterface getGameServer() throws RemoteException{return null;};
     public SocketHandler getSocketHandler(){return null;};
     public void stopListeningForServerThread(){};
+    public String getNameConnection() throws RemoteException{return null;}
 }

@@ -1,9 +1,14 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
+import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.RegisterNumPlayers;
+import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
+import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
+import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -74,17 +79,34 @@ public class LobbyController {
 
     @FXML
     public void onTrialLevel() {
-        Message message = new LevelSelectionMessage(0);
-        client.sendMessage(message);
-
+        try{
+            if(!client.isRmi()) {
+                Message message = new LevelSelectionMessage(0);
+                client.sendMessage(message);
+            }
+            else{
+                client.getGameServer().setGameLevel(0);
+            }
+        }catch (RemoteException e){
+            e.printStackTrace();
+        }
         hideLevelChoice();
         showUserChoice();
     }
 
     @FXML
     public void onTwoLevel() {
-        Message message = new LevelSelectionMessage(2);
-        client.sendMessage(message);
+        try{
+            if(!client.isRmi()) {
+                Message message = new LevelSelectionMessage(2);
+                client.sendMessage(message);
+            }
+            else{
+                client.getGameServer().setGameLevel(2);
+            }
+        }catch (RemoteException e){
+            e.printStackTrace();
+        }
 
         hideLevelChoice();
         showUserChoice();
@@ -92,7 +114,20 @@ public class LobbyController {
 
     @FXML
     public void onDoneClicked(javafx.event.ActionEvent actionEvent) throws RemoteException{
-        client.setUsername(usernameField.getText());
+        String username = usernameField.getText();
+        if(client.isRmi()){
+            try {
+                client.getGameServer().setPlayerUsername(username);
+                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username)));
+                if(client.getGameServer().getNumPlayersConnected() == 1){
+                    client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new RequestNumPlayers()));
+                }
+            }
+            catch(PlayerExistsException e){
+                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new WrongUsername()));
+            }
+        }
+        client.setUsername(username);
     }
 
     public void showNumPlayers() {

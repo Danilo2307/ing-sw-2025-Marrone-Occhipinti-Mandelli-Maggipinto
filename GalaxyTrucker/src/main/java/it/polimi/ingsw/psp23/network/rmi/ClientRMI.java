@@ -76,4 +76,13 @@ public class ClientRMI extends Client {
         clientRegistry.addPlayer(username, nameConnection);
     }
 
+    @Override
+    public String getNameConnection() throws RemoteException{
+        return nameConnection;
+    }
+
+    @Override
+    public boolean isRmi(){
+        return true;
+    }
 }

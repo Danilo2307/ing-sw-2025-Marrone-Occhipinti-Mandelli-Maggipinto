@@ -11,15 +11,14 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
-import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
-import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.messages.*;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.*;
+import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
+import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
@@ -89,9 +88,13 @@ public class TuiApplication implements ViewAPI {
         runGame();
     }
 
-    public void setupRMI() throws RemoteException {
+    public void setupRMI(String nameConnection) throws RemoteException {
 
         if(client.getGameServer().getNumPlayersConnected() == 1) {
+
+            Message msg = (new DirectMessage(new SelectLevel()));
+            client.getGameServer().sendToUser(nameConnection, msg);
+
             Scanner scanner = new Scanner(System.in);
             int level = scanner.nextInt();
             scanner.nextLine();
@@ -102,7 +105,7 @@ public class TuiApplication implements ViewAPI {
         io.print("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
 
         Scanner scanner;
-        String username;
+        String username = null;
 
         boolean error;
         do {
@@ -131,6 +134,7 @@ public class TuiApplication implements ViewAPI {
                 error = true;
             }
         } while (error);
+        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new AppropriateUsername(username)));
         if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
             client.getGameServer().startBuildingPhase();
         }
@@ -528,7 +532,13 @@ public class TuiApplication implements ViewAPI {
 
     @Override
     public void showAppropriateUsername(String username) {
-        client.getSocketHandler().setUsername(username);
+        try {
+            if (!client.isRmi()) {
+                client.getSocketHandler().setUsername(username);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
         io.print("Benvenuto in Galaxy Trucker!!\n");
         setState(TuiState.LOBBY);
     }
