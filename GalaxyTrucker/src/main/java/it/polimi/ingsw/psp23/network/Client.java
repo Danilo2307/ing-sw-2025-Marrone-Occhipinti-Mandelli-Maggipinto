@@ -30,4 +30,5 @@ public abstract class Client {
     public SocketHandler getSocketHandler(){return null;};
     public void stopListeningForServerThread(){};
     public String getNameConnection() throws RemoteException{return null;}
+    public String getUsername() throws RemoteException{return null;}
 }

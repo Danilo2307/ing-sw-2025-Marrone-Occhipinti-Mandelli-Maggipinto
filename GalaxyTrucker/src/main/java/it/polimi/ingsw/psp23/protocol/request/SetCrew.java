@@ -33,6 +33,8 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.SetCrew){
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");

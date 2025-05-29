@@ -26,6 +26,8 @@ public record RequestShip(String nickname) implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(nickname);
         Component[][] ship = p.getTruck().getShip();

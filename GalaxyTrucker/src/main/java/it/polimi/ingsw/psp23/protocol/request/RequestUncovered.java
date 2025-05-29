@@ -17,6 +17,8 @@ public record RequestUncovered() implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         DirectMessage m = new DirectMessage(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));
         // Server.getInstance().sendMessage(username, dm);

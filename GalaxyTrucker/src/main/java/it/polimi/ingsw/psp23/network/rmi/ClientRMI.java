@@ -85,4 +85,9 @@ public class ClientRMI extends Client {
     public boolean isRmi(){
         return true;
     }
+
+    @Override
+    public String getUsername() throws RemoteException {
+        return username;
+    }
 }

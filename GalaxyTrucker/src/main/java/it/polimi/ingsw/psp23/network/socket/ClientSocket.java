@@ -91,4 +91,9 @@ public class ClientSocket extends Client {
 
     }
 
+    @Override
+    public String getUsername() {
+        return socketHandler.getUsername();
+    }
+
 }

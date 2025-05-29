@@ -24,6 +24,8 @@ public record LeaveFlight() implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username){
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.CheckBoards && game.getGameStatus() != GameStatus.Building) {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");

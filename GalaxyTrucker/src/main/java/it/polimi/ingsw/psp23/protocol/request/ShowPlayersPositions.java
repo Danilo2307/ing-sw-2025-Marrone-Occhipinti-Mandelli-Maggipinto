@@ -17,6 +17,8 @@ public record ShowPlayersPositions() implements Action{
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         StringBuilder sb = new StringBuilder();
         Game game = Game.getInstance();
         for (Player player : game.getPlayers()) {

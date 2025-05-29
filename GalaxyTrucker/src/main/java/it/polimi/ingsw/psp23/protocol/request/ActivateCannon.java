@@ -26,6 +26,8 @@ public record ActivateCannon(int cx, int cy, int bx, int by) implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username){
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Board truck = game.getCurrentPlayer().getTruck();
         Component[][] nave = truck.getShip();

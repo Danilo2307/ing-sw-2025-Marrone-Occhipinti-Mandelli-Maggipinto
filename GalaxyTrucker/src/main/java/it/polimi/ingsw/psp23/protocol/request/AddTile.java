@@ -17,6 +17,8 @@ public record AddTile(int x, int y) implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         p.addTile(x, y);

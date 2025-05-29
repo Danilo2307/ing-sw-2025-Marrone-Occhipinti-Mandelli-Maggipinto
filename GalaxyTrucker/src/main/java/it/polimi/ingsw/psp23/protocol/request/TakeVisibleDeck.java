@@ -19,6 +19,8 @@ public record TakeVisibleDeck(int index) implements Action{
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Player player = game.getPlayerFromNickname(username);
         ArrayList<Card> deckChosen = switch(index) {

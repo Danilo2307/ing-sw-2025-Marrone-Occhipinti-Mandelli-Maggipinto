@@ -360,7 +360,7 @@ public class TuiApplication implements ViewAPI {
                 }
                 else {
                     if (words.length == 1) {
-                        client.sendAction(new RequestShip(client.getSocketHandler().getUsername()));
+                        client.sendAction(new RequestShip(client.getUsername()));
                     } else {
                         String nickname = words[1];
                         client.sendAction(new RequestShip(nickname));

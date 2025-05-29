@@ -19,6 +19,8 @@ public record RequestTileInfo(int x, int y) implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Player p = game.getPlayerFromNickname(username);
         Component target = p.getTruck().getTile(x, y);

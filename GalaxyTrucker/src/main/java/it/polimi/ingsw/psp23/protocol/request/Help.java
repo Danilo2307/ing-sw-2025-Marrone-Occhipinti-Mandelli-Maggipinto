@@ -19,6 +19,8 @@ public record Help() implements Action {
     private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username){
+        dm.clear();
+        bm.clear();
         Game game = Game.getInstance();
         Card currentCard = game.getCurrentCard();
         HelpVisitor help = new HelpVisitor();
