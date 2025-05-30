@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
@@ -67,6 +68,25 @@ public class BuildingPhaseController {
             event.consume();});
     }
 
+    public void setCentral(Color playerColor) {
+        int id = 0;
+        switch (playerColor) {
+            case Blue -> id = 900;
+            case Green -> id = 901;
+            case Red -> id = 902;
+            case Yellow -> id = 903;
+        }
+
+        int finalId = id;
+        Platform.runLater(() -> {
+            String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + finalId + ".jpg";
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+            ImageView imageView = new ImageView(image);
+            ship.add(imageView, 2, 3);
+        });
+
+    }
+
     @FXML
     public void onDrawHeapClicked() throws RemoteException {
         client.sendAction(new DrawFromHeap());
@@ -114,8 +134,6 @@ public class BuildingPhaseController {
     public void showTile(Component toDraw) {
         Platform.runLater(() -> {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
-            System.out.println(toDraw.getId());
-            System.out.println(imagePath);
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             tileInHand.setImage(image);
             tileInHand.setVisible(true);

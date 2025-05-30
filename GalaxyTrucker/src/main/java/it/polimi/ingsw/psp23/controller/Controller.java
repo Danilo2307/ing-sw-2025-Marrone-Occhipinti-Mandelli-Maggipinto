@@ -16,10 +16,7 @@ import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
-import it.polimi.ingsw.psp23.protocol.response.IllegalTruck;
-import it.polimi.ingsw.psp23.protocol.response.StateChanged;
-import it.polimi.ingsw.psp23.protocol.response.StringResponse;
-import it.polimi.ingsw.psp23.protocol.response.UpdateFromCard;
+import it.polimi.ingsw.psp23.protocol.response.*;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -62,9 +59,13 @@ public class Controller {
 
     public void startBuildingPhase() {
         Game game = Game.getInstance();
+        int count = 0;
         for (Player player : game.getPlayers()) {
             // TODO: bisogna cambiare l'id messo momentaneamente a meno 1!!
-            player.getTruck().addComponent(new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true, -1), 2, 3);
+            HousingUnit centralCabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true, count+900);
+            player.getTruck().addComponent(centralCabin,2,3);
+            Server.getInstance().sendMessage(player.getNickname(), new DirectMessage(new TileResponse(centralCabin)));
+            count++;
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
         game.setGameStatus(GameStatus.Building);

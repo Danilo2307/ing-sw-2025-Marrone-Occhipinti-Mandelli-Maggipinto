@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.view.gui;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
@@ -45,6 +46,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private  TimerController timerController;
     private Stage stage;
     private static GuiApplication instance;
+    private Color playerColor;
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -124,7 +126,7 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
-    public void toBuildingPhase() {
+    public void toBuildingPhase(Color playerColor) {
 
         FXMLLoader loader = new FXMLLoader(
                 getClass().getResource("/fxml/build-view.fxml")
@@ -135,6 +137,7 @@ public class GuiApplication extends Application implements ViewAPI {
             buildingPhaseController.setClient(client);
             Scene scene = new Scene(root, 1152, 768);
             stage.setScene(scene);
+            buildingPhaseController.setCentral(playerColor);
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -179,7 +182,22 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showTile(Component requested) {
-        buildingPhaseController.showTile(requested);
+        // se è la cabina centrale salvo il colore e la aggiungo all'inizio di buildingphase
+        if (requested.getId() >= 900) {
+            switch (requested.getId()) {
+                case 900 ->
+                    playerColor = Color.Blue;
+                case 901 ->
+                    playerColor = Color.Green;
+                case 902 ->
+                    playerColor = Color.Red;
+                case 903 ->
+                    playerColor = Color.Yellow;
+            }
+        }
+        else {
+            buildingPhaseController.showTile(requested);
+        }
     }
 
     @Override
@@ -200,7 +218,6 @@ public class GuiApplication extends Application implements ViewAPI {
             // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
             alert.showAndWait();
         });
-
     }
 
     @Override
@@ -217,7 +234,7 @@ public class GuiApplication extends Application implements ViewAPI {
     public void stateChanged(GameStatus newState) {
         Platform.runLater(() -> {
             switch(newState) {
-                case GameStatus.Building -> toBuildingPhase();
+                case GameStatus.Building -> toBuildingPhase(playerColor);
             }
         });
 
