@@ -24,6 +24,12 @@
     -fx-font-weight: bold;
 }
 
+.quit-button:hover{
+    -fx-background-color: rgb(16, 11, 11);
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
 .main-button:hover {
     -fx-background-color: #df0a0a;
     -fx-cursor: hand;
