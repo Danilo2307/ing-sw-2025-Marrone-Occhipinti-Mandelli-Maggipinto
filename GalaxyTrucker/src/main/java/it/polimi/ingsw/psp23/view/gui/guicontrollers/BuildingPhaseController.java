@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -105,10 +106,14 @@ public class BuildingPhaseController {
     }
 
     public void showTile(Component toDraw) {
-        String imagePath = "it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
-        Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-        tileInHand.setImage(image);
-        tileInHand.setVisible(true);
+        Platform.runLater(() -> {
+            String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
+            System.out.println(toDraw.getId());
+            System.out.println(imagePath);
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+            tileInHand.setImage(image);
+            tileInHand.setVisible(true);
+        });
     }
 
     public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
@@ -120,7 +125,7 @@ public class BuildingPhaseController {
 
         // creo image per ogni tile
         for (Component component : uncovered) {
-            String imagePath = "it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
+            String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             ImageView imageView = new ImageView(image);
 
