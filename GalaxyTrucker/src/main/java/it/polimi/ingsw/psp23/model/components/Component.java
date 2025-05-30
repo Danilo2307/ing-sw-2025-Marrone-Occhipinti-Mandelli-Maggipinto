@@ -16,6 +16,7 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
     private int x;
     private int y;
     private final int id;
+    private int rotate;
 
     // lo chiamo sempre tramite super(...) quando istanzio le sottoclassi
     public Component(Side up, Side down, Side left, Side right, int id) {
@@ -27,8 +28,12 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
         this.x = -1;   // assumeranno valori positivi solo se e quando Component passerà in status ON_TRUCK
         this.y = -1;
         this.id = id;
+        this.rotate = 0;
     }
 
+    public int getRotate() {
+        return this.rotate;
+    }
     // player prende in mano il component
     public void moveToHand() {
         if (state == ComponentLocation.PILE || state == ComponentLocation.FACE_UP || state == ComponentLocation.RESERVED)
@@ -65,6 +70,7 @@ public sealed class Component implements Serializable permits AlienAddOns, Batte
         this.left = this.down;
         this.down = this.right;
         this.right = support;
+        rotate = rotate + 90;
     }
 
     public ComponentLocation getState() {

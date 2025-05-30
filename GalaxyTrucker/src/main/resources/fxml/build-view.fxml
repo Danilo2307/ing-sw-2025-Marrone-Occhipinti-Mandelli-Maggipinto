@@ -15,48 +15,48 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1152.0" stylesheets="@build-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.BuildingPhaseController">
    <children>
-      <StackPane fx:id="boardStack" layoutY="112.0" prefHeight="530.0" prefWidth="757.0">
+      <StackPane fx:id="boardStack" layoutX="-2.0" layoutY="216.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="530.0" prefWidth="757.0">
          <children>
             <ImageView fx:id="board" fitHeight="520.0" fitWidth="726.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg" />
                </image>
             </ImageView>
-            <GridPane fx:id="ship">
+            <GridPane fx:id="ship" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="671.0">
               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" percentWidth="14.2857" prefWidth="79.4000244140625" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.1999755859375" minWidth="10.0" prefWidth="88.5" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" percentWidth="14.2857" prefWidth="79.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.0" minWidth="10.0" percentWidth="14.2857" prefWidth="96.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="91.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" percentWidth="14.2857" prefWidth="108.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="92.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" percentWidth="14.2857" prefWidth="83.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.1999755859375" minWidth="8.5" prefWidth="100.86834716796875" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.88839721679688" minWidth="10.0" percentWidth="14.2857" prefWidth="96.64157104492188" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="115.0" minWidth="10.0" percentWidth="14.2857" prefWidth="89.58438110351562" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="100.91561889648438" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="117.0" minWidth="10.0" percentWidth="14.2857" prefWidth="88.97137451171875" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="109.0" minWidth="10.0" prefWidth="103.52862548828125" />
               </columnConstraints>
               <rowConstraints>
                   <RowConstraints maxHeight="173.0" minHeight="10.0" percentHeight="20.0" prefHeight="139.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="99.0" minHeight="10.0" percentHeight="20.0" prefHeight="84.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="158.0" minHeight="10.0" percentHeight="20.0" prefHeight="104.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="158.0" minHeight="10.0" percentHeight="20.0" prefHeight="90.2259521484375" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="107.11431884765625" minHeight="10.0" prefHeight="105.2740478515625" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="102.41558837890625" minHeight="10.0" prefHeight="99.207763671875" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
          </children>
       </StackPane>
-      <Button fx:id="leaveBtn" layoutX="823.0" layoutY="694.0" mnemonicParsing="false" onAction="#onLeaveClicked" styleClass="quit-button" text="abbandona" textFill="RED">
+      <Button fx:id="leaveBtn" layoutX="993.0" layoutY="713.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLeaveClicked" styleClass="quit-button" text="abbandona" textFill="RED">
          <font>
-            <Font name="Arial Black" size="13.0" />
+            <Font name="Arial Black" size="18.0" />
          </font></Button>
-      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="765.0" layoutY="205.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="tileInHand" fitHeight="133.0" fitWidth="132.0" layoutX="863.0" layoutY="193.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../it/polimi/ingsw/psp23/images/tiles/00.jpg" />
          </image>
       </ImageView>
-      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="9.0" layoutY="8.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
+      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="27.0" layoutY="22.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="124.0" prefWidth="1099.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
          <content>
-            <HBox fx:id="uncoveredBox" prefHeight="124.0" prefWidth="922.0" spacing="5.0" styleClass="transparent-hbox" />
+            <HBox fx:id="uncoveredBox" prefHeight="125.0" prefWidth="1120.0" spacing="5.0" styleClass="transparent-hbox" />
          </content>
       </ScrollPane>
-      <Button fx:id="uncoveredRefresh" layoutX="14.0" layoutY="146.0" mnemonicParsing="false" onAction="#onUncoveredRefresh" prefHeight="28.0" prefWidth="35.0">
+      <Button fx:id="uncoveredRefresh" layoutX="30.0" layoutY="160.0" mnemonicParsing="false" onAction="#onUncoveredRefresh" prefHeight="28.0" prefWidth="35.0">
          <graphic>
             <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -65,31 +65,31 @@
             </ImageView>
          </graphic>
       </Button>
-      <ToolBar fx:id="mainCommands" layoutX="757.0" layoutY="347.0" orientation="VERTICAL" style="-fx-background-color: transparent;">
+      <ToolBar fx:id="mainCommands" layoutX="822.0" layoutY="355.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="341.0" prefWidth="241.0" style="-fx-background-color: transparent;">
         <items>
           <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio">
                <font>
-                  <Font name="Arial Black" size="13.0" />
+                  <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota">
+            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="39.0" prefWidth="210.0" text="ruota">
                <font>
-                  <Font name="Arial Black" size="13.0" />
+                  <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="scarta">
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" prefHeight="39.0" prefWidth="210.0" text="scarta">
                <font>
-                  <Font name="Arial Black" size="13.0" />
+                  <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="29.0" prefWidth="117.0" text="posiziona" textFill="#121212">
+            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="39.0" prefWidth="211.0" text="posiziona" textFill="#121212">
                <font>
-                  <Font name="Arial Black" size="13.0" />
+                  <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" text="gira clessidra">
+            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" prefHeight="39.0" prefWidth="212.0" text="gira clessidra">
                 <font>
-                    <Font name="Arial Black" size="13.0" />
+                    <Font name="Arial Black" size="18.0" />
                 </font></Button>
-            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" text="prenota">
+            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" prefHeight="39.0" prefWidth="212.0" text="prenota">
                 <font>
-                    <Font name="Arial Black" size="13.0" />
+                    <Font name="Arial Black" size="18.0" />
                 </font></Button>
         </items>
       </ToolBar>

@@ -41,6 +41,7 @@ public class BuildingPhaseController {
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
+    Component componentInHand;
 
     public void setClient(Client client) {
         this.client = client;
@@ -82,7 +83,9 @@ public class BuildingPhaseController {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + finalId + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             ImageView imageView = new ImageView(image);
-            ship.add(imageView, 2, 3);
+            imageView.setFitHeight(97);
+            imageView.setFitWidth(101);
+            ship.add(imageView, 3, 2);
         });
 
     }
@@ -104,7 +107,7 @@ public class BuildingPhaseController {
     public void onRotateClicked() throws RemoteException{
         client.sendAction(new RotateTile());
         Platform.runLater(() -> {
-            tileInHand.setRotate(tileInHand.getRotate() + 90);
+            tileInHand.setRotate(componentInHand.getRotate() + 90);
         });
     }
 
@@ -132,6 +135,7 @@ public class BuildingPhaseController {
     }
 
     public void showTile(Component toDraw) {
+        componentInHand = toDraw;
         Platform.runLater(() -> {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
@@ -153,9 +157,13 @@ public class BuildingPhaseController {
                 String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
                 Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 ImageView imageView = new ImageView(image);
+                imageView.setFitWidth(101);
+                imageView.setFitHeight(97);
 
                 // aggiungo la tile all'HBox
+                imageView.setRotate(component.getRotate());
                 uncoveredBox.getChildren().add(imageView);
+
 
                 // associo un listener di ClickEvent ad ogni imageview creata
                 imageView.setOnMouseClicked(mouseEvent -> {
