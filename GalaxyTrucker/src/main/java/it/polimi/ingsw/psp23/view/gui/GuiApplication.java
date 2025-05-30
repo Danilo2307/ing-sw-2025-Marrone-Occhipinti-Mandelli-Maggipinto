@@ -194,19 +194,20 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showError(String error) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setContentText(error);
         Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText(error);
             // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
             alert.showAndWait();
         });
+
     }
 
     @Override
     public void showMessage(String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(message);
-        Platform.runLater(() -> {
+        Platform.runLater(()  -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText(message);
             // pop-up che blocca esecuzione finchè l'utente non chiude la finestra
             alert.showAndWait();
         });

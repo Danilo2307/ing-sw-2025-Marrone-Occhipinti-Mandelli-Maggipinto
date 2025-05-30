@@ -13,44 +13,16 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="737.0" prefWidth="966.0" stylesheets="@build-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.BuildingPhaseController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1152.0" stylesheets="@build-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.BuildingPhaseController">
    <children>
-      <ToolBar layoutX="733.0" layoutY="345.0" orientation="VERTICAL" prefHeight="323.0" prefWidth="168.0" style="-fx-background-color: transparent;">
-        <items>
-          <Button fx:id="drawHeapBtn" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio">
-               <font>
-                  <Font name="Arial Black" size="13.0" />
-               </font></Button>
-            <Button fx:id="rotateBtn" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota">
-               <font>
-                  <Font name="Arial Black" size="13.0" />
-               </font></Button>
-            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="scarta">
-               <font>
-                  <Font name="Arial Black" size="13.0" />
-               </font></Button>
-            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="29.0" prefWidth="117.0" text="posiziona" textFill="#121212">
-               <font>
-                  <Font name="Arial Black" size="13.0" />
-               </font></Button>
-            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" text="gira clessidra">
-                <font>
-                    <Font name="Arial Black" size="13.0" />
-                </font></Button>
-            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" text="prenota">
-                <font>
-                    <Font name="Arial Black" size="13.0" />
-                </font></Button>
-        </items>
-      </ToolBar>
-      <StackPane fx:id="boardStack" layoutY="196.0" prefHeight="540.0" prefWidth="721.0">
+      <StackPane fx:id="boardStack" layoutY="112.0" prefHeight="530.0" prefWidth="757.0">
          <children>
             <ImageView fx:id="board" fitHeight="520.0" fitWidth="726.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg" />
                </image>
             </ImageView>
-            <GridPane fx:id="ship" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="470.0" prefWidth="666.0">
+            <GridPane fx:id="ship">
               <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" percentWidth="14.2857" prefWidth="79.4000244140625" />
                   <ColumnConstraints hgrow="SOMETIMES" maxWidth="105.1999755859375" minWidth="10.0" prefWidth="88.5" />
@@ -74,12 +46,12 @@
          <font>
             <Font name="Arial Black" size="13.0" />
          </font></Button>
-      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="769.0" layoutY="207.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="tileInHand" fitHeight="97.0" fitWidth="101.0" layoutX="765.0" layoutY="205.0" onDragDropped="#handleTileDrop" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../it/polimi/ingsw/psp23/images/tiles/31.jpg" />
+            <Image url="@../it/polimi/ingsw/psp23/images/tiles/00.jpg" />
          </image>
       </ImageView>
-      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="9.0" layoutY="8.0" prefHeight="126.0" prefWidth="927.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
+      <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="9.0" layoutY="8.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
          <content>
             <HBox fx:id="uncoveredBox" prefHeight="124.0" prefWidth="922.0" spacing="5.0" styleClass="transparent-hbox" />
          </content>
@@ -93,5 +65,33 @@
             </ImageView>
          </graphic>
       </Button>
+      <ToolBar fx:id="mainCommands" layoutX="757.0" layoutY="347.0" orientation="VERTICAL" style="-fx-background-color: transparent;">
+        <items>
+          <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="25.0" prefWidth="62.0" text="ruota">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" text="scarta">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="29.0" prefWidth="117.0" text="posiziona" textFill="#121212">
+               <font>
+                  <Font name="Arial Black" size="13.0" />
+               </font></Button>
+            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" text="gira clessidra">
+                <font>
+                    <Font name="Arial Black" size="13.0" />
+                </font></Button>
+            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" text="prenota">
+                <font>
+                    <Font name="Arial Black" size="13.0" />
+                </font></Button>
+        </items>
+      </ToolBar>
    </children>
 </AnchorPane>

@@ -75,13 +75,17 @@ public class BuildingPhaseController {
     @FXML
     public void onReleaseClicked() throws RemoteException{
         client.sendAction(new ReleaseTile());
-        tileInHand.setImage(null);
+        Platform.runLater(() -> {
+            tileInHand.setImage(null);
+        });
     }
 
     @FXML
     public void onRotateClicked() throws RemoteException{
         client.sendAction(new RotateTile());
-        tileInHand.setRotate(tileInHand.getRotate() + 90);
+        Platform.runLater(() -> {
+            tileInHand.setRotate(tileInHand.getRotate() + 90);
+        });
     }
 
     @FXML
@@ -102,7 +106,9 @@ public class BuildingPhaseController {
     @FXML
     public void onReserveClicked() throws RemoteException{
         client.sendAction(new ReserveTile());
-        tileInHand.setImage(null);
+        Platform.runLater(() -> {
+            tileInHand.setImage(null);
+        });
     }
 
     public void showTile(Component toDraw) {
@@ -120,28 +126,31 @@ public class BuildingPhaseController {
         // aggiorno attributo che indica l'ultima versione
         this.lastVersion = lastVersion;
 
-        // pulisco immagini precedenti
-        uncoveredBox.getChildren().clear();
+        Platform.runLater(() -> {
+            // pulisco immagini precedenti
+            uncoveredBox.getChildren().clear();
 
-        // creo image per ogni tile
-        for (Component component : uncovered) {
-            String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
-            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
-            ImageView imageView = new ImageView(image);
+            // creo image per ogni tile
+            for (Component component : uncovered) {
+                String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+                ImageView imageView = new ImageView(image);
 
-            // aggiungo la tile all'HBox
-            uncoveredBox.getChildren().add(imageView);
-            // associo un listener di ClickEvent ad ogni imageview creata
-            imageView.setOnMouseClicked(mouseEvent -> {
-                try {
-                    drawUncovered(imageView);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            });
-        }
-        // forzo aggiornamento all'inizio della lista
-        uncoveredScrollPane.setHvalue(0.0);
+                // aggiungo la tile all'HBox
+                uncoveredBox.getChildren().add(imageView);
+
+                // associo un listener di ClickEvent ad ogni imageview creata
+                imageView.setOnMouseClicked(mouseEvent -> {
+                    try {
+                        drawUncovered(imageView);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+            // forzo aggiornamento all'inizio della lista
+            uncoveredScrollPane.setHvalue(0.0);
+        });
     }
 
     private void drawUncovered(ImageView imageView) throws RemoteException {
