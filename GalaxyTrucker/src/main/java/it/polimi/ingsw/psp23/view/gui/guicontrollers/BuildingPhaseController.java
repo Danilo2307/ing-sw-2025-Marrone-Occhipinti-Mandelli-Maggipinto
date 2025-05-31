@@ -103,9 +103,10 @@ public class BuildingPhaseController {
 
     @FXML
     public void onRotateClicked() throws RemoteException{
+        int rotation = componentInHand.getRotate();
         client.sendAction(new RotateTile());
         Platform.runLater(() -> {
-            tileInHand.setRotate(componentInHand.getRotate() + 90);
+            tileInHand.setRotate(rotation + 90);
         });
     }
 
