@@ -128,6 +128,15 @@ public class LobbyController {
             }
         }
         client.setUsername(username);
+        try{
+            if(client.isRmi()) {
+                if (client.getGameServer().getNumPlayersConnected() != 1 && client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()) {
+                    client.getGameServer().startBuildingPhase();
+                }
+            }
+        }catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showNumPlayers() {

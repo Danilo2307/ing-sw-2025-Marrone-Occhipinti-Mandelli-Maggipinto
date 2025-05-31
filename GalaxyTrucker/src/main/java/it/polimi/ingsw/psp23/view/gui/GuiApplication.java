@@ -157,15 +157,6 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void showAppropriateUsername(String username) {
         lobbyController.hideUserChoice();
-        try{
-            if(client.isRmi()) {
-                if (client.getGameServer().getNumPlayersConnected() != 1 && client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()) {
-                    client.getGameServer().startBuildingPhase();
-                }
-            }
-        }catch (RemoteException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
