@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
@@ -56,17 +57,12 @@ public class BuildingPhaseController {
 
         // codice per permettere il drag della tile (equivale a spostare dati)
         tileInHand.setOnDragDetected(event -> {
-            if (tileInHand.getImage() == null) return;
-
             Dragboard db = tileInHand.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
             content.putImage(tileInHand.getImage());
-
-            // Inserisci la rotazione come stringa
-            content.putString(String.valueOf(tileInHand.getRotate()));
-
             db.setContent(content);
-            event.consume();});
+            event.consume();
+        });
     }
 
     public void setCentral(Color playerColor) {
@@ -83,9 +79,11 @@ public class BuildingPhaseController {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + finalId + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
             ImageView imageView = new ImageView(image);
-            imageView.setFitHeight(97);
-            imageView.setFitWidth(101);
-            ship.add(imageView, 3, 2);
+            StackPane pane = new StackPane(imageView);
+            pane.setAlignment(Pos.CENTER);
+            imageView.setFitHeight(94);
+            imageView.setFitWidth(94);
+            ship.add(pane, 3, 2);
         });
 
     }
@@ -139,6 +137,7 @@ public class BuildingPhaseController {
         Platform.runLater(() -> {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
             Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+            tileInHand.setRotate(componentInHand.getRotate());
             tileInHand.setImage(image);
             tileInHand.setVisible(true);
         });
@@ -184,41 +183,7 @@ public class BuildingPhaseController {
         client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
 
-    // codice che fissa la tile dopo il drop e la leva dalla mano
-    @FXML
-    private void handleTileDrop(DragEvent event) throws RemoteException{
-        Dragboard db = event.getDragboard();
-        boolean success = false;
 
-        if (db.hasImage()) {
-            // Target: StackPane dove si è fatto il drop
-            StackPane target = (StackPane) event.getGestureTarget();
-
-            // Copia l'immagine
-            ImageView dropped = new ImageView(db.getImage());
-            dropped.setFitWidth(60);
-            dropped.setPreserveRatio(true);
-
-            // Recupera la rotazione passata come stringa e applicala
-            double rotation = Double.parseDouble(db.getString());
-            dropped.setRotate(rotation);
-
-            // Mostra l'immagine nella cella
-            target.getChildren().clear();
-            target.getChildren().add(dropped);
-
-            // Rimuovi immagine originale dal tile
-            tileInHand.setImage(null);
-
-            success = true;
-
-            // invio azione di saldatura
-            client.sendAction(new AddTile(GridPane.getRowIndex(target),GridPane.getColumnIndex(target)));
-        }
-
-        event.setDropCompleted(success);
-        event.consume();
-    }
 
     @FXML
     public void onUncoveredRefresh() throws RemoteException{
