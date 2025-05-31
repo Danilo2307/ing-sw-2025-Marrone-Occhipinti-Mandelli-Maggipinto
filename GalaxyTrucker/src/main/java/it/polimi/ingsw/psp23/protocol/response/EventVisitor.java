@@ -49,4 +49,6 @@ public interface EventVisitor<T> {
 
     public T visitForLobbyUnavailable(LobbyUnavailable lobbyUnavailable, ViewAPI viewAPI);
 
+    public T visitForVisibleDeckResponse(VisibleDeckResponse visibleDeckResponse, ViewAPI viewAPI);
+
 }

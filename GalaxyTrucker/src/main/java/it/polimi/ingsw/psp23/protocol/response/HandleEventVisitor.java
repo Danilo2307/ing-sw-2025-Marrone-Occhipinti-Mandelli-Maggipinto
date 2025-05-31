@@ -139,4 +139,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForVisibleDeckResponse(VisibleDeckResponse visibleDeckResponse, ViewAPI viewAPI){
+        visibleDeckResponse.handle(viewAPI);
+        return null;
+    }
+
+
 }

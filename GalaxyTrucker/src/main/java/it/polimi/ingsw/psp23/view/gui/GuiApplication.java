@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui;
 
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -283,6 +284,11 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
+
+    }
+
+    @Override
+    public void showDeck(ArrayList<Integer> idCards, String description) {
 
     }
 

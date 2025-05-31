@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -648,5 +649,10 @@ public class TuiApplication implements ViewAPI {
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
         io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
+    }
+
+    @Override
+    public void showDeck(ArrayList<Integer> idCards, String description) {
+        io.print(description);
     }
 }

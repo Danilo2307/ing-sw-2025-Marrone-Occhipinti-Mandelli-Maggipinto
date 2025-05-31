@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
+import it.polimi.ingsw.psp23.protocol.response.VisibleDeckResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +38,12 @@ public record TakeVisibleDeck(int index) implements Action{
         }
         else {
             StringBuilder descriptions = new StringBuilder();
+            ArrayList<Integer> ids = new ArrayList<>();
             for (Card card : deckChosen) {
-                descriptions.append(card.toString()).append("\n");
+                descriptions.append(card.toString()).append("\n\n");
+                ids.add(card.getId());
             }
-            DirectMessage m = new DirectMessage(new StringResponse(descriptions.toString()));
-            // Server.getInstance().sendMessage(username, dm);
+            DirectMessage m = new DirectMessage(new VisibleDeckResponse(ids, descriptions.toString()));
             dm.add(m);
         }
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view;
 
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -36,6 +37,7 @@ public interface ViewAPI {
     void showCardUpdate(String message);
     void showMeteor(Meteor meteor);
     void showCannonShot(int coord, CannonShot cannonShot);
+    void showDeck(ArrayList<Integer> ids, String description);
 
 
 
