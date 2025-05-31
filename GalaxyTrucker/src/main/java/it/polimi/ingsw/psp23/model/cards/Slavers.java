@@ -271,6 +271,7 @@ public class Slavers extends Card {
                     loser = null;
                     counterMember = 0;
                     game.getNextPlayer();
+                    game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
                 }
             }
         }

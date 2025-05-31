@@ -128,13 +128,13 @@ public class MeteorSwarm extends Card {
             player.getTruck().handleMeteor(meteor, line);
         }
         currentIndex++;
-        meteor = meteors.get(currentIndex);
         resolvers.clear();
         if (currentIndex >= meteors.size()) {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
         }
         else{
+            meteor = meteors.get(currentIndex);
             game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));
         }
     }
