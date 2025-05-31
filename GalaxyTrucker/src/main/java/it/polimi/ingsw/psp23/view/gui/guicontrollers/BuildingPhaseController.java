@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
+import it.polimi.ingsw.psp23.exceptions.InvalidCoordinatesException;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.network.Client;
@@ -8,14 +9,12 @@ import it.polimi.ingsw.psp23.protocol.request.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -54,13 +53,85 @@ public class BuildingPhaseController {
 
         ship.prefWidthProperty().bind(boardStack.widthProperty());
         ship.prefHeightProperty().bind(boardStack.heightProperty());
+    //inizializzo la gridpane con degli stackpane che conterranno le tiles
+        int rows = 5;
+        int cols = 7;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if(!(i== 2 && j== 3)) {
+                    StackPane cell = new StackPane();
+                    cell.setPrefSize(94, 94);
 
-        // codice per permettere il drag della tile (equivale a spostare dati)
-        tileInHand.setOnDragDetected(event -> {
-            Dragboard db = tileInHand.startDragAndDrop(TransferMode.MOVE);
-            ClipboardContent content = new ClipboardContent();
-            content.putImage(tileInHand.getImage());
-            db.setContent(content);
+                    ship.add(cell, j, i);
+                    setupCellForDrop(cell, i, j);
+                }
+            }
+        }
+    }
+
+    @FXML
+    private void handleDragDetected(MouseEvent event) {
+        if (tileInHand.getImage() == null) {
+            event.consume(); // blocco il drag se non c'è immagine
+            return;
+        }
+        Dragboard db = tileInHand.startDragAndDrop(TransferMode.MOVE);
+        ClipboardContent content = new ClipboardContent();
+        content.putImage(tileInHand.getImage());
+        db.setContent(content);
+        event.consume();
+    }
+
+    private void setupCellForDrop(StackPane cell, int row, int col) {
+        cell.setOnMouseEntered(e -> {
+            cell.getStyleClass().removeAll("cell-default");
+            cell.getStyleClass().add("cell-hover");
+        });
+
+        cell.setOnMouseExited(e -> {
+            cell.getStyleClass().removeAll("cell-hover", "cell-highlight");
+            cell.getStyleClass().add("cell-default");
+        });
+
+        cell.setOnDragEntered(event -> {
+            if (event.getDragboard().hasImage()) {
+                cell.getStyleClass().removeAll("cell-hover", "cell-default");
+                cell.getStyleClass().add("cell-highlight");
+            }
+        });
+
+        cell.setOnDragExited(event -> {
+            cell.getStyleClass().removeAll("cell-highlight");
+            cell.getStyleClass().add("cell-default");
+        });
+        cell.setOnDragOver(event -> {
+            if (event.getGestureSource() != cell && event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        cell.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = true;
+
+            if (db.hasImage()) {
+                ImageView dropped = new ImageView(db.getImage());
+                dropped.setFitWidth(94);
+                dropped.setFitHeight(94);
+                dropped.setRotate(componentInHand.getRotate());
+
+                try {
+                    client.sendAction(new AddTile(row,col));
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+
+                    cell.getChildren().add(dropped);
+                    tileInHand.setImage(null); // svuota la mano
+
+            }
+            event.setDropCompleted(success);
             event.consume();
         });
     }

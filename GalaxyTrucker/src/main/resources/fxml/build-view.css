@@ -34,4 +34,18 @@
     -fx-background-color: #df0a0a;
     -fx-cursor: hand;
 }
+/* build-view.css */
 
+.cell-default {
+    -fx-background-color: transparent;
+}
+
+.cell-hover {
+    -fx-border-color: gray;
+    -fx-background-color: lightblue;
+}
+
+.cell-highlight {
+    -fx-border-color: gray;
+    -fx-background-color: lightgreen;
+}
