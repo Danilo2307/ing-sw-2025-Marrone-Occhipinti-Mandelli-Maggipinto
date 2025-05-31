@@ -145,5 +145,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForIncorrectWelding(IncorrectWelding incorrectWelding, ViewAPI viewAPI){
+        incorrectWelding.handle(viewAPI);
+        return null;
+    }
+
 
 }

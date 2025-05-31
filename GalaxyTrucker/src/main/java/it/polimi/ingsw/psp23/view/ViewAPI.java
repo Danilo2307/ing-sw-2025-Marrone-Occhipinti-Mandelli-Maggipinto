@@ -38,6 +38,7 @@ public interface ViewAPI {
     void showMeteor(Meteor meteor);
     void showCannonShot(int coord, CannonShot cannonShot);
     void showDeck(ArrayList<Integer> ids, String description);
+    void incorrectTile();
 
 
 

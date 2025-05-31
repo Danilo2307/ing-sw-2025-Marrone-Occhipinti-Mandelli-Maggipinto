@@ -51,4 +51,6 @@ public interface EventVisitor<T> {
 
     public T visitForVisibleDeckResponse(VisibleDeckResponse visibleDeckResponse, ViewAPI viewAPI);
 
+    public T visitForIncorrectWelding(IncorrectWelding incorrectWelding, ViewAPI viewAPI);
+
 }
