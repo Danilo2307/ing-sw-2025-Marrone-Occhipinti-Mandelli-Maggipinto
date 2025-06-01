@@ -53,4 +53,6 @@ public interface EventVisitor<T> {
 
     public T visitForIncorrectWelding(IncorrectWelding incorrectWelding, ViewAPI viewAPI);
 
+    public T visitForNewCardDrawn(NewCardDrawn newCardDrawn, ViewAPI viewAPI);
+
 }

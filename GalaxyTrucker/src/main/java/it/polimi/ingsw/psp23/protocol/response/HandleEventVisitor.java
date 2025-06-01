@@ -151,5 +151,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForNewCardDrawn(NewCardDrawn newCardDrawn, ViewAPI viewAPI){
+        newCardDrawn.handle(viewAPI);
+        return null;
+    }
+
 
 }

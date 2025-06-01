@@ -658,4 +658,9 @@ public class TuiApplication implements ViewAPI {
 
     @Override
     public void incorrectTile(){}
+
+    @Override
+    public void showNewCard(int id, String description) {
+        io.print(description);
+    }
 }

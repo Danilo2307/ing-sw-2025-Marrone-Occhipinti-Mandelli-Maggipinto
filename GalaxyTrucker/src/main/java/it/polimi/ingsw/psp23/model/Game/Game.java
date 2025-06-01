@@ -8,6 +8,9 @@ import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.NewCardDrawn;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -346,6 +349,7 @@ public class Game {
             // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
             // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
             // Controller.getInstance().onGameEvent(e);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())));
             Visitor visitor = new InitPlayVisitor();
             currentCard.call(visitor);
         }
