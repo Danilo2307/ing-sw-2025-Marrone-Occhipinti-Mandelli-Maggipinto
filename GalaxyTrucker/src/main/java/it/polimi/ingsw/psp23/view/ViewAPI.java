@@ -39,6 +39,7 @@ public interface ViewAPI {
     void showCannonShot(int coord, CannonShot cannonShot);
     void showDeck(ArrayList<Integer> ids, String description);
     void incorrectTile();
+    void showNewCard(int id, String description);
 
 
 
