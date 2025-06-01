@@ -50,6 +50,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private static GuiApplication instance;
     private Color playerColor;
     private int level;
+    private Scene buildingPhaseScene = null;
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -130,21 +131,25 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     public void toBuildingPhase(Color playerColor) {
+        if(buildingPhaseScene == null) {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/build-view.fxml")
+            );
+            try {
+                Parent root = loader.load();
+                this.buildingPhaseController = loader.getController();
+                buildingPhaseController.setClient(client);
+                Scene scene = new Scene(root, 1152, 768);
+                buildingPhaseScene = scene;
+                stage.setScene(scene);
+                buildingPhaseController.setCentral(playerColor);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            stage.setScene(buildingPhaseScene);
+        }
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/build-view.fxml")
-        );
-        try {
-            Parent root = loader.load();
-            this.buildingPhaseController = loader.getController();
-            buildingPhaseController.setClient(client);
-            Scene scene = new Scene(root, 1152, 768);
-            stage.setScene(scene);
-            buildingPhaseController.setCentral(playerColor);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void toFlightBoard() {

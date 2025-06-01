@@ -65,31 +65,36 @@
       </Button>
       <ToolBar fx:id="mainCommands" layoutX="822.0" layoutY="355.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="341.0" prefWidth="241.0" style="-fx-background-color: transparent;">
         <items>
-          <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio">
+          <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="39.0" prefWidth="210.0" text="ruota">
+            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="39.0" prefWidth="210.0" text="ruota" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" prefHeight="39.0" prefWidth="210.0" text="scarta">
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" prefHeight="39.0" prefWidth="210.0" text="scarta" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="39.0" prefWidth="211.0" text="posiziona" textFill="#121212">
+            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="39.0" prefWidth="211.0" text="posiziona" textFill="#121212" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" prefHeight="39.0" prefWidth="212.0" text="gira clessidra">
+            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" prefHeight="39.0" prefWidth="212.0" text="gira clessidra" styleClass="default-button">
                 <font>
                     <Font name="Arial Black" size="18.0" />
                 </font></Button>
-            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" prefHeight="39.0" prefWidth="212.0" text="prenota">
+            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" prefHeight="39.0" prefWidth="212.0" text="prenota" styleClass="default-button">
                 <font>
                     <Font name="Arial Black" size="18.0" />
                 </font></Button>
         </items>
       </ToolBar>
+      <Button fx:id="toFlightBoard" layoutX="1006.0" layoutY="162.0" onAction="#onFlightBoardClicked" mnemonicParsing="false" prefHeight="39.0" prefWidth="106.0" text="Flight Board" styleClass="default-button">
+         <font>
+            <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

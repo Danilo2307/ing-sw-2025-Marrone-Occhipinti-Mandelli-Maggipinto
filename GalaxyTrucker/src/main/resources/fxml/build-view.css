@@ -47,3 +47,9 @@
     -fx-border-color: gray;
     -fx-background-color: lightgreen;
 }
+
+.default-button:hover {
+    -fx-background-color: #5773ff;
+    -fx-cursor: hand;
+}
+
