@@ -318,6 +318,11 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     @Override
+    public void showNewCard(int id, String description) {
+
+    }
+
+    @Override
     public void incorrectTile(){
         Platform.runLater(() -> {
             buildingPhaseController.getTileInHand().setVisible(true);
