@@ -275,8 +275,11 @@ public class BuildingPhaseController {
 
     @FXML
     public void onFlightBoardClicked(){
-        //qui andrà mandata l'azione di richiesta posizioni al server che
-        //restituirà un evento permettendo anche il cambio della scena
+        try {
+            client.sendAction(new RequestFlightBoard());
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

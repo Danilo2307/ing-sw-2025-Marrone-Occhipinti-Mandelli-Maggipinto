@@ -30,6 +30,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
@@ -152,28 +153,6 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
-    public void toFlightBoard() {
-        FXMLLoader loader;
-        if(this.level == 0) {
-            loader = new FXMLLoader(
-                    getClass().getResource("/fxml/flight-board-view-0.fxml")
-            );
-        }else{
-            loader = new FXMLLoader(
-                    getClass().getResource("/fxml/flight-board-view-2.fxml")
-            );
-        }
-        try {
-            Parent root = loader.load();
-            this.flightBoardController2 = loader.getController();
-            flightBoardController2.setClient(client);
-            Scene scene = new Scene(root, 1152, 768);
-            stage.setScene(scene);
-        }
-        catch(IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public void showRequestLevel() {
@@ -335,6 +314,31 @@ public class GuiApplication extends Application implements ViewAPI {
             buildingPhaseController.getCellToRemove().getChildren().clear();
         });
 
+    }
+
+    @Override
+    public void showFlightBoard(Map<Color,Integer> positions){
+        FXMLLoader loader;
+        if(this.level == 0) {
+            loader = new FXMLLoader(
+                    getClass().getResource("/fxml/flight-board-view-0.fxml")
+            );
+        }else{
+            loader = new FXMLLoader(
+                    getClass().getResource("/fxml/flight-board-view-2.fxml")
+            );
+        }
+        try {
+            Parent root = loader.load();
+            this.flightBoardController2 = loader.getController();
+            flightBoardController2.setClient(client);
+            flightBoardController2.setColors(positions);
+            Scene scene = new Scene(root, 1152, 768);
+            stage.setScene(scene);
+        }
+        catch(IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
