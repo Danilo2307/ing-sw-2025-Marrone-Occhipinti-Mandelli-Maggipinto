@@ -59,10 +59,10 @@ public class Controller {
 
     private void setPlayersColors(Player player, int count) {
         switch (count) {
-            case 0: player.setColor(Color.Blue);
-            case 1: player.setColor(Color.Green);
-            case 2: player.setColor(Color.Red);
-            case 3: player.setColor(Color.Yellow);
+            case 0 -> player.setColor(Color.Blue);
+            case 1 -> player.setColor(Color.Green);
+            case 2 -> player.setColor(Color.Red);
+            case 3 -> player.setColor(Color.Yellow);
         }
     }
 

@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
+
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
 // la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
 // da cui viene effettivamente fatta partire la gui
@@ -318,6 +319,8 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showFlightBoard(Map<Color,Integer> positions){
+        positions.forEach((k, v) -> System.out.println("Chiave: " + k + ", Valore: " + v + "\n"));
+
         FXMLLoader loader;
         if(this.level == 0) {
             loader = new FXMLLoader(

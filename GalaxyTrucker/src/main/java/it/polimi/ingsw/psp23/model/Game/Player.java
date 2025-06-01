@@ -25,6 +25,7 @@ public class Player {
         this.currentTileInHand = null;
         this.inGame = true;
         this.isConnected = true;
+        this.color = null;
 
     }
 
@@ -152,8 +153,8 @@ public class Player {
         return currentTileInHand;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColor(Color colore) {
+        this.color = colore;
     }
 
     public Color getColor() {
