@@ -153,6 +153,11 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public void setGameLevel(int level) throws RemoteException {
         Game.getInstance(level);
     }
+    
+    @Override
+    public int getGameLevel() throws RemoteException {
+        return Game.getInstance().getLevel();
+    }
 
     @Override
     public int getNumPlayersConnected() throws RemoteException {

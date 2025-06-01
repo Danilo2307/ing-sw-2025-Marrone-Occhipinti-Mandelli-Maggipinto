@@ -181,8 +181,9 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     @Override
-    public void showAppropriateUsername(String username) {
+    public void showAppropriateUsername(String username, int level) {
         lobbyController.hideUserChoice();
+        this.level = level;
     }
 
     @Override

@@ -21,4 +21,5 @@ public interface ClientRMIHandlerInterface extends Remote{
     void setNumRequestedPlayers(int num) throws RemoteException;
     int getNumRequestedPlayers() throws RemoteException;
     void startBuildingPhase() throws RemoteException;
+    int getGameLevel() throws RemoteException;
 }

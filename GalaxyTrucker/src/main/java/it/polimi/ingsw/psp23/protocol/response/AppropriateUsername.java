@@ -4,10 +4,10 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.TUI.TuiState;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
-public record AppropriateUsername(String username) implements Event {
+public record AppropriateUsername(String username, int level) implements Event {
 
     public void handle(ViewAPI view) {
-        view.showAppropriateUsername(username);
+        view.showAppropriateUsername(username, level);
     }
 
     @Override

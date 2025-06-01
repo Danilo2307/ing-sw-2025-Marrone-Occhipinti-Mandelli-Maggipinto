@@ -205,7 +205,7 @@ public class Server {
                     }
                 } while(error);
 
-                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username)));
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username, Game.getInstance().getLevel())));
                 int indiceUsernameDaCambiare = usersConnected.indexOf(nameConnection);
                 usersConnected.remove(indiceUsernameDaCambiare);
                 usersConnected.add(indiceUsernameDaCambiare, username);

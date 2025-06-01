@@ -135,7 +135,7 @@ public class TuiApplication implements ViewAPI {
                 error = true;
             }
         } while (error);
-        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new AppropriateUsername(username)));
+        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel())));
         if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
             client.getGameServer().startBuildingPhase();
         }
@@ -532,7 +532,7 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void showAppropriateUsername(String username) {
+    public void showAppropriateUsername(String username, int level) {
         try {
             if (!client.isRmi()) {
                 client.getSocketHandler().setUsername(username);

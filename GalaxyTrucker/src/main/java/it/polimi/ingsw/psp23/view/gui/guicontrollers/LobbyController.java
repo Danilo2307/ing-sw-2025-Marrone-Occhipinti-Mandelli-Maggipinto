@@ -118,7 +118,7 @@ public class LobbyController {
         if(client.isRmi()){
             try {
                 client.getGameServer().setPlayerUsername(username);
-                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username)));
+                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel())));
                 if(client.getGameServer().getNumPlayersConnected() == 1){
                     client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new RequestNumPlayers()));
                 }

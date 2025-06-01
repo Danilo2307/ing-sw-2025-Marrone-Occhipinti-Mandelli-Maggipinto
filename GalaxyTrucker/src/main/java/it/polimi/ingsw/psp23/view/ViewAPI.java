@@ -18,7 +18,7 @@ public interface ViewAPI {
     void setupRMI(String nameConnection) throws RemoteException;
     void showRequestLevel();
     void showRequestNumPlayers();
-    void showAppropriateUsername(String username);
+    void showAppropriateUsername(String username, int level);
     void showWrongUsername();
     void showTile(Component requested);
     void showShip(Component[][] ship, int[][] validCoordinates);
