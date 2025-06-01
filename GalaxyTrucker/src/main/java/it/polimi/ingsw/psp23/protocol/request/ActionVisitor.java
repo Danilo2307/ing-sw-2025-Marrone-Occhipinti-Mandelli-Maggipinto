@@ -82,4 +82,6 @@ public interface ActionVisitor<T> {
 
     public T visitForAccessMatch(AccessMatch accessMatch, String username);
 
+    public T visitForRequestFlightBoard(RequestFlightBoard requestFlightBoard, String username);
+
 }

@@ -663,4 +663,9 @@ public class TuiApplication implements ViewAPI {
     public void showNewCard(int id, String description) {
         io.print(description);
     }
+
+    @Override
+    public void showFlightBoard(Map<Color, Integer> flightMap) {}
+
+
 }

@@ -57,13 +57,22 @@ public class Controller {
         }
     }
 
+    private void setPlayersColors(Player player, int count) {
+        switch (count) {
+            case 0: player.setColor(Color.Blue);
+            case 1: player.setColor(Color.Green);
+            case 2: player.setColor(Color.Red);
+            case 3: player.setColor(Color.Yellow);
+        }
+    }
+
     public void startBuildingPhase() {
         Game game = Game.getInstance();
         int count = 0;
         for (Player player : game.getPlayers()) {
-            // TODO: bisogna cambiare l'id messo momentaneamente a meno 1!!
             HousingUnit centralCabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true, count+900);
             player.getTruck().addComponent(centralCabin,2,3);
+            setPlayersColors(player, count);
             Server.getInstance().sendMessage(player.getNickname(), new DirectMessage(new TileResponse(centralCabin)));
             count++;
         }//questo for inizializza la cabina centrale dei player con la prima housing unit

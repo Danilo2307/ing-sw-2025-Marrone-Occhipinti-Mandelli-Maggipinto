@@ -242,4 +242,9 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForRequestFlightBoard(RequestFlightBoard requestFlightBoard, String username){
+        requestFlightBoard.handle(username);
+        return null;
+    }
 }

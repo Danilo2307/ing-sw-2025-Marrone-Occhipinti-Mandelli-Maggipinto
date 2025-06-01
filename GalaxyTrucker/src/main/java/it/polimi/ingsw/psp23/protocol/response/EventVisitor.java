@@ -55,4 +55,6 @@ public interface EventVisitor<T> {
 
     public T visitForNewCardDrawn(NewCardDrawn newCardDrawn, ViewAPI viewAPI);
 
+    public T visitForFlightBoardResponse(FlightBoardResponse flightBoardResponse, ViewAPI viewAPI);
+
 }

@@ -157,5 +157,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForFlightBoardResponse(FlightBoardResponse flightBoardResponse, ViewAPI viewAPI) {
+        flightBoardResponse.handle(viewAPI);
+        return null;
+    }
+
 
 }

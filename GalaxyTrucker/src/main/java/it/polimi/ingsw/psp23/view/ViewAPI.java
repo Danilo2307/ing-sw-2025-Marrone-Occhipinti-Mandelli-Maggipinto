@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public interface ViewAPI {
     void setClient(Client client);
@@ -40,7 +42,5 @@ public interface ViewAPI {
     void showDeck(ArrayList<Integer> ids, String description);
     void incorrectTile();
     void showNewCard(int id, String description);
-
-
-
+    void showFlightBoard(Map<Color, Integer> flightMap);
 }

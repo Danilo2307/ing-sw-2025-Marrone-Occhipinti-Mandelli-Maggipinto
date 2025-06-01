@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.model.Game;
 
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
 
 
 public class Player {
@@ -13,6 +14,7 @@ public class Player {
     private boolean inGame;
     private boolean isConnected;
     private Game game;
+    private Color color;
 
     public Player(String nickname) {
         this.nickname = nickname;
@@ -150,4 +152,11 @@ public class Player {
         return currentTileInHand;
     }
 
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
+    }
 }
