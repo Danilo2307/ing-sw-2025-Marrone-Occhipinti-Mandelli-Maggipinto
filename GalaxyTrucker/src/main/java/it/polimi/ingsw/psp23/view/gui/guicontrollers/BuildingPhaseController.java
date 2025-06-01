@@ -42,6 +42,15 @@ public class BuildingPhaseController {
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
     Component componentInHand;
+    private StackPane cellToRemove = null;
+
+    public ImageView getTileInHand() {
+        return tileInHand;
+    }
+
+    public StackPane getCellToRemove() {
+        return cellToRemove;
+    }
 
     public void setClient(Client client) {
         this.client = client;
@@ -83,6 +92,7 @@ public class BuildingPhaseController {
     }
 
     private void setupCellForDrop(StackPane cell, int row, int col) {
+
         cell.setOnMouseEntered(e -> {
             cell.getStyleClass().removeAll("cell-default");
             cell.getStyleClass().add("cell-hover");
@@ -116,10 +126,13 @@ public class BuildingPhaseController {
             boolean success = true;
 
             if (db.hasImage()) {
+                cellToRemove = cell;
                 ImageView dropped = new ImageView(db.getImage());
                 dropped.setFitWidth(94);
                 dropped.setFitHeight(94);
                 dropped.setRotate(componentInHand.getRotate());
+                cell.getChildren().add(dropped);
+                tileInHand.setVisible(false); // svuota la mano
 
                 try {
                     client.sendAction(new AddTile(row,col));
@@ -127,8 +140,6 @@ public class BuildingPhaseController {
                     throw new RuntimeException(e);
                 }
 
-                    cell.getChildren().add(dropped);
-                    tileInHand.setImage(null); // svuota la mano
 
             }
             event.setDropCompleted(success);

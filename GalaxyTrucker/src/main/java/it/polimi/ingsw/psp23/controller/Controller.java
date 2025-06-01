@@ -69,8 +69,8 @@ public class Controller {
         }//questo for inizializza la cabina centrale dei player con la prima housing unit
 
         game.setGameStatus(GameStatus.Building);
-        game.getPlayers().forEach(player -> {
-            inizializzazioneNave.getInstance().popolaNave(player);});
+      //  game.getPlayers().forEach(player -> {
+       //     inizializzazioneNave.getInstance().popolaNave(player);});
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Building)));
 
         if (game.getLevel() != 0) {

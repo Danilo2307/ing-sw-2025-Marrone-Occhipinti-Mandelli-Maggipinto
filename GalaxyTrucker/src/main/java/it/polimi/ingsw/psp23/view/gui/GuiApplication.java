@@ -292,4 +292,13 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
+    @Override
+    public void incorrectTile(){
+        Platform.runLater(() -> {
+            buildingPhaseController.getTileInHand().setVisible(true);
+            buildingPhaseController.getCellToRemove().getChildren().clear();
+        });
+
+    }
+
 }

@@ -655,4 +655,7 @@ public class TuiApplication implements ViewAPI {
     public void showDeck(ArrayList<Integer> idCards, String description) {
         io.print(description);
     }
+
+    @Override
+    public void incorrectTile(){}
 }

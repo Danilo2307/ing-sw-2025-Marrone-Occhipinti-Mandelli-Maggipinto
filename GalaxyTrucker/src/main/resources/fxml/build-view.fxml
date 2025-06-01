@@ -47,9 +47,7 @@
             <Font name="Arial Black" size="18.0" />
          </font></Button>
       <ImageView fx:id="tileInHand" fitHeight="133.0" fitWidth="132.0" layoutX="863.0" layoutY="193.0" onDragDetected="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../it/polimi/ingsw/psp23/images/tiles/00.jpg" />
-         </image>
+
       </ImageView>
       <ScrollPane fx:id="uncoveredScrollPane" fitToHeight="true" layoutX="27.0" layoutY="22.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="124.0" prefWidth="1099.0" styleClass="transparent-scrollpane" vbarPolicy="NEVER">
          <content>
