@@ -211,7 +211,7 @@ public class Server {
                 usersConnected.add(indiceUsernameDaCambiare, username);
                 socketHandler.setUsername(username);
 
-                synchronized (Server.getInstance().getClients()) {
+                /*synchronized (Server.getInstance().getClients()) {
                     if (Server.getInstance().getClients().size() == 1 && UsersConnected.getInstance().getClients().size() != 1) {
                         // Se è chiusa e siamo nel primo player riapriamo la serversocket
 
@@ -220,7 +220,7 @@ public class Server {
                         // In questo punto permettiamo al Server di accettare nuovi client
                         ConnectionThread.getInstance().start();
                     }
-                }
+                }*/
 
 
                 if(UsersConnected.getInstance().getClients().size() == Game.getInstance().getNumRequestedPlayers()){
