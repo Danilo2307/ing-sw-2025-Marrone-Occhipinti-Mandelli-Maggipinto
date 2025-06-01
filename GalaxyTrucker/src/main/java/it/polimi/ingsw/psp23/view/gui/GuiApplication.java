@@ -332,9 +332,11 @@ public class GuiApplication extends Application implements ViewAPI {
             Parent root = loader.load();
             this.flightBoardController2 = loader.getController();
             flightBoardController2.setClient(client);
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root, 1152, 768);
+                stage.setScene(scene);
+            });
             flightBoardController2.setColors(positions);
-            Scene scene = new Scene(root, 1152, 768);
-            stage.setScene(scene);
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -342,3 +344,4 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
 }
+

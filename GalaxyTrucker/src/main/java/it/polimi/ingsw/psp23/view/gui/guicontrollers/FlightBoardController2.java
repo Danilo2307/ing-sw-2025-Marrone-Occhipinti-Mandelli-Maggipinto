@@ -82,14 +82,6 @@ public class FlightBoardController2 {
         }
     }
 
-    @FXML
-    public void onFourthDeckClicked(){
-        try {
-            client.sendAction(new TakeVisibleDeck(4));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     @FXML
     public void onBackToShipClicked(){
@@ -98,13 +90,13 @@ public class FlightBoardController2 {
 
     public void setColors(Map<Color,Integer> colors){
 
-        for(int i =0; i<positions.length; i++){
+       /* for(int i =0; i<positions.length; i++){
             int finalI = i;
             Platform.runLater(()->{
                 positions[finalI].setStyle(null);
             });
 
-        }
+        }*/
 
         for(Map.Entry<Color,Integer> entry : colors.entrySet()){
             Platform.runLater(()->{

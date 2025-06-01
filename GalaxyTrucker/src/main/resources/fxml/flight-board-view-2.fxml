@@ -21,7 +21,7 @@
       <Button fx:id="secondDeck" layoutX="257.0" layoutY="296.0" mnemonicParsing="false" onAction="#onSecondDeckClicked" prefHeight="101.0" prefWidth="71.0" styleClass="card-button" />
       <Button fx:id="firstDeck" layoutX="118.0" layoutY="273.0" mnemonicParsing="false" onAction="#onFirstDeckClicked" prefHeight="101.0" prefWidth="71.0" rotate="25.0" styleClass="card-button" />
       <Button fx:id="thirdDeck" layoutX="390.0" layoutY="267.0" mnemonicParsing="false" onAction="#onThirdDeckClicked" prefHeight="101.0" prefWidth="71.0" rotate="-25.0" styleClass="card-button" />
-      <Button fx:id="fourthDeck" layoutX="260.0" layoutY="-7.0" mnemonicParsing="false" onAction="#onFourthDeckClicked" prefHeight="101.0" prefWidth="71.0" rotate="90.0" styleClass="card-button" />
+      <Button fx:id="fourthDeck" layoutX="260.0" layoutY="-7.0" mnemonicParsing="false" prefHeight="101.0" prefWidth="71.0" rotate="90.0" styleClass="card-button" />
       <ImageView fx:id="position0" fitHeight="21.0" fitWidth="20.0" layoutX="119.0" layoutY="159.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
       <ImageView fx:id="position1" fitHeight="21.0" fitWidth="20.0" layoutX="143.0" layoutY="134.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
       <ImageView fx:id="position2" fitHeight="21.0" fitWidth="20.0" layoutX="170.0" layoutY="112.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
