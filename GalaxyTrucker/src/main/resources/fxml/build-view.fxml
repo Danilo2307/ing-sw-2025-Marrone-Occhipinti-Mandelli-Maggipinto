@@ -65,35 +65,45 @@
       </Button>
       <ToolBar fx:id="mainCommands" layoutX="822.0" layoutY="355.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="341.0" prefWidth="241.0" style="-fx-background-color: transparent;">
         <items>
-          <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" text="pesca dal mucchio" styleClass="default-button">
+          <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" styleClass="default-button" text="pesca dal mucchio">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="39.0" prefWidth="210.0" text="ruota" styleClass="default-button">
+            <Button fx:id="rotateBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onRotateClicked" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="ruota">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" prefHeight="39.0" prefWidth="210.0" text="scarta" styleClass="default-button">
+            <Button fx:id="releaseBtn" mnemonicParsing="false" onAction="#onReleaseClicked" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="scarta">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="39.0" prefWidth="211.0" text="posiziona" textFill="#121212" styleClass="default-button">
+            <Button fx:id="putBtn" mnemonicParsing="false" onAction="#onPutClicked" prefHeight="39.0" prefWidth="211.0" styleClass="default-button" text="posiziona" textFill="#121212">
                <font>
                   <Font name="Arial Black" size="18.0" />
                </font></Button>
-            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" prefHeight="39.0" prefWidth="212.0" text="gira clessidra" styleClass="default-button">
+            <Button fx:id="turnBtn" mnemonicParsing="false" onAction="#onTurnClicked" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="gira clessidra">
                 <font>
                     <Font name="Arial Black" size="18.0" />
                 </font></Button>
-            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" prefHeight="39.0" prefWidth="212.0" text="prenota" styleClass="default-button">
+            <Button fx:id="reserveBtn" mnemonicParsing="false" onAction="#onReserveClicked" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="prenota">
                 <font>
                     <Font name="Arial Black" size="18.0" />
                 </font></Button>
         </items>
       </ToolBar>
-      <Button fx:id="toFlightBoard" layoutX="1006.0" layoutY="162.0" onAction="#onFlightBoardClicked" mnemonicParsing="false" prefHeight="39.0" prefWidth="106.0" text="Flight Board" styleClass="default-button">
+      <Button fx:id="toFlightBoard" layoutX="1006.0" layoutY="162.0" mnemonicParsing="false" onAction="#onFlightBoardClicked" prefHeight="39.0" prefWidth="106.0" styleClass="default-button" text="Flight Board">
          <font>
             <Font name="Arial Black" size="13.0" />
+         </font>
+      </Button>
+      <ImageView fx:id="binCheck" fitHeight="114.0" fitWidth="124.0" layoutX="832.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../it/polimi/ingsw/psp23/images/utility/bin.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="shipCorrected" layoutX="811.0" layoutY="684.0" mnemonicParsing="false" onAction="#onShipCorrected" prefHeight="39.0" prefWidth="143.0" text="Nave corretta!">
+         <font>
+            <Font name="Arial Black" size="14.0" />
          </font>
       </Button>
    </children>

@@ -262,7 +262,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showIllegalTruck() {
-
+        buildingPhaseController.toCheck();
     }
 
     @Override
