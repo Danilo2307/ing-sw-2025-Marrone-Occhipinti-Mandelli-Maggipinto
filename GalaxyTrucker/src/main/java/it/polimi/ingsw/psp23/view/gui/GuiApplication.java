@@ -262,7 +262,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showIllegalTruck() {
-
+        buildingPhaseController.toCheck();
     }
 
     @Override
@@ -365,6 +365,7 @@ public class GuiApplication extends Application implements ViewAPI {
         try {
             Parent root = loader.load();
             this.flightBoardController2 = loader.getController();
+            flightBoardController2.inizializzaPosizioni();
             flightBoardController2.setClient(client);
             Platform.runLater(() -> {
                 Scene scene = new Scene(root, 1152, 768);

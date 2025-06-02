@@ -44,6 +44,10 @@ public class BuildingPhaseController {
     Component componentInHand;
     private StackPane cellToRemove = null;
 
+    @FXML private ImageView binCheck;
+    @FXML private Button shipCorrected;
+
+
     public ImageView getTileInHand() {
         return tileInHand;
     }
@@ -76,6 +80,10 @@ public class BuildingPhaseController {
                 }
             }
         }
+        binCheck.setVisible(false);
+        binCheck.setManaged(false);
+        shipCorrected.setVisible(false);
+        shipCorrected.setManaged(false);
     }
 
     @FXML
@@ -280,6 +288,43 @@ public class BuildingPhaseController {
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void toCheck() {
+        // annullo tutti i bottoni della building
+        releaseBtn.setVisible(false);
+        releaseBtn.setManaged(false);
+        rotateBtn.setVisible(false);
+        rotateBtn.setManaged(false);
+        putBtn.setVisible(false);
+        putBtn.setManaged(false);
+        turnBtn.setVisible(false);
+        turnBtn.setManaged(false);
+        drawHeapBtn.setVisible(false);
+        drawHeapBtn.setManaged(false);
+        leaveBtn.setVisible(false);
+        leaveBtn.setManaged(false);
+        reserveBtn.setVisible(false);
+        reserveBtn.setManaged(false);
+        tileInHand.setVisible(false);
+        tileInHand.setManaged(false);
+        uncoveredBox.getChildren().clear();
+        uncoveredBox.setManaged(false);
+        uncoveredBox.setVisible(false);
+        uncoveredRefresh.setVisible(false);
+        uncoveredRefresh.setManaged(false);
+
+        binCheck.setVisible(true);
+        binCheck.setManaged(true);
+        shipCorrected.setVisible(true);
+        shipCorrected.setManaged(true);
+
+
+    }
+
+    @FXML
+    public void onShipCorrected() throws RemoteException{
+        client.sendAction(new Fixed());
     }
 
 
