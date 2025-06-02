@@ -5,13 +5,12 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="768.0" prefWidth="1152.0" stylesheets="@deck-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.DeckViewController">
    <children>
-      <ImageView fx:id="card1" fitHeight="508.0" fitWidth="331.0" layoutX="53.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="card2" fitHeight="508.0" fitWidth="331.0" layoutX="424.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="card3" fitHeight="508.0" fitWidth="331.0" layoutX="769.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="884.0" layoutY="683.0" mnemonicParsing="false" prefHeight="63.0" prefWidth="231.0" text="Torna alla FlightBoard" onAction="#onBackToFlightBoardClicked">
+      <ImageView fx:id="card1" fitHeight="508.0" fitWidth="331.0" layoutX="31.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="card2" fitHeight="508.0" fitWidth="331.0" layoutX="386.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="card3" fitHeight="508.0" fitWidth="331.0" layoutX="775.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="884.0" layoutY="683.0" mnemonicParsing="false" onAction="#onBackToFlightBoardClicked" prefHeight="63.0" prefWidth="231.0" text="Torna alla FlightBoard">
          <font>
             <Font name="Arial Black" size="14.0" />
          </font>

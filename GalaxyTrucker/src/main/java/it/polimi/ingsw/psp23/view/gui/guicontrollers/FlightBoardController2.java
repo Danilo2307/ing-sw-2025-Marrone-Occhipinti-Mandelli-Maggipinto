@@ -9,11 +9,14 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
+
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import javafx.stage.Stage;
 
@@ -51,8 +54,8 @@ public class FlightBoardController2 {
     private int deck = 0;
     private ImageView[] positions;
 
-    public void initialize() {
-        positions = new javafx.scene.image.ImageView[]{
+    public void inizializzaPosizioni() {
+        positions = new ImageView[]{
                 position0, position1, position2, position3, position4, position5,
                 position6, position7, position8, position9, position10, position11,
                 position12, position13, position14, position15, position16, position17,
@@ -107,22 +110,25 @@ public class FlightBoardController2 {
 
     public void setColors(Map<Color,Integer> colors){
 
-       /* for(int i =0; i<positions.length; i++){
+       for(int i =0; i<positions.length; i++){
             int finalI = i;
             Platform.runLater(()->{
-                positions[finalI].setStyle(null);
+                positions[finalI].setImage(null);
             });
 
-        }*/
+        }
 
         for(Map.Entry<Color,Integer> entry : colors.entrySet()){
             Platform.runLater(()->{
                 Color color = entry.getKey();
+                System.out.println("Qui ci arrivo con almeno un colore " + entry.getValue() + " " + entry.getKey());
+                String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
+                javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 switch (color){
-                    case Red ->  positions[entry.getValue()].setStyle("-fx-background-color: red;");
-                    case Blue ->  positions[entry.getValue()].setStyle("-fx-background-color: blue;");
-                    case Yellow -> positions[entry.getValue()].setStyle("-fx-background-color: yellow;");
-                    case Green -> positions[entry.getValue()].setStyle("-fx-background-color: green;");
+                    case Red ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/red.jpg"))));
+                    case Blue ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/blue.jpg"))));
+                    case Yellow -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/yellow.jpg"))));
+                    case Green -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/green.jpg"))));
                 }
             });
 

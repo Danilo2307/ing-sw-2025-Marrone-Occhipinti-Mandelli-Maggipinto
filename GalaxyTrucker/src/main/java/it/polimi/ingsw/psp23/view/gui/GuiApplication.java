@@ -365,12 +365,13 @@ public class GuiApplication extends Application implements ViewAPI {
         try {
             Parent root = loader.load();
             this.flightBoardController2 = loader.getController();
+            flightBoardController2.inizializzaPosizioni();
             flightBoardController2.setClient(client);
+            flightBoardController2.setColors(positions);
             Platform.runLater(() -> {
                 Scene scene = new Scene(root, 1152, 768);
                 stage.setScene(scene);
             });
-            flightBoardController2.setColors(positions);
         }
         catch(IOException e) {
             e.printStackTrace();
