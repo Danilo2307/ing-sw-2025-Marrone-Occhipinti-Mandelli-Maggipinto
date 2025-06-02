@@ -32,6 +32,7 @@ import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
 
@@ -308,12 +309,17 @@ public class GuiApplication extends Application implements ViewAPI {
                     getClass().getResource("/fxml/show-deck.fxml")
             );
             try {
-                Parent root = loader.load();
-                Scene scene = new Scene(root, 1152, 768);
-                card1.setImage(new Image("/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg"));
-                card2.setImage(new Image("/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg"));
-                card3.setImage(new Image("/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg"));
-                stage.setScene(scene);
+                    Parent root = loader.load();
+                    Scene scene = new Scene(root, 1152, 768);
+                    String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
+                    String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
+                    String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
+                Platform.runLater(() -> {
+                    card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
+                    card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
+                    card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
+                    stage.setScene(scene);
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
