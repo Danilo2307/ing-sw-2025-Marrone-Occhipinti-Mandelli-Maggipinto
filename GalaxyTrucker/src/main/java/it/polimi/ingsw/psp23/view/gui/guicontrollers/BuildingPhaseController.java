@@ -296,7 +296,6 @@ public class BuildingPhaseController {
     }
 
 
-
     @FXML
     public void onUncoveredRefresh() throws RemoteException{
         client.sendAction(new RequestUncovered());
@@ -312,11 +311,12 @@ public class BuildingPhaseController {
     }
 
     public void toCheck() {
-        binCheck.setVisible(true);
-        binCheck.setManaged(true);
-        shipCorrected.setVisible(true);
-        shipCorrected.setManaged(true);
-
+        Platform.runLater(() -> {
+            binCheck.setVisible(true);
+            binCheck.setManaged(true);
+            shipCorrected.setVisible(true);
+            shipCorrected.setManaged(true);
+        });
     }
 
     @FXML
