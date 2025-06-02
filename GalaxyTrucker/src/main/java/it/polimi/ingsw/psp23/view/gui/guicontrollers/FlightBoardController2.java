@@ -125,10 +125,10 @@ public class FlightBoardController2 {
                 String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
                 javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 switch (color){
-                    case Red ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/red.jpg"))));
-                    case Blue ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/blue.jpg"))));
-                    case Yellow -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/yellow.jpg"))));
-                    case Green -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/utility/green.jpg"))));
+                    case Red ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
+                    case Blue ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
+                    case Yellow -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
+                    case Green -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
                 }
             });
 
