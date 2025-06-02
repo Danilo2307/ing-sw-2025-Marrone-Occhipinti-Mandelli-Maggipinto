@@ -9,7 +9,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-import javax.swing.text.html.ImageView;
+import javafx.scene.image.ImageView;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -47,9 +47,9 @@ public class FlightBoardController2 {
     @FXML private javafx.scene.image.ImageView position21;
     @FXML private javafx.scene.image.ImageView position22;
     @FXML private javafx.scene.image.ImageView position23;
-    @FXML private javafx.scene.image.ImageView card1;
-    @FXML private javafx.scene.image.ImageView card2;
-    @FXML private javafx.scene.image.ImageView card3;
+    @FXML private ImageView card1;
+    @FXML private ImageView card2;
+    @FXML private ImageView card3;
     private Client client;
     private int deck = 0;
     private javafx.scene.image.ImageView[] positions;
@@ -143,13 +143,13 @@ public class FlightBoardController2 {
         }
     }
 
-    public javafx.scene.image.ImageView getCard1() {
+    public ImageView getCard1() {
         return card1;
     }
-    public javafx.scene.image.ImageView getCard2() {
+    public ImageView getCard2() {
         return card2;
     }
-    public javafx.scene.image.ImageView getCard3() {
+    public ImageView getCard3() {
         return card3;
     }
 

@@ -24,7 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
+import javafx.scene.image.ImageView;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -301,9 +301,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showDeck(ArrayList<Integer> idCards, String description) {
-        javafx.scene.image.ImageView card1 = flightBoardController2.getCard1();
-        javafx.scene.image.ImageView card2 = flightBoardController2.getCard2();
-        javafx.scene.image.ImageView card3 = flightBoardController2.getCard3();
+        ImageView card1 = flightBoardController2.getCard1();
+        ImageView card2 = flightBoardController2.getCard2();
+        ImageView card3 = flightBoardController2.getCard3();
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/show-deck.fxml")
             );
