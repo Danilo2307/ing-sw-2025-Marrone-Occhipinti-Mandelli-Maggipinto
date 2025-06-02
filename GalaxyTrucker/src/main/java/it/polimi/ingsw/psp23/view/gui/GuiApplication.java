@@ -302,9 +302,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showDeck(ArrayList<Integer> idCards, String description) {
-        ImageView card1 = flightBoardController2.getCard1();
-        ImageView card2 = flightBoardController2.getCard2();
-        ImageView card3 = flightBoardController2.getCard3();
+        ImageView card1;
+        ImageView card2;
+        ImageView card3;
             FXMLLoader loader = new FXMLLoader(
                     getClass().getResource("/fxml/show-deck.fxml")
             );
@@ -314,6 +314,9 @@ public class GuiApplication extends Application implements ViewAPI {
                     String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
                     String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
                     String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
+                    card1 = flightBoardController2.getCard1();
+                    card2 = flightBoardController2.getCard2();
+                    card3 = flightBoardController2.getCard3();
                 Platform.runLater(() -> {
                     card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
                     card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
