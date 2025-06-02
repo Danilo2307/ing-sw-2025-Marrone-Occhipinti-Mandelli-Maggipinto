@@ -203,6 +203,27 @@ public class BuildingPhaseController {
     @FXML
     public void onPutClicked() throws RemoteException{
         client.sendAction(new Put());
+
+        // annullo tutti i bottoni della building
+        releaseBtn.setVisible(false);
+        releaseBtn.setManaged(false);
+        rotateBtn.setVisible(false);
+        rotateBtn.setManaged(false);
+        putBtn.setVisible(false);
+        putBtn.setManaged(false);
+        turnBtn.setVisible(false);
+        turnBtn.setManaged(false);
+        drawHeapBtn.setVisible(false);
+        drawHeapBtn.setManaged(false);
+        reserveBtn.setVisible(false);
+        reserveBtn.setManaged(false);
+        tileInHand.setVisible(false);
+        tileInHand.setManaged(false);
+        uncoveredBox.getChildren().clear();
+        uncoveredBox.setManaged(false);
+        uncoveredBox.setVisible(false);
+        uncoveredRefresh.setVisible(false);
+        uncoveredRefresh.setManaged(false);
     }
 
     @FXML
@@ -291,34 +312,10 @@ public class BuildingPhaseController {
     }
 
     public void toCheck() {
-        // annullo tutti i bottoni della building
-        releaseBtn.setVisible(false);
-        releaseBtn.setManaged(false);
-        rotateBtn.setVisible(false);
-        rotateBtn.setManaged(false);
-        putBtn.setVisible(false);
-        putBtn.setManaged(false);
-        turnBtn.setVisible(false);
-        turnBtn.setManaged(false);
-        drawHeapBtn.setVisible(false);
-        drawHeapBtn.setManaged(false);
-        leaveBtn.setVisible(false);
-        leaveBtn.setManaged(false);
-        reserveBtn.setVisible(false);
-        reserveBtn.setManaged(false);
-        tileInHand.setVisible(false);
-        tileInHand.setManaged(false);
-        uncoveredBox.getChildren().clear();
-        uncoveredBox.setManaged(false);
-        uncoveredBox.setVisible(false);
-        uncoveredRefresh.setVisible(false);
-        uncoveredRefresh.setManaged(false);
-
         binCheck.setVisible(true);
         binCheck.setManaged(true);
         shipCorrected.setVisible(true);
         shipCorrected.setManaged(true);
-
 
     }
 
