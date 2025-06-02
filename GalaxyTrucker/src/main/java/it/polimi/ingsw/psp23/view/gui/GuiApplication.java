@@ -49,6 +49,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private  FlightPhaseController flightPhaseController;
     private FlightBoardController2 flightBoardController2;
     private  LobbyController lobbyController;
+    private DeckViewController deckViewController;
     private  TimerController timerController;
     private Stage stage;
     private static GuiApplication instance;
@@ -58,6 +59,10 @@ public class GuiApplication extends Application implements ViewAPI {
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
+    }
+
+    public Client getClient() {
+        return client;
     }
 
     public static GuiApplication getInstance() {
@@ -310,13 +315,14 @@ public class GuiApplication extends Application implements ViewAPI {
             );
             try {
                     Parent root = loader.load();
+                    this.deckViewController = loader.getController();
                     Scene scene = new Scene(root, 1152, 768);
                     String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
                     String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
                     String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
-                    card1 = flightBoardController2.getCard1();
-                    card2 = flightBoardController2.getCard2();
-                    card3 = flightBoardController2.getCard3();
+                    card1 = deckViewController.getCard1();
+                    card2 = deckViewController.getCard2();
+                    card3 = deckViewController.getCard3();
                 Platform.runLater(() -> {
                     card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
                     card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
@@ -369,6 +375,10 @@ public class GuiApplication extends Application implements ViewAPI {
         catch(IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int getDeckNumber(){
+        return flightBoardController2.getDeckNumber();
     }
 
 }

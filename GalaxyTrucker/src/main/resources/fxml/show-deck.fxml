@@ -6,7 +6,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="768.0" prefWidth="1152.0" stylesheets="@deck-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.FlightBoardController2">
+<AnchorPane prefHeight="768.0" prefWidth="1152.0" stylesheets="@deck-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.DeckViewController">
    <children>
       <ImageView fx:id="card1" fitHeight="508.0" fitWidth="331.0" layoutX="53.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="card2" fitHeight="508.0" fitWidth="331.0" layoutX="424.0" layoutY="142.0" pickOnBounds="true" preserveRatio="true" />

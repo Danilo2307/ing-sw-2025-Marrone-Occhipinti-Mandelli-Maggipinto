@@ -23,36 +23,33 @@ public class FlightBoardController2 {
     @FXML private Button thirdDeck;
     @FXML private Button fourthDeck;
     @FXML private Button backToShip;
-    @FXML private javafx.scene.image.ImageView position0;
-    @FXML private javafx.scene.image.ImageView position1;
-    @FXML private javafx.scene.image.ImageView position2;
-    @FXML private javafx.scene.image.ImageView position3;
-    @FXML private javafx.scene.image.ImageView position4;
-    @FXML private javafx.scene.image.ImageView position5;
-    @FXML private javafx.scene.image.ImageView position6;
-    @FXML private javafx.scene.image.ImageView position7;
-    @FXML private javafx.scene.image.ImageView position8;
-    @FXML private javafx.scene.image.ImageView position9;
-    @FXML private javafx.scene.image.ImageView position10;
-    @FXML private javafx.scene.image.ImageView position11;
-    @FXML private javafx.scene.image.ImageView position12;
-    @FXML private javafx.scene.image.ImageView position13;
-    @FXML private javafx.scene.image.ImageView position14;
-    @FXML private javafx.scene.image.ImageView position15;
-    @FXML private javafx.scene.image.ImageView position16;
-    @FXML private javafx.scene.image.ImageView position17;
-    @FXML private javafx.scene.image.ImageView position18;
-    @FXML private javafx.scene.image.ImageView position19;
-    @FXML private javafx.scene.image.ImageView position20;
-    @FXML private javafx.scene.image.ImageView position21;
-    @FXML private javafx.scene.image.ImageView position22;
-    @FXML private javafx.scene.image.ImageView position23;
-    @FXML private ImageView card1;
-    @FXML private ImageView card2;
-    @FXML private ImageView card3;
+    @FXML private ImageView position0;
+    @FXML private ImageView position1;
+    @FXML private ImageView position2;
+    @FXML private ImageView position3;
+    @FXML private ImageView position4;
+    @FXML private ImageView position5;
+    @FXML private ImageView position6;
+    @FXML private ImageView position7;
+    @FXML private ImageView position8;
+    @FXML private ImageView position9;
+    @FXML private ImageView position10;
+    @FXML private ImageView position11;
+    @FXML private ImageView position12;
+    @FXML private ImageView position13;
+    @FXML private ImageView position14;
+    @FXML private ImageView position15;
+    @FXML private ImageView position16;
+    @FXML private ImageView position17;
+    @FXML private ImageView position18;
+    @FXML private ImageView position19;
+    @FXML private ImageView position20;
+    @FXML private ImageView position21;
+    @FXML private ImageView position22;
+    @FXML private ImageView position23;
     private Client client;
     private int deck = 0;
-    private javafx.scene.image.ImageView[] positions;
+    private ImageView[] positions;
 
     public void initialize() {
         positions = new javafx.scene.image.ImageView[]{
@@ -65,6 +62,10 @@ public class FlightBoardController2 {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public int getDeckNumber(){
+        return this.deck;
     }
 
     @FXML
@@ -103,21 +104,6 @@ public class FlightBoardController2 {
         GuiApplication.getInstance().toBuildingPhase(null);
     }
 
-    @FXML
-    public void onBackToFlightBoardClicked(){
-        try {
-            switch (deck) {
-                case 1 -> client.sendAction(new ReleaseDeck(1));
-                case 2 -> client.sendAction(new ReleaseDeck(2));
-                case 3 -> client.sendAction(new ReleaseDeck(3));
-                default -> throw new RuntimeException("Deck non salvato");
-            }
-            deck = 0;
-            client.sendAction(new RequestFlightBoard());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public void setColors(Map<Color,Integer> colors){
 
@@ -141,16 +127,6 @@ public class FlightBoardController2 {
             });
 
         }
-    }
-
-    public ImageView getCard1() {
-        return card1;
-    }
-    public ImageView getCard2() {
-        return card2;
-    }
-    public ImageView getCard3() {
-        return card3;
     }
 
 
