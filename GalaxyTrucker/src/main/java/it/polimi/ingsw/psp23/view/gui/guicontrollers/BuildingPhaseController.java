@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.*;
+import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -203,6 +204,7 @@ public class BuildingPhaseController {
     @FXML
     public void onPutClicked() throws RemoteException{
         client.sendAction(new Put());
+        GuiApplication.getInstance().disableDeckClick();
 
         // annullo tutti i bottoni della building
         releaseBtn.setVisible(false);

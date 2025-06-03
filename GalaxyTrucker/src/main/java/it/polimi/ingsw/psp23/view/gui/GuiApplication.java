@@ -382,5 +382,9 @@ public class GuiApplication extends Application implements ViewAPI {
         return flightBoardController2.getDeckNumber();
     }
 
+    public void disableDeckClick(){
+        flightBoardController2.disableDeckClick();
+    }
+
 }
 

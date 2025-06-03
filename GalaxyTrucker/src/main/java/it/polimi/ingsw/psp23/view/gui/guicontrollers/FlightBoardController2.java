@@ -61,6 +61,9 @@ public class FlightBoardController2 {
                 position12, position13, position14, position15, position16, position17,
                 position18, position19, position20, position21, position22, position23
         };
+        firstDeck.setOnAction(actionEvent -> onFirstDeckClicked());
+        secondDeck.setOnAction(actionEvent -> onSecondDeckClicked());
+        thirdDeck.setOnAction(actionEvent -> onThirdDeckClicked());
     }
 
     public void setClient(Client client) {
@@ -105,6 +108,12 @@ public class FlightBoardController2 {
     @FXML
     public void onBackToShipClicked(){
         GuiApplication.getInstance().toBuildingPhase(null);
+    }
+
+    public void disableDeckClick(){
+        firstDeck.setOnAction(null);
+        secondDeck.setOnAction(null);
+        thirdDeck.setOnAction(null);
     }
 
 
