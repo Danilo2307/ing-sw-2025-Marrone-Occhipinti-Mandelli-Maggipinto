@@ -31,6 +31,7 @@ public class BuildingPhaseController {
     private Client client;
     int lastVersion;
 
+    // building
     @FXML private StackPane boardStack;
     @FXML private ImageView board;
     @FXML private GridPane ship;
@@ -48,8 +49,14 @@ public class BuildingPhaseController {
     Component componentInHand;
     private StackPane cellToRemove = null;
 
+    // check
     @FXML private ImageView binCheck;
     @FXML private Button shipCorrected;
+
+    // add crew
+    @FXML private Button astronautBtn;
+    @FXML private Button purpleAlienBtn;
+    @FXML private Button brownAlienBtn;
 
 
     public ImageView getTileInHand() {
@@ -88,6 +95,12 @@ public class BuildingPhaseController {
         binCheck.setManaged(false);
         shipCorrected.setVisible(false);
         shipCorrected.setManaged(false);
+        purpleAlienBtn.setVisible(false);
+        purpleAlienBtn.setManaged(false);
+        brownAlienBtn.setVisible(false);
+        brownAlienBtn.setManaged(false);
+        astronautBtn.setVisible(false);
+        astronautBtn.setManaged(false);
     }
 
     @FXML
@@ -387,6 +400,41 @@ public class BuildingPhaseController {
     @FXML
     public void onShipCorrected() throws RemoteException{
         client.sendAction(new Fixed());
+        // tolgo bottoni check
+        binCheck.setVisible(false);
+        binCheck.setOnDragDropped(null);
+        binCheck.setOnDragOver(null);
+        binCheck.setManaged(false);
+        shipCorrected.setVisible(false);
+        shipCorrected.setManaged(false);
+        // disabilito drag&drop
+        for (Node node : ship.getChildren()) {
+            node.setOnDragDetected(null);
+        }
+    }
+
+    public void toAddCrew() {
+        Platform.runLater(() -> {
+            astronautBtn.setVisible(true);
+            astronautBtn.setManaged(true);
+
+            if (GuiApplication.getInstance().getLevel() == 2) {
+                purpleAlienBtn.setVisible(true);
+                purpleAlienBtn.setManaged(true);
+                brownAlienBtn.setVisible(true);
+                brownAlienBtn.setManaged(true);
+            }
+
+
+
+
+
+        });
+
+
+
+
+
     }
 
 
