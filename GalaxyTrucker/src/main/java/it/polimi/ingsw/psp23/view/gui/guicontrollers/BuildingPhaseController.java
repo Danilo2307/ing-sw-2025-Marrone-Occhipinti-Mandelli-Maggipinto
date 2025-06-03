@@ -57,6 +57,7 @@ public class BuildingPhaseController {
     @FXML private Button astronautBtn;
     @FXML private Button purpleAlienBtn;
     @FXML private Button brownAlienBtn;
+    int selectedCrewType;
 
 
     public ImageView getTileInHand() {
@@ -426,6 +427,14 @@ public class BuildingPhaseController {
         }
     }
 
+    private void sendCrewAction(int row, int col, boolean isAlien, Color color) {
+        try {
+            client.sendAction(new SetCrew(row, col, isAlien, color));
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void toAddCrew() {
         Platform.runLater(() -> {
             astronautBtn.setVisible(true);
@@ -438,16 +447,27 @@ public class BuildingPhaseController {
                 brownAlienBtn.setManaged(true);
             }
 
+            // assegno a ogni click un 'id' per salvare l'informazione della crew selezionata
+            astronautBtn.setOnAction(e -> selectedCrewType = 1);
+            purpleAlienBtn.setOnAction(e -> selectedCrewType = 2);
+            brownAlienBtn.setOnAction(e -> selectedCrewType = 3);
 
-
-
-
+            // creo i listener su ogni tile
+            for (Node tile : ship.getChildren()) {
+                // il click sulla tile triggera l'esecuzione di questo "metodo"
+                tile.setOnMouseClicked(mouseEvent -> {
+                    int row = GridPane.getRowIndex(tile) != null ? GridPane.getRowIndex(tile) : 0;
+                    int col = GridPane.getColumnIndex(tile) != null ? GridPane.getColumnIndex(tile) : 0;
+                    switch(selectedCrewType) {
+                        case 1 -> sendCrewAction(row, col, false, null);
+                        case 2 -> sendCrewAction(row, col, true, Color.Purple);
+                        case 3 -> sendCrewAction(row, col, true, Color.Brown);
+                    }
+                    // ripristino valore
+                    selectedCrewType = 0;
+                });
+            }
         });
-
-
-
-
-
     }
 
 
