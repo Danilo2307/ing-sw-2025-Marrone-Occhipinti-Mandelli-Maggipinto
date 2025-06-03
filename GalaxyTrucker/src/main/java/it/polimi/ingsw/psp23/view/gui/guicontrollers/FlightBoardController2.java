@@ -130,14 +130,13 @@ public class FlightBoardController2 {
         for(Map.Entry<Color,Integer> entry : colors.entrySet()){
             Platform.runLater(()->{
                 Color color = entry.getKey();
-                System.out.println("Qui ci arrivo con almeno un colore " + entry.getValue() + " " + entry.getKey());
                 String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
                 javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 switch (color){
-                    case Red ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
-                    case Blue ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
-                    case Yellow -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
-                    case Green -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
+                    case Red ->  positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
+                    case Blue ->  positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
+                    case Yellow -> positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
+                    case Green -> positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
                 }
             });
 

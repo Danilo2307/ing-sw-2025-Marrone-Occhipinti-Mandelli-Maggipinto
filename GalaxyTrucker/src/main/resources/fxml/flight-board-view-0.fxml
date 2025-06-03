@@ -18,10 +18,6 @@
                 <Font name="Arial Black" size="13.0" />
             </font>
         </Button>
-        <Button fx:id="secondDeck" layoutX="495.0" layoutY="541.0" mnemonicParsing="false"  prefHeight="232.0" prefWidth="153.0" styleClass="card-button" />
-        <Button fx:id="firstDeck" layoutX="245.0" layoutY="493.0" mnemonicParsing="false"  prefHeight="232.0" prefWidth="153.0" rotate="25.0" styleClass="card-button" />
-        <Button fx:id="thirdDeck" layoutX="746.0" layoutY="485.0" mnemonicParsing="false"  prefHeight="232.0" prefWidth="153.0" rotate="-25.0" styleClass="card-button" />
-        <Button fx:id="fourthDeck" layoutX="496.0" layoutY="-32.0" mnemonicParsing="false" prefHeight="232.0" prefWidth="153.0" rotate="90.0" styleClass="card-button" />
         <ImageView fx:id="position0" fitHeight="21.0" fitWidth="20.0" layoutX="264.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
         <ImageView fx:id="position1" fitHeight="21.0" fitWidth="20.0" layoutX="306.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
         <ImageView fx:id="position2" fitHeight="21.0" fitWidth="20.0" layoutX="361.0" layoutY="221.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />

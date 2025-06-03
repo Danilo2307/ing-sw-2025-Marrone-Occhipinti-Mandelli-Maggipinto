@@ -72,6 +72,18 @@ public class BuildingPhaseController {
     }
 
     public void initialize() {
+
+        if(GuiApplication.getInstance().getLevel() == 0){
+            board.setImage( new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1.jpg"))));
+            reserveBtn.setVisible(false);
+            reserveBtn.setManaged(false);
+            turnBtn.setVisible(false);
+            turnBtn.setManaged(false);
+        }else{
+            board.setImage( new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg"))));
+        }
+
+
         board.fitWidthProperty().bind(boardStack.widthProperty());
         board.fitHeightProperty().bind(boardStack.heightProperty());
 
@@ -338,6 +350,7 @@ public class BuildingPhaseController {
             // ATTIVO DRAG&DROP per rimuovere tiles
             // Per ogni nodo nella griglia, aggiungo listener di drag
             for (Node node : ship.getChildren()) {
+                node.setOnDragDropped(null);
                 int row = GridPane.getRowIndex(node) != null ? GridPane.getRowIndex(node) : 0;
                 int col = GridPane.getColumnIndex(node) != null ? GridPane.getColumnIndex(node) : 0;
 

@@ -21,10 +21,6 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import javafx.stage.Stage;
 
 public class FlightBoardController0 {
-    @FXML private Button firstDeck;
-    @FXML private Button secondDeck;
-    @FXML private Button thirdDeck;
-    @FXML private Button fourthDeck;
     @FXML private Button backToShip;
     @FXML private ImageView position0;
     @FXML private ImageView position1;
@@ -51,7 +47,6 @@ public class FlightBoardController0 {
     @FXML private ImageView position22;
     @FXML private ImageView position23;
     private Client client;
-    private int deck = 0;
     private ImageView[] positions;
 
     public void initialize() {
@@ -61,59 +56,16 @@ public class FlightBoardController0 {
                 position12, position13, position14, position15, position16, position17,
                 position18, position19, position20, position21, position22, position23
         };
-        firstDeck.setOnAction(actionEvent -> onFirstDeckClicked());
-        secondDeck.setOnAction(actionEvent -> onSecondDeckClicked());
-        thirdDeck.setOnAction(actionEvent -> onThirdDeckClicked());
     }
 
     public void setClient(Client client) {
         this.client = client;
     }
 
-    public int getDeckNumber(){
-        return this.deck;
-    }
-
-    @FXML
-    public void onFirstDeckClicked(){
-        deck = 1;
-        try {
-            client.sendAction(new TakeVisibleDeck(1));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    public void onSecondDeckClicked(){
-        deck = 2;
-        try {
-            client.sendAction(new TakeVisibleDeck(2));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @FXML
-    public void onThirdDeckClicked(){
-        deck = 3;
-        try {
-            client.sendAction(new TakeVisibleDeck(3));
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
 
     @FXML
     public void onBackToShipClicked(){
         GuiApplication.getInstance().toBuildingPhase(null);
-    }
-
-    public void disableDeckClick(){
-        firstDeck.setOnAction(event -> {});
-        secondDeck.setOnAction(event -> {});
-        thirdDeck.setOnAction(event -> {} );
     }
 
 
@@ -134,10 +86,10 @@ public class FlightBoardController0 {
                 String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
                 javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 switch (color){
-                    case Red ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
-                    case Blue ->  positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
-                    case Yellow -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
-                    case Green -> positions[entry.getValue()].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
+                    case Red ->  positions[entry.getValue() % 18].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
+                    case Blue ->  positions[entry.getValue() % 18].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
+                    case Yellow -> positions[entry.getValue() % 18].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
+                    case Green -> positions[entry.getValue() % 18].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
                 }
             });
 

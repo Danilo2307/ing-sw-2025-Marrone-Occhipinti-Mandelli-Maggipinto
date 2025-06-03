@@ -251,7 +251,7 @@ public class GuiApplication extends Application implements ViewAPI {
         Platform.runLater(() -> {
             switch(newState) {
                 case GameStatus.Building -> toBuildingPhase(playerColor);
-                case GameStatus.SetCrew -> buildingPhaseController.toAddCrew();
+               // case GameStatus.SetCrew -> buildingPhaseController.toAddCrew();
             }
         });
 
@@ -365,9 +365,9 @@ public class GuiApplication extends Application implements ViewAPI {
                 );
                 try {
                     Parent root = loader.load();
-                    this.flightBoardController2 = loader.getController();
-                    flightBoardController2.setClient(client);
-                    flightBoardController2.setColors(positions);
+                    this.flightBoardController0 = loader.getController();
+                    flightBoardController0.setClient(client);
+                    flightBoardController0.setColors(positions);
                     Scene scene = new Scene(root, 1152, 768);
                     flightBoardScene = scene;
                     Platform.runLater(() -> {
@@ -382,9 +382,9 @@ public class GuiApplication extends Application implements ViewAPI {
                 );
                 try {
                     Parent root = loader.load();
-                    this.flightBoardController0 = loader.getController();
-                    flightBoardController0.setClient(client);
-                    flightBoardController0.setColors(positions);
+                    this.flightBoardController2 = loader.getController();
+                    flightBoardController2.setClient(client);
+                    flightBoardController2.setColors(positions);
                     Scene scene = new Scene(root, 1152, 768);
                     flightBoardScene = scene;
                     Platform.runLater(() -> {
