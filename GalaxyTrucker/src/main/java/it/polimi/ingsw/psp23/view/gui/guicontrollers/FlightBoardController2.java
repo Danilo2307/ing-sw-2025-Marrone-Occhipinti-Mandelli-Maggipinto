@@ -54,7 +54,7 @@ public class FlightBoardController2 {
     private int deck = 0;
     private ImageView[] positions;
 
-    public void inizializzaPosizioni() {
+    public void initialize() {
         positions = new ImageView[]{
                 position0, position1, position2, position3, position4, position5,
                 position6, position7, position8, position9, position10, position11,
@@ -111,9 +111,9 @@ public class FlightBoardController2 {
     }
 
     public void disableDeckClick(){
-        firstDeck.setOnAction(null);
-        secondDeck.setOnAction(null);
-        thirdDeck.setOnAction(null);
+        firstDeck.setOnAction(event -> {});
+        secondDeck.setOnAction(event -> {});
+        thirdDeck.setOnAction(event -> {} );
     }
 
 

@@ -56,6 +56,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private Color playerColor;
     private int level;
     private Scene buildingPhaseScene = null;
+    private Scene flightBoardScene = null;
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -150,7 +151,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 buildingPhaseController.setClient(client);
                 Scene scene = new Scene(root, 1152, 768);
                 buildingPhaseScene = scene;
-                stage.setScene(scene);
+                Platform.runLater(() -> {stage.setScene(scene);});
                 buildingPhaseController.setCentral(playerColor);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -323,10 +324,10 @@ public class GuiApplication extends Application implements ViewAPI {
                     card1 = deckViewController.getCard1();
                     card2 = deckViewController.getCard2();
                     card3 = deckViewController.getCard3();
-                Platform.runLater(() -> {
                     card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
                     card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
                     card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
+                Platform.runLater(() -> {
                     stage.setScene(scene);
                 });
             } catch (IOException e) {
@@ -350,31 +351,35 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showFlightBoard(Map<Color,Integer> positions){
-        positions.forEach((k, v) -> System.out.println("Chiave: " + k + ", Valore: " + v + "\n"));
-
         FXMLLoader loader;
-        if(this.level == 0) {
-            loader = new FXMLLoader(
-                    getClass().getResource("/fxml/flight-board-view-0.fxml")
-            );
+        if(flightBoardScene == null) {
+            if (this.level == 0) {
+                loader = new FXMLLoader(
+                        getClass().getResource("/fxml/flight-board-view-0.fxml")
+                );
+            } else {
+                loader = new FXMLLoader(
+                        getClass().getResource("/fxml/flight-board-view-2.fxml")
+                );
+            }
+            try {
+                Parent root = loader.load();
+                this.flightBoardController2 = loader.getController();
+                flightBoardController2.setClient(client);
+                flightBoardController2.setColors(positions);
+                Scene scene = new Scene(root, 1152, 768);
+                flightBoardScene = scene;
+                Platform.runLater(() -> {
+                    stage.setScene(scene);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }else{
-            loader = new FXMLLoader(
-                    getClass().getResource("/fxml/flight-board-view-2.fxml")
-            );
-        }
-        try {
-            Parent root = loader.load();
-            this.flightBoardController2 = loader.getController();
-            flightBoardController2.inizializzaPosizioni();
-            flightBoardController2.setClient(client);
             flightBoardController2.setColors(positions);
             Platform.runLater(() -> {
-                Scene scene = new Scene(root, 1152, 768);
-                stage.setScene(scene);
+                stage.setScene(flightBoardScene);
             });
-        }
-        catch(IOException e) {
-            e.printStackTrace();
         }
     }
 
