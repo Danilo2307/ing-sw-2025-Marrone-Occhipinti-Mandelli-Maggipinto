@@ -10,6 +10,8 @@ import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -22,6 +24,7 @@ import javafx.scene.layout.StackPane;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class BuildingPhaseController {
@@ -204,7 +207,7 @@ public class BuildingPhaseController {
     @FXML
     public void onPutClicked() throws RemoteException{
         client.sendAction(new Put());
-        GuiApplication.getInstance().disableDeckClick();
+        //GuiApplication.getInstance().disableDeckClick();
 
         // annullo tutti i bottoni della building
         releaseBtn.setVisible(false);
@@ -318,6 +321,66 @@ public class BuildingPhaseController {
             binCheck.setManaged(true);
             shipCorrected.setVisible(true);
             shipCorrected.setManaged(true);
+
+            // ATTIVO DRAG&DROP per rimuovere tiles
+            // Per ogni nodo nella griglia, aggiungo listener di drag
+            for (Node node : ship.getChildren()) {
+                int row = GridPane.getRowIndex(node) != null ? GridPane.getRowIndex(node) : 0;
+                int col = GridPane.getColumnIndex(node) != null ? GridPane.getColumnIndex(node) : 0;
+
+                List<Node> children = ((Parent) node).getChildrenUnmodifiable();
+
+                if (!children.isEmpty()) {
+                    ImageView imageView = (ImageView) children.get(0); // sicuro per contratto
+
+                    final int r = row;
+                    final int c = col;
+
+                    imageView.setOnDragDetected(event -> {
+                        Dragboard db = imageView.startDragAndDrop(TransferMode.MOVE);
+                        ClipboardContent content = new ClipboardContent();
+                        content.putImage(imageView.getImage());
+                        content.putString(r + "," + c);
+                        db.setContent(content);
+                        event.consume();
+                    });
+                }
+            }
+
+            // Drag target: binCheck
+            binCheck.setOnDragOver(event -> {
+                if (event.getGestureSource() != binCheck && event.getDragboard().hasImage()) {
+                    event.acceptTransferModes(TransferMode.MOVE);
+                }
+                event.consume();
+            });
+
+            binCheck.setOnDragDropped(event -> {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+
+                if (db.hasImage() && db.hasString()) {
+                    String[] parts = db.getString().split(",");
+                    int row = Integer.parseInt(parts[0]);
+                    int col = Integer.parseInt(parts[1]);
+
+                    // Rimuovi l'immagine dalla griglia
+                    ship.getChildren().removeIf(node ->
+                            GridPane.getRowIndex(node) == row &&
+                                    GridPane.getColumnIndex(node) == col
+                    );
+
+                    try {
+                        client.sendAction(new RemoveTile(row, col));
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                    success = true;
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            });
+
         });
     }
 
