@@ -43,6 +43,9 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         Board truck = p.getTruck();
         Component tile = truck.getTile(x, y);
         int index = truck.getHousingUnits().indexOf(tile);
+        if (index == -1)
+            throw new InvalidActionException("La tile considerata non è una cabina!");
+
         HousingUnit housingUnit = truck.getHousingUnits().get(index);
 
         if (alien) {
