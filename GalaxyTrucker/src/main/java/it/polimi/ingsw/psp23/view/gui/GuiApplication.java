@@ -66,6 +66,10 @@ public class GuiApplication extends Application implements ViewAPI {
         return client;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
     public static GuiApplication getInstance() {
         return instance;
     }
