@@ -48,6 +48,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private  CheckBoardController checkBoardController;
     private  FlightPhaseController flightPhaseController;
     private FlightBoardController2 flightBoardController2;
+    private FlightBoardController0 flightBoardController0;
     private  LobbyController lobbyController;
     private DeckViewController deckViewController;
     private  TimerController timerController;
@@ -361,29 +362,49 @@ public class GuiApplication extends Application implements ViewAPI {
                 loader = new FXMLLoader(
                         getClass().getResource("/fxml/flight-board-view-0.fxml")
                 );
+                try {
+                    Parent root = loader.load();
+                    this.flightBoardController2 = loader.getController();
+                    flightBoardController2.setClient(client);
+                    flightBoardController2.setColors(positions);
+                    Scene scene = new Scene(root, 1152, 768);
+                    flightBoardScene = scene;
+                    Platform.runLater(() -> {
+                        stage.setScene(scene);
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
                 loader = new FXMLLoader(
                         getClass().getResource("/fxml/flight-board-view-2.fxml")
                 );
-            }
-            try {
-                Parent root = loader.load();
-                this.flightBoardController2 = loader.getController();
-                flightBoardController2.setClient(client);
-                flightBoardController2.setColors(positions);
-                Scene scene = new Scene(root, 1152, 768);
-                flightBoardScene = scene;
-                Platform.runLater(() -> {
-                    stage.setScene(scene);
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
+                try {
+                    Parent root = loader.load();
+                    this.flightBoardController0 = loader.getController();
+                    flightBoardController0.setClient(client);
+                    flightBoardController0.setColors(positions);
+                    Scene scene = new Scene(root, 1152, 768);
+                    flightBoardScene = scene;
+                    Platform.runLater(() -> {
+                        stage.setScene(scene);
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }else{
-            flightBoardController2.setColors(positions);
-            Platform.runLater(() -> {
-                stage.setScene(flightBoardScene);
-            });
+            if(level == 2) {
+                flightBoardController2.setColors(positions);
+                Platform.runLater(() -> {
+                    stage.setScene(flightBoardScene);
+                });
+            }else{
+                flightBoardController0.setColors(positions);
+                Platform.runLater(() -> {
+                    stage.setScene(flightBoardScene);
+                });
+            }
         }
     }
 
