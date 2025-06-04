@@ -42,9 +42,12 @@ public record SetCrew(int x, int y, boolean alien, Color color) implements Actio
         Player p = game.getPlayerFromNickname(username);
         Board truck = p.getTruck();
         Component tile = truck.getTile(x, y);
+        if (tile == null)
+            throw new InvalidActionException("Hai selezionato una tile vuota! Riprova");
+
         int index = truck.getHousingUnits().indexOf(tile);
         if (index == -1)
-            throw new InvalidActionException("La tile considerata non è una cabina!");
+            throw new InvalidActionException("La tile considerata non è una cabina! Riprova");
 
         HousingUnit housingUnit = truck.getHousingUnits().get(index);
 
