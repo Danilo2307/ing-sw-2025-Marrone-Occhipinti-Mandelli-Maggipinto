@@ -63,7 +63,7 @@
             </ImageView>
          </graphic>
       </Button>
-      <ToolBar fx:id="mainCommands" layoutX="822.0" layoutY="355.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="341.0" prefWidth="241.0" style="-fx-background-color: transparent;">
+      <ToolBar fx:id="mainCommands" layoutX="822.0" layoutY="355.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="293.0" prefWidth="242.0" style="-fx-background-color: transparent;">
         <items>
           <Button fx:id="drawHeapBtn" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" onAction="#onDrawHeapClicked" styleClass="default-button" text="pesca dal mucchio">
                <font>
@@ -117,6 +117,11 @@
          </font>
       </Button>
       <Button fx:id="brownAlienBtn" layoutX="811.0" layoutY="335.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="182.0" text="Alieno marrone">
+         <font>
+            <Font name="Arial Black" size="12.0" />
+         </font>
+      </Button>
+      <Button fx:id="finishedBtn" layoutX="811.0" layoutY="659.0" mnemonicParsing="false" onAction="#onFinishedClicked" prefHeight="40.0" prefWidth="143.0" text="Fatto">
          <font>
             <Font name="Arial Black" size="12.0" />
          </font>

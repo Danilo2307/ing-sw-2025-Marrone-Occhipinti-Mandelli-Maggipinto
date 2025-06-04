@@ -57,6 +57,7 @@ public class BuildingPhaseController {
     @FXML private Button astronautBtn;
     @FXML private Button purpleAlienBtn;
     @FXML private Button brownAlienBtn;
+    @FXML private Button finishedBtn;
     int selectedCrewType;
     boolean inAddCrew = false;
 
@@ -85,13 +86,13 @@ public class BuildingPhaseController {
             board.setImage( new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg"))));
         }
 
-
         board.fitWidthProperty().bind(boardStack.widthProperty());
         board.fitHeightProperty().bind(boardStack.heightProperty());
 
         ship.prefWidthProperty().bind(boardStack.widthProperty());
         ship.prefHeightProperty().bind(boardStack.heightProperty());
-    //inizializzo la gridpane con degli stackpane che conterranno le tiles
+
+        //inizializzo la gridpane con degli stackpane che conterranno le tiles
         int rows = 5;
         int cols = 7;
         for (int i = 0; i < rows; i++) {
@@ -105,6 +106,8 @@ public class BuildingPhaseController {
                 }
             }
         }
+
+        // disabilito tutti i pulsanti che serviranno per le fasi di check e addcrew
         binCheck.setVisible(false);
         binCheck.setManaged(false);
         shipCorrected.setVisible(false);
@@ -115,6 +118,8 @@ public class BuildingPhaseController {
         brownAlienBtn.setManaged(false);
         astronautBtn.setVisible(false);
         astronautBtn.setManaged(false);
+        finishedBtn.setVisible(false);
+        finishedBtn.setManaged(false);
     }
 
     @FXML
@@ -449,6 +454,8 @@ public class BuildingPhaseController {
         Platform.runLater(() -> {
             astronautBtn.setVisible(true);
             astronautBtn.setManaged(true);
+            finishedBtn.setVisible(true);
+            finishedBtn.setManaged(true);
 
             if (GuiApplication.getInstance().getLevel() == 2) {
                 purpleAlienBtn.setVisible(true);
@@ -478,6 +485,21 @@ public class BuildingPhaseController {
                 });
             }
         });
+    }
+
+    @FXML
+    public void onFinishedClicked() throws RemoteException {
+        client.sendAction(new Finished());
+
+        // disabilito tutti i pulsanti
+        purpleAlienBtn.setVisible(false);
+        purpleAlienBtn.setManaged(false);
+        brownAlienBtn.setVisible(false);
+        brownAlienBtn.setManaged(false);
+        astronautBtn.setVisible(false);
+        astronautBtn.setManaged(false);
+        finishedBtn.setVisible(false);
+        finishedBtn.setManaged(false);
     }
 
 
