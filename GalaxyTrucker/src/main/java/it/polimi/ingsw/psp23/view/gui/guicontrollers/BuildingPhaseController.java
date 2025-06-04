@@ -58,6 +58,7 @@ public class BuildingPhaseController {
     @FXML private Button purpleAlienBtn;
     @FXML private Button brownAlienBtn;
     int selectedCrewType;
+    boolean inAddCrew = false;
 
 
     public ImageView getTileInHand() {
@@ -253,6 +254,8 @@ public class BuildingPhaseController {
         uncoveredBox.getChildren().clear();
         uncoveredBox.setManaged(false);
         uncoveredBox.setVisible(false);
+        uncoveredScrollPane.setVisible(false);
+        uncoveredScrollPane.setManaged(false);
         uncoveredRefresh.setVisible(false);
         uncoveredRefresh.setManaged(false);
     }
@@ -276,6 +279,9 @@ public class BuildingPhaseController {
     }
 
     public void showTile(Component toDraw) {
+        if (inAddCrew)
+            return;
+
         componentInHand = toDraw;
         Platform.runLater(() -> {
             String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + toDraw.getId() + ".jpg";
@@ -347,6 +353,9 @@ public class BuildingPhaseController {
             binCheck.setManaged(true);
             shipCorrected.setVisible(true);
             shipCorrected.setManaged(true);
+            tileInHand.setImage(null);
+            tileInHand.setVisible(false);
+            tileInHand.setManaged(false);
 
             // ATTIVO DRAG&DROP per rimuovere tiles
             // Per ogni nodo nella griglia, aggiungo listener di drag
@@ -436,6 +445,7 @@ public class BuildingPhaseController {
     }
 
     public void toAddCrew() {
+        inAddCrew = true;
         Platform.runLater(() -> {
             astronautBtn.setVisible(true);
             astronautBtn.setManaged(true);
