@@ -60,6 +60,9 @@ public class GuiApplication extends Application implements ViewAPI {
     private Scene buildingPhaseScene = null;
     private Scene flightBoardScene = null;
     private Scene flightPhaseScene = null;
+    String myNickname;
+    ArrayList<String> usernames = new ArrayList<>();
+
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -158,7 +161,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 buildingPhaseController.setClient(client);
                 Scene scene = new Scene(root, 1152, 768);
                 buildingPhaseScene = scene;
-               // buildedShip = buildingPhaseController.getShip();
+                buildedShip = buildingPhaseController.getShip();
                 Platform.runLater(() -> {stage.setScene(scene);});
                 buildingPhaseController.setCentral(playerColor);
             } catch (IOException e) {
@@ -183,6 +186,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showAppropriateUsername(String username, int level) {
+        myNickname = username;
         lobbyController.hideUserChoice();
         this.level = level;
     }
@@ -435,13 +439,14 @@ public class GuiApplication extends Application implements ViewAPI {
                 this.flightPhaseController = loader.getController();
                 flightPhaseController.setClient(client);
                 Scene scene = new Scene(root, 1152, 768);
-                flightPhaseScene = scene;
                 Button button1 = flightPhaseController.getButton1();
                 button1.setVisible(true);
                 button1.setManaged(true);
                 button1.setText("Pesca carta");
                 button1.setOnAction(e -> {flightPhaseController.drawCard();});
+                flightPhaseController.setShip(buildedShip);
                 flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
+                flightPhaseScene = scene;
                 Platform.runLater(() -> {stage.setScene(scene);});
             } catch (IOException e) {
                 e.printStackTrace();

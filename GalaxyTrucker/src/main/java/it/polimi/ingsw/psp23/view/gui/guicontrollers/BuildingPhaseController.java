@@ -257,6 +257,10 @@ public class BuildingPhaseController {
         }
     }
 
+    public StackPane getShip(){
+        return boardStack;
+    }
+
     public void setCentral(Color playerColor) {
         int id = 0;
         switch (playerColor) {

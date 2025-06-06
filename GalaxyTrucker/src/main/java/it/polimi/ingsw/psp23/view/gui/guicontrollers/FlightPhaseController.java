@@ -51,6 +51,10 @@ public class FlightPhaseController {
     public Label getTextLabel(){
         return textLabel;
     }
+    public void setShip(StackPane ship){
+        this.ship.getChildren().clear();
+        this.ship.getChildren().add(ship);
+    }
 
     public void setCardImage(int id){
         String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + id + ".jpg";
