@@ -41,7 +41,6 @@ public class BuildingPhaseController {
     @FXML private Button turnBtn;
     @FXML private Button leaveBtn;
     @FXML private Button drawHeapBtn;
-    @FXML private Button reserveBtn;
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
@@ -82,8 +81,6 @@ public class BuildingPhaseController {
 
         if(GuiApplication.getInstance().getLevel() == 0){
             board.setImage( new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1.jpg"))));
-            reserveBtn.setVisible(false);
-            reserveBtn.setManaged(false);
             turnBtn.setVisible(false);
             turnBtn.setManaged(false);
         }else{
@@ -326,8 +323,6 @@ public class BuildingPhaseController {
         turnBtn.setManaged(false);
         drawHeapBtn.setVisible(false);
         drawHeapBtn.setManaged(false);
-        reserveBtn.setVisible(false);
-        reserveBtn.setManaged(false);
         tileInHand.setVisible(false);
         tileInHand.setManaged(false);
         uncoveredBox.getChildren().clear();
@@ -347,14 +342,6 @@ public class BuildingPhaseController {
     @FXML
     public void onTurnClicked() throws RemoteException{
         client.sendAction(new TurnHourglass());
-    }
-
-    @FXML
-    public void onReserveClicked() throws RemoteException{
-        client.sendAction(new ReserveTile());
-        Platform.runLater(() -> {
-            tileInHand.setImage(null);
-        });
     }
 
     public void showTile(Component toDraw) {
