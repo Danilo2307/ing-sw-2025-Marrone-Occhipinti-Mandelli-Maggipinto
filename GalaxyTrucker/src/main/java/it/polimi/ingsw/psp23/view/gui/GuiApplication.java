@@ -44,8 +44,6 @@ public class GuiApplication extends Application implements ViewAPI {
     private static final CountDownLatch latch = new CountDownLatch(1);
     private Client client;
     private  BuildingPhaseController buildingPhaseController;
-    private  CardDialogController cardDialogController;
-    private  CheckBoardController checkBoardController;
     private  FlightPhaseController flightPhaseController;
     private FlightBoardController2 flightBoardController2;
     private FlightBoardController0 flightBoardController0;
