@@ -41,13 +41,16 @@ public class BuildingPhaseController {
     @FXML private Button turnBtn;
     @FXML private Button leaveBtn;
     @FXML private Button drawHeapBtn;
-    @FXML private Button reserveBtn;
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
+    @FXML private StackPane reserved1;
+    @FXML private StackPane reserved2;
+    boolean reservedInHand = false;
     Component componentInHand;
     private StackPane cellToRemove = null;
+
 
     // check
     @FXML private ImageView binCheck;
@@ -78,8 +81,6 @@ public class BuildingPhaseController {
 
         if(GuiApplication.getInstance().getLevel() == 0){
             board.setImage( new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1.jpg"))));
-            reserveBtn.setVisible(false);
-            reserveBtn.setManaged(false);
             turnBtn.setVisible(false);
             turnBtn.setManaged(false);
         }else{
@@ -97,7 +98,7 @@ public class BuildingPhaseController {
         int cols = 7;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                if(!(i== 2 && j== 3)) {
+                if(!(i== 2 && j== 3) && !(i==0 && (j == 5 || j == 6))) {
                     StackPane cell = new StackPane();
                     cell.setPrefSize(94, 94);
 
@@ -105,6 +106,11 @@ public class BuildingPhaseController {
                     setupCellForDrop(cell, i, j);
                 }
             }
+        }
+
+        if (GuiApplication.getInstance().getLevel() == 2) {
+            setupReserveSlot(reserved1);
+            setupReserveSlot(reserved2);
         }
 
         // disabilito tutti i pulsanti che serviranno per le fasi di check e addcrew
@@ -180,15 +186,75 @@ public class BuildingPhaseController {
 
                 try {
                     client.sendAction(new AddTile(row,col));
+                    if (reservedInHand) {
+                        reservedInHand = false;
+                    }
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
-
-
             }
             event.setDropCompleted(success);
             event.consume();
         });
+    }
+
+    public void setupReserveSlot(StackPane slot) {
+        slot.setOnDragOver(event -> {
+            if (event.getGestureSource() != slot && event.getDragboard().hasImage()) {
+                event.acceptTransferModes(TransferMode.MOVE);
+            }
+            event.consume();
+        });
+
+        slot.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            if (db.hasImage()) {
+                ImageView dropped = new ImageView(db.getImage());
+                dropped.setFitWidth(86);
+                dropped.setFitHeight(86);
+                slot.getChildren().clear(); // rimuovi vecchie immagini
+                slot.getChildren().add(dropped);
+                try {
+                    client.sendAction(new ReserveTile());
+                } catch (RemoteException e) {
+                    throw new RuntimeException(e);
+                }
+                tileInHand.setImage(null);
+                tileInHand.setVisible(false);
+                event.setDropCompleted(true);
+            } else {
+                event.setDropCompleted(false);
+            }
+            event.consume();
+        });
+    }
+
+    @FXML
+    public void takeReserved1() throws RemoteException {
+        if (!reserved1.getChildren().isEmpty()) {
+            ImageView imageView = (ImageView) reserved1.getChildren().get(0);
+            if (imageView.getImage() != null) {
+                client.sendAction(new TakeReservedTile(0));
+                tileInHand.setImage(imageView.getImage());
+                tileInHand.setVisible(true);
+                reserved1.getChildren().remove(imageView); // rimuovi dalla riserva
+                reservedInHand = true;
+            }
+        }
+    }
+
+    @FXML
+    public void takeReserved2() throws RemoteException {
+        if (!reserved2.getChildren().isEmpty()) {
+            ImageView imageView = (ImageView) reserved2.getChildren().get(0);
+            if (imageView.getImage() != null) {
+                client.sendAction(new TakeReservedTile(1));
+                tileInHand.setImage(imageView.getImage());
+                tileInHand.setVisible(true);
+                reserved2.getChildren().remove(imageView);
+                reservedInHand = true;
+            }
+        }
     }
 
     public void setCentral(Color playerColor) {
@@ -221,10 +287,15 @@ public class BuildingPhaseController {
 
     @FXML
     public void onReleaseClicked() throws RemoteException{
-        client.sendAction(new ReleaseTile());
-        Platform.runLater(() -> {
-            tileInHand.setImage(null);
-        });
+        if (!reservedInHand) {
+            client.sendAction(new ReleaseTile());
+            Platform.runLater(() -> {
+                tileInHand.setImage(null);
+            });
+        }
+        else {
+            GuiApplication.getInstance().showError("Non puoi scartare una tile prenotata!");
+        }
     }
 
     @FXML
@@ -252,8 +323,6 @@ public class BuildingPhaseController {
         turnBtn.setManaged(false);
         drawHeapBtn.setVisible(false);
         drawHeapBtn.setManaged(false);
-        reserveBtn.setVisible(false);
-        reserveBtn.setManaged(false);
         tileInHand.setVisible(false);
         tileInHand.setManaged(false);
         uncoveredBox.getChildren().clear();
@@ -273,14 +342,6 @@ public class BuildingPhaseController {
     @FXML
     public void onTurnClicked() throws RemoteException{
         client.sendAction(new TurnHourglass());
-    }
-
-    @FXML
-    public void onReserveClicked() throws RemoteException{
-        client.sendAction(new ReserveTile());
-        Platform.runLater(() -> {
-            tileInHand.setImage(null);
-        });
     }
 
     public void showTile(Component toDraw) {
