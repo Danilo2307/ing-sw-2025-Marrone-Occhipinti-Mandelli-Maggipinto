@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import java.io.IOException;
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.concurrent.CountDownLatch;
+import javafx.scene.control.Button;
 
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
@@ -54,8 +56,10 @@ public class GuiApplication extends Application implements ViewAPI {
     private static GuiApplication instance;
     private Color playerColor;
     private int level;
+    private StackPane buildedShip = null;
     private Scene buildingPhaseScene = null;
     private Scene flightBoardScene = null;
+    private Scene flightPhaseScene = null;
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -154,6 +158,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 buildingPhaseController.setClient(client);
                 Scene scene = new Scene(root, 1152, 768);
                 buildingPhaseScene = scene;
+               // buildedShip = buildingPhaseController.getShip();
                 Platform.runLater(() -> {stage.setScene(scene);});
                 buildingPhaseController.setCentral(playerColor);
             } catch (IOException e) {
@@ -250,6 +255,7 @@ public class GuiApplication extends Application implements ViewAPI {
             switch(newState) {
                 case GameStatus.Building -> toBuildingPhase(playerColor);
                 case GameStatus.SetCrew -> buildingPhaseController.toAddCrew();
+                case GameStatus.Playing -> toFlightPhase();
             }
         });
 
@@ -341,7 +347,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showNewCard(int id, String description) {
-
+        Platform.runLater(() -> {
+            flightPhaseController.getTextLabel().setText("");
+            flightPhaseController.getButton1().setVisible(false);
+            flightPhaseController.getButton1().setManaged(false);
+            flightPhaseController.setCardImage(id);
+        });
     }
 
     @Override
@@ -413,6 +424,28 @@ public class GuiApplication extends Application implements ViewAPI {
 
     public void disableDeckClick(){
         flightBoardController2.disableDeckClick();
+    }
+
+    public void toFlightPhase(){
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/flight-view.fxml")
+            );
+            try {
+                Parent root = loader.load();
+                this.flightPhaseController = loader.getController();
+                flightPhaseController.setClient(client);
+                Scene scene = new Scene(root, 1152, 768);
+                flightPhaseScene = scene;
+                Button button1 = flightPhaseController.getButton1();
+                button1.setVisible(true);
+                button1.setManaged(true);
+                button1.setText("Pesca carta");
+                button1.setOnAction(e -> {flightPhaseController.drawCard();});
+                flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
+                Platform.runLater(() -> {stage.setScene(scene);});
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
     }
 
 }
