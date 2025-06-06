@@ -33,13 +33,15 @@
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="94" minWidth="94" prefWidth="94" />
               </columnConstraints>
               <rowConstraints>
-                  <RowConstraints maxHeight="94" minHeight="94" prefHeight="94" />
-                  <RowConstraints maxHeight="94" minHeight="94" prefHeight="94" />
-                <RowConstraints maxHeight="94" minHeight="94" prefHeight="94" />
-                <RowConstraints maxHeight="94" minHeight="94" prefHeight="94" />
-                <RowConstraints maxHeight="94" minHeight="94" prefHeight="94" />
+                  <RowConstraints maxHeight="94.0" minHeight="94.0" prefHeight="94.0" />
+                  <RowConstraints maxHeight="94.0" minHeight="94.0" prefHeight="94.0" />
+                <RowConstraints maxHeight="94.0" minHeight="94.0" prefHeight="94.0" />
+                <RowConstraints maxHeight="94.0" minHeight="94.0" prefHeight="94.0" />
+                <RowConstraints maxHeight="94.0" minHeight="94.0" prefHeight="94.0" />
               </rowConstraints>
             </GridPane>
+            <StackPane fx:id="reserved1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#takeReserved1" prefHeight="86.0" prefWidth="86.0" translateX="200.0" translateY="-195.0" />
+            <StackPane fx:id="reserved2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#takeReserved2" prefHeight="86.0" prefWidth="86.0" translateX="295.0" translateY="-195.0" />
          </children>
       </StackPane>
       <Button fx:id="leaveBtn" layoutX="993.0" layoutY="713.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLeaveClicked" styleClass="quit-button" text="abbandona" textFill="RED">
