@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.view.gui;
 
+import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
@@ -60,6 +61,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private Scene buildingPhaseScene = null;
     private Scene flightBoardScene = null;
     private Scene flightPhaseScene = null;
+    private GameStatus gameStatus;
     String myNickname;
     ArrayList<String> usernames = new ArrayList<>();
 
@@ -255,6 +257,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void stateChanged(GameStatus newState) {
+        gameStatus = newState;
         Platform.runLater(() -> {
             switch(newState) {
                 case GameStatus.Building -> toBuildingPhase(playerColor);
@@ -431,25 +434,35 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     public void toFlightPhase(){
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/fxml/flight-view.fxml")
-        );
-        try {
-            Parent root = loader.load();
-            this.flightPhaseController = loader.getController();
-            flightPhaseController.setClient(client);
-            Scene scene = new Scene(root, 1152, 768);
-            Button button1 = flightPhaseController.getButton1();
-            button1.setVisible(true);
-            button1.setManaged(true);
-            button1.setText("Pesca carta");
-            button1.setOnAction(e -> {flightPhaseController.drawCard();});
-            flightPhaseController.setShip(buildedShip);
-            flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
-            flightPhaseScene = scene;
-            Platform.runLater(() -> {stage.setScene(scene);});
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(flightPhaseController == null) {
+            FXMLLoader loader = new FXMLLoader(
+                    getClass().getResource("/fxml/flight-view.fxml")
+            );
+            try {
+                Parent root = loader.load();
+                this.flightPhaseController = loader.getController();
+                flightPhaseController.setClient(client);
+                Scene scene = new Scene(root, 1152, 768);
+                Button button1 = flightPhaseController.getButton1();
+                button1.setVisible(true);
+                button1.setManaged(true);
+                button1.setText("Pesca carta");
+                button1.setOnAction(e -> {
+                    flightPhaseController.drawCard();
+                });
+                flightPhaseController.setShip(buildedShip);
+                flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
+                flightPhaseScene = scene;
+                Platform.runLater(() -> {
+                    stage.setScene(scene);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }else{
+            Platform.runLater(() -> {
+                stage.setScene(flightPhaseScene);
+            });
         }
     }
 
@@ -457,6 +470,13 @@ public class GuiApplication extends Application implements ViewAPI {
         ArrayList<String> copy = new ArrayList<>(usernames); // copia difensiva
         copy.remove(myNickname); // rimuove il proprio nickname
         return copy;
+    }
+
+    public void backToShip(){
+        if(gameStatus == GameStatus.Building)
+            toBuildingPhase(null);
+        else if(gameStatus == GameStatus.Playing)
+            toFlightPhase();
     }
 
 
