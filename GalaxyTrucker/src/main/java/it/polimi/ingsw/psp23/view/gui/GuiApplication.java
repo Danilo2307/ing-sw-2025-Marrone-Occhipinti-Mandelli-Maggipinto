@@ -477,6 +477,8 @@ public class GuiApplication extends Application implements ViewAPI {
             toBuildingPhase(null);
         else if(gameStatus == GameStatus.Playing)
             toFlightPhase();
+        else
+            toBuildingPhase(null);
     }
 
 
