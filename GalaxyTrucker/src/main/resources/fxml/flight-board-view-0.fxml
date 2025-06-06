@@ -18,30 +18,23 @@
                 <Font name="Arial Black" size="13.0" />
             </font>
         </Button>
-        <ImageView fx:id="position0" fitHeight="21.0" fitWidth="20.0" layoutX="264.0" layoutY="300.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position1" fitHeight="21.0" fitWidth="20.0" layoutX="306.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position2" fitHeight="21.0" fitWidth="20.0" layoutX="361.0" layoutY="221.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position3" fitHeight="21.0" fitWidth="20.0" layoutX="414.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position4" fitHeight="21.0" fitWidth="20.0" layoutX="471.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position5" fitHeight="21.0" fitWidth="20.0" layoutX="528.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position6" fitHeight="21.0" fitWidth="20.0" layoutX="592.0" layoutY="179.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position7" fitHeight="21.0" fitWidth="20.0" layoutX="647.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position8" fitHeight="21.0" fitWidth="20.0" layoutX="704.0" layoutY="199.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position9" fitHeight="21.0" fitWidth="20.0" layoutX="756.0" layoutY="221.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position10" fitHeight="21.0" fitWidth="20.0" layoutX="813.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position11" fitHeight="21.0" fitWidth="20.0" layoutX="844.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position12" fitHeight="21.0" fitWidth="20.0" layoutX="844.0" layoutY="383.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position13" fitHeight="21.0" fitWidth="20.0" layoutX="799.0" layoutY="435.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position14" fitHeight="21.0" fitWidth="20.0" layoutX="756.0" layoutY="469.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position15" fitHeight="21.0" fitWidth="20.0" layoutX="695.0" layoutY="482.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position16" fitHeight="21.0" fitWidth="20.0" layoutX="638.0" layoutY="500.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position17" fitHeight="21.0" fitWidth="20.0" layoutX="578.0" layoutY="500.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position18" fitHeight="21.0" fitWidth="20.0" layoutX="513.0" layoutY="502.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position19" fitHeight="21.0" fitWidth="20.0" layoutX="463.0" layoutY="501.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position20" fitHeight="21.0" fitWidth="20.0" layoutX="399.0" layoutY="482.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position21" fitHeight="21.0" fitWidth="20.0" layoutX="358.0" layoutY="460.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position22" fitHeight="21.0" fitWidth="20.0" layoutX="291.0" layoutY="420.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
-        <ImageView fx:id="position23" fitHeight="21.0" fitWidth="20.0" layoutX="264.0" layoutY="367.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position0" fitHeight="21.0" fitWidth="20.0" layoutX="277.0" layoutY="314.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position1" fitHeight="21.0" fitWidth="20.0" layoutX="312.0" layoutY="241.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position2" fitHeight="21.0" fitWidth="20.0" layoutX="372.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position3" fitHeight="21.0" fitWidth="20.0" layoutX="449.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position4" fitHeight="21.0" fitWidth="20.0" layoutX="520.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position5" fitHeight="21.0" fitWidth="20.0" layoutX="592.0" layoutY="171.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position6" fitHeight="21.0" fitWidth="20.0" layoutX="667.0" layoutY="185.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position7" fitHeight="21.0" fitWidth="20.0" layoutX="742.0" layoutY="207.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position8" fitHeight="21.0" fitWidth="20.0" layoutX="806.0" layoutY="255.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position9" fitHeight="21.0" fitWidth="20.0" layoutX="844.0" layoutY="328.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position10" fitHeight="21.0" fitWidth="20.0" layoutX="799.0" layoutY="406.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position11" fitHeight="21.0" fitWidth="20.0" layoutX="734.0" layoutY="446.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position12" fitHeight="21.0" fitWidth="20.0" layoutX="667.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position13" fitHeight="21.0" fitWidth="20.0" layoutX="592.0" layoutY="482.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position14" fitHeight="21.0" fitWidth="20.0" layoutX="520.0" layoutY="474.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position15" fitHeight="21.0" fitWidth="20.0" layoutX="442.0" layoutY="468.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position16" fitHeight="21.0" fitWidth="20.0" layoutX="372.0" layoutY="446.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
+        <ImageView fx:id="position17" fitHeight="21.0" fitWidth="20.0" layoutX="305.0" layoutY="396.0" pickOnBounds="true" preserveRatio="true" rotate="45.0" />
     </children>
 </AnchorPane>
-
