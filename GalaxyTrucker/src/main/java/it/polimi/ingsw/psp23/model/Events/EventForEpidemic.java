@@ -21,7 +21,7 @@ public class EventForEpidemic extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         // Assuming the UI simply informs of the status change
         return "Evento Epidemia: lo stato di gioco cambia in '"
                 + getNewStatus().toString() + "'.\n";

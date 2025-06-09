@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -70,13 +71,13 @@ public class Pirates extends Card {
     /**
      * Starts the pirate encounter by setting the game status and firing the event.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_PIRATES);
         game.fireEvent(new EventForPirates(
                 game.getGameStatus(), days, firepower, prize, cannonShot
         ));
-        Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().getFirst());
+        UsersConnected.getInstance().getGameFromUsername(username).setCurrentPlayer(UsersConnected.getInstance().getGameFromUsername(username).getPlayers().getFirst());
     }
 
     /**
@@ -87,7 +88,7 @@ public class Pirates extends Card {
      * @param j the column position for the cannon
      */
     public void activeCannon(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
@@ -107,7 +108,7 @@ public class Pirates extends Card {
      * @param j the column position for the shield
      */
     public void activeShield(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_PIRATES) {
             throw new CardException("Cannot activate shield now: phase is " + game.getGameStatus());
         }
@@ -126,7 +127,7 @@ public class Pirates extends Card {
      * @param username the nickname of the winning player
      */
     public void getCosmicCredits(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
             throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
@@ -139,7 +140,7 @@ public class Pirates extends Card {
         game.sortPlayersByPosition();
         if (losers.isEmpty()) {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
         else{
             game.setGameStatus(GameStatus.END_PIRATES);
@@ -164,7 +165,7 @@ public class Pirates extends Card {
      * @param username the nickname of the winning player
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
             throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
@@ -173,7 +174,7 @@ public class Pirates extends Card {
         }
         if (losers.isEmpty()) {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
         else{
             game.setGameStatus(GameStatus.END_PIRATES);
@@ -198,7 +199,7 @@ public class Pirates extends Card {
      * @param username the nickname of the player issuing READY
      */
     public void ready(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() == GameStatus.INIT_PIRATES) {
             readyStartPhase(username);
         } else if (game.getGameStatus() == GameStatus.END_PIRATES) {
@@ -213,7 +214,7 @@ public class Pirates extends Card {
      * Handles the READY logic for the INIT_PIRATES phase.
      */
     private void readyStartPhase(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
@@ -254,7 +255,7 @@ public class Pirates extends Card {
      * Handles the READY logic for the END_PIRATES resolution phase.
      */
     private void readyResolutionPhase(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!losers.contains(username)) {
             throw new CardException("You are not a loser");
         }
@@ -273,7 +274,7 @@ public class Pirates extends Card {
                 }
             }
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
         else {
             if (countCannonShot == 0) {
@@ -298,7 +299,7 @@ public class Pirates extends Card {
                             .handleCannonShot(c, impactLine);
                 }
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
         }
     }
@@ -308,8 +309,8 @@ public class Pirates extends Card {
      *
      * @return available commands as a string
      */
-    public String help() {
-        Game game = Game.getInstance();
+    public String help(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_PIRATES:

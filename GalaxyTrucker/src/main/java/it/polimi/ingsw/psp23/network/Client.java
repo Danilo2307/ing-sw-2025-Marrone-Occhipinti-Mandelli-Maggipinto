@@ -13,6 +13,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
 public abstract class Client {
+
+    // attributo contenente l'identificativo del game a cui appartengono i client
+    int id;
+
     public void sendAction(Action action) throws RemoteException{
 
     }
@@ -30,5 +34,7 @@ public abstract class Client {
     public SocketHandler getSocketHandler(){return null;};
     public void stopListeningForServerThread(){};
     public String getNameConnection() throws RemoteException{return null;}
-    public String getUsername() throws RemoteException{return null;}
+    public String getUsername(){return null;}
+    public int getId(){return id;}
+    public void setId(int id){this.id = id;}
 }

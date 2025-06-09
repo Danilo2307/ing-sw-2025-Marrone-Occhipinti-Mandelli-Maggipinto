@@ -35,12 +35,5 @@ public record AccessMatch(int matchChoice) implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
-    }
 
 }

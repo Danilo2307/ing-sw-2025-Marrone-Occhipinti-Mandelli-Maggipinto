@@ -9,7 +9,7 @@ public class DefeatedFromPirates extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Hai perso, dovrai resistere alle cannonate!\n");
         return sb.toString();

@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -122,7 +123,7 @@ public class Smugglers extends Card {
      * @throws CardException if phase is invalid or wrong player
      */
     public void activeCannon(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_SMUGGLERS) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
@@ -144,7 +145,7 @@ public class Smugglers extends Card {
      * @throws CardException if phase is invalid, wrong player, or loading fails
      */
     public void loadGoods(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot load goods in this phase");
         }
@@ -156,7 +157,7 @@ public class Smugglers extends Card {
         }
         if (loadedCount == 0) {
             int idx = game.getPlayers().indexOf(game.getPlayerFromNickname(username));
-            Utility.updatePosition(Game.getInstance().getPlayers(), idx, -days);
+            Utility.updatePosition(UsersConnected.getInstance().getGameFromUsername(username).getPlayers(), idx, -days);
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
@@ -165,7 +166,7 @@ public class Smugglers extends Card {
             if (loadedCount == prize.size()) {
                 game.sortPlayersByPosition();
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
@@ -181,7 +182,7 @@ public class Smugglers extends Card {
      * @throws CardException if phase is invalid or wrong player
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Winner has not been determined yet");
         }
@@ -191,7 +192,7 @@ public class Smugglers extends Card {
         loadedCount = prize.size();
         game.sortPlayersByPosition();
         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
     }
 
     /**
@@ -204,7 +205,7 @@ public class Smugglers extends Card {
      * @throws CardException if phase is invalid, wrong player, or removal fails
      */
     public void removePreciousItem(String username, int i, int j, int num) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
         }
@@ -221,7 +222,7 @@ public class Smugglers extends Card {
             if(lostCount == numItemsStolen || board.calculateGoods() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SMUGGLERS);
@@ -239,7 +240,7 @@ public class Smugglers extends Card {
     }
 
     public void removeBatteries(String username, int i, int j, int num){
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove batteries");
         }
@@ -256,7 +257,7 @@ public class Smugglers extends Card {
             if(lostCount == numItemsStolen){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SMUGGLERS);
@@ -286,8 +287,8 @@ public class Smugglers extends Card {
     /**
      * Initializes the smugglers encounter phase and fires an event.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
         game.fireEvent(new EventForSmugglers(
                 game.getGameStatus(),
@@ -311,7 +312,7 @@ public class Smugglers extends Card {
      * @throws CardException if not INIT_SMUGGLERS
      */
     public void ready(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
@@ -328,7 +329,7 @@ public class Smugglers extends Card {
      * @param username the current player's nickname
      */
     private void readyStartPhase(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("User '" + username + "' is not the current player");
         }
@@ -345,7 +346,7 @@ public class Smugglers extends Card {
             if(noGoods.contains(loser)){
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     game.getNextPlayer();
@@ -358,7 +359,7 @@ public class Smugglers extends Card {
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
             else{
                 game.getNextPlayer();
@@ -370,8 +371,8 @@ public class Smugglers extends Card {
      *
      * @return help text listing available commands
      */
-    public String help() {
-        GameStatus status = Game.getInstance().getGameStatus();
+    public String help(String username) {
+        GameStatus status = UsersConnected.getInstance().getGameFromUsername(username).getGameStatus();
         switch (status) {
             case INIT_SMUGGLERS:
                 return "Available commands: ACTIVECANNON, READY\n";

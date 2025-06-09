@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Events.EventForMeteorSwarm;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -56,8 +57,8 @@ public class MeteorSwarm extends Card {
     /**
      * Rolls dice for each meteor, sets impact lines, fires events, and enters INIT_METEORSWARM.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
         game.fireEvent(new EventForMeteorSwarm(game.getGameStatus()));
         resolvers.clear();
@@ -78,7 +79,7 @@ public class MeteorSwarm extends Card {
      * Can be called by any player during INIT_METEORSWARM.
      */
     public void activeCannon(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
@@ -93,7 +94,7 @@ public class MeteorSwarm extends Card {
      * Can be called by any player during INIT_METEORSWARM.
      */
     public void activeShield(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot activate shield now: phase is " + game.getGameStatus());
         }
@@ -109,7 +110,7 @@ public class MeteorSwarm extends Card {
      * @param username the player confirming readiness
      */
     public void ready(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
         if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
@@ -131,7 +132,7 @@ public class MeteorSwarm extends Card {
         resolvers.clear();
         if (currentIndex >= meteors.size()) {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
         else{
             meteor = meteors.get(currentIndex);
@@ -142,8 +143,8 @@ public class MeteorSwarm extends Card {
     /**
      * Returns available commands for the Meteor Swarm card.
      */
-    public String help() {
-        if (Game.getInstance().getGameStatus() == GameStatus.INIT_METEORSWARM) {
+    public String help(String username) {
+        if (UsersConnected.getInstance().getGameFromUsername(username).getGameStatus() == GameStatus.INIT_METEORSWARM) {
             return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY\n";
         }
         return "No commands available in current phase.\n";

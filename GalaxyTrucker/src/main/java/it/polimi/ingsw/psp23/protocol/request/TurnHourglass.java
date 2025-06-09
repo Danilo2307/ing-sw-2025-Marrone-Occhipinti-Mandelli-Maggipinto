@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.controller.Controller;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public record TurnHourglass() implements Action {
 
     public void handle(String username){
-        Controller.getInstance().startTimer();
+        UsersConnected.getInstance().getGameFromUsername(username).getController().startTimer();
     }
 
     @Override
@@ -23,12 +24,5 @@ public record TurnHourglass() implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
-    }
 
 }

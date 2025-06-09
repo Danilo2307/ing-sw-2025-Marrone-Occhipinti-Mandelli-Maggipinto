@@ -2,8 +2,10 @@ package it.polimi.ingsw.psp23.controller;
 
 import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.exceptions.InvalidCoordinatesException;
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -29,25 +31,6 @@ public class ServerActionHandler {
 
             a.call(new HandleActionVisitor(), username);
 
-            List<DirectMessage> dm = a.getDm();
-            List<BroadcastMessage> bm = a.getBm();
-
-            if(dm != null && !dm.isEmpty()){
-                for(Message m : dm) {
-                    Server.getInstance().sendMessage(username, m);
-                }
-                dm.clear();
-            }
-            if(bm != null && !bm.isEmpty()){
-                Server server = Server.getInstance();
-                for(Message m : bm) {
-                    for(Player p : Game.getInstance().getPlayers()) {
-                        if(server.getClients().keySet().stream().map(server::getUsernameForConnection).toList().contains(p.getNickname()))
-                            Server.getInstance().sendMessage(p.getNickname(), m);
-                    }
-                }
-                bm.clear();
-            }
         }
         /// TODO: raccolgo eccezioni lanciate dalla call
         // Catch all game-related exceptions triggered by invalid player actions.

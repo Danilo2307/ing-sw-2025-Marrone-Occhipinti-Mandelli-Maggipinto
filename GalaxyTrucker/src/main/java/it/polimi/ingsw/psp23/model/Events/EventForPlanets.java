@@ -59,7 +59,7 @@ public class EventForPlanets extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         List<String> descriptions = planetGoodsDescriptions();
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Pianeti:\n")

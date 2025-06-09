@@ -13,6 +13,8 @@ public class ConnectionThread extends Thread{
 
     public static ConnectionThread instance = null;
 
+    public boolean listening = false;
+
     public ConnectionThread(){}
 
     public static ConnectionThread getInstance(){
@@ -24,6 +26,7 @@ public class ConnectionThread extends Thread{
 
     @Override
     public void run() {
+        listening = true;
         while(true){
 
             String connectionId = UUID.randomUUID().toString();
@@ -33,5 +36,9 @@ public class ConnectionThread extends Thread{
             Users.getInstance().createClientHandler(connectionId);
 
         }
+    }
+
+    public boolean isListening(){
+        return listening;
     }
 }

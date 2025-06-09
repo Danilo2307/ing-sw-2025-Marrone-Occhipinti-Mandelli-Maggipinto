@@ -13,6 +13,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -46,8 +47,8 @@ public class AbandonedStation extends Card {
         return new ArrayList<>(prize);
     }
 
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
         game.fireEvent(new EventForAbandonedStation(game.getGameStatus(), days, numMembers, prize));
         game.setCurrentPlayer(game.getPlayers().getFirst());
@@ -58,7 +59,7 @@ public class AbandonedStation extends Card {
      * Throws CardException if called in the wrong phase or by a non-current player, or if crew is insufficient.
      */
     public void dockStation(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(isSold != null){
             throw new CardException("Station was docked by " + isSold );
         }
@@ -87,7 +88,7 @@ public class AbandonedStation extends Card {
      * Throws ContainerException for container-specific failures, or CardException if used in wrong phase or by wrong user.
      */
     public void loadGoods(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
             throw new CardException("Cannot load goods in phase: " + game.getGameStatus());
         }
@@ -100,7 +101,7 @@ public class AbandonedStation extends Card {
             counterItem++;
             if (counterItem == prize.size()) {
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException |
@@ -114,7 +115,7 @@ public class AbandonedStation extends Card {
      * Allows passing during END_ABANDONEDSTATION: moves to next card.
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
             throw new CardException("User '" + username + "' cannot pass in phase: " + game.getGameStatus());
         }
@@ -123,7 +124,7 @@ public class AbandonedStation extends Card {
         }
         if (game.getGameStatus() == GameStatus.END_ABANDONEDSTATION){
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
         else{
             if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
@@ -132,7 +133,7 @@ public class AbandonedStation extends Card {
 //            game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
             } else {
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
         }
     }
@@ -141,8 +142,8 @@ public class AbandonedStation extends Card {
      * Returns available commands based on current AbandonedStation phase.
      * @return help message
      */
-    public String help() {
-        GameStatus status = Game.getInstance().getGameStatus();
+    public String help(String username) {
+        GameStatus status = UsersConnected.getInstance().getGameFromUsername(username).getGameStatus();
         return switch (status) {
             case INIT_ABANDONEDSTATION -> "Available commands: ATTRACCA, PASSA\n";
             case END_ABANDONEDSTATION -> "Available commands: LOADGOODS, PERDI, PASSA\n";

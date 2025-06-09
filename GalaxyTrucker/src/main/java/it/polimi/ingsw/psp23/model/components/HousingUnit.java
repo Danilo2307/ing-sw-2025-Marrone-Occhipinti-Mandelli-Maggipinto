@@ -28,9 +28,6 @@ public final class HousingUnit extends Component {
     // verifica prima che la lista di housing unit presente in board non contenga già alieni di questo colore (per ogni board solo un alieno viola e solo uno marrone al massimo)
     public void setAlien(Color color) {
         // non strettamente necessaria perchè connectedAddonds sarebbe vuoto, ma così dò messaggio più preciso
-        if (Game.getInstance().getLevel() == 0) {
-            throw new LevelException("Non puoi aggiungere alieni nel volo di prova!");
-        }
 
         if (numAstronaut == 0 && canContainAlien(color) && !isStartingCabin)
             this.alien = color;

@@ -19,7 +19,7 @@ public class CannonShotIncoming extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         if(isBig) {
             sb.append("È in arrivo una cannonata grossa da ").append(direction).append(" all'indice ").append(indice).append("\n");

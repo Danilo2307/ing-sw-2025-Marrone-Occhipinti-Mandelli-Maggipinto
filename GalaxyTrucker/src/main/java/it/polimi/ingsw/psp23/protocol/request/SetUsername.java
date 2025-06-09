@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.protocol.request;
 import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
@@ -13,7 +14,7 @@ import java.util.List;
 public record SetUsername(String username) implements Action {
 
     public void handle(String username){
-        Controller.getInstance().addPlayerToGame(username);
+        UsersConnected.getInstance().getGameFromUsername(username).getController().addPlayerToGame(username);
     }
 
     @Override
@@ -29,14 +30,6 @@ public record SetUsername(String username) implements Action {
     @Override
     public String toString() {
         return username;
-    }
-
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
     }
 
 }

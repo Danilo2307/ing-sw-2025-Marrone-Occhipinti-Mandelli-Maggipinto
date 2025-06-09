@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp23.model.Events.EventForEpidemic;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -30,11 +31,11 @@ public class Epidemic extends Card {
     /**
      * Initializes the play of the Epidemic card by setting the game status and firing the corresponding event.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_EPIDEMIC);
         game.fireEvent(new EventForEpidemic(game.getGameStatus()));
-        applyEffect();
+        applyEffect(username);
     }
 
     /**
@@ -44,8 +45,8 @@ public class Epidemic extends Card {
      *
      * @throws CardException if called outside INIT_EPIDEMIC or removal fails
      */
-    private void applyEffect() {
-        Game game = Game.getInstance();
+    private void applyEffect(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         for (Player p : game.getPlayers()) {
             Board board = p.getTruck();
             List<HousingUnit> housingUnits = board.getHousingUnits();
@@ -78,7 +79,7 @@ public class Epidemic extends Card {
         }
         // finalize
         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
     }
 
     /**
@@ -86,7 +87,7 @@ public class Epidemic extends Card {
      *
      * @return help message
      */
-    public String help() {
+    public String help(String username) {
         return "This card triggers immediately: no commands available.";
     }
 

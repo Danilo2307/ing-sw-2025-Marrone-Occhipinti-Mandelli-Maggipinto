@@ -44,9 +44,9 @@ public class MainServer {
         try{
             Server.getInstance().connectClients(connectionId);
             Users.getInstance().createClientHandler(connectionId);
-            if(UsersConnected.getInstance().getClients().size() == 1) {
+            /*if(UsersConnected.getInstance().getClients().size() == 1) {
                 Server.getInstance().sendMessage(new DirectMessage(new RequestNumPlayers()), connectionId);
-            }
+            }*/
 
             try {
                 ConnectionThread.getInstance().join(40000);
@@ -54,7 +54,7 @@ public class MainServer {
             catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            Game.getInstance().getPlayers().forEach(player -> {System.out.println(player.getNickname());});
+            // Game.getInstance().getPlayers().forEach(player -> {System.out.println(player.getNickname());});
         }
         catch (LobbyUnavailableException e){
             System.out.println(e.getMessage());

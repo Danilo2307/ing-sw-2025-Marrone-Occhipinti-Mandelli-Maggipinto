@@ -9,7 +9,7 @@ public class AbandonedStationOccupation extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("La stazione abbandonata è stata occupata!").append("\n");
         return sb.toString();

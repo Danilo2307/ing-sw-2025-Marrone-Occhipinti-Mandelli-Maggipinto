@@ -9,7 +9,7 @@ public class AbandonedShipOccupation extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("La nave abbandonata è stata acquistata!").append("\n");
         return sb.toString();

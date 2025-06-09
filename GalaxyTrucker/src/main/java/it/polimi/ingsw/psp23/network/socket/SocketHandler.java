@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -76,7 +77,8 @@ public class SocketHandler {
             }
             catch (IOException e) {
                 // e.printStackTrace();
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata prechè un player è uscito")));
+                int gameId = UsersConnected.getInstance().getGameFromUsername(username).getId();
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata prechè un player è uscito")), gameId);
                 Server.getInstance().disconnectAll();
                 // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {

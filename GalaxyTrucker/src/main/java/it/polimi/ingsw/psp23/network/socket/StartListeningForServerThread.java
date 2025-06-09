@@ -53,8 +53,6 @@ public class StartListeningForServerThread extends Thread {
 
                 }
             }
-        } catch (SocketTimeoutException e) {
-
         }
         catch(Exception e){
             throw new RuntimeException("Errore in run di StartListeningForServerThread: " + e.getMessage());

@@ -12,7 +12,7 @@ public class PlanetOccupation extends Event{
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("È stato occupato il pianeta numero ").append(i).append("\n");
         return sb.toString();

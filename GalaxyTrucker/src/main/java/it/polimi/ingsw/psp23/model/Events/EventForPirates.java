@@ -70,7 +70,7 @@ public class EventForPirates extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Pirati:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")

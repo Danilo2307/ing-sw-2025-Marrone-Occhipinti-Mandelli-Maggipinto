@@ -31,11 +31,7 @@ public class ClientSocket extends Client {
 
             //message = socketHandler.readMessage();
             startListeningForServerThread = new StartListeningForServerThread(socketHandler, clientEventHandler, this);
-            //startListeningForServerThread.start();
-            //if (!message.call(new GetEventVisitor()).toString().equals("Appropriate Username")) {
-            // this.close();
-            //throw new PlayerExistsException("Lanciata dal costruttore di client");
-            //}
+
         }
         catch (IOException e) {
             throw new RuntimeException("Errore class Client constructor: " + e.getMessage());

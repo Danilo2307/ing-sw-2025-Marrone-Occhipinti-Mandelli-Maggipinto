@@ -53,4 +53,13 @@ public class ReadyVisitor implements VisitorUsername<Void> {
         return null;
     }
 
+    @Override
+    public Void visitForEpidemic(Epidemic epidemic, String username){
+        return null;
+    }
+
+    @Override
+    public Void visitForStardust(Stardust stardust, String username){
+        return null;
+    }
 }

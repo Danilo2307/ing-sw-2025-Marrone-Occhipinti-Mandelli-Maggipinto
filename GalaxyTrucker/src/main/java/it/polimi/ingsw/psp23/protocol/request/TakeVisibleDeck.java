@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Card;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -16,13 +17,9 @@ import java.util.List;
 
 public record TakeVisibleDeck(int index) implements Action{
 
-    private static List<DirectMessage> dm = new ArrayList<>();
-    private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username) {
-        dm.clear();
-        bm.clear();
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player player = game.getPlayerFromNickname(username);
         ArrayList<Card> deckChosen = switch(index) {
             case 1 -> game.getVisibleDeck1(player);
@@ -32,9 +29,8 @@ public record TakeVisibleDeck(int index) implements Action{
         };
 
         if (deckChosen == null) {
-            DirectMessage m = new DirectMessage(new StringResponse("Non puoi guardare il mazzetto "+index+" in questo momento\n"));
-            // Server.getInstance().sendMessage(username, dm);
-            dm.add(m);
+            DirectMessage dm = new DirectMessage(new StringResponse("Non puoi guardare il mazzetto "+index+" in questo momento\n"));
+            Server.getInstance().sendMessage(username, dm);
         }
         else {
             StringBuilder descriptions = new StringBuilder();
@@ -44,7 +40,7 @@ public record TakeVisibleDeck(int index) implements Action{
                 ids.add(card.getId());
             }
             DirectMessage m = new DirectMessage(new VisibleDeckResponse(ids, descriptions.toString()));
-            dm.add(m);
+            Server.getInstance().sendMessage(username, m);
         }
     }
 
@@ -57,14 +53,6 @@ public record TakeVisibleDeck(int index) implements Action{
     @Override
     public <T> T call(ActionVisitorSinglePar<T> actionVisitorSinglePar){
         return null;
-    }
-
-    public List<DirectMessage> getDm() {
-        return dm;
-    }
-
-    public List<BroadcastMessage> getBm() {
-        return bm;
     }
 
 }

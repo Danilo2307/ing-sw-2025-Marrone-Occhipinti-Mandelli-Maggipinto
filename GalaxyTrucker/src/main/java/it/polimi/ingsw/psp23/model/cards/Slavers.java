@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -111,13 +112,13 @@ public class Slavers extends Card {
     /**
      * Starts the slavers encounter phase.
      */
-    public void initPlay() {
-        Game.getInstance().setGameStatus(GameStatus.INIT_SLAVERS);
-        Game.getInstance().fireEvent(new EventForSlavers(
-                Game.getInstance().getGameStatus(),
+    public void initPlay(String username) {
+        UsersConnected.getInstance().getGameFromUsername(username).setGameStatus(GameStatus.INIT_SLAVERS);
+        UsersConnected.getInstance().getGameFromUsername(username).fireEvent(new EventForSlavers(
+                UsersConnected.getInstance().getGameFromUsername(username).getGameStatus(),
                 cannonStrength, membersStolen, prize, days));
-        Game.getInstance().setCurrentPlayer(Game.getInstance().getPlayers().getFirst());
-        for(Player player : Game.getInstance().getPlayers()) {
+        UsersConnected.getInstance().getGameFromUsername(username).setCurrentPlayer(UsersConnected.getInstance().getGameFromUsername(username).getPlayers().getFirst());
+        for(Player player : UsersConnected.getInstance().getGameFromUsername(username).getPlayers()) {
             if(player.getTruck().calculateCrew() == 0){
                 noCrew.add(player.getNickname());
             }
@@ -131,7 +132,7 @@ public class Slavers extends Card {
      * @param j column index
      */
     public void activeCannon(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_SLAVERS) {
             throw new CardException("Cannot activate cannon now: phase is " + game.getGameStatus());
         }
@@ -148,7 +149,7 @@ public class Slavers extends Card {
      * @param username winner nickname
      */
     public void getCosmicCredits(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SLAVERS) {
             throw new CardException("Winner has not been determined yet");
         }
@@ -161,7 +162,7 @@ public class Slavers extends Card {
         Utility.updatePosition(game.getPlayers(), idx, -days);
         game.sortPlayersByPosition();
         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
     }
 
     /**
@@ -169,7 +170,7 @@ public class Slavers extends Card {
      * @param username winner nickname
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SLAVERS) {
             throw new CardException("Winner has not been determined yet");
         }
@@ -177,7 +178,7 @@ public class Slavers extends Card {
             throw new CardException("You did not defeat the slavers: " + username);
         }
         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
     }
 
     /**
@@ -185,7 +186,7 @@ public class Slavers extends Card {
      * @param username player nickname
      */
     public void ready(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
@@ -201,7 +202,7 @@ public class Slavers extends Card {
      * READY logic for INIT_SLAVERS.
      */
     private void readyStartPhase(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("User '" + username + "' is not the current player");
         }
@@ -219,7 +220,7 @@ public class Slavers extends Card {
             if(noCrew.contains(loser)){
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     game.getNextPlayer();
@@ -233,7 +234,7 @@ public class Slavers extends Card {
         else{
             if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
             else{
                 game.getNextPlayer();
@@ -250,7 +251,7 @@ public class Slavers extends Card {
      * @param num members to remove
      */
     public void reduceCrew(String username, int i, int j, int num) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SLAVERS) {
             throw new CardException("User '" + username + "' cannot remove crew in phase: " + game.getGameStatus());
         }
@@ -264,7 +265,7 @@ public class Slavers extends Card {
             if(counterMember == membersStolen || board.calculateCrew() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     game.setGameStatus(GameStatus.INIT_SLAVERS);
@@ -285,8 +286,8 @@ public class Slavers extends Card {
      * Returns help text for current game phase.
      * @return available commands string
      */
-    public String help() {
-        Game game = Game.getInstance();
+    public String help(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_SLAVERS:

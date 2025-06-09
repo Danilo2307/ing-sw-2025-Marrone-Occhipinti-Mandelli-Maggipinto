@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Card;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public record ReleaseDeck(int x) implements Action {
 
     public void handle(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player player = game.getPlayerFromNickname(username);
         switch(x) {
             case 1 -> game.releaseVisibleDeck1(player);
@@ -33,12 +34,5 @@ public record ReleaseDeck(int x) implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
-    }
 
 }

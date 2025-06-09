@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public interface ViewAPI {
@@ -43,4 +44,5 @@ public interface ViewAPI {
     void incorrectTile();
     void showNewCard(int id, String description);
     void showFlightBoard(Map<Color, Integer> flightMap);
+    void showAvailableLobbies(List<List<Integer>> availableLobbies);
 }

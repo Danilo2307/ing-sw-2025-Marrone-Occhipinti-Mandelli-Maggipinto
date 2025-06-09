@@ -9,7 +9,7 @@ public class ItemsEarned extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Bravo, ti sei meritato le merci!\n");
         return sb.toString();

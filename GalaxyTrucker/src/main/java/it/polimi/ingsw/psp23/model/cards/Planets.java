@@ -13,6 +13,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -76,7 +77,7 @@ public class Planets extends Card {
      * @throws CardException if state invalid or planet occupied
      */
     public void landOnPlanet(String username, int i) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_PLANETS) {
             throw new CardException("Cannot land in " + game.getGameStatus());
         }
@@ -112,7 +113,7 @@ public class Planets extends Card {
      * @throws CardException if state invalid
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() == GameStatus.END_PLANETS) {
             int playerIndex = planetsOccupied.indexOf(username);
             if (playerIndex >= 0) {
@@ -123,7 +124,7 @@ public class Planets extends Card {
                     loadedCount.set(playerIndex, totalGoods);
                     if(verifyAll()){
                         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                     }
                 }
             }
@@ -140,7 +141,7 @@ public class Planets extends Card {
             } else {
                 if (planetsOccupied.stream().allMatch(Objects::isNull)) {
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
                 else{
                     for (Player p : game.getPlayers().reversed()) {
@@ -162,7 +163,7 @@ public class Planets extends Card {
      * @throws CardException if loading invalid
      */
     public void loadGoods(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_PLANETS) {
             throw new CardException("Cannot load goods in this phase");
         }
@@ -178,7 +179,7 @@ public class Planets extends Card {
                 loadedCount.set(player, loadedCount.get(player) + 1);
                 if (verifyAll()) {
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                    Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
                 }
             }
             catch (InvalidCoordinatesException | ComponentMismatchException | ContainerException | TypeMismatchException e){
@@ -234,8 +235,8 @@ public class Planets extends Card {
     /**
      * Initializes the planet landing phase and fires the event.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_PLANETS);
         game.fireEvent(new EventForPlanets(game.getGameStatus(), daysLost, planetGoods));
         game.setCurrentPlayer(game.getPlayers().getFirst());
@@ -245,8 +246,8 @@ public class Planets extends Card {
      * Provides usage instructions for the Planets card.
      * @return help text detailing available actions
      */
-    public String help() {
-        Game game = Game.getInstance();
+    public String help(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         GameStatus status = game.getGameStatus();
         switch (status) {
             case INIT_PLANETS:

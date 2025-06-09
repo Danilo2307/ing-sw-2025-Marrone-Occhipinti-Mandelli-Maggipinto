@@ -13,7 +13,7 @@ public class ShowCurrentCard extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append(currentCard.toString()).append("\n");
         return sb.toString();

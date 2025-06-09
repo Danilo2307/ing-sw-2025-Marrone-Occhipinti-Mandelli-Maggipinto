@@ -20,4 +20,8 @@ public interface VisitorUsername<T> {
 
     public T visitForOpenSpace(OpenSpace openSpace, String username);
 
+    public T visitForEpidemic(Epidemic epidemic, String username);
+
+    public T visitForStardust(Stardust stardust, String username);
+
 }

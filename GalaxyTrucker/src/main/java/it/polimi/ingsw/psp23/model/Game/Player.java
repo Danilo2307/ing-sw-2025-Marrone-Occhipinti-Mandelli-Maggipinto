@@ -16,11 +16,11 @@ public class Player {
     private Game game;
     private Color color;
 
-    public Player(String nickname) {
+    public Player(String nickname, Game game) {
         this.nickname = nickname;
         this.position = 0;
-        this.game = Game.getInstance();
-        this.truck = new Board(game.getLevel());
+        this.game = game;
+        this.truck = new Board(game.getLevel(), nickname);
         this.money = 0;
         this.currentTileInHand = null;
         this.inGame = true;

@@ -69,7 +69,7 @@ public class EventForSmugglers extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Contrabbandieri:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")

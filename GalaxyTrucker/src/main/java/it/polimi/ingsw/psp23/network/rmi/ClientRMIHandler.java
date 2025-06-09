@@ -1,24 +1,25 @@
 package it.polimi.ingsw.psp23.network.rmi;
 
-import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.GameException;
 import it.polimi.ingsw.psp23.exceptions.InvalidCoordinatesException;
-import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
+import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
+import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.IncorrectWelding;
-import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHandlerInterface {
@@ -32,10 +33,10 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     @Override
     public void registerClient(String username, String nameConnection, ClientCallbackInterface callback) throws RemoteException{
 
-        List<String> usersConnected = UsersConnected.getInstance().getClients();
+        // List<String> usersConnected = UsersConnected.getInstance().getClients();
 
-        synchronized (usersConnected) {
-            UsersConnected.getInstance().addClient(nameConnection);
+        //synchronized (usersConnected) {
+            //UsersConnected.getInstance().addClient(nameConnection);
             registry.registerClient(nameConnection, callback);
             System.out.println("Client connected: " + nameConnection);
 
@@ -49,11 +50,14 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
                 // System.out.println(message.toString());
 
             }*/
-            if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
+
+
+            /*if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance().getNumRequestedPlayers() == -1){
                 UsersConnected.getInstance().removeClient(nameConnection);
                 throw new LobbyUnavailableException("lobby is unavailable");
-            }
-        }
+            }*/
+
+        //}
 
 
 
@@ -67,10 +71,10 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
      * Invia un messaggio a TUTTI i client RMI registrati.
      */
     @Override
-    public void sendToAllClients(Message msg) throws RemoteException {
-        for (ClientCallbackInterface cb : registry.getAllClients()) {
+    public void sendToAllClients(Message msg, List<String> listaUsername) throws RemoteException {
+        for (String u : listaUsername) {
             try {
-                cb.onReceivedMessage(msg);
+                sendToNickname(u, msg);
             } catch (RemoteException e) {
                 // il client probabilmente è offline: deregistralo
                 System.err.println("Client non risponde, rimuovo dallo stub list.");
@@ -117,25 +121,6 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public void sendAction(String username, String nameConnection, Action action) throws RemoteException{
         try {
             action.call(new HandleActionVisitor(), username);
-            List<DirectMessage> dm = action.getDm();
-            List<BroadcastMessage> bm = action.getBm();
-
-            if(dm != null && !dm.isEmpty()){
-                for(Message m : dm) {
-                    sendToUser(nameConnection, m);
-                }
-                dm.clear();
-            }
-            if(bm != null && !bm.isEmpty()){
-                for(Message m : bm) {
-                    for(Player p : Game.getInstance().getPlayers()) {
-                        if(registry.getAllPlayers().contains(p.getNickname()))
-                            sendToUser(registry.getPlayerConnectionFromNickname(p.getNickname()), m);
-                    }
-                }
-                bm.clear();
-            }
-
         }
         catch(GameException e) {
             DirectMessage dm = new DirectMessage(new ErrorResponse(e.getMessage()));
@@ -151,36 +136,71 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
 
     @Override
     public void setGameLevel(int level) throws RemoteException {
-        Game.getInstance(level);
-    }
-    
-    @Override
-    public int getGameLevel() throws RemoteException {
-        return Game.getInstance().getLevel();
+        UsersConnected.getInstance().addGame();
+        int gameIdConsidering = Server.getInstance().getGamesSize();
+        Server.getInstance().addGame(new Game(level, gameIdConsidering));
     }
 
     @Override
-    public int getNumPlayersConnected() throws RemoteException {
-        return UsersConnected.getInstance().getClients().size();
+    public int getGameLevel(int gameId) throws RemoteException {
+        return Server.getInstance().getGame(gameId).getLevel();
     }
 
     @Override
-    public void setPlayerUsername(String username) throws RemoteException{
-        Controller.getInstance().addPlayerToGame(username);
+    public GameStatus getGameStatus(int gameId) throws RemoteException {
+        return Server.getInstance().getGame(gameId).getGameStatus();
     }
 
     @Override
-    public void setNumRequestedPlayers(int num) throws RemoteException{
-        Game.getInstance().setNumRequestedPlayers(num);
+    public int getNumPlayersConnected(int gameId) throws RemoteException {
+        return UsersConnected.getInstance().getClients(gameId).size();
     }
 
     @Override
-    public int getNumRequestedPlayers() throws RemoteException{
-        return Game.getInstance().getNumRequestedPlayers();
+    public void setPlayerUsername(String username, int gameId) throws RemoteException{
+        // Controller.getInstance().addPlayerToGame(username);
+        if(UsersConnected.getInstance().usernameAlreadyExists(username)){
+            throw new PlayerExistsException("");
+        }
+        UsersConnected.getInstance().addClient(username, gameId);
+        UsersConnected.getInstance().getGameFromUsername(username).getController().addPlayerToGame(username);
     }
 
     @Override
-    public void startBuildingPhase() throws RemoteException{
-        Controller.getInstance().startBuildingPhase();
+    public void setNumRequestedPlayers(int num, String username) throws RemoteException{
+        UsersConnected.getInstance().getGameFromUsername(username).setNumRequestedPlayers(num);
+        if(!ConnectionThread.getInstance().isListening()) {
+            ConnectionThread.getInstance().start();
+        }
+    }
+
+    @Override
+    public int getNumRequestedPlayers(int gameId) throws RemoteException{
+        return Server.getInstance().getGame(gameId).getNumRequestedPlayers();
+    }
+
+    @Override
+    public void startBuildingPhase(int gameId) throws RemoteException{
+        Server.getInstance().getGame(gameId).getController().startBuildingPhase();
+    }
+
+    @Override
+    public int getGamesSize() throws RemoteException{
+        return Server.getInstance().getGamesSize();
+    }
+
+    @Override
+    public synchronized List<List<Integer>> getGamesAvailables() throws RemoteException{
+        ArrayList<List<Integer>> matchesAvailable = new ArrayList<>();
+        for(Game g : Server.getInstance().getGames()){
+            if(g.getGameStatus() == GameStatus.Setup) {
+                List<Integer> info = new ArrayList<>();
+                info.add(g.getId());
+                info.add(g.getPlayers().size());
+                info.add(g.getNumRequestedPlayers());
+                matchesAvailable.add(info);
+            }
+        }
+        return matchesAvailable;
     }
 }

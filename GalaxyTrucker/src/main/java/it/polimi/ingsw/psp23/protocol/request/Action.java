@@ -16,8 +16,5 @@ public interface Action extends Serializable {
     @Override
     public String toString();
 
-    public List<DirectMessage> getDm();
-
-    public List<BroadcastMessage> getBm();
 
 }

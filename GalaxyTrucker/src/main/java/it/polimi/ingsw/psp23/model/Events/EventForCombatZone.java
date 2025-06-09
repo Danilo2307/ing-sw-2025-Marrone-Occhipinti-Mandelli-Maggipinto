@@ -70,7 +70,7 @@ public class EventForCombatZone extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         String challDesc = challenges.stream()
                 .map(Challenge::toString)
                 .collect(Collectors.joining(", "));

@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 
@@ -15,7 +16,7 @@ import java.util.List;
 public record RemoveBatteries(int x, int y, int num) implements Action {
 
     public void handle(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SMUGGLERS){
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
@@ -34,12 +35,5 @@ public record RemoveBatteries(int x, int y, int num) implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
-    }
 
 }

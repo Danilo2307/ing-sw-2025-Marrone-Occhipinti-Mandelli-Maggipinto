@@ -3,6 +3,7 @@ import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +26,10 @@ public class Board {
     private final int ROWS = 5;
     private final int COLS = 7;
     int[][] validCoords;
+    // username del player a cui appartiene la board
+    String username;
 
-    public Board(int level) {
+    public Board(int level, String username) {
         if (level == 2) {
             validCoords = new int[][]{
                     {0, 2}, {0, 4}, {1, 1}, {1, 2}, {1, 3}, {1, 4}, {1, 5}, {2, 0}, {2, 1}, {2, 2}, {2, 3}, {2, 4},
@@ -50,6 +53,7 @@ public class Board {
         housingUnits = new ArrayList<>();
         structuralComponents = new ArrayList<>();
         reservedTiles = new ArrayList<>();
+        this.username = username;
     }
 
     /**
@@ -283,7 +287,7 @@ public class Board {
 
         // elimino component e aggiorno la pila degli scarti se necessario
         ship[i][j] = null;
-        if (!(Game.getInstance().getGameStatus() == GameStatus.CheckBoards && Game.getInstance().getLevel() == 0)) {
+        if (!(UsersConnected.getInstance().getGameFromUsername(username).getGameStatus() == GameStatus.CheckBoards && UsersConnected.getInstance().getGameFromUsername(username).getLevel() == 0)) {
             garbage++;
         }
 
@@ -611,7 +615,7 @@ public class Board {
             // Flag che indica se la meteora è stata distrutta da un cannone
             boolean isDestroyed = false;
             // in base al livello posso sparare ai lati
-            boolean canShootToSide = Game.getInstance().getLevel() == 2;
+            boolean canShootToSide = UsersConnected.getInstance().getGameFromUsername(username).getLevel() == 2;
 
             // Scorro tutti i cannoni installati sulla nave
             for (Cannon s : cannons) {

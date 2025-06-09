@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public record TakeReservedTile(int index) implements Action{
 
     public void handle(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
         // suppongo utente inserisca 1-based
         p.takeReservedTile(index);
@@ -26,12 +27,5 @@ public record TakeReservedTile(int index) implements Action{
         return null;
     }
 
-    public List<DirectMessage> getDm(){
-        return null;
-    }
-
-    public List<BroadcastMessage> getBm(){
-        return null;
-    }
 
 }

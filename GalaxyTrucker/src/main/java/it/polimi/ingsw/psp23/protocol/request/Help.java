@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.BuyShipVisitor;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.HelpVisitor;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -15,17 +16,12 @@ import java.util.List;
 
 public record Help() implements Action {
 
-    private static List<DirectMessage> dm = new ArrayList<>();
-    private static List<BroadcastMessage> bm = new ArrayList<>();
 
     public void handle(String username){
-        dm.clear();
-        bm.clear();
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Card currentCard = game.getCurrentCard();
         HelpVisitor help = new HelpVisitor();
-        // Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse(currentCard.call(help))));
-        dm.add(new DirectMessage(new StringResponse(currentCard.call(help))));
+        Server.getInstance().sendMessage(username, new DirectMessage(new StringResponse(currentCard.call(help, username))));
     }
 
     @Override
@@ -38,11 +34,4 @@ public record Help() implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm() {
-        return dm;
-    }
-
-    public List<BroadcastMessage> getBm() {
-        return bm;
-    }
 }

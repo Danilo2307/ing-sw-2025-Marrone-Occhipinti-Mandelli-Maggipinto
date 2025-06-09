@@ -20,7 +20,7 @@ public class MeteorIncoming extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         if(grande) {
             sb.append("È in arrivo un meteorite grosso da ").append(direction).append(" all'indice ").append(indice).append("\n");

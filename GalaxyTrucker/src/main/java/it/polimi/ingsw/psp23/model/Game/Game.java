@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.NewCardDrawn;
@@ -25,7 +26,7 @@ import java.util.function.Consumer;
 
 public class Game {
 
-    public static Game instance = null;
+    // public static Game instance = null;
 
     private final ArrayList<Player> players;
     private final ArrayList<Player> playersNotOnFlight;
@@ -49,8 +50,11 @@ public class Game {
     private int turn;
     int level;
     int []firstPositions;
+    int Id;
+    Controller controller;
 
-    private Game(int level) {
+    // Questo costruttore è public perchè deve essere accessibile da Server che è in un altro package
+     public Game(int level, int id) {
         this.players = new ArrayList<>();
         this.playersNotOnFlight = new ArrayList<>();
         this.deck = new ArrayList<>();
@@ -64,6 +68,8 @@ public class Game {
         this.numRequestedPlayers = -1;
         this.turn = 0;
         this.level = level;
+        this.Id = id;
+        this.controller = null;
         // istanzio tutti i componenti e li metto nell'heap
         this.heap.addAll(ComponentFactory.generateAllComponents(level));
 
@@ -103,22 +109,22 @@ public class Game {
      * will create a new Game instance.
      * For testing purposes only.
      */
-    public static void resetInstance() {
+     /*public static void resetInstance() {
         instance = null;
-    }
+     }*/
 
-    public static Game getInstance(int level) {
+    /*public static Game getInstance(int level) {
         instance = new Game(level);
         return instance;
-    }
+    }*/
 
     public int getLevel() {
         return level;
     }
 
-    public static Game getInstance(){
+     /*public static Game getInstance(){
         return instance;
-    }
+    }*/
 
     public void setNumRequestedPlayers(int number) {
         if (numRequestedPlayers == -1)
@@ -169,12 +175,17 @@ public class Game {
     }
 
     public void addPlayer(String nickname) {
-        for(Player p: players){
+        /*for(Player p: players){
             if(p.getNickname().equals(nickname)){
                 throw new PlayerExistsException("Player already exists");
             }
-        }
-        players.add(new Player(nickname));
+        }*/
+        /*for(Integer i : UsersConnected.getInstance().getMap().keySet()){
+            if(UsersConnected.getInstance().getClients(i).contains(nickname)){
+                throw new PlayerExistsException("Player already exists");
+            }
+        }*/
+        players.add(new Player(nickname, this));
     }
 
     public ArrayList<Component> getUncovered() {
@@ -337,7 +348,7 @@ public class Game {
         }
     }
 
-    public void nextCard(){
+    public void nextCard(String username){
         checkEliminationPlayers();
         sortPlayersByPosition();
         currentCard = getNextCard();
@@ -349,9 +360,9 @@ public class Game {
             // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
             // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
             // Controller.getInstance().onGameEvent(e);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())));
-            Visitor visitor = new InitPlayVisitor();
-            currentCard.call(visitor);
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())), Id);
+            VisitorUsername visitor = new InitPlayVisitor();
+            currentCard.call(visitor, username);
         }
     }
 
@@ -528,6 +539,18 @@ public class Game {
         if(eventListener != null) {
             eventListener2.accept(event, username);
         }
+    }
+
+    public int getId(){
+        return Id;
+    }
+
+    public Controller getController() {
+        return controller;
+    }
+
+    public void setController() {
+        this.controller = new Controller(Id);
     }
 
 }

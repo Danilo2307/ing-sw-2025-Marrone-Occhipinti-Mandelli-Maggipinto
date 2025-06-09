@@ -57,4 +57,6 @@ public interface EventVisitor<T> {
 
     public T visitForFlightBoardResponse(FlightBoardResponse flightBoardResponse, ViewAPI viewAPI);
 
+    public T visitForLobbyAvailable(LobbyAvailable lobbyAvailable, ViewAPI viewAPI);
+
 }

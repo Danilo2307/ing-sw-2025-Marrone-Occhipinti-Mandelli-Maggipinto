@@ -231,8 +231,8 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
     }
 
     @Override
-    public Void visitForCreateNewMatch(CreateNewMatch createNewMatch, String username){
-        createNewMatch.handle(username);
+    public Void visitForUserDecision(UserDecision userDecision, String username){
+        userDecision.handle(username);
         return null;
     }
 

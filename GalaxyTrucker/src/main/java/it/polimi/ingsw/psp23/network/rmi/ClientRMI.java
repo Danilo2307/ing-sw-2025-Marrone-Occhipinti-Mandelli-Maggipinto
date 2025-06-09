@@ -87,7 +87,7 @@ public class ClientRMI extends Client {
     }
 
     @Override
-    public String getUsername() throws RemoteException {
+    public String getUsername() {
         return username;
     }
 }

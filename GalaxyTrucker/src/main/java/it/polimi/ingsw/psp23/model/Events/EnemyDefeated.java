@@ -12,7 +12,7 @@ public class EnemyDefeated extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("I nemici sono stati sconfitti!\n");
         return sb.toString();

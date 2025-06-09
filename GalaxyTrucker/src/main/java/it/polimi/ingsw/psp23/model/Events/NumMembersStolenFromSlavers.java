@@ -14,7 +14,7 @@ public class NumMembersStolenFromSlavers extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Hai perso, rimuovi ").append(numMembers).append(" membri dell'equipaggio\n");
         return sb.toString();

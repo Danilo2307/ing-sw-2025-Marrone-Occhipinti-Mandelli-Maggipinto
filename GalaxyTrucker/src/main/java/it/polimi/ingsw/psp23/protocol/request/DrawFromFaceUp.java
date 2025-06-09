@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.NoTileException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
@@ -19,31 +20,23 @@ import java.util.List;
 /** Event triggered when the user wants to draw a face-up component at position x. */
 public record DrawFromFaceUp (int x, int version) implements Action {
 
-    private static List<DirectMessage> dm = new ArrayList<>();
-    private static List<BroadcastMessage> bm = new ArrayList<>();
-
     public void handle(String username) {
-        dm.clear();
-        bm.clear();
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
         try {
             Component drawn = p.chooseCardUncovered(x, version);
-            DirectMessage m = new DirectMessage(new TileResponse(drawn));
-            // Server.getInstance().sendMessage(username, dm);
-            dm.add(m);
+            DirectMessage dm = new DirectMessage(new TileResponse(drawn));
+            Server.getInstance().sendMessage(username, dm);
         }
         catch (NoTileException | IndexOutOfBoundsException exception) {
-            DirectMessage m = new DirectMessage(new ErrorResponse(exception.getMessage()));
-            // Server.getInstance().sendMessage(username, dm);
-            dm.add(m);
+            DirectMessage dm = new DirectMessage(new ErrorResponse(exception.getMessage()));
+            Server.getInstance().sendMessage(username, dm);
         }
         finally {
             ArrayList<Component> uncovered = game.getUncovered();
             int updatedVersion = game.getLastUncoveredVersion();
-            DirectMessage m1 = new DirectMessage(new UncoveredListResponse(uncovered, updatedVersion));
-            // Server.getInstance().sendMessage(username, dm1);
-            dm.add(m1);
+            DirectMessage dm1 = new DirectMessage(new UncoveredListResponse(uncovered, updatedVersion));
+            Server.getInstance().sendMessage(username, dm1);
         }
     }
 
@@ -57,11 +50,4 @@ public record DrawFromFaceUp (int x, int version) implements Action {
         return null;
     }
 
-    public List<DirectMessage> getDm() {
-        return dm;
-    }
-
-    public List<BroadcastMessage> getBm() {
-        return bm;
-    }
 }

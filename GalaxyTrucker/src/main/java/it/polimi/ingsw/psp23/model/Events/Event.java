@@ -12,5 +12,5 @@ public abstract class Event {
     public GameStatus getNewStatus() { return newStatus; }
 
     /** Metodo astratto per generare la descrizione rivolta all’UI */
-    public abstract String describe();
+    public abstract String describe(int gameId);
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.psp23.model.Events;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.socket.Server;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -62,12 +63,12 @@ public class EventForAbandonedStation extends Event {
      * Builds and returns the UI description for this event in Italian.
      */
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Evento Stazione abbandonata:\n")
                 .append("  Giorni persi: ").append(daysLost).append("\n")
                 .append("  Membri di equipaggio persi: ").append(numMembers).append("\n")
-                .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader, ovvero " + Game.getInstance().getPlayers().getFirst().getNickname() + "\n");
+                .append("  Oggetti premio: ").append(prizeDescription()).append("\nSi parte dal leader, ovvero " + Server.getInstance().getGame(gameId).getPlayers().getFirst().getNickname() + "\n");
         return sb.toString();
     }
 }

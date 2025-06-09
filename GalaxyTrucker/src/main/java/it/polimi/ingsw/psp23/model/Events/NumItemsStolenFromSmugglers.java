@@ -14,7 +14,7 @@ public class NumItemsStolenFromSmugglers extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("Hai perso, perderai le tue ").append(numItems).append(" merci più importanti\n");
         return sb.toString();

@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
@@ -13,10 +14,8 @@ import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
-import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
-import it.polimi.ingsw.psp23.protocol.response.LobbyUnavailable;
-import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
-import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
+import it.polimi.ingsw.psp23.protocol.request.UserDecision;
+import it.polimi.ingsw.psp23.protocol.response.*;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -24,9 +23,8 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Server {
 
@@ -34,6 +32,7 @@ public class Server {
     private ServerSocket serverSocket;
     private final HashMap<String, SocketHandler> clients;
     private final ClientRMIHandlerInterface rmiServer;
+    private final HashMap<Integer, Game> games;
 
 
     // Qui creo il server
@@ -47,6 +46,8 @@ public class Server {
             this.rmiServer = null;
 
             clients = new HashMap<>();
+
+            games = new HashMap<>();
 
             System.out.println("Server started at port " + port + " and with address " + serverSocket.getInetAddress());
 
@@ -65,6 +66,8 @@ public class Server {
             this.serverSocket.setReuseAddress(true);
 
             clients = new HashMap<>();
+
+            games = new HashMap<>();
 
             System.out.println("Server started at port " + port + " and with address " + serverSocket.getInetAddress());
 
@@ -147,37 +150,85 @@ public class Server {
                 Socket socket = serverSocket.accept();
 
 
-
-                // Questa istruzione serve per non andare avanti all'infinito ma, nel caso in cui dopo aver stabilito
-                // la connessione il client non dovesse mandare niente per 5 sec, questa istruzione lancerà un'eccezione
-                // socket.setSoTimeout(60000);
-
                 SocketHandler socketHandler = new SocketHandler(socket);
 
-                List<String> usersConnected = UsersConnected.getInstance().getClients();
+                // Per prima cosa il server comunica al client che entra gli id delle partite disponibili a cui partecipare
 
-                synchronized (usersConnected) {
+                ArrayList<List<Integer>> matchesAvailable = new ArrayList<>();
+                for(Game g : Server.getInstance().getGames()){
+                    if(g.getGameStatus() == GameStatus.Setup) {
+                        List<Integer> info = new ArrayList<>();
+                        info.add(g.getId());
+                        info.add(g.getPlayers().size());
+                        info.add(g.getNumRequestedPlayers());
+                        matchesAvailable.add(info);
+                    }
+                }
+
+                socketHandler.sendMessage(new DirectMessage(new LobbyAvailable(matchesAvailable)));
+
+                /*Adesso devo adottare due comportamenti diversi in base alla scelta del client, ovvero se vorrà
+                creare una nuova partita o partecipare ad una partita già esistente.
+                A questo proposito al client vengono mostrati gli id delle partite in corso in modo che lui possa
+                scegliere a quale partecipare o creare direttamente un'altra partita
+                */
+
+                int choice = 0;
+                boolean loop = false;
+                do {
+                    UserDecision userChoice = (UserDecision) socketHandler.readMessage().call(new GetActionVisitor());
+                    choice = userChoice.getChoice();
+                    if(choice != 0 && (!games.keySet().contains(choice - 1) || games.get(choice - 1).getGameStatus() != GameStatus.Setup)){
+                        loop = true;
+                        socketHandler.sendMessage(new DirectMessage(new ErrorResponse("Inserimento non valido")));
+                    }
+                    else{
+                        loop = false;
+                    }
+                }while(loop);
+
+                int gameIdConsidering = 0;
+                // Vuol dire che il player vuole creare una partita
+                if (choice == 0){
+                    gameIdConsidering = games.size();
+                    UsersConnected.getInstance().addGame();
+                }
+                // Il player vuole accedere alla partita con l'id da lui inserito
+                // (È importante ricordare che il player inserisce un indice 1-based mentre in UsersConnected ed in games
+                // gli indici sono 0-based)
+                else if(choice < 0 || choice > games.size()){
+                    socketHandler.sendMessage(new DirectMessage(new ErrorResponse("Hai inserito un id errato!")));
+                }
+                // Caso in cui un player voglia partecipare ad una partita già esistente con un certo id
+                else {
+                    gameIdConsidering = choice - 1;
+                }
+
+                List<String> usersConnected = UsersConnected.getInstance().getClients(gameIdConsidering);
+
+                // TODO: modifica l'oggetto di sincronizzazione
+                synchronized (UsersConnected.getInstance()) {
                     clients.put(nameConnection, socketHandler);
-                    UsersConnected.getInstance().addClient(nameConnection);
+                    UsersConnected.getInstance().addClient(nameConnection, gameIdConsidering);
                     System.out.println("Client connected: " + nameConnection);
 
 
-                    if(UsersConnected.getInstance().getClients().size() != 1 && Game.getInstance() == null){
+                    if(UsersConnected.getInstance().getClients(gameIdConsidering).size() != 1 && games.get(gameIdConsidering).getNumRequestedPlayers() == -1) {
                         socketHandler.sendMessage(new DirectMessage(new LobbyUnavailable()));
                         clients.remove(nameConnection);
-                        UsersConnected.getInstance().removeClient(nameConnection);
+                        UsersConnected.getInstance().removeClient(nameConnection, gameIdConsidering);
                         throw new LobbyUnavailableException("Lobby unavailable");
                     }
 
-                    else if(UsersConnected.getInstance().getClients().size() == 1){
+                    else if(UsersConnected.getInstance().getClients(gameIdConsidering).size() == 1){
 
-                        socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
+                        // socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
 
                         Message message = socketHandler.readMessage();
 
                         System.out.println(message.toString());
 
-                        Game.getInstance(Integer.parseInt(message.toString()));
+                        addGame(new Game(Integer.parseInt(message.toString()), gameIdConsidering));
 
                         System.out.println("arrivato a questo punto");
 
@@ -192,7 +243,8 @@ public class Server {
                 String username = null;
 
                 boolean error;
-                do {
+
+                /*do {
                     try {
                         a = socketHandler.readMessage().call(new GetActionVisitor());
                         username = a.call(new SetUsernameActionVisitor());
@@ -203,12 +255,27 @@ public class Server {
                         socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
                         error = true;
                     }
+                } while(error);*/
+
+                do {
+                        a = socketHandler.readMessage().call(new GetActionVisitor());
+                        username = a.call(new SetUsernameActionVisitor());
+                        if(UsersConnected.getInstance().usernameAlreadyExists(username)){
+                            socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
+                            error = true;
+                        }
+                        else{
+                            UsersConnected.getInstance().removeClient(nameConnection, gameIdConsidering);
+                            UsersConnected.getInstance().addClient(username, gameIdConsidering);
+                            a.call(new HandleActionVisitor(), username);
+                            error = false;
+                        }
                 } while(error);
 
-                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username, Game.getInstance().getLevel())));
-                int indiceUsernameDaCambiare = usersConnected.indexOf(nameConnection);
+                socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username, games.get(gameIdConsidering).getLevel())));
+                /*int indiceUsernameDaCambiare = usersConnected.indexOf(username);
                 usersConnected.remove(indiceUsernameDaCambiare);
-                usersConnected.add(indiceUsernameDaCambiare, username);
+                usersConnected.add(indiceUsernameDaCambiare, username);*/
                 socketHandler.setUsername(username);
 
                 /*synchronized (Server.getInstance().getClients()) {
@@ -223,8 +290,8 @@ public class Server {
                 }*/
 
 
-                if(UsersConnected.getInstance().getClients().size() == Game.getInstance().getNumRequestedPlayers()){
-                    Controller.getInstance().startBuildingPhase();
+                if(UsersConnected.getInstance().getClients(gameIdConsidering).size() == games.get(gameIdConsidering).getNumRequestedPlayers()){
+                    games.get(gameIdConsidering).getController().startBuildingPhase();
                 }
 
 
@@ -325,21 +392,26 @@ public class Server {
         return null;
     }
 
-    public void notifyAllObservers(Message message) {
-        synchronized (clients) {
-            for (String connection : clients.keySet()) {
-                try {
-                    sendMessage(message, connection);
-                } catch (RuntimeException e) {
-                    System.out.println("Eccezione lanciata nel notifyAllObservers di Server. Se si è disconnesso inaspettatamente un player questo messaggio è del tutto normale, altrimenti c'è un problema!!" + e.getMessage());
+    public void notifyAllObservers(Message message, int gameId) {
+        synchronized (games.get(gameId)) {
+            List<String> players = new ArrayList<>(games.get(gameId).getPlayers().stream().map(p -> p.getNickname()).collect(Collectors.toList()));
+            try {
+                for (String s : clients.keySet()) {
+                    String username = getUsernameForConnection(s);
+                    if (players.contains(username)) {
+                        try {
+                            sendMessage(username, message);
+                        } catch (RuntimeException e) {
+                            System.out.println("Eccezione lanciata nel notifyAllObservers di Server. Se si è disconnesso inaspettatamente un player questo messaggio è del tutto normale, altrimenti c'è un problema!!" + e.getMessage());
+                        }
+                        System.out.println("Notify observer: " + username + " with message: " + message.toString());
+                        players.remove(getUsernameForConnection(s));
+                    }
                 }
-                System.out.println("Notify observer: " + getUsernameForConnection(connection) + " with message: " + message.toString());
+                rmiServer.sendToAllClients(message, players);
+            } catch (RemoteException e) {
+                System.out.println("Messaggio inviato con esito negativo");
             }
-        }
-        try{
-            rmiServer.sendToAllClients(message);
-        } catch (RemoteException e) {
-            System.out.println("Messaggio inviato con esito negativo");
         }
     }
 
@@ -390,6 +462,23 @@ public class Server {
 
     public String getUsernameForConnection(String connectionID) {
         return clients.get(connectionID).getUsername();
+    }
+
+    public Game getGame(int id) {
+        return games.get(id);
+    }
+
+    public void addGame(Game game) {
+        games.put(game.getId(), game);
+        game.setController();
+    }
+
+    public synchronized int getGamesSize(){
+        return games.size();
+    }
+
+    public synchronized List<Game> getGames() {
+        return games.values().stream().toList();
     }
 
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
 import it.polimi.ingsw.psp23.controller.Controller;
+import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
@@ -12,15 +13,13 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.*;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.*;
-import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
-import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
-import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
-import it.polimi.ingsw.psp23.protocol.response.StateChanged;
+import it.polimi.ingsw.psp23.protocol.response.*;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import java.net.Socket;
@@ -28,6 +27,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */
@@ -56,8 +56,54 @@ public class TuiApplication implements ViewAPI {
     public void setup() throws RemoteException {
         Socket socket = client.getSocket();
         Scanner scanner = new Scanner(System.in);
-
         try {
+            Event e = client.readMessage().call(new GetEventVisitor());
+            e.call(new HandleEventVisitor(), this);
+        }catch (SocketTimeoutException e){
+
+        }
+
+        int scelta = -1;
+
+        boolean error = false;
+        do {
+            try {
+                scelta = scanner.nextInt();
+                scanner.nextLine();
+                client.sendAction(new UserDecision(scelta));
+                socket.setSoTimeout(100);
+                client.readMessage();
+                error = true;
+                io.error("Non puoi partecipare a questo match, inserisci un altro id");
+            }catch (SocketTimeoutException e){
+                error = false;
+                try{
+                    socket.setSoTimeout(0);
+                }catch (SocketException se){
+                    throw new RuntimeException(se);
+                }
+            }
+            catch(SocketException s){
+                throw new RuntimeException();
+            }
+        }while(error);
+
+        if(scelta == 0){
+            showRequestLevel();
+            int livello = scanner.nextInt();
+            scanner.nextLine();
+            Message messaggio = new LevelSelectionMessage(livello);
+            client.sendMessage(messaggio);
+
+            client.avvia();
+        }
+
+        else{
+            client.avvia();
+            client.setId(scelta-1);
+        }
+
+        /*try {
             socket.setSoTimeout(1000);
             Message messaggio = client.readMessage();
             messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), this);
@@ -80,7 +126,7 @@ public class TuiApplication implements ViewAPI {
         }
         catch (SocketException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
         String username = scanner.nextLine();
@@ -91,12 +137,34 @@ public class TuiApplication implements ViewAPI {
 
     public void setupRMI(String nameConnection) throws RemoteException {
 
-        if(client.getGameServer().getNumPlayersConnected() == 1) {
+        Scanner scanner = new Scanner(System.in);
+
+        List<List<Integer>> matchesAvailable = client.getGameServer().getGamesAvailables();
+        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new LobbyAvailable(matchesAvailable)));
+
+        int scelta = 0;
+        List<Integer> matchIndexesAvailable = matchesAvailable.stream().mapToInt(l -> l.get(0)).boxed().toList();
+        boolean error = false;
+        do {
+            scelta = scanner.nextInt();
+            scanner.nextLine();
+            if(scelta != 0 && (!matchIndexesAvailable.contains(scelta - 1) || client.getGameServer().getGameStatus(scelta - 1 ) != GameStatus.Setup)){
+                error = true;
+                io.error("Non puoi partecipare a questo match, inserisci un altro id");
+            }
+            else{
+                error = false;
+            }
+        }while (error);
+
+        // client.sendAction(new UserDecision(scelta));
+
+        if(scelta == 0) {
 
             Message msg = (new DirectMessage(new SelectLevel()));
             client.getGameServer().sendToUser(nameConnection, msg);
 
-            Scanner scanner = new Scanner(System.in);
+            scanner = new Scanner(System.in);
             int level = scanner.nextInt();
             scanner.nextLine();
 
@@ -105,19 +173,24 @@ public class TuiApplication implements ViewAPI {
 
         io.print("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
 
-        Scanner scanner;
         String username = null;
 
-        boolean error;
+        error = false;
         do {
             try {
                 scanner = new Scanner(System.in);
                 username = scanner.nextLine();
-                client.getGameServer().setPlayerUsername(username);
+
+                int gameIdConsidering = scelta;
+                if(scelta == 0){
+                    gameIdConsidering = client.getGameServer().getGamesSize();
+                }
+                client.getGameServer().setPlayerUsername(username,  gameIdConsidering - 1);
+                client.setId(gameIdConsidering - 1);
                 error = false;
                 io.print("Username settato correttamente\n");
                 client.setUsername(username);
-                if(client.getGameServer().getNumPlayersConnected() == 1){
+                if(scelta == 0){
                     io.print("Inserisci il numero di giocatori presenti nella partita (minimo 2 massimo 4): ");
                     int avversari;
                     do {
@@ -127,7 +200,7 @@ public class TuiApplication implements ViewAPI {
                         }
                         scanner.nextLine();
                     }while(avversari <= 1 || avversari > 4);
-                    client.getGameServer().setNumRequestedPlayers(avversari);
+                    client.getGameServer().setNumRequestedPlayers(avversari, username);
 //                    client.open();
                 }
             } catch (PlayerExistsException e) {
@@ -135,9 +208,9 @@ public class TuiApplication implements ViewAPI {
                 error = true;
             }
         } while (error);
-        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel())));
-        if(client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()){
-            client.getGameServer().startBuildingPhase();
+        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel(client.getId()))));
+        if(client.getGameServer().getNumPlayersConnected(client.getId()) == client.getGameServer().getNumRequestedPlayers(client.getId())){
+            client.getGameServer().startBuildingPhase(client.getId());
         }
         runGame();
     }
@@ -666,6 +739,14 @@ public class TuiApplication implements ViewAPI {
 
     @Override
     public void showFlightBoard(Map<Color, Integer> flightMap) {}
+
+    @Override
+    public void showAvailableLobbies(List<List<Integer>> availableLobbies) {
+        io.print("Scegli se partecipare ad una partita esistente o se crearne una nuova\n\t0: crea una nuova partita\n");
+        for (List<Integer> list : availableLobbies) {
+            io.print("\t" + (list.get(0)+1) + ": " + "numero di players presenti: " + list.get(1).toString() + ", numero di players massimo: " + list.get(2).toString() + "\n");
+        }
+    }
 
 
 }

@@ -12,6 +12,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -44,8 +45,8 @@ public class AbandonedShip extends Card {
         return numMembers;
     }
 
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_ABANDONEDSHIP);
         game.fireEvent(new EventForAbandonedShip(game.getGameStatus(), days, cosmicCredits, numMembers));
         game.setCurrentPlayer(game.getPlayers().getFirst());
@@ -57,7 +58,7 @@ public class AbandonedShip extends Card {
      * If the last player, skips to the next card.
      */
     public void pass(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
             throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
         }
@@ -70,7 +71,7 @@ public class AbandonedShip extends Card {
             // game.fireEvent(new TurnOf(game.getGameStatus(), currentPlayerNickname));
         } else {
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
     }
 
@@ -80,7 +81,7 @@ public class AbandonedShip extends Card {
      * Throws a CardException if conditions are not met.
      */
     public void buyShip(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(isSold != null){
             throw new CardException("Ship was bought by " + isSold );
         }
@@ -111,7 +112,7 @@ public class AbandonedShip extends Card {
      * Throws a CardException if conditions are not met.
      */
     public void reduceCrew(String username, int i, int j, int num) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_ABANDONEDSHIP) {
             throw new CardException("User '" + username + "' cannot remove crew in phase: " + game.getGameStatus());
         }
@@ -124,7 +125,7 @@ public class AbandonedShip extends Card {
             countMember += num;
             if (countMember == numMembers) {
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
             }
         }
         catch (InvalidCoordinatesException | ComponentMismatchException | CrewOperationException | TypeMismatchException e){
@@ -136,8 +137,8 @@ public class AbandonedShip extends Card {
      * Returns a help string listing available commands depending on current game status.
      * @return help message
      */
-    public String help() {
-        Game game = Game.getInstance();
+    public String help(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         GameStatus status = game.getGameStatus();
         return switch (status) {
             case INIT_ABANDONEDSHIP -> "Available commands: COMPRANAVE, PASSA\n";

@@ -14,7 +14,7 @@ public class TurnOf extends Event {
     }
 
     @Override
-    public String describe() {
+    public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
         sb.append("È il turno di ").append(nickname).append("\n");
         return sb.toString();

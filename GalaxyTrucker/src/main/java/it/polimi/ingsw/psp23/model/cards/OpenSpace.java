@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Events.EventForOpenSpace;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.Game.Utility;
+import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
@@ -26,7 +27,7 @@ public class OpenSpace extends Card {
      * Activates an engine at the given coordinates during INIT_OPENSPACE phase.
      */
     public void activeEngine(String username, int i, int j) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
             throw new CardException("Cannot activate engine now: phase is " + game.getGameStatus());
         }
@@ -39,8 +40,8 @@ public class OpenSpace extends Card {
     /**
      * Initializes the OpenSpace card by setting up the phase and firing an event.
      */
-    public void initPlay() {
-        Game game = Game.getInstance();
+    public void initPlay(String username) {
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_OPENSPACE);
         game.fireEvent(new EventForOpenSpace(game.getGameStatus()));
         game.setCurrentPlayer(game.getPlayers().getFirst());
@@ -52,7 +53,7 @@ public class OpenSpace extends Card {
      * applies the engine strength effect to all and resets the card.
      */
     public void ready(String username) {
-        Game game = Game.getInstance();
+        Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
             throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
         }
@@ -71,15 +72,15 @@ public class OpenSpace extends Card {
             game.sortPlayersByPosition();
             resolvers.clear();
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
-            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")));
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
         }
     }
 
     /**
      * Returns available commands for the OpenSpace card.
      */
-    public String help() {
-        if (Game.getInstance().getGameStatus() == GameStatus.INIT_OPENSPACE) {
+    public String help(String username) {
+        if (UsersConnected.getInstance().getGameFromUsername(username).getGameStatus() == GameStatus.INIT_OPENSPACE) {
             return "Available commands: ATTIVA CANNONE, PRONTO\n";
         }
         return "No commands available in current phase.\n";

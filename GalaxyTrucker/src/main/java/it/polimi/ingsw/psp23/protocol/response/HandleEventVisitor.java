@@ -163,5 +163,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForLobbyAvailable(LobbyAvailable lobbyAvailable, ViewAPI viewAPI) {
+        lobbyAvailable.handle(viewAPI);
+        return null;
+    }
+
 
 }
