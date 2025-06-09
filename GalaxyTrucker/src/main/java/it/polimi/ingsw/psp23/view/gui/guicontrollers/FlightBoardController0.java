@@ -48,7 +48,7 @@ public class FlightBoardController0 {
 
     @FXML
     public void onBackToShipClicked(){
-        GuiApplication.getInstance().toBuildingPhase(null);
+        GuiApplication.getInstance().backToShip();
     }
 
 

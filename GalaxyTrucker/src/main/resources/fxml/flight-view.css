@@ -1,0 +1,22 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/background_image.jpeg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+
+}
+
+.quit-button {
+    -fx-background-color: rgb(186, 22, 22);
+    -fx-text-fill: white;
+}
+
+.quit-button:hover{
+    -fx-background-color: rgb(255, 2, 2);
+    -fx-text-fill: white;
+}
+
+
+.default-button:hover {
+    -fx-background-color: #5773ff;
+    -fx-cursor: hand;
+}
