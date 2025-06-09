@@ -83,6 +83,7 @@ public class Controller {
       //  game.getPlayers().forEach(player -> {
        //     inizializzazioneNave.getInstance().popolaNave(player);});
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StateChanged(GameStatus.Building)), gameId);
+        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringList(UsersConnected.getInstance().getClients(gameId))), gameId);
 
         if (game.getLevel() != 0) {
             startTimer();

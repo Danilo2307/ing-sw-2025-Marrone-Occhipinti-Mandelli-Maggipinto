@@ -59,4 +59,6 @@ public interface EventVisitor<T> {
 
     public T visitForLobbyAvailable(LobbyAvailable lobbyAvailable, ViewAPI viewAPI);
 
+    public T visitForStringList(StringList stringList, ViewAPI viewAPI);
+
 }
