@@ -169,5 +169,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForStringList(StringList stringList, ViewAPI viewAPI) {
+        stringList.handle(viewAPI);
+        return null;
+    }
+
 
 }
