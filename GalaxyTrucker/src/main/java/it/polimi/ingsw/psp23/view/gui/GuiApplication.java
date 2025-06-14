@@ -32,10 +32,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import javafx.scene.control.Button;
 
@@ -142,7 +139,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void setupRMI(String nameConnection) throws RemoteException{
-        if(client.getGameServer().getNumPlayersConnected() == 1) {
+        if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1) {
 
             Message msg = (new DirectMessage(new SelectLevel()));
             client.getGameServer().sendToUser(nameConnection, msg);
@@ -479,6 +476,11 @@ public class GuiApplication extends Application implements ViewAPI {
             toFlightPhase();
         else
             toBuildingPhase(null);
+    }
+
+    @Override
+    public void showAvailableLobbies(List<List<Integer>> availableLobbies){
+        // TODO: Implementare!!!!
     }
 
 

@@ -117,9 +117,9 @@ public class LobbyController {
         String username = usernameField.getText();
         if(client.isRmi()){
             try {
-                client.getGameServer().setPlayerUsername(username);
-                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel())));
-                if(client.getGameServer().getNumPlayersConnected() == 1){
+                // TODO: client.getGameServer().setPlayerUsername(username);
+                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel(client.getId()))));
+                if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1){
                     client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new RequestNumPlayers()));
                 }
             }
@@ -130,8 +130,8 @@ public class LobbyController {
         client.setUsername(username);
         try{
             if(client.isRmi()) {
-                if (client.getGameServer().getNumPlayersConnected() != 1 && client.getGameServer().getNumPlayersConnected() == client.getGameServer().getNumRequestedPlayers()) {
-                    client.getGameServer().startBuildingPhase();
+                if (client.getGameServer().getNumPlayersConnected(client.getId()) != 1 && client.getGameServer().getNumPlayersConnected(client.getId()) == client.getGameServer().getNumRequestedPlayers(client.getId())) {
+                    client.getGameServer().startBuildingPhase(client.getId());
                 }
             }
         }catch (RemoteException e) {
