@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 import it.polimi.ingsw.psp23.protocol.request.DrawCard;
+import it.polimi.ingsw.psp23.protocol.request.Land;
 import javafx.scene.control.Button;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
@@ -51,6 +52,7 @@ public class FlightPhaseController {
     public Label getTextLabel(){
         return textLabel;
     }
+
     public void setShip(StackPane ship){
         this.ship.getChildren().clear();
         this.ship.getChildren().add(ship);
@@ -85,5 +87,106 @@ public class FlightPhaseController {
         }
     }
 
+    public void planetsCommands(int id) {
+        button1.setText("Atterra Pianeta 1");
+        button2.setText("Atterra Pianeta 2");
+        button3.setText("Atterra Pianeta 3");
+        button4.setText("Atterra Pianeta 4");
+        button5.setText("Atterra Pianeta 5");
 
+        switch (id) {
+            // 4 pianeti
+            case 112, 206 -> {
+                button1.setManaged(true);
+                button1.setVisible(true);
+                button1.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(0));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button2.setManaged(true);
+                button2.setVisible(true);
+                button2.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(1));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button3.setManaged(true);
+                button3.setVisible(true);
+                button3.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(2));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button4.setManaged(true);
+                button4.setVisible(true);
+                button4.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(3));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+            }
+
+            // 3 pianeti
+            case 102, 114, 204, 207 -> {
+                button1.setManaged(true);
+                button1.setVisible(true);
+                button1.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(0));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button2.setManaged(true);
+                button2.setVisible(true);
+                button2.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(1));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button3.setManaged(true);
+                button3.setVisible(true);
+                button3.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(2));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+            }
+
+            // 2 pianeti
+            case 113, 205 -> {
+                button1.setManaged(true);
+                button1.setVisible(true);
+                button1.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(0));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+                button2.setManaged(true);
+                button2.setVisible(true);
+                button2.setOnAction(e -> {
+                    try {
+                        client.sendAction(new Land(1));
+                    } catch (RemoteException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                });
+            }
+        }
+    }
 }
