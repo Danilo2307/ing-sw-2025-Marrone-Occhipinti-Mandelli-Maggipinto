@@ -115,7 +115,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
 
     @Override
-    public void setup() { /*
+    public void setup() {
+        client.avvia();
+        /*
         Socket socket = client.getSocket();
         try {
             socket.setSoTimeout(1000);
@@ -176,12 +178,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showRequestLevel() {
-        lobbyController.showLevelChoice();
+        //lobbyController.showLevelChoice();
     }
 
     @Override
     public void showRequestNumPlayers() {
-        lobbyController.showNumPlayers();
+        //lobbyController.showNumPlayers();
     }
 
     @Override

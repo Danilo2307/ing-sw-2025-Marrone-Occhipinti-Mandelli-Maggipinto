@@ -28,6 +28,7 @@ public class LobbyController {
     // scelta partita
     @FXML private Button createGameBtn;
     @FXML private VBox lobbiesContainer;
+    private boolean creator = false;
 
     // username
     @FXML private Button done;
@@ -56,22 +57,26 @@ public class LobbyController {
             // Crea un bottone per ogni lobby
             for (int i = 0; i < availableLobbies.size(); i++) {
                 List<Integer> lobby = availableLobbies.get(i);
-                int current = lobby.get(0);
-                int max = lobby.get(1);
-                int lobbyId = i;
+                int id = lobby.get(0);
+                int current = lobby.get(1);
+                int max = lobby.get(2);
+                int level = lobby.get(3);
 
-                String label = String.format("Partita %d: giocatori presenti: %d e numero massimo: %d", lobbyId + 1, current, max);
+                String label = String.format("Partita %d:::  livello: %d ||| giocatori presenti: %d ||| numero massimo: %d", id+1, level, current, max);
                 Button joinButton = new Button(label);
                 joinButton.setOnAction(ev -> {
-                    hideLobbiesView();
-                    showUserChoice();  // il server avvia login+join
                     // la lambda cattura il rispettivo lobbyId al momento della creazione
                     try {
-                        client.sendAction(new UserDecision(lobbyId));
+                        // lato server faccio la conversione
+                        client.sendAction(new UserDecision(id+1));   // server fa la conversione a 0-based
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
+                    hideLobbiesView();
+                    showUserChoice();  // il server avvia login+join
+                    client.setId(id);  // setto 0-based come nel server
                 });
+
                 lobbiesContainer.getChildren().add(joinButton);
             }
         });
@@ -94,6 +99,7 @@ public class LobbyController {
         } catch (RemoteException ex) {
             throw new RuntimeException(ex);
         }
+        creator = true;
         hideLobbiesView();
         showLevelChoice();  // reindirizza al flow di creazione
     }
@@ -148,7 +154,7 @@ public class LobbyController {
             e.printStackTrace();
         }
         hideLevelChoice();
-        showNumPlayers();
+        showUserChoice();
     }
 
     @FXML
@@ -166,7 +172,7 @@ public class LobbyController {
         }
 
         hideLevelChoice();
-        showNumPlayers();
+        showUserChoice();
     }
 
     @FXML
@@ -194,6 +200,9 @@ public class LobbyController {
             }
         }catch (RemoteException e) {
             e.printStackTrace();
+        }
+        if (creator) {
+            showNumPlayers();
         }
     }
 
@@ -223,21 +232,18 @@ public class LobbyController {
     public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(2));
         hideNumPlayers();
-        showUserChoice();
     }
 
     @FXML
     public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(3));
         hideNumPlayers();
-        showUserChoice();
     }
 
     @FXML
     public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(4));
         hideNumPlayers();
-        showUserChoice();
     }
 
     public void flushText() {

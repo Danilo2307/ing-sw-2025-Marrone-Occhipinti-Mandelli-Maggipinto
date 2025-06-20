@@ -185,12 +185,9 @@ public class Server {
             try {
 
                 Socket socket = serverSocket.accept();
-
-
                 SocketHandler socketHandler = new SocketHandler(socket);
 
                 // Per prima cosa il server comunica al client che entra gli id delle partite disponibili a cui partecipare
-
                 ArrayList<List<Integer>> matchesAvailable = new ArrayList<>();
                 for(Game g : Server.getInstance().getGames()){
                     if(g.getGameStatus() == GameStatus.Setup && g.getNumRequestedPlayers() != -1) {
@@ -202,7 +199,6 @@ public class Server {
                         matchesAvailable.add(info);
                     }
                 }
-
                 socketHandler.sendMessage(new DirectMessage(new LobbyAvailable(matchesAvailable)));
 
                 /*Adesso devo adottare due comportamenti diversi in base alla scelta del client, ovvero se vorrà
@@ -210,12 +206,11 @@ public class Server {
                 A questo proposito al client vengono mostrati gli id delle partite in corso in modo che lui possa
                 scegliere a quale partecipare o creare direttamente un'altra partita
                 */
-
                 int choice = 0;
                 boolean loop = false;
                 do {
                     UserDecision userChoice = (UserDecision) socketHandler.readMessage().call(new GetActionVisitor());
-                    choice = userChoice.getChoice();
+                    choice = userChoice.getChoice();   // arriva 1-based, per questo faccio sempre choice-1
                     if(choice != 0 && (!games.keySet().contains(choice - 1) || games.get(choice - 1).getGameStatus() != GameStatus.Setup)){
                         loop = true;
                         socketHandler.sendMessage(new DirectMessage(new ErrorResponse("Inserimento non valido")));
@@ -223,7 +218,7 @@ public class Server {
                     else{
                         loop = false;
                     }
-                }while(loop);
+                } while(loop);
 
                 int gameIdConsidering = 0;
                 // Vuol dire che il player vuole creare una partita
@@ -255,7 +250,7 @@ public class Server {
                         socketHandler.sendMessage(new DirectMessage(new LobbyUnavailable()));
                         clients.remove(nameConnection);
                         UsersConnected.getInstance().removeClient(nameConnection, gameIdConsidering);
-                        throw new LobbyUnavailableException("Lobby unavailable");
+                        throw new LobbyUnavailableException("Lobby unavailable: riavvia il programma");
                     }
 
                     else if(UsersConnected.getInstance().getClients(gameIdConsidering).size() == 1){
