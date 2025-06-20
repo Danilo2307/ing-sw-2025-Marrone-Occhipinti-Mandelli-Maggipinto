@@ -14,6 +14,7 @@ import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
+import it.polimi.ingsw.psp23.protocol.response.LobbyAvailable;
 import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
@@ -142,7 +143,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
 
     @Override
-    public void setupRMI(String nameConnection) throws RemoteException{ /*
+    public void setupRMI(String nameConnection) throws RemoteException{
+
+        List<List<Integer>> matchesAvailable = client.getGameServer().getGamesAvailables();
+        client.getGameServer().sendToUser(nameConnection, new DirectMessage(new LobbyAvailable(matchesAvailable)));
+
+        /*
         if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1) {
 
             Message msg = (new DirectMessage(new SelectLevel()));

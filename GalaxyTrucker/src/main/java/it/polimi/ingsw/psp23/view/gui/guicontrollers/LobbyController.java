@@ -29,6 +29,7 @@ public class LobbyController {
     @FXML private Button createGameBtn;
     @FXML private VBox lobbiesContainer;
     private boolean creator = false;
+    private int RMIIdGameChosen;
 
     // username
     @FXML private Button done;
@@ -52,7 +53,6 @@ public class LobbyController {
     }
 
     public void showLobbies(List<List<Integer>> availableLobbies) {
-        System.out.println(availableLobbies);
         Platform.runLater(() -> {
             // Crea un bottone per ogni lobby
             for (int i = 0; i < availableLobbies.size(); i++) {
@@ -67,8 +67,16 @@ public class LobbyController {
                 joinButton.setOnAction(ev -> {
                     // la lambda cattura il rispettivo lobbyId al momento della creazione
                     try {
-                        // lato server faccio la conversione
-                        client.sendAction(new UserDecision(id+1));   // server fa la conversione a 0-based
+                        if (!client.isRmi()) {
+                            try {
+                                client.sendAction(new UserDecision(id+1));   // server fa la conversione a 0-based
+                            } catch (RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        else {
+                            RMIIdGameChosen = id+1;
+                        }
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
@@ -93,12 +101,14 @@ public class LobbyController {
     }
 
     @FXML
-    private void createGame()  {
-        try {
+    private void createGame() throws RemoteException {
+        if (!client.isRmi()) {
             client.sendAction(new UserDecision(0));
-        } catch (RemoteException ex) {
-            throw new RuntimeException(ex);
         }
+        else {
+            RMIIdGameChosen = 0;
+        }
+
         creator = true;
         hideLobbiesView();
         showLevelChoice();  // reindirizza al flow di creazione
@@ -181,10 +191,13 @@ public class LobbyController {
         if(client.isRmi()){
             try {
                 // TODO: client.getGameServer().setPlayerUsername(username);
-                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel(client.getId()))));
-                if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1){
-                    client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new RequestNumPlayers()));
+                if (RMIIdGameChosen == 0) {
+                    RMIIdGameChosen = client.getGameServer().getGamesSize();
+                    client.setId(RMIIdGameChosen - 1);
                 }
+                client.getGameServer().setPlayerUsername(username, RMIIdGameChosen-1);
+                client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new AppropriateUsername(username, client.getGameServer().getGameLevel(client.getId()))));
+
             }
             catch(PlayerExistsException e){
                 client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new WrongUsername()));
@@ -201,6 +214,7 @@ public class LobbyController {
         }catch (RemoteException e) {
             e.printStackTrace();
         }
+
         if (creator) {
             showNumPlayers();
         }

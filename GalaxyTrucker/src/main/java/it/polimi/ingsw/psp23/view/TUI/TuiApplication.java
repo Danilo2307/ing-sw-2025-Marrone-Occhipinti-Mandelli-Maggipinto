@@ -181,7 +181,7 @@ public class TuiApplication implements ViewAPI {
                 scanner = new Scanner(System.in);
                 username = scanner.nextLine();
 
-                int gameIdConsidering = scelta;
+                int gameIdConsidering = scelta; // 1-based
                 if(scelta == 0){
                     gameIdConsidering = client.getGameServer().getGamesSize();
                 }
