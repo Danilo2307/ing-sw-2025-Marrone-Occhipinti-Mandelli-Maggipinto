@@ -351,12 +351,71 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showNewCard(int id, String description) {
+
+        flightPhaseController.getButton1().setVisible(false);
+        flightPhaseController.getButton2().setVisible(false);
+        flightPhaseController.getButton3().setVisible(false);
+        flightPhaseController.getButton4().setVisible(false);
+        flightPhaseController.getButton5().setVisible(false);
+        flightPhaseController.getButton6().setVisible(false);
+
         Platform.runLater(() -> {
             flightPhaseController.getTextLabel().setText("");
             flightPhaseController.getButton1().setVisible(false);
             flightPhaseController.getButton1().setManaged(false);
             flightPhaseController.setCardImage(id);
         });
+
+        switch(gameStatus) {
+            case GameStatus.INIT_ABANDONEDSHIP -> {
+                flightPhaseController.getButton1().setText("Conquista Nave");
+                flightPhaseController.getButton1().setManaged(true);
+                flightPhaseController.getButton1().setVisible(true);
+            }
+            case GameStatus.INIT_PLANETS -> {
+                flightPhaseController.getButton1().setText("Atterra Pianeta 1");
+                flightPhaseController.getButton2().setText("Atterra Pianeta 2");
+                flightPhaseController.getButton3().setText("Atterra Pianeta 3");
+                flightPhaseController.getButton4().setText("Atterra Pianeta 4");
+                flightPhaseController.getButton5().setText("Atterra Pianeta 5");
+                switch(id){
+                    case 102 ->{
+                        flightPhaseController.getButton1().setManaged(true);
+                        flightPhaseController.getButton1().setVisible(true);
+                        flightPhaseController.getButton2().setManaged(true);
+                        flightPhaseController.getButton2().setVisible(true);
+                        flightPhaseController.getButton3().setManaged(true);
+                        flightPhaseController.getButton3().setVisible(true);
+                        flightPhaseController.getButton4().setManaged(true);
+                        flightPhaseController.getButton4().setVisible(true);
+                    }
+                    case 112 ->{
+
+                    }
+                    case 113 ->{
+
+                    }
+                    case 114 ->{
+
+                    }
+                    case 204 ->{
+
+                    }
+                    case 205 ->{
+
+                    }
+                    case 206 ->{
+
+                    }
+                    case 207 ->{
+
+                    }
+                }
+            }
+            case GameStatus.Playing -> {
+
+            }
+        }
     }
 
     @Override
