@@ -26,6 +26,7 @@ public class ClientRegistry extends UnicastRemoteObject implements ClientRegistr
 
         @Override
         public void unregisterClient(String nameConnection) throws RemoteException {
+            clients.get(nameConnection).disconnectClient();
             clients.remove(nameConnection);
             System.out.println("ClientRegistry: deregistrato " + nameConnection);
         }
@@ -63,5 +64,14 @@ public class ClientRegistry extends UnicastRemoteObject implements ClientRegistr
         @Override
         public String getPlayerNicknameFromConnection(String connection) throws RemoteException{
             return  players.get(connection);
+        }
+         @Override
+         public String getNameConnectionFromCallback(ClientCallbackInterface c) throws RemoteException{
+            for(String s : clients.keySet()){
+                if(clients.get(s).equals(c)){
+                    return s;
+                }
+            }
+            return null;
         }
 }

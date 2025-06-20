@@ -29,7 +29,7 @@ public class Test1 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        this.game = new Game(2,1);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -148,7 +148,7 @@ public class Test1 {
     void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         assertEquals(4, p3.getTruck().calculateCrew());
-        card.initPlay();
+        card.initPlay("Fede");
         //SOLO GIGI NE RISENTE
         assertEquals(2, p1.getTruck().calculateCrew());
         assertEquals(2, p2.getTruck().calculateCrew());

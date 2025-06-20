@@ -29,7 +29,7 @@ public class Test1 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        this.game = new Game(2,1);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -74,8 +74,8 @@ public class Test1 {
     @Test
     void testDockAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
-        card.help();
+        card.initPlay("Fede");
+        card.help("Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSTATION, game.getGameStatus());
 
         // Albi passa

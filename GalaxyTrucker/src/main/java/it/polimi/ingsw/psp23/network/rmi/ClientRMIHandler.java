@@ -16,14 +16,19 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.IncorrectWelding;
+import it.polimi.ingsw.psp23.protocol.response.MatchFinished;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHandlerInterface {
     private final ClientRegistryInterface registry;
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
     public ClientRMIHandler(ClientRegistryInterface registry) throws RemoteException{
         super();
@@ -59,7 +64,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
 
         //}
 
-
+        initializePing();
 
     }
 
@@ -193,14 +198,42 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public synchronized List<List<Integer>> getGamesAvailables() throws RemoteException{
         ArrayList<List<Integer>> matchesAvailable = new ArrayList<>();
         for(Game g : Server.getInstance().getGames()){
-            if(g.getGameStatus() == GameStatus.Setup) {
+            if(g.getGameStatus() == GameStatus.Setup && g.getNumRequestedPlayers() != -1) {
                 List<Integer> info = new ArrayList<>();
                 info.add(g.getId());
                 info.add(g.getPlayers().size());
                 info.add(g.getNumRequestedPlayers());
+                info.add(g.getLevel());
                 matchesAvailable.add(info);
             }
         }
         return matchesAvailable;
+    }
+
+    private void initializePing() throws RemoteException {
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                for (ClientCallbackInterface client : registry.getAllClients()) {
+                    try {
+                        client.sendHeartbeat();
+                    } catch (RemoteException e) {
+                        String nameConnection = registry.getNameConnectionFromCallback(client);
+                        String nickname = registry.getPlayerNicknameFromConnection(nameConnection);
+                        int gameId = UsersConnected.getInstance().getGameFromUsername(nickname).getId();
+                        // Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata perchè un player è uscito")), gameId);
+                        Server.getInstance().disconnectAll(gameId, nickname);
+                    }
+                }
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    public void disconnectAll(List<String> players) throws RemoteException {
+        for(String player : players) {
+            String nameConnection = registry.getPlayerConnectionFromNickname(player);
+            registry.unregisterClient(nameConnection);
+        }
     }
 }

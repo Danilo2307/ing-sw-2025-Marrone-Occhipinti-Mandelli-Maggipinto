@@ -744,7 +744,12 @@ public class TuiApplication implements ViewAPI {
     public void showAvailableLobbies(List<List<Integer>> availableLobbies) {
         io.print("Scegli se partecipare ad una partita esistente o se crearne una nuova\n\t0: crea una nuova partita\n");
         for (List<Integer> list : availableLobbies) {
-            io.print("\t" + (list.get(0)+1) + ": " + "numero di players presenti: " + list.get(1).toString() + ", numero di players massimo: " + list.get(2).toString() + "\n");
+            if(list.get(3) == 0) {
+                io.print("\t" + (list.get(0) + 1) + ": " + "volo di prova, numero di players presenti: " + list.get(1).toString() + ", numero di players massimo: " + list.get(2).toString() + "\n");
+            }
+            else{
+                io.print("\t" + (list.get(0) + 1) + ": " + "partita di livello " + list.get(3) + ", numero di players presenti: " + list.get(1).toString() + ", numero di players massimo: " + list.get(2).toString() + "\n");
+            }
         }
     }
 

@@ -8,4 +8,6 @@ import java.rmi.RemoteException;
 public interface ClientCallbackInterface extends Remote {
         void onReceivedMessage(Message message) throws RemoteException;
         void onError(String message) throws RemoteException;
+        void disconnectClient() throws RemoteException;
+        void sendHeartbeat() throws RemoteException;
 }

@@ -219,7 +219,7 @@ public class Smugglers extends Card {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
             lostCount += num;
-            if(lostCount == numItemsStolen || board.calculateGoods() == 0){
+            if(lostCount == numItemsStolen || (board.calculateGoods() == 0 && board.calculateBatteriesAvailable() == 0)){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                     Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
@@ -254,7 +254,7 @@ public class Smugglers extends Card {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.reduceBatteries(i, j, num);
             lostCount += num;
-            if(lostCount == numItemsStolen){
+            if(lostCount == numItemsStolen || board.calculateBatteriesAvailable() == 0){
                 if(game.getCurrentPlayerIndex() >= (game.getPlayers().size() - 1)){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                     Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
@@ -299,7 +299,7 @@ public class Smugglers extends Card {
         ));
         game.setCurrentPlayer(game.getPlayers().getFirst());
         for(Player p : game.getPlayers()){
-            if(p.getTruck().calculateGoods() == 0){
+            if(p.getTruck().calculateGoods() == 0 && p.getTruck().calculateBatteriesAvailable() == 0){
                 noGoods.add(p.getNickname());
             }
         }

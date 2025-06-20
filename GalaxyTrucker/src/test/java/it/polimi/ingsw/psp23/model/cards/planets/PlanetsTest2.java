@@ -32,7 +32,7 @@ public class PlanetsTest2 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance();
+        this.game = new Game(2,1);;
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -71,7 +71,7 @@ public class PlanetsTest2 {
     @Test
     void testLandingAndLoading() throws CardException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PLANETS, game.getGameStatus());
 
         // Albi atterra sul pianeta 1

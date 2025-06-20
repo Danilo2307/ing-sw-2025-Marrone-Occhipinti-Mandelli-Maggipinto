@@ -28,7 +28,7 @@ public class Test1 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        this.game = new Game(2,1);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -73,7 +73,7 @@ public class Test1 {
     @Test
     void testStardust() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(4, p1.getPosition());
         assertEquals(3, p2.getPosition());
         GameStatus after = game.getGameStatus();

@@ -7,11 +7,14 @@ import it.polimi.ingsw.psp23.model.Events.ShowWinners;
 import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
+import it.polimi.ingsw.psp23.model.enumeration.Challenge;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.NewCardDrawn;
+import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -188,6 +191,14 @@ public class Game {
         players.add(new Player(nickname, this));
     }
 
+    public synchronized void removePlayer(String nickname) {
+        for(Player player : players) {
+            if (player.getNickname().equals(nickname)) {
+                players.remove(player);
+            }
+        }
+    }
+
     public ArrayList<Component> getUncovered() {
         synchronized (uncovered) {
             return uncovered;
@@ -299,7 +310,9 @@ public class Game {
     public void setCurrentPlayer(Player player){
         currentPlayer = player;
         currentPlayerIndex = players.indexOf(player);
-        fireEvent(new TurnOf(getGameStatus(), currentPlayer.getNickname()));
+        if(gameStatus != GameStatus.Building && gameStatus != GameStatus.Setup && gameStatus != GameStatus.CheckBoards && gameStatus != GameStatus.SetCrew) {
+            fireEvent(new TurnOf(getGameStatus(), currentPlayer.getNickname()));
+        }
     }
 
     public void setCurrentPlayerIndex(int index){

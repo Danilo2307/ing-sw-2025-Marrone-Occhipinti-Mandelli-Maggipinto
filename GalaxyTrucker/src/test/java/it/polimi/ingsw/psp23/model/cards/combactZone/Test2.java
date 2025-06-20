@@ -8,6 +8,8 @@ import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.CombatZone;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.network.UsersConnected;
+import it.polimi.ingsw.psp23.network.socket.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +28,14 @@ public class Test2 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        Server.getInstance("localhost", 8000, null);
+        Server.getInstance().addGame(new Game(2,0));
+        UsersConnected.getInstance().addGame();
+        UsersConnected.getInstance().addClient("Albi", 0);
+        UsersConnected.getInstance().addClient("Fede", 0);
+        UsersConnected.getInstance().addClient("Gigi", 0);
+        game = Server.getInstance().getGame(0);
+
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -166,7 +175,7 @@ public class Test2 {
     @Test
     void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         //SI PARTE CON LA PRIMA SFIDA
         assertEquals(GameStatus.FIRST_COMBATZONE, game.getGameStatus());
         //ALBI ATTIVA UNO DEI SUOI CANNONI

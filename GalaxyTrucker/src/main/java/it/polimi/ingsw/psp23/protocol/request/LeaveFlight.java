@@ -27,13 +27,7 @@ public record LeaveFlight() implements Action {
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.CheckBoards && game.getGameStatus() != GameStatus.Building) {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
-        try {
-            game.getCurrentPlayer().setInGame(false);
-        }
-        // se entra nel catch vuol dire che non c'è un current player e quindi siamo all'inizio della partita prima di giocare la prima carta
-        catch (NullPointerException e) {
-            game.getPlayers().getFirst().setInGame(false);
-        }
+        game.getPlayerFromNickname(username).setInGame(false);
         Server.getInstance().sendMessage(username, new DirectMessage(new MatchFinished("Hai abbandonato il volo, attendi che finiscano anche gli altri giocatori\n")));
 
         for(Player player : game.getPlayers()){

@@ -25,7 +25,7 @@ public class Test3 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance();
+        this.game = new Game(2,1);;
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -74,7 +74,7 @@ public class Test3 {
     @Test
     void testBuyAndReduce() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
 
         // Albi COMPRA

@@ -29,4 +29,5 @@ public interface ClientRMIHandlerInterface extends Remote{
     int getGameLevel(int gameId) throws RemoteException;
     int getGamesSize() throws RemoteException;
     List<List<Integer>> getGamesAvailables() throws RemoteException;
+    void disconnectAll(List<String> players) throws RemoteException;
 }

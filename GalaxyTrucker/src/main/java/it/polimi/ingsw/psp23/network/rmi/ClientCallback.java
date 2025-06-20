@@ -30,4 +30,12 @@ public class ClientCallback extends UnicastRemoteObject implements ClientCallbac
     public void onError(String error) throws RemoteException{
         view.showError(error);
     }
+
+    @Override
+    public void disconnectClient() throws RemoteException {
+        UnicastRemoteObject.unexportObject(this, true);
+    }
+
+    @Override
+    public void sendHeartbeat() throws RemoteException {}
 }

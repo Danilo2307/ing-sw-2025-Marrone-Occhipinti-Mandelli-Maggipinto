@@ -29,7 +29,7 @@ public class Test3 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(0);
+        this.game = new Game(0,1);;
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -168,7 +168,7 @@ public class Test3 {
     @Test
     void test3MeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());
 
         // PRIMO METEORE

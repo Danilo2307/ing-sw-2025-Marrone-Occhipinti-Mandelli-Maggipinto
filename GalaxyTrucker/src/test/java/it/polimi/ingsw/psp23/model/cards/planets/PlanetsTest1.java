@@ -33,7 +33,7 @@ public class PlanetsTest1 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance();
+        this.game = new Game(2,1);;
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -72,7 +72,7 @@ public class PlanetsTest1 {
     @Test
     void testLandingAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PLANETS, game.getGameStatus());
 
         // Albi atterra sul pianeta 1

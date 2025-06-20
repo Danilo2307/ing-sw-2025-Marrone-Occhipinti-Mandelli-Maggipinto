@@ -20,13 +20,12 @@ public class BoardTest {
 
     @BeforeEach
     public void setup() {
-        Game.resetInstance();
-        Game.getInstance(2);
+        Game game = new Game(2, 1);
     }
 
     @Test
     public void testAddComponent() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test1");
         HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
         // la cabina centrale non richiede adiacenza
@@ -62,7 +61,7 @@ public class BoardTest {
 
     @Test
     public void testInvalidCoordinates() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test2");
 
         HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
@@ -87,7 +86,7 @@ public class BoardTest {
     // non ritesto l'invalidità delle coordinate o TypeMismatch perchè già coperti da altri test e la logica è identica
     public void testReduceBatteries() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test3");
         HousingUnit cabin = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         cabin.moveToHand();
         truck.addComponent(cabin, 2, 3);
@@ -108,7 +107,7 @@ public class BoardTest {
     @Test
     public void testCalculateEngineStrength() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test4");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -152,7 +151,7 @@ public class BoardTest {
     @Test
     public void testCalculateCannonStrength() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test5");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -218,7 +217,7 @@ public class BoardTest {
     @Test
     public void testCalculateGoodsSales() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test6");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -237,7 +236,7 @@ public class BoardTest {
     @Test
     public void testCalculateExposedConnectors() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test7");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -280,7 +279,7 @@ public class BoardTest {
     // DI SEGUITO VARI METODI PER TESTARE CHECK() CHE CONTROLLA LEGALITA' NAVE
     @Test
     public void testCheckTileOverGun() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test8");
 
         // cabina centrale obbligatoria per una nave valida
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -306,7 +305,7 @@ public class BoardTest {
 
     @Test
     public void testCheckTileUnderEngine() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test9");
 
         // cabina centrale
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -334,7 +333,7 @@ public class BoardTest {
 
     @Test
     public void testCheckSingleConnectorVSDouble() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test10");
 
         // cabina centrale
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -356,7 +355,7 @@ public class BoardTest {
 
     @Test
     public void testCheckConnectorVSEmpty() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test11");
 
         // cabina centrale
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -373,7 +372,7 @@ public class BoardTest {
 
     @Test
     public void testCheckEngineIsNotDown() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test12");
 
         // cabina centrale
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -390,7 +389,7 @@ public class BoardTest {
 
     @Test
     public void testCheckGeneral() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test13");
 
         // cabina centrale
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
@@ -431,7 +430,7 @@ public class BoardTest {
     @Test
     public void testDeleteNormal() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test14");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -449,7 +448,7 @@ public class BoardTest {
 
     @Test
     public void testDeleteGuns() {
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test15");
         HousingUnit h = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         h.moveToHand();
         truck.addComponent(h, 2, 3);
@@ -474,7 +473,7 @@ public class BoardTest {
     @Test
     public void testDeleteUnreachableTiles() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test16");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -514,7 +513,7 @@ public class BoardTest {
     @Test
     public void testDeleteUnreachableTile() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test17");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -554,7 +553,7 @@ public class BoardTest {
     @Test
     public void testCheckDeleteTileMultiplePaths() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test18");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -587,7 +586,7 @@ public class BoardTest {
     @Test
     public void testDeleteGeneral() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test19");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -629,7 +628,7 @@ public class BoardTest {
     @Test
     public void testCannonShotBig() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test20");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -672,7 +671,7 @@ public class BoardTest {
     @Test
     public void testCannonShotSmall() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test21");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -716,7 +715,7 @@ public class BoardTest {
     @Test
     public void testBigMeteor() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test22");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);
@@ -791,7 +790,7 @@ public class BoardTest {
     @Test
     public void testSmallMeteor() {
         // setup
-        Board truck = new Board(2);
+        Board truck = new Board(2, "test23");
         HousingUnit central = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         central.moveToHand();
         truck.addComponent(central, 2, 3);

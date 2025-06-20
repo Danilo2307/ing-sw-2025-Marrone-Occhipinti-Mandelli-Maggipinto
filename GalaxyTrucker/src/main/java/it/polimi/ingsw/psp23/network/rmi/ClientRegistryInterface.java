@@ -10,7 +10,7 @@ public interface ClientRegistryInterface extends Remote {
     void registerClient(String username, ClientCallbackInterface callback) throws RemoteException;
 
     /** Rimuove il callback per lo username indicato */
-    void unregisterClient(String username) throws RemoteException;
+    void unregisterClient(String nameConnection) throws RemoteException;
 
     /** Restituisce tutti i callback registrati */
     Collection<ClientCallbackInterface> getAllClients() throws RemoteException;
@@ -25,4 +25,6 @@ public interface ClientRegistryInterface extends Remote {
     String getPlayerConnectionFromNickname(String nickname) throws RemoteException;
 
     String getPlayerNicknameFromConnection(String connection) throws RemoteException;
+
+    String getNameConnectionFromCallback(ClientCallbackInterface c) throws RemoteException;
 }

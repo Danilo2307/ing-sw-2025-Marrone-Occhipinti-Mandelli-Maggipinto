@@ -4,6 +4,7 @@ import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.cards.RemoveBatteriesVisitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
@@ -22,7 +23,7 @@ public record RemoveBatteries(int x, int y, int num) implements Action {
         }
         Player p = game.getPlayerFromNickname(username);
         Board board = p.getTruck();
-        board.reduceBatteries(x, y, num);
+        game.getCurrentCard().call(new RemoveBatteriesVisitor(), username, x, y, num);
     }
 
     @Override

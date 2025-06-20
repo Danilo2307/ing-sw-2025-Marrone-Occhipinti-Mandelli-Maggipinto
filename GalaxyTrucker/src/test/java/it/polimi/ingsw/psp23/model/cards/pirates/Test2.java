@@ -29,7 +29,7 @@ public class Test2 {
 
     @BeforeEach
     void setUp() {
-        this.game = Game.getInstance(2);
+        this.game = new Game(2,1);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -146,7 +146,7 @@ public class Test2 {
     @Test
     void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
-        card.initPlay();
+        card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima

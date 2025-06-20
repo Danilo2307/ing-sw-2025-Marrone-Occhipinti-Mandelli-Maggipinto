@@ -319,7 +319,7 @@ public class CombatZone extends Card {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.removePreciousItem(i, j, num);
             countGood += num;
-            if (countGood == goodsLost || board.calculateGoods() == 0) {
+            if (countGood == goodsLost || (board.calculateGoods() == 0 && board.calculateBatteriesAvailable() == 0)) {
                 resolvers.clear();
                 loserThirdChallenge = findMinMembers(game.getPlayers()).getNickname();
                 game.setGameStatus(GameStatus.ENDTHIRD_COMBATZONE);
@@ -340,13 +340,13 @@ public class CombatZone extends Card {
             throw new CardException("User '" + username + "' is not the loser of the second challenge");
         }
         if(game.getPlayerFromNickname(username).getTruck().calculateGoods() > 0){
-            throw new CardException("You have to lose items");
+            throw new CardException("You have to lose items first");
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
             board.reduceBatteries(i, j, num);
             countGood += num;
-            if (countGood == goodsLost) {
+            if (countGood == goodsLost || board.calculateBatteriesAvailable() == 0) {
                 resolvers.clear();
                 loserThirdChallenge = findMinMembers(game.getPlayers()).getNickname();
                 game.setGameStatus(GameStatus.ENDTHIRD_COMBATZONE);
@@ -408,7 +408,8 @@ public class CombatZone extends Card {
             if(p.getTruck().calculateCrew() == 0){
                 noCrew.add(p.getNickname());
             }
-            if(p.getTruck().calculateGoods() == 0){
+            // if(p.getTruck().calculateGoods() + p.getTruck().calculateBatteriesAvailable() < goodsLost){
+            if(p.getTruck().calculateGoods() == 0 && p.getTruck().calculateBatteriesAvailable() == 0){
                 noGoods.add(p.getNickname());
             }
         }

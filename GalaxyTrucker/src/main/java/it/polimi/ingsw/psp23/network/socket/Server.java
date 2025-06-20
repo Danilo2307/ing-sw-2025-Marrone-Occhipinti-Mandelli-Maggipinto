@@ -121,18 +121,55 @@ public class Server {
         }
     }
 
-    public void disconnectAll() {
+    /*public void disconnectAll(int gameId) {
         synchronized (clients) {
             for (String stringa : clients.keySet()) {
-                try {
-                    SocketHandler socketHandler = clients.get(stringa);
-                    socketHandler.close();
-                    System.out.println("Chiuso client: " + stringa);
-                } catch (Exception e) {
-                    System.err.println("Errore chiudendo il client" + stringa + ": " + e.getMessage());
+                if (clients.get(stringa).getUsername().){
+                    try {
+                        SocketHandler socketHandler = clients.get(stringa);
+                        socketHandler.close();
+                        System.out.println("Chiuso client: " + stringa);
+                    } catch (Exception e) {
+                        System.err.println("Errore chiudendo il client" + stringa + ": " + e.getMessage());
+                    }
                 }
             }
             clients.clear();
+        }
+    }*/
+
+    public void disconnectAll(int gameId, String username) {
+
+        synchronized (games.get(gameId)) {
+            Game game = games.get(gameId);
+            Iterator<Player> it = game.getPlayers().iterator();
+            while (it.hasNext()) {
+                Player p = it.next();
+                if (p.getNickname().equals(username)) {
+                    it.remove();  // rimuove in modo sicuro l’elemento corrente
+                    break;        // esce se vuoi rimuovere solo il primo match
+                }
+            }
+            List<String> players = new ArrayList<>(game.getPlayers().stream().map(p -> p.getNickname()).collect(Collectors.toList()));
+            try {
+                for (String s : clients.keySet()) {
+                    String user = getUsernameForConnection(s);
+                    if (players.contains(user)) {
+                        try {
+                            SocketHandler socketHandler = clients.get(s);
+                            socketHandler.sendMessage(new DirectMessage(new MatchFinished("La partita è terminata perchè un player è uscito")));
+                            socketHandler.close();
+                            System.out.println("Chiuso client: " + s);
+                        } catch (RuntimeException e) {
+                            System.out.println("Eccezione lanciata nel disconnectAll di Server" + e.getMessage());
+                        }
+                        players.remove(getUsernameForConnection(s));
+                    }
+                }
+                rmiServer.disconnectAll(players);
+            } catch (RemoteException e) {
+                System.out.println("Messaggio inviato con esito negativo");
+            }
         }
     }
 
@@ -156,11 +193,12 @@ public class Server {
 
                 ArrayList<List<Integer>> matchesAvailable = new ArrayList<>();
                 for(Game g : Server.getInstance().getGames()){
-                    if(g.getGameStatus() == GameStatus.Setup) {
+                    if(g.getGameStatus() == GameStatus.Setup && g.getNumRequestedPlayers() != -1) {
                         List<Integer> info = new ArrayList<>();
                         info.add(g.getId());
                         info.add(g.getPlayers().size());
                         info.add(g.getNumRequestedPlayers());
+                        info.add(g.getLevel());
                         matchesAvailable.add(info);
                     }
                 }
