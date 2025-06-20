@@ -6,19 +6,28 @@ import it.polimi.ingsw.psp23.network.messages.LevelSelectionMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import it.polimi.ingsw.psp23.protocol.request.RegisterNumPlayers;
+import it.polimi.ingsw.psp23.protocol.request.UserDecision;
 import it.polimi.ingsw.psp23.protocol.response.AppropriateUsername;
 import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
 import it.polimi.ingsw.psp23.protocol.response.WrongUsername;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class LobbyController {
     private Client client;
+
+    // scelta partita
+    @FXML private Button createGameBtn;
+    @FXML private VBox lobbiesContainer;
 
     // username
     @FXML private Button done;
@@ -39,6 +48,54 @@ public class LobbyController {
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    public void showLobbies(List<List<Integer>> availableLobbies) {
+        System.out.println(availableLobbies);
+        Platform.runLater(() -> {
+            // Crea un bottone per ogni lobby
+            for (int i = 0; i < availableLobbies.size(); i++) {
+                List<Integer> lobby = availableLobbies.get(i);
+                int current = lobby.get(0);
+                int max = lobby.get(1);
+                int lobbyId = i;
+
+                String label = String.format("Partita %d: giocatori presenti: %d e numero massimo: %d", lobbyId + 1, current, max);
+                Button joinButton = new Button(label);
+                joinButton.setOnAction(ev -> {
+                    hideLobbiesView();
+                    showUserChoice();  // il server avvia login+join
+                    // la lambda cattura il rispettivo lobbyId al momento della creazione
+                    try {
+                        client.sendAction(new UserDecision(lobbyId));
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                lobbiesContainer.getChildren().add(joinButton);
+            }
+        });
+    }
+
+    private void hideLobbiesView() {
+        Platform.runLater(() -> {
+            createGameBtn.setVisible(false);
+            createGameBtn.setManaged(false);
+            lobbiesContainer.getChildren().clear();
+            lobbiesContainer.setVisible(false);
+            lobbiesContainer.setManaged(false);
+        });
+    }
+
+    @FXML
+    private void createGame()  {
+        try {
+            client.sendAction(new UserDecision(0));
+        } catch (RemoteException ex) {
+            throw new RuntimeException(ex);
+        }
+        hideLobbiesView();
+        showLevelChoice();  // reindirizza al flow di creazione
     }
 
     public void showLevelChoice() {
@@ -91,7 +148,7 @@ public class LobbyController {
             e.printStackTrace();
         }
         hideLevelChoice();
-        showUserChoice();
+        showNumPlayers();
     }
 
     @FXML
@@ -109,11 +166,11 @@ public class LobbyController {
         }
 
         hideLevelChoice();
-        showUserChoice();
+        showNumPlayers();
     }
 
     @FXML
-    public void onDoneClicked(javafx.event.ActionEvent actionEvent) throws RemoteException{
+    public void onDoneClicked() throws RemoteException{
         String username = usernameField.getText();
         if(client.isRmi()){
             try {
@@ -127,6 +184,7 @@ public class LobbyController {
                 client.getGameServer().sendToUser(client.getNameConnection(), new DirectMessage(new WrongUsername()));
             }
         }
+        // questo comando invia anche azione
         client.setUsername(username);
         try{
             if(client.isRmi()) {
@@ -165,23 +223,28 @@ public class LobbyController {
     public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(2));
         hideNumPlayers();
+        showUserChoice();
     }
 
     @FXML
     public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(3));
         hideNumPlayers();
+        showUserChoice();
     }
 
     @FXML
     public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(4));
         hideNumPlayers();
+        showUserChoice();
     }
 
     public void flushText() {
         usernameField.setText("");
     }
+
+
 
 
 

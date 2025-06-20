@@ -4,11 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane  stylesheets="@lobby-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.LobbyController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1152.0" stylesheets="@lobby-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.LobbyController">
    <children>
-      <TextField fx:id="usernameField"  managed="false" prefHeight="30.0" visible="false" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="420.0" />
+      <TextField fx:id="usernameField" managed="false" prefHeight="30.0" visible="false" AnchorPane.leftAnchor="350.0" AnchorPane.rightAnchor="350.0" AnchorPane.topAnchor="420.0" />
 
       <Label fx:id="usernameLabel" alignment="CENTER" managed="false" text="Inserisci il tuo username:" textFill="WHITE" visible="false" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="380.0">
          <font>
@@ -17,12 +18,12 @@
       </Label>
 
       <Button fx:id="done" managed="false" onAction="#onDoneClicked" prefHeight="30.0" styleClass="done-button" text="Fatto" visible="false" AnchorPane.leftAnchor="400.0" AnchorPane.rightAnchor="400.0" AnchorPane.topAnchor="480.0" />
-      <Button fx:id="trialLevel" styleClass="generic-button" layoutX="360.0" layoutY="500.0" managed="false" minWidth="46.0" mnemonicParsing="false" onAction="#onTrialLevel" prefHeight="30.0" prefWidth="190.0" text="Volo di prova" visible="false" >
+      <Button fx:id="trialLevel" layoutX="360.0" layoutY="500.0" managed="false" minWidth="46.0" mnemonicParsing="false" onAction="#onTrialLevel" prefHeight="30.0" prefWidth="190.0" styleClass="generic-button" text="Volo di prova" visible="false">
       <font>
          <Font name="Arial Black" size="15.0" />
       </font>
       </Button>
-      <Button fx:id="twoLevel" styleClass="generic-button" layoutX="640.0" layoutY="500.0" managed="false" mnemonicParsing="false" onAction="#onTwoLevel" prefHeight="30.0" prefWidth="190.0" text="Volo di livello 2" visible="false" >
+      <Button fx:id="twoLevel" layoutX="640.0" layoutY="500.0" managed="false" mnemonicParsing="false" onAction="#onTwoLevel" prefHeight="30.0" prefWidth="190.0" styleClass="generic-button" text="Volo di livello 2" visible="false">
       <font>
          <Font name="Arial Black" size="15.0" />
       </font>
@@ -37,20 +38,27 @@
             <Font name="Arial Black" size="23.0" />
          </font>
       </Label>
-      <Button fx:id="twoPlayersButton" styleClass="generic-button" prefWidth="60" layoutY="500.0" layoutX="435.0" managed="false" mnemonicParsing="false" onAction="#onSelectTwoPlayers" text="2" visible="false">
+      <Button fx:id="twoPlayersButton" layoutX="435.0" layoutY="500.0" managed="false" mnemonicParsing="false" onAction="#onSelectTwoPlayers" prefWidth="60" styleClass="generic-button" text="2" visible="false">
          <font>
             <Font name="Arial Black" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="threePlayersButton" styleClass="generic-button" prefWidth="60" layoutY="500.0" layoutX="535.0" managed="false" mnemonicParsing="false" onAction="#onSelectThreePlayers" text="3" visible="false">
+      <Button fx:id="threePlayersButton" layoutX="535.0" layoutY="500.0" managed="false" mnemonicParsing="false" onAction="#onSelectThreePlayers" prefWidth="60" styleClass="generic-button" text="3" visible="false">
          <font>
             <Font name="Arial Black" size="16.0" />
          </font>
       </Button>
-      <Button fx:id="fourPlayersButton" layoutY="500.0" prefWidth="60" styleClass="generic-button" layoutX="635.0" managed="false" mnemonicParsing="false" onAction="#onSelectFourPlayers" text="4" visible="false">
+      <Button fx:id="fourPlayersButton" layoutX="635.0" layoutY="500.0" managed="false" mnemonicParsing="false" onAction="#onSelectFourPlayers" prefWidth="60" styleClass="generic-button" text="4" visible="false">
          <font>
             <Font name="Arial Black" size="16.0" />
          </font>
       </Button>
+
+      <Button fx:id="createGameBtn" layoutX="23.0" layoutY="420.0" onAction="#createGame" prefHeight="40.0" prefWidth="174.0" text="Crea nuova partita">
+         <font>
+            <Font name="Arial Black" size="12.0" />
+         </font></Button>
+
+      <VBox fx:id="lobbiesContainer" layoutX="277.0" layoutY="391.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="354.0" prefWidth="466.0" spacing="10.0" />
    </children>
 </AnchorPane>

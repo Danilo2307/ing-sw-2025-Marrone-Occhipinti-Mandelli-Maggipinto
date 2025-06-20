@@ -113,8 +113,9 @@ public class GuiApplication extends Application implements ViewAPI {
         this.client = client;
     }
 
+
     @Override
-    public void setup() {
+    public void setup() { /*
         Socket socket = client.getSocket();
         try {
             socket.setSoTimeout(1000);
@@ -135,10 +136,11 @@ public class GuiApplication extends Application implements ViewAPI {
         catch (SocketException e) {
             throw new RuntimeException(e);
         }
-    }
+     */ }
+
 
     @Override
-    public void setupRMI(String nameConnection) throws RemoteException{
+    public void setupRMI(String nameConnection) throws RemoteException{ /*
         if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1) {
 
             Message msg = (new DirectMessage(new SelectLevel()));
@@ -146,7 +148,7 @@ public class GuiApplication extends Application implements ViewAPI {
         }
         else{
             lobbyController.showUserChoice();
-        }
+        }*/
     }
 
     public void toBuildingPhase(Color playerColor) {
@@ -171,7 +173,6 @@ public class GuiApplication extends Application implements ViewAPI {
         }
 
     }
-
 
     @Override
     public void showRequestLevel() {
@@ -539,7 +540,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showAvailableLobbies(List<List<Integer>> availableLobbies){
-        // TODO: Implementare!!!!
+        lobbyController.showLobbies(availableLobbies);
     }
 
 
