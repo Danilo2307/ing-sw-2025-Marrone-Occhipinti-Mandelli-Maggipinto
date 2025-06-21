@@ -84,4 +84,5 @@ public interface ActionVisitor<T> {
 
     public T visitForRequestFlightBoard(RequestFlightBoard requestFlightBoard, String username);
 
+    public T visitForEarnCredits(EarnCredits earnCredits, String username);
 }

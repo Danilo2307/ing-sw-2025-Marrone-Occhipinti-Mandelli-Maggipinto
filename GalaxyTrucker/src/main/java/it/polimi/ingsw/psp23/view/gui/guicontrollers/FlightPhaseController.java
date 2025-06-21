@@ -23,6 +23,7 @@ public class FlightPhaseController {
     @FXML Button button5;
     @FXML Button button6;
     @FXML ImageView card;
+    @FXML Button drawBtn;
     @FXML Label textLabel;
     @FXML StackPane ship;
     @FXML GridPane shipGrid;
@@ -329,4 +330,76 @@ public class FlightPhaseController {
 
         });
     }
+
+    public void slaversCommands() {
+        Platform.runLater(() -> {
+            button1.setText("Attiva cannone");
+           enable(button1);
+           button2.setText("Pronto");
+           enable(button2);
+           button3.setText("Riduci equipaggio");
+           enable(button3);
+           button4.setText("Balza la ricompensa");
+           enable(button4);
+           button5.setText("Prendi i crediti");
+           enable(button5);
+
+           button1.setOnAction(e -> {
+               doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
+                  int cx = cannon.x();
+                  int cy = cannon.y();
+                  int bx = battery.x();
+                  int by = battery.y();
+                  try {
+                      client.sendAction(new ActivateCannon(cx, cy, bx, by));
+                      doubleSelector = null;
+                  }
+                  catch (RemoteException ex) {
+                      ex.printStackTrace();
+                  }
+              });
+           });
+
+           button2.setOnAction(e -> {
+               try {
+                   client.sendAction(new Ready());
+               } catch (RemoteException ex) {
+                   throw new RuntimeException(ex);
+               }
+           });
+
+           button3.setOnAction(e -> {
+              singleSelector = new SingleTileSelector(coord -> {
+                  int x = coord.x();
+                  int y = coord.y();
+
+                  try {
+                      client.sendAction(new ReduceCrew(x,y,1));
+                      singleSelector = null;
+                  } catch (RemoteException ex) {
+                      throw new RuntimeException(ex);
+                  }
+              });
+           });
+
+           button4.setOnAction(e -> {
+               try {
+                   client.sendAction(new NextTurn());
+               } catch (RemoteException ex) {
+                   ex.printStackTrace();
+               }
+           });
+
+           button5.setOnAction(e -> {
+               try {
+                   client.sendAction(new EarnCredits());
+               } catch (RemoteException ex) {
+                   ex.printStackTrace();
+               }
+           });
+
+        });
+    }
+
+
 }

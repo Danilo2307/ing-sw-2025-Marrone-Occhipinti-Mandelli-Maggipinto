@@ -247,4 +247,10 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
         requestFlightBoard.handle(username);
         return null;
     }
+
+    @Override
+    public Void visitForEarnCredits(EarnCredits earnCredits, String username) {
+        earnCredits.handle(username);
+        return null;
+    }
 }
