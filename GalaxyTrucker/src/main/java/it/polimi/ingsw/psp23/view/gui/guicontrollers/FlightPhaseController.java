@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import it.polimi.ingsw.psp23.network.Client;
-import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -28,7 +27,8 @@ public class FlightPhaseController {
     @FXML StackPane ship;
     @FXML GridPane shipGrid;
 
-    private TwoStepsTileSelector tileSelector = null;
+    private SingleTileSelector singleSelector = null;
+    private TwoStepsTileSelector doubleSelector = null;
 
 
     public void setClient(Client client) {
@@ -72,16 +72,23 @@ public class FlightPhaseController {
                 int row = r == null ? 0 : r;
                 int col = c == null ? 0 : c;
 
+                // utente ha cliccato bottone che prevede un click sulla ship
+                if (singleSelector != null) {
+                    singleSelector.handleClick(row, col);
+                }
+                /// OSS: ogni volta che invio azione devo rimettere i selector a null, così da resettare e permettere nuovi click
+                // utente ha cliccato bottone che prevede doppio sulla ship (attivazioni)
+                else if (doubleSelector != null) {
+                    doubleSelector.handleClick(row, col);
+                }
+
                 // se non è stata selezionata alcuna modalità --> info
-                if (tileSelector == null) {
+                else {
                     try {
                         client.sendAction(new RequestTileInfo(row, col));
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
-                }
-                else {
-                    tileSelector.handleClick(row, col);
                 }
             });
         }
@@ -144,7 +151,7 @@ public class FlightPhaseController {
 
             button1.setOnAction(event -> {
                 // creo il selector
-                tileSelector = new TwoStepsTileSelector( (engine, battery) -> {
+                doubleSelector = new TwoStepsTileSelector( (engine, battery) -> {
                     // callback dopo i 2 click
                     int ex = engine.x();
                     int ey = engine.y();
@@ -153,7 +160,7 @@ public class FlightPhaseController {
                     try {
                         // invio azione e resetto il selettore
                         client.sendAction(new ActivateEngine(ex, ey, bx, by));
-                        tileSelector = null;
+                        doubleSelector = null;
                     }
                     catch (RemoteException e) {
                         e.printStackTrace();
@@ -270,5 +277,56 @@ public class FlightPhaseController {
                 });
             }
         }
+    }
+
+    public void startdustCommands() {
+        Platform.runLater(() -> {
+            textLabel.setText("Non puoi fare nulla: perderai giorni di volo in base al numero di connettori esposti");
+        });
+    }
+
+
+    public void abandonedshipCommands() {
+        Platform.runLater(() -> {
+            button1.setText("Compra nave");
+            enable(button1);
+            button2.setText("Passa");
+            enable(button2);
+            button3.setText("Riduci equipaggio");
+            enable(button3);
+
+            button1.setOnAction(e -> {
+                try {
+                    client.sendAction(new BuyShip());
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+            button2.setOnAction(e -> {
+                try {
+                    client.sendAction(new NextTurn());
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
+
+            button3.setOnAction(e -> {
+                // creo selettore per ridurre
+                singleSelector = new SingleTileSelector(coord -> {
+                    int x = coord.x();
+                    int y = coord.y();
+                    try {
+                        // invio azione e resetto selettore
+                        client.sendAction(new ReduceCrew(x, y, 1));
+                        singleSelector = null;
+                    }
+                    catch (RemoteException ex) {
+                        ex.printStackTrace();
+                    }
+                });
+            });
+
+        });
     }
 }

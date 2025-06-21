@@ -360,7 +360,6 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showNewCard(int id, String description) {
-
         Platform.runLater(() -> {
             flightPhaseController.getTextLabel().setText("");
             flightPhaseController.disableAllButtons();
@@ -368,13 +367,14 @@ public class GuiApplication extends Application implements ViewAPI {
         });
 
         switch(gameStatus) {
+            case INIT_STARDUST -> {
+                flightPhaseController.startdustCommands();
+            }
             case INIT_OPENSPACE -> {
                 flightPhaseController.openSpaceCommands();
             }
             case GameStatus.INIT_ABANDONEDSHIP -> {
-                flightPhaseController.getButton1().setText("Conquista Nave");
-                flightPhaseController.getButton1().setManaged(true);
-                flightPhaseController.getButton1().setVisible(true);
+                flightPhaseController.abandonedshipCommands();
             }
             case GameStatus.INIT_PLANETS -> {
                 flightPhaseController.planetsCommands(id);

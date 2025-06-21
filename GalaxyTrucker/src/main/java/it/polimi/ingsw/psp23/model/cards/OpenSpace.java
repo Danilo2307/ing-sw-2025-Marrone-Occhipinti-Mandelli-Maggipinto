@@ -81,7 +81,7 @@ public class OpenSpace extends Card {
      */
     public String help(String username) {
         if (UsersConnected.getInstance().getGameFromUsername(username).getGameStatus() == GameStatus.INIT_OPENSPACE) {
-            return "Available commands: ATTIVA CANNONE, PRONTO\n";
+            return "Available commands: ATTIVA MOTORE, PRONTO\n";
         }
         return "No commands available in current phase.\n";
     }
