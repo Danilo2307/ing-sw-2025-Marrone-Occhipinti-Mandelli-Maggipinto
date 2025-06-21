@@ -1,10 +1,14 @@
 package it.polimi.ingsw.psp23.model.Game;
 
-
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
+
+/**
+ * This class represents the initialization of a player's ship with various components.
+ * It employs the Singleton design pattern to ensure that only one instance of the class is created and used.
+ */
 public class inizializzazioneNave {
 
     private static inizializzazioneNave instance;
@@ -19,6 +23,14 @@ public class inizializzazioneNave {
         return instance;
     }
 
+
+    /**
+     * Populates the player's ship (truck) with various components such as cannons, housing units,
+     * structural components, battery hubs, engines, and alien add-ons. Each component is initialized,
+     * moved to the player's hand, and added to specific locations on the ship's board.
+     *
+     * @param p the player whose ship is being populated
+     */
     public void popolaNave(Player p) {
         Board nave = p.getTruck();
 

@@ -1,17 +1,38 @@
 package it.polimi.ingsw.psp23.model.Game;
+
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 
 import java.util.ArrayList;
 
-// Utility Class che istanzia tutti i componenti della nave
+
+/**
+ * The ComponentFactory class is a factory for creating Component objects. 
+ * This class is designed to generate and manage the creation of every 
+ * type of components used in a game. It is intended to be used as a 
+ * static utility class and cannot be instantiated.
+ *
+ * Methods in this class include a primary method for generating all components
+ * at a specified game level, as well as private helper methods for creating
+ * different categories of components. The generated components are returned 
+ * as collections for further processing or integration into the game.
+ */
 public class ComponentFactory {
 
-    // costruttore private e vuoto, così impedisco istanziazione: i components vengono creati una sola volta chiamando dal Game ComponentFactory.generateAllComponents()
+    // private empty constructor to prevent instantiation: components are created only once by calling ComponentFactory.generateAllComponents() from Game
     private ComponentFactory() {}
 
-    // non necessita di uno stato interno dell'oggetto; può essere usato senza l'istanza della classe
+    /**
+     * Generates a list of all available components based on the specified level.
+     * This method aggregates various categories of components, such as containers, 
+     * housing units, cannons, engines, shields, structural components, battery hubs, 
+     * and optionally alien add-ons if the level is set to 2.
+     *
+     * @param level the level of components to be generated. If level is 2, alien add-ons 
+     *              are included in the result.
+     * @return a list of all components available for the specified level.
+     */
     public static ArrayList<Component> generateAllComponents(int level) {
         ArrayList<Component> components = new ArrayList<>();
         components.addAll(generateContainers());
@@ -28,11 +49,19 @@ public class ComponentFactory {
         return components;
     }
 
-    // sottometodi statici perchè anche questi non devono essere chiamati su oggetti. Privati perchè sono metodi di supporto che servono solo alla classe.
+    /**
+     * Generates a list of container components with predefined properties.
+     * The containers are categorized by specific attributes such as connectors,
+     * color, weight, and unique identifiers. This method is a helper function 
+     * specific to the ComponentFactory class and provides the list of container 
+     * components for further use in the application.
+     *
+     * @return an ArrayList of Component objects representing the generated containers.
+     */
     private static ArrayList<Component> generateContainers() {
         ArrayList<Component> subComponents = new ArrayList<>();
-        // ordine Side: up, down, left, right
-        // tutti container blu
+        // Side order: up, down, left, right
+        // every blue container
         subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 11));
         subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 12));
         subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(), 13 ));
@@ -48,7 +77,7 @@ public class ComponentFactory {
         subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 113 ));
         subComponents.add(new Container( Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 114 ));
         subComponents.add(new Container(Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, 3, Color.Blue, new ArrayList<>(), 115 ));
-        // tutti container rossi
+        // every red container
         subComponents.add(new Container(Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 116 ));
         subComponents.add(new Container(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 1, Color.Red, new ArrayList<>(), 117 ));
         subComponents.add(new Container(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, 1, Color.Red, new ArrayList<>(), 118 ));
@@ -62,10 +91,18 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of housing unit components with predefined properties.
+     * Each housing unit is configured with specific connector types, orientations,
+     * and unique identifiers. The generated components are added to an ArrayList
+     * for further use within the application.
+     *
+     * @return an ArrayList of Component objects representing the generated housing units.
+     */
     private static ArrayList<Component> generateHousingUnits() {
         ArrayList<Component> subComponents = new ArrayList<>();
-        // ordine Side: up, down, left, right
-        // cabine normali (quelle speciali le istanzio da un'altra parte perchè non finiranno nel "mucchio" heap
+        // Side order: up, down, left, right
+        // Regular housing units (special ones are instantiated elsewhere because they won't go in the heap)
         subComponents.add(new HousingUnit(Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, false, 21));
         subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 22));
         subComponents.add(new HousingUnit(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 23));
@@ -87,10 +124,19 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of cannon components with predefined properties.
+     * The cannons are categorized based on their configuration, which includes
+     * aspects such as connector types, orientations, and whether they are single
+     * or double cannons. These components are created with unique identifiers
+     * and specific attributes tailored for use in the application.
+     *
+     * @return an ArrayList of Component objects representing the generated cannons.
+     */
     private static ArrayList<Component> generateCannons() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        // genero tutti i singoli
+        // generate all single cannons
         subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 31));
         subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 32));
         subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, false, 33));
@@ -117,7 +163,7 @@ public class ComponentFactory {
         subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 324));
         subComponents.add(new Cannon(Side.GUN, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 325));
 
-        // genero tutti i doppi
+        // generate all double cannons
         subComponents.add(new Cannon(Side.GUN, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true, 326));
         subComponents.add(new Cannon(Side.GUN, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, true, 327));
         subComponents.add(new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, true, 328));
@@ -133,10 +179,21 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of engine components with predefined properties.
+     * The engines are differentiated based on their connector types,
+     * orientations, and whether they are single or double engines.
+     * Each engine is assigned a unique identifier and specific attributes.
+     * This method is a helper function specific to the ComponentFactory class
+     * and is used to provide a list of engine components for further use
+     * within the application.
+     *
+     * @return an ArrayList of Component objects representing the generated engines.
+     */
     private static ArrayList<Component> generateEngines() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        //genero tutti i singoli
+        //generate all single engines
         subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 41));
         subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, false, 42));
         subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, false, 43));
@@ -159,7 +216,7 @@ public class ComponentFactory {
         subComponents.add(new Engine(Side.EMPTY, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, false, 420));
         subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, false, 421));
 
-        // genero tutti i doppi
+        // generate all double engines
         subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true, 422));
         subComponents.add(new Engine(Side.SINGLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, true, 423));
         subComponents.add(new Engine(Side.DOUBLE_CONNECTOR, Side.ENGINE, Side.EMPTY, Side.EMPTY, true, 424));
@@ -173,6 +230,14 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of shield components with predefined properties.
+     * Each shield is configured with specific sides and a unique identifier.
+     * The method creates and adds several Shield objects to an ArrayList
+     * and returns this list for further use within the application.
+     *
+     * @return an ArrayList of Component objects representing the generated shield components.
+     */
     private static ArrayList<Component> generateShields() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
@@ -188,10 +253,19 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of structural components with predefined properties.
+     * Each structural component is configured with specific connector types
+     * on its sides and assigned a unique identifier. These components are
+     * used as tubular elements in the application and contribute to the
+     * overall structure.
+     *
+     * @return an ArrayList of Component objects representing the generated structural components.
+     */
     private static ArrayList<Component> generateStructuralComponents() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        // ordine Side: up, down, left, right
+        // Side order: up, down, left, right
         subComponents.add(new StructuralComponent(Side.UNIVERSAL_CONNECTOR,  Side.EMPTY, Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 61));
         subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 62));
         subComponents.add(new StructuralComponent(Side.SINGLE_CONNECTOR,  Side.SINGLE_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 63));
@@ -204,10 +278,19 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of battery hub components with predefined properties.
+     * This method creates a collection of BatteryHub objects, configured with
+     * specific connector types, battery counts, and unique identifiers.
+     * The generated components are added to an ArrayList for further use
+     * within the application.
+     *
+     * @return an ArrayList of Component objects representing the generated battery hubs.
+     */
     private static ArrayList<Component> generateBatteryHubs() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        // genero tutte quelle da 2
+        // generate all battery hubs with two batteries
         subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 2, 71));
         subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2, 72));
         subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, 2, 73));
@@ -220,7 +303,7 @@ public class ComponentFactory {
         subComponents.add(new BatteryHub(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, 710));
         subComponents.add(new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, 2, 711));
 
-        // genero i pacchi da 3 batterie
+        // generate all battery hubs with three batteries
         subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, 3, 712));
         subComponents.add(new BatteryHub(Side.SINGLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, 3, 713));
         subComponents.add(new BatteryHub(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, 714));
@@ -231,10 +314,19 @@ public class ComponentFactory {
         return subComponents;
     }
 
+    /**
+     * Generates a list of alien add-on components with predefined properties.
+     * The alien add-ons are categorized based on their connector types, colors,
+     * orientations, and unique identifiers. This method creates and adds
+     * several AlienAddOns objects to an ArrayList and returns this list for
+     * further use within the application.
+     *
+     * @return an ArrayList of Component objects representing the generated alien add-ons.
+     */
     private static ArrayList<Component> generateAlienAddOns() {
         ArrayList<Component> subComponents = new ArrayList<>();
 
-        // genero i supporti marroni
+        // generate all brown alien add ons
         subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown, 81));
         subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.SINGLE_CONNECTOR, Side.SINGLE_CONNECTOR, Color.Brown, 82));
         subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown, 83));
@@ -242,7 +334,7 @@ public class ComponentFactory {
         subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Brown, 85));
         subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Brown, 86));
 
-        // genero tutti i supporti viola
+        // generate all purple alien add ons
         subComponents.add(new AlienAddOns(Side.SINGLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple, 87));
         subComponents.add(new AlienAddOns(Side.DOUBLE_CONNECTOR, Side.EMPTY, Side.DOUBLE_CONNECTOR, Side.DOUBLE_CONNECTOR, Color.Purple, 88));
         subComponents.add(new AlienAddOns(Side.EMPTY, Side.EMPTY, Side.UNIVERSAL_CONNECTOR, Side.EMPTY, Color.Purple, 89));
