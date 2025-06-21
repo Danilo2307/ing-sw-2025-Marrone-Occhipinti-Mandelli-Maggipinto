@@ -21,7 +21,7 @@
                         <Image url="@../it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg" />
                     </image>
                 </ImageView>
-                <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="659.0" StackPane.alignment="CENTER">
+                <GridPane fx:id="shipGrid" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="476.0" prefWidth="659.0" StackPane.alignment="CENTER">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="94" minWidth="94" prefWidth="94" />
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="94" minWidth="94" prefWidth="94" />
@@ -47,27 +47,27 @@
             </font></Button>
         <ToolBar fx:id="mainCommands" layoutX="833.0" layoutY="428.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="293.0" prefWidth="242.0" style="-fx-background-color: transparent;">
             <items>
-                <Button fx:id="button1" layoutX="733.0" layoutY="345.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="209.0" styleClass="default-button" text="Bottone 1" visible="false" managed="false">
+                <Button fx:id="button1" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="209.0" styleClass="default-button" text="Bottone 1" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
-                <Button fx:id="button2" layoutX="733.0" layoutY="345.0" mnemonicParsing="false"  prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 2" visible="false" managed="false">
+                <Button fx:id="button2" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 2" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
-                <Button fx:id="button3" mnemonicParsing="false"  prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 3" visible="false" managed="false">
+                <Button fx:id="button3" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 3" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
-                <Button fx:id="button4" mnemonicParsing="false"  prefHeight="39.0" prefWidth="211.0" styleClass="default-button" text="Bottone 4" textFill="#121212" visible="false" managed="false">
+                <Button fx:id="button4" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="211.0" styleClass="default-button" text="Bottone 4" textFill="#121212" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
-                <Button fx:id="button5" mnemonicParsing="false"  prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 5" visible="false" managed="false">
+                <Button fx:id="button5" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 5" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
-                <Button fx:id="button6" mnemonicParsing="false"  prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 6" visible="false" managed="false">
+                <Button fx:id="button6" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 6" visible="false">
                     <font>
                         <Font name="Arial Black" size="18.0" />
                     </font></Button>
@@ -78,7 +78,7 @@
                 <Font name="Arial Black" size="13.0" />
             </font>
         </Button>
-      <Label fx:id = "textLabel" alignment="TOP_LEFT" layoutX="36.0" layoutY="14.0" prefHeight="182.0" prefWidth="750.0" text="Settore dove verrà inserito il testo" textFill="WHITE">
+      <Label fx:id="textLabel" alignment="TOP_LEFT" layoutX="36.0" layoutY="14.0" prefHeight="182.0" prefWidth="750.0" text="Settore dove verrà inserito il testo" textFill="WHITE">
          <font>
             <Font name="Arial Black" size="18.0" />
          </font>

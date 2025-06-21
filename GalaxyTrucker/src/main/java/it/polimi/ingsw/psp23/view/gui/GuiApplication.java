@@ -361,21 +361,16 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void showNewCard(int id, String description) {
 
-        flightPhaseController.getButton1().setVisible(false);
-        flightPhaseController.getButton2().setVisible(false);
-        flightPhaseController.getButton3().setVisible(false);
-        flightPhaseController.getButton4().setVisible(false);
-        flightPhaseController.getButton5().setVisible(false);
-        flightPhaseController.getButton6().setVisible(false);
-
         Platform.runLater(() -> {
             flightPhaseController.getTextLabel().setText("");
-            flightPhaseController.getButton1().setVisible(false);
-            flightPhaseController.getButton1().setManaged(false);
+            flightPhaseController.disableAllButtons();
             flightPhaseController.setCardImage(id);
         });
 
         switch(gameStatus) {
+            case INIT_OPENSPACE -> {
+                flightPhaseController.openSpaceCommands();
+            }
             case GameStatus.INIT_ABANDONEDSHIP -> {
                 flightPhaseController.getButton1().setText("Conquista Nave");
                 flightPhaseController.getButton1().setManaged(true);
@@ -479,6 +474,7 @@ public class GuiApplication extends Application implements ViewAPI {
                     flightPhaseController.drawCard();
                 });
                 flightPhaseController.setShip(buildedShip);
+                flightPhaseController.installClickHandlers();
                 flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
                 flightPhaseScene = scene;
                 Platform.runLater(() -> {
