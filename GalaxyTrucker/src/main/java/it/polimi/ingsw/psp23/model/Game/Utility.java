@@ -2,22 +2,52 @@ package it.polimi.ingsw.psp23.model.Game;
 import java.util.Random;
 import java.util.List;
 
+
+/**
+ * Utility is a final class that provides static helper methods for general-purpose utility 
+ * operations, including random number generation and position updating logic. 
+ * The class is designed to be non-instantiable and thread-safe.
+ */
 public final class Utility {
-    // creo istanza unica (efficienza e vera casualità) della classe di Java Random che serve per generare numeri casuali
+    // Creating a single instance (for efficiency and true randomness) of Java's Random class used to generate random numbers
     private static final Random rand = new Random();
 
-    // evito istanziazione
     private Utility() {
     }
 
+    /**
+     * Simulates the rolling of two six-sided dices and returns the sum of the results.
+     * This method generates two random integers between 1 (inclusive) and 6 (inclusive)
+     * and adds them together to produce a value in the range of 2 to 12.
+     *
+     * @return an integer representing the sum of two randomly generated dice rolls,
+     *         ranging from 2 to 12.
+     */
     public static int roll2to12() {
         return rand.nextInt(6) + 1 + rand.nextInt(6) + 1;
     }
 
+
+    /**
+     * Generates a random integer in the range from 0 (inclusive) to the specified size (exclusive).
+     * It is used to pick one random card from the heap.
+     *
+     * @param size the upper bound (exclusive) for the generated random integer
+     * @return a random integer between 0 (inclusive) and size (exclusive)
+     */
     public static int randomComponent(int size) {
         return rand.nextInt(0, size);
     }
 
+    /**
+     * Updates the position of a specific player in the provided list based on the specified number of positions to jump.
+     * The method ensures that players do not move to positions already occupied by other players and doesn't count the position
+     * when a player is already there.
+     *
+     * @param players the list of players participating in the game
+     * @param playerIndex the index of the player in the list whose position is to be updated
+     * @param positionsToJump the number of positions the player intends to move; can be positive or negative
+     */
     public static void updatePosition(List<Player> players, int playerIndex, int positionsToJump) {
         Player giocatore = players.get(playerIndex);
         int playerLocation = giocatore.getPosition();
@@ -28,8 +58,9 @@ public final class Utility {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi++;
                         offset++;
-                        k = 0; // azzerando k ottengo l'effetto di far ripartire il ciclo nel caso in cui ci sia una collisione, in modo da
-                        // essere sicuro di confrontare il giocatore corrente con TUTTI GLI ALTRI GIOCATORI PRESENTI
+                        // resetting k causes the cycle to restart in case of a collision, ensuring
+                        // the current player is compared with ALL OTHER PLAYERS PRESENT
+                        k=0;
 
                         /* TODO: bisogna attenzionare che non ci siano loop infiniti dovuto magari ad un accavallamento successivo delle pedine
                                  che potrebbe portare questo ciclo a non esaurirsi mai perchè trova sempre posizioni occupate dopo */
@@ -42,9 +73,10 @@ public final class Utility {
                     if (k != playerIndex && players.get(k).getPosition() == playerLocation + offset) {
                         saltiEffettivi--;
                         offset--;
-                        k = 0; // azzerando k ottengo l'effetto di far ripartire il ciclo nel caso in cui ci sia una collisione, in modo da
-                        // essere sicuro di confrontare il giocatore corrente con TUTTI GLI ALTRI GIOCATORI PRESENTI
-
+                        // resetting k causes the cycle to restart in case of a collision, ensuring
+                        // the current player is compared with ALL OTHER PLAYERS PRESENT
+                        k=0;
+                        
                         /* TODO: bisogna attenzionare che non ci siano loop infiniti dovuto magari ad un accavallamento successivo delle pedine
                                  che potrebbe portare questo ciclo a non esaurirsi mai perchè trova sempre posizioni occupate dopo */
                     }
@@ -55,69 +87,3 @@ public final class Utility {
     }
 
 }
-
-    // È importante che il positionsToJump sia negativo quando si arretra!!!
-    /*public static void updatePosition(List<Player> players,int playerIndex, int positionsToJump){
-        Player giocatore = players.get(playerIndex);
-        int playerLocation = giocatore.getPosition();
-        int newlocation = positionsToJump + playerLocation;
-            for (int k = 0; k < players.size(); k++) {
-                if (k != playerIndex && players.get(k).getPosition() == newlocation) {
-                    if(positionsToJump >= 0){
-                        positionsToJump++;
-                    }
-                    else{
-                        positionsToJump--;
-                    }
-                    newlocation = positionsToJump + playerLocation;
-                    k = 0; // azzerando k ottengo l'effetto di far ripartire il ciclo nel caso in cui ci sia una collisione, in modo da
-                           // essere sicuro di confrontare il giocatore corrente con TUTTI GLI ALTRI GIOCATORI PRESENTI
-
-                    *//* TODO: bisogna attenzionare che non ci siano loop infiniti dovuto magari ad un accavallamento successivo delle pedine
-                             che potrebbe portare questo ciclo a non esaurirsi mai perchè trova sempre posizioni occupate dopo *//*
-                }
-            }
-            giocatore.setPosition(positionsToJump);
-    }
-    *//* TODO: la check per verificare se un giocatore è stato doppiato e quindi dovrebbe abbandonare il gioco, la lascio ad un'altra funzione
-             ma in caso, dovrebbe essere inserita qui, alla fine dell'aggiornamento delle posizioni*//*
-}*/
-
-
-/* qui sono presenti i metodi thereIsCollision ed il metodo alternativo per scorrere le posizioni
-
-private boolean thereIsCollision(Player giocatore, List<Player> players, int i) {
-    for(int k=0; k<players.size(); k++){
-        if(k!=i && players.get(k).getPosition() == giocatore.getPosition()){
-            return true;
-        }
-    }
-    return false;
-}
- */
-
-/* backup vecchio metodo updatePosition circa funzionante
-public static void updatePosition(List<Player> players,int playerIndex, int positionsToJump){
-        //il numero di posizioni totali è 24
-        //l'aggiornamento dell'ordine della lista viene supposto a posteriori del play della carta
-        //considero la posizione 0 come quella più sulla sinistra della tavola da gioco
-        int size = players.size();
-        int playerPosition = players.get(playerIndex).getPosition();
-        int finalPosition = playerPosition + positionsToJump;
-        if(positionsToJump > 0){
-            for(int i = size-1; i >= 0; i--)
-                if(players.get(i).getPosition() > playerPosition && players.get(i).getPosition() <= finalPosition)
-                    finalPosition++; //per ogni player nel percorso, aumento di uno le caselle effettive da percorrere
-
-            players.get(playerIndex).setPosition(finalPosition);
-
-        }else{
-            for(int i = 0; i <size; i++) //comincio dall'ultimo elemento della lista che sarebbe il player in ultima posizione
-                if(players.get(i).getPosition() < playerPosition && players.get(i).getPosition() >= finalPosition)
-                    finalPosition--;
-
-            players.get(playerIndex).setPosition(finalPosition);
-
-        }
-    }
- */

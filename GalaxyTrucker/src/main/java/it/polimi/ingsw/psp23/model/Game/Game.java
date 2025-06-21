@@ -23,13 +23,13 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-/*
- * Game è una classe singleton in modo da poterci accedere ovunque tramite getInstance()
+
+/**
+ * Represents a Game object where players interact with components, cards, and decks
+ * to fulfill game logic and mechanics. The Game class manages the players' states,
+ * the game board, phases, scoring, and events during a game session.
  */
-
 public class Game {
-
-    // public static Game instance = null;
 
     private final ArrayList<Player> players;
     private final ArrayList<Player> playersNotOnFlight;
@@ -56,7 +56,7 @@ public class Game {
     int Id;
     Controller controller;
 
-    // Questo costruttore è public perchè deve essere accessibile da Server che è in un altro package
+    // This constructor is public because it needs to be accessible from Server which is in another package
      public Game(int level, int id) {
         this.players = new ArrayList<>();
         this.playersNotOnFlight = new ArrayList<>();
@@ -73,15 +73,15 @@ public class Game {
         this.level = level;
         this.Id = id;
         this.controller = null;
-        // istanzio tutti i componenti e li metto nell'heap
+         // instantiate all components and add them to the heap
         this.heap.addAll(ComponentFactory.generateAllComponents(level));
 
         if (level == 2) {
-            this.visibleCards1 = new ArrayList<>(); //questi sono i tre mazzetti visibili ad inizio game, vanno staccati
-            this.visibleCards2 = new ArrayList<>(); //perchè possono essere visti solo uno alla volta
+            this.visibleCards1 = new ArrayList<>(); //these are the three visible decks visibile during the first phase of the game, they must be detached
+            this.visibleCards2 = new ArrayList<>(); //because these are only visible one at a time
             this.visibleCards3 = new ArrayList<>();
 
-            // per le carte devo avere 2 liste per creare deck corretto: una di livello 1 e una di liv2 e poi faccio shuffle
+            // Create 2 lists for generating correct deck: one card of level 1 and two cards of level 2, then shuffle
             ArrayList<Card> level1Cards = CardFactory.generateLevel1Cards();
             ArrayList<Card> level2Cards = CardFactory.generateLevel2Cards();
             Collections.shuffle(level1Cards);
@@ -92,7 +92,7 @@ public class Game {
             this.visibleCards2.addAll(level2Cards.subList(2, 4));
             this.visibleCards3.add(level1Cards.get(2));
             this.visibleCards3.addAll(level2Cards.subList(4, 6));
-            this.deck.addAll(level1Cards.subList(0, 4));  // indice finale è escluso
+            this.deck.addAll(level1Cards.subList(0, 4));
             this.deck.addAll(level2Cards.subList(0, 8));
 
             firstPositions = new int[]{8, 5, 3, 2};
@@ -107,28 +107,18 @@ public class Game {
 
     }
 
-    /**
-     * Resets the Game singleton so that the next call to getInstance()
-     * will create a new Game instance.
-     * For testing purposes only.
-     */
-     /*public static void resetInstance() {
-        instance = null;
-     }*/
-
-    /*public static Game getInstance(int level) {
-        instance = new Game(level);
-        return instance;
-    }*/
-
     public int getLevel() {
         return level;
     }
 
-     /*public static Game getInstance(){
-        return instance;
-    }*/
 
+    /**
+     * Sets the number of players requested for the game. This value can only be set once.
+     * If the number of players has already been defined, an exception will be thrown.
+     *
+     * @param number the number of players requested for the game
+     * @throws InvalidActionException if the number of requested players has already been set
+     */
     public void setNumRequestedPlayers(int number) {
         if (numRequestedPlayers == -1)
             this.numRequestedPlayers = number;
@@ -136,15 +126,35 @@ public class Game {
             throw new InvalidActionException("Non puoi modificare il numero di giocatori attesi!");
     }
 
+    /**
+     * Retrieves the number of players requested for the game.
+     *
+     * @return the number of players requested for the game
+     */
     public int getNumRequestedPlayers() {
         return numRequestedPlayers;
     }
 
+    /**
+     * Retrieves the earnings based on the player’s final ranking.
+     *
+     * @return an array of integers representing the first positions
+     */
     public int[] getFirstPositions() {
         return firstPositions;
     }
 
-    /** Player per rimanere in partita deve avere almeno un umano e non essere stato doppiato */
+    /**
+     * This method checks the status of all players in the game to determine whether they should
+     * be eliminated from the flight. A player is eliminated from the flight if either:
+     * - Their truck's human crew count is zero.
+     * - The gap between their position and the leading player's position exceeds 24.
+     *
+     * The method assumes that `maxPosition` refers to the position of the leading player,
+     * even if they are eliminated during the process. It does not update `maxPosition` dynamically
+     * in such cases.
+     */
+
     public void checkEliminationPlayers() {
         // ricavo posizione del leader
         int maxPosition = players.stream().mapToInt(Player::getPosition).max().orElse(0);
@@ -160,7 +170,16 @@ public class Game {
     // OSS: se elimino il leader non riaggiorno maxPosition: potremmo supporre che si faccia riferimento sempre a lui anche se eliminato (non specificato su regolamento)
     }
 
-    /** ad ogni turno elimina i giocatori non più in volo e riordina la lista in ordine di position decrescente */
+    /**
+     * Sorts the list of players currently in the game based on their positions.
+     *
+     * This method performs the following actions:
+     * 1. Identifies and removes players who are no longer in the game. These players are transferred to another list for players who are not in the flight.
+     * 2. Sorts the remaining players in descending order of their position values.
+     *
+     * Players who are not in the game are determined using the `isInGame()` method on each player object.
+     * The sorting process uses the `getPosition()` method of the `Player` class and orders players by their position in descending order.
+     */
     public void sortPlayersByPosition() {
         // necessaria perchè non posso rimuovere un oggetto dalla stessa lista su cui sto iterando tramite for-each
         List<Player> toRemove = new ArrayList<>();
@@ -178,25 +197,7 @@ public class Game {
     }
 
     public void addPlayer(String nickname) {
-        /*for(Player p: players){
-            if(p.getNickname().equals(nickname)){
-                throw new PlayerExistsException("Player already exists");
-            }
-        }*/
-        /*for(Integer i : UsersConnected.getInstance().getMap().keySet()){
-            if(UsersConnected.getInstance().getClients(i).contains(nickname)){
-                throw new PlayerExistsException("Player already exists");
-            }
-        }*/
         players.add(new Player(nickname, this));
-    }
-
-    public synchronized void removePlayer(String nickname) {
-        for(Player player : players) {
-            if (player.getNickname().equals(nickname)) {
-                players.remove(player);
-            }
-        }
     }
 
     public ArrayList<Component> getUncovered() {
@@ -264,7 +265,7 @@ public class Game {
             if (position < 0 || position >= uncovered.size()) {
                 throw new IndexOutOfBoundsException("Position invalid: " + position);
             }
-            // qualche altro player ha pescato dalla lista --> quella che stava vedendo il giocatore noon era aggiornata
+            // another player has drawn from the list --> what the player was seeing is not up to date
             if (version != lastUncoveredVersion)
                 throw new NoTileException("La lista di tessere scoperte che vedi non è aggiornata.\nEcco la versione aggiornata:\n");
             Component c = uncovered.get(position);
@@ -288,6 +289,15 @@ public class Game {
         }
     }
 
+    /**
+     * Checks and updates the number of reserved tiles for each player in the game.
+     *
+     * For every player:
+     * - Determines the number of tiles reserved in the player's truck.
+     * - If the truck has reserved tiles, updates the truck's garbage value with the count of reserved tiles.
+     *
+     * This method iterates through all players in the game and modifies relevant player data accordingly.
+     */
     public void checkReservedTiles() {
         for (Player p : players) {
             int reserved = p.getTruck().getReservedTiles().size();
@@ -315,10 +325,6 @@ public class Game {
         }
     }
 
-    public void setCurrentPlayerIndex(int index){
-        currentPlayerIndex = index;
-    }
-
     /** @return the next player in the round, or null if the round is over        */
     public Player getNextPlayer(){
         int size = players.size();
@@ -335,6 +341,14 @@ public class Game {
         return turn;
     }
 
+    /**
+     * Retrieves a player by their nickname from the list of players in the game.
+     * If the player with the specified nickname is not found, an exception is thrown.
+     *
+     * @param nickname the nickname of the player to retrieve
+     * @return the Player object corresponding to the specified nickname
+     * @throws PlayerNotExistsException if no player with the given nickname exists in the game
+     */
     public Player getPlayerFromNickname(String nickname) throws PlayerNotExistsException {
         for (Player player : players) {
             if(player.getNickname().equals(nickname))
@@ -361,6 +375,17 @@ public class Game {
         }
     }
 
+    /**
+     * Executes the logic to proceed to the next card in the game. It performs several actions including:
+     * eliminating players who do not meet certain criteria, sorting the players by their position,
+     * drawing the next card from the deck, and updating the game status.
+     *
+     * If no more cards are available, or there is only one player remaining, the game will end,
+     * final scores will be calculated, and the winners will be announced. Otherwise, the game
+     * continues and the new card's logic is executed.
+     *
+     * @param username the username of the player currently involved in the card action
+     */
     public void nextCard(String username){
         checkEliminationPlayers();
         sortPlayersByPosition();
@@ -370,9 +395,6 @@ public class Game {
             calculateFinalScores();
             fireEvent(new ShowWinners(getGameStatus()));
         }else{
-            // Lanciando questo evento notifico il controller che deve inoltrare le informazioni della carta alla view
-            // Event e = new ShowCurrentCard(Game.getInstance().getGameStatus(), currentCard);
-            // Controller.getInstance().onGameEvent(e);
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())), Id);
             VisitorUsername visitor = new InitPlayVisitor();
             currentCard.call(visitor, username);
@@ -402,6 +424,14 @@ public class Game {
         }
     }
 
+    /** Allows a player to temporarily view a deck during the Building phase.
+     * Access is granted only if:
+     *  - the game is in Building phase
+     *  - no other player is currently viewing this deck
+     *  - the player has at least one tile on the truck (isWelded)
+     * @param player who wants to see the deck2
+     * @return a copy of the visible deck if access is granted, otherwise null
+     */
     public ArrayList<Card> getVisibleDeck2(Player player){
         if (level == 0) {
             throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
@@ -418,6 +448,14 @@ public class Game {
         }
     }
 
+    /** Allows a player to temporarily view a deck during the Building phase.
+     * Access is granted only if:
+     *  - the game is in Building phase
+     *  - no other player is currently viewing this deck
+     *  - the player has at least one tile on the truck (isWelded)
+     * @param player who wants to see the deck3
+     * @return a copy of the visible deck if access is granted, otherwise null
+     */
     public ArrayList<Card> getVisibleDeck3(Player player) {
         if (level == 0) {
             throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
@@ -434,7 +472,7 @@ public class Game {
         }
     }
 
-    /** releases the deck after the player has  finished viewing it
+    /** releases the first deck after the player has finished viewing it
      * @param player releasing the deck
      * @throws IllegalStateException if the player is not the current owner
      */
@@ -452,6 +490,10 @@ public class Game {
         }
     }
 
+    /** releases the second deck after the player has finished viewing it
+     * @param player releasing the deck
+     * @throws IllegalStateException if the player is not the current owner
+     */
     public void releaseVisibleDeck2(Player player){
         if (level == 0) {
             throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
@@ -466,6 +508,10 @@ public class Game {
         }
     }
 
+    /** releases the third deck after the player has finished viewing it
+     * @param player releasing the deck
+     * @throws IllegalStateException if the player is not the current owner
+     */
     public void releaseVisibleDeck3(Player player){
         if (level == 0) {
             throw new LevelException("Non esistono mazzetti visibili nel volo di prova!");
@@ -542,12 +588,25 @@ public class Game {
         this.eventListener2 = listener;
     }
 
+    /**
+     * Triggers the provided event by notifying the associated event listener in the controller.
+     *
+     * @param event the event to be fired, containing details to notify the listener
+     */
     public void fireEvent(Event event) {
         if (eventListener != null) {
             eventListener.accept(event);
         }
     }
 
+    /**
+     * Triggers the specified event by notifying the associated event listener in the controller.
+     * This method provides additional context by including the username of the player associated
+     * with the event.
+     *
+     * @param event the event to be fired, containing details to notify the listener
+     * @param username the username of the player involved in the event
+     */
     public void fireEvent(Event event, String username) {
         if(eventListener != null) {
             eventListener2.accept(event, username);
