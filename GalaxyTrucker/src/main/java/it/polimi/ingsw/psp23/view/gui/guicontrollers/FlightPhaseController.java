@@ -293,7 +293,7 @@ public class FlightPhaseController {
 
 
     public void abandonedshipCommands() {
-        /// potrei levarlo runlater : sono già nel thread UI
+        ///  TODO: potrei levarlo runlater : sono già nel thread UI. capire se metterlo/toglierlo in tutti
         Platform.runLater(() -> {
             button1.setText("Compra nave");
             enable(button1);
@@ -466,4 +466,78 @@ public class FlightPhaseController {
             textLabel.setText("Non puoi fare nulla: perderai 1 membro dell'equipaggio per ogni cabina contagiata");
         });
     }
+
+    public void piratesCommands() {
+        button1.setText("Attiva cannone");
+        enable(button1);
+        button2.setText("Pronto");
+        enable(button2);
+        button3.setText("Attiva scudo");
+        enable(button3);
+        button4.setText("Balza la ricompensa");
+        enable(button4);
+        button5.setText("Prendi i crediti");
+        enable(button5);
+
+        button1.setOnAction(e -> {
+            doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
+                int cx = cannon.x();
+                int cy = cannon.y();
+                int bx = battery.x();
+                int by = battery.y();
+                try {
+                    client.sendAction(new ActivateCannon(cx,cy,bx,by));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    doubleSelector = null;
+                }
+            });
+        });
+
+        button2.setOnAction(e -> {
+            try {
+                client.sendAction(new Ready());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        button3.setOnAction(e -> {
+            doubleSelector = new TwoStepsTileSelector((shield, battery) -> {
+                try {
+                    client.sendAction(new ActivateShield(shield.x(), shield.y(), battery.x(), battery.y()));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    doubleSelector = null;
+                }
+            });
+        });
+
+        button4.setOnAction(e -> {
+            try {
+                client.sendAction(new NextTurn());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        button5.setOnAction(e -> {
+            try {
+                client.sendAction(new EarnCredits());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+
+
+
+
+
+
 }

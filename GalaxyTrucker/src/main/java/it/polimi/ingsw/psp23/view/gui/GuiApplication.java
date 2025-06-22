@@ -387,6 +387,9 @@ public class GuiApplication extends Application implements ViewAPI {
                 case INIT_EPIDEMIC -> {
                     flightPhaseController.epidemicCommands();
                 }
+                case INIT_PIRATES -> {
+                    flightPhaseController.piratesCommands();
+                }
                 case GameStatus.INIT_PLANETS -> {
                     flightPhaseController.planetsCommands(id);
                 }
