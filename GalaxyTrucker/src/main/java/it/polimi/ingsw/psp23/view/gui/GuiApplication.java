@@ -52,6 +52,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private  LobbyController lobbyController;
     private DeckViewController deckViewController;
     private  TimerController timerController;
+    private EndGameController endGameController;
     private Stage stage;
     private static GuiApplication instance;
     private Color playerColor;
@@ -508,10 +509,8 @@ public class GuiApplication extends Application implements ViewAPI {
     public void backToShip(){
         if(gameStatus == GameStatus.Building)
             toBuildingPhase(null);
-        else if(gameStatus == GameStatus.Playing)
-            toFlightPhase();
         else
-            toBuildingPhase(null);
+            toFlightPhase();
     }
 
     @Override
@@ -521,9 +520,22 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking) {
-
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/end_game.fxml")
+        );
+        try {
+            Parent root = loader.load();
+            this.endGameController = loader.getController();
+            endGameController.printInfo(ranking, stage);
+            Scene scene = new Scene(root, 1152, 768);
+            Platform.runLater(() -> {
+                stage.setScene(scene);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-
 }
+
 

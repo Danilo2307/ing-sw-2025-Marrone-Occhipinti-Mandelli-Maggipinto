@@ -1,0 +1,16 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/podio.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.generic-button {
+    -fx-background-color: #c5c0c0;
+    -fx-text-fill: white;
+}
+
+.generic-button:hover {
+    -fx-background-color: #5773ff;
+    -fx-cursor: hand;
+}
+
