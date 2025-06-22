@@ -394,6 +394,9 @@ public class GuiApplication extends Application implements ViewAPI {
                 case GameStatus.INIT_PLANETS -> {
                     flightPhaseController.planetsCommands(id);
                 }
+                case INIT_ABANDONEDSTATION -> {
+                    flightPhaseController.abandonedStationCommands();
+                }
                 case GameStatus.Playing -> {
 
                 }

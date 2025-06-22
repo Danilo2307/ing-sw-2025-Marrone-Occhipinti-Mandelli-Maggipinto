@@ -459,11 +459,24 @@ public class FlightPhaseController {
     }
 
 
+    public void abandonedStationCommands() {
+        button1.setText("Attracca");
+        enable(button1);
+        button1.setOnAction(e -> {
+            try {
+                client.sendAction(new DockStation());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
 
+        // passa turno
+        setupPassBtn(button2);
+        //  carica o scarica merce
+        setupLoadGoodBtn(button3);
+        setupDropGoodBtn(button4);
 
-
-
-
+    }
 
 
 }
