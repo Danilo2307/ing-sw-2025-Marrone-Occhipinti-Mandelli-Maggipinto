@@ -516,6 +516,11 @@ public class GuiApplication extends Application implements ViewAPI {
         lobbyController.showLobbies(availableLobbies);
     }
 
+    @Override
+    public void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking) {
+
+    }
+
 
 }
 

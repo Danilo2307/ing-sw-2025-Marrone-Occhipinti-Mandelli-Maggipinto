@@ -13,13 +13,11 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.FinalRanking;
 import it.polimi.ingsw.psp23.protocol.response.NewCardDrawn;
 import it.polimi.ingsw.psp23.protocol.response.StateChanged;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -393,7 +391,17 @@ public class Game {
         if(currentCard == null || players.size() <= 1){
             setGameStatus(GameStatus.End);
             calculateFinalScores();
-            fireEvent(new ShowWinners(getGameStatus()));
+
+            // send final ranking to clients
+            List<AbstractMap.SimpleEntry<String, Integer>> ranking = new ArrayList<>();
+            for (Player p: players) {
+                ranking.add(new AbstractMap.SimpleEntry<>(p.getNickname(), p.getMoney()));
+            }
+            for (Player p: playersNotOnFlight) {
+                ranking.add(new AbstractMap.SimpleEntry<>(p.getNickname(), p.getMoney()));
+            }
+            Server.getInstance().notifyAllObservers(new BroadcastMessage(new FinalRanking(ranking)), Id);
+
         }else{
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())), Id);
             VisitorUsername visitor = new InitPlayVisitor();

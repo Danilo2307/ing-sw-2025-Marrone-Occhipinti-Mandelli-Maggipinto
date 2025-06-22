@@ -175,5 +175,11 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
+    @Override
+    public Void visitForFinalRanking(FinalRanking finalRanking, ViewAPI viewAPI) {
+        finalRanking.handle(viewAPI);
+        return null;
+    }
+
 
 }

@@ -1,7 +1,9 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
-import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
+
+import java.util.AbstractMap;
+import java.util.List;
 
 public interface EventVisitor<T> {
 
@@ -60,5 +62,7 @@ public interface EventVisitor<T> {
     public T visitForLobbyAvailable(LobbyAvailable lobbyAvailable, ViewAPI viewAPI);
 
     public T visitForStringList(StringList stringList, ViewAPI viewAPI);
+
+    public T visitForFinalRanking(FinalRanking ranking, ViewAPI viewAPI);
 
 }

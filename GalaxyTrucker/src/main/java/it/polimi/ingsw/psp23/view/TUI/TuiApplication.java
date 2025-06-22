@@ -753,5 +753,25 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
+    @Override
+    public void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking) {
+        io.print("===== CLASSIFICA FINALE =====\n");
+
+        for (AbstractMap.SimpleEntry<String,Integer> rank : ranking) {
+            String name = rank.getKey();
+            int value = rank.getValue();
+
+            io.print(name + ": " + value);
+            if (value > 0) {
+                io.print(" --> ha vinto!\n");
+            }
+            else {
+                io.print(" --> ha perso!\n");
+            }
+        }
+
+        io.print("=============================");
+    }
+
 
 }

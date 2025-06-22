@@ -6,7 +6,7 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.socket.Server;
 
 public class ShowWinners extends Event {
-
+    /// USELESS DA ORA : ELIMINARE
     public ShowWinners(GameStatus newStatus) {
         super(newStatus);
     }
