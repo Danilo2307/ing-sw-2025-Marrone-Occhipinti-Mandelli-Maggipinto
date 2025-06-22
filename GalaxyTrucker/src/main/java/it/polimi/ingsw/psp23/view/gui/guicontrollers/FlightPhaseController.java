@@ -161,7 +161,6 @@ public class FlightPhaseController {
                 ex.printStackTrace();
             }
         });
-
     }
 
     private void setupLoadGoodBtn(Button load) {
@@ -180,8 +179,12 @@ public class FlightPhaseController {
         });
     }
 
-    private void setupDropGoodBtn(Button drop) {
-        drop.setText("Scarica merce");
+    private void setupDropGoodBtn(Button drop, boolean precious) {
+        if (precious)
+            drop.setText("Rimuovi merce preziosa");
+        else
+            drop.setText("Scarica merce");
+
         enable(drop);
         drop.setOnAction(e -> {
             singleSelector = new SingleTileSelector((container) -> {
@@ -196,7 +199,12 @@ public class FlightPhaseController {
 
                 dialog.showAndWait().ifPresent(idx -> {
                     try {
-                        client.sendAction(new LoseGood(x,y, idx));
+                        if (precious) {
+                            client.sendAction(new RemovePreciousItem(x,y,idx));
+                        }
+                        else {
+                            client.sendAction(new LoseGood(x,y, idx));
+                        }
                     }
                     catch (RemoteException ex) {
                         ex.printStackTrace();
@@ -303,6 +311,29 @@ public class FlightPhaseController {
         });
     }
 
+    private void setupRemoveCrewBtn(Button reduceCrew) {
+        reduceCrew.setText("Rimuovi membro equipaggio");
+        enable(reduceCrew);
+
+        reduceCrew.setOnAction(e -> {
+            // creo selettore per ridurre
+            singleSelector = new SingleTileSelector(coord -> {
+                int x = coord.x();
+                int y = coord.y();
+                try {
+                    // invio azione e resetto selettore
+                    client.sendAction(new ReduceCrew(x, y, 1));
+                }
+                catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    singleSelector = null;
+                }
+            });
+        });
+    }
+
     /// volendo, si potrebbe creare un "annulla" cioè permettere all'utente di cliccare "attiva cannone" e poi "attiva scudo" e
     /// prenderebbe i comandi di "attiva scudo" . Basterebbe mettere i selettori a null prima di creare quello nuovo
 
@@ -327,7 +358,7 @@ public class FlightPhaseController {
 
                 setupPassBtn(button5);
                 setupLoadGoodBtn(button6);
-                setupDropGoodBtn(button7);
+                setupDropGoodBtn(button7, false);
 
             }
 
@@ -339,7 +370,7 @@ public class FlightPhaseController {
 
                 setupPassBtn(button4);
                 setupLoadGoodBtn(button5);
-                setupDropGoodBtn(button6);
+                setupDropGoodBtn(button6, false);
 
             }
 
@@ -350,7 +381,7 @@ public class FlightPhaseController {
 
                 setupPassBtn(button3);
                 setupLoadGoodBtn(button4);
-                setupDropGoodBtn(button5);
+                setupDropGoodBtn(button5, false);
 
             }
         }
@@ -364,7 +395,6 @@ public class FlightPhaseController {
     public void abandonedshipCommands() {
         button1.setText("Compra nave");
         enable(button1);
-
         button1.setOnAction(e -> {
             try {
                 client.sendAction(new BuyShip());
@@ -374,47 +404,14 @@ public class FlightPhaseController {
         });
 
         setupPassBtn(button2);
-
-        button3.setText("Riduci equipaggio");
-        enable(button3);
-        button3.setOnAction(e -> {
-            // creo selettore per ridurre
-            singleSelector = new SingleTileSelector(coord -> {
-                int x = coord.x();
-                int y = coord.y();
-                try {
-                    // invio azione e resetto selettore
-                    client.sendAction(new ReduceCrew(x, y, 1));
-                    singleSelector = null;
-                }
-                catch (RemoteException ex) {
-                    ex.printStackTrace();
-                }
-            });
-        });
+        setupRemoveCrewBtn(button3);
     }
 
     public void slaversCommands() {
 
         setupCannonBtn(button1);
         setupReadyBtn(button2);
-
-        button3.setText("Riduci equipaggio");
-        enable(button3);
-        button3.setOnAction(e -> {
-            singleSelector = new SingleTileSelector(coord -> {
-                int x = coord.x();
-                int y = coord.y();
-
-                try {
-                    client.sendAction(new ReduceCrew(x,y,1));
-                    singleSelector = null;
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-        });
-
+        setupRemoveCrewBtn(button3);
         setupPassBtn(button4);
 
         button5.setText("Prendi i crediti");
@@ -426,7 +423,6 @@ public class FlightPhaseController {
                ex.printStackTrace();
             }
         });
-
     }
 
     public void meteorSwarmCommands() {
@@ -474,8 +470,47 @@ public class FlightPhaseController {
         setupPassBtn(button2);
         //  carica o scarica merce
         setupLoadGoodBtn(button3);
-        setupDropGoodBtn(button4);
+        setupDropGoodBtn(button4, false);
+    }
 
+
+    public void smugglersCommands() {
+        setupCannonBtn(button1);
+        setupReadyBtn(button2);
+
+        // comando vincitore
+        setupLoadGoodBtn(button3);
+        setupDropGoodBtn(button4, false);
+        setupPassBtn(button5);
+
+        // comandi perdenti
+        setupDropGoodBtn(button6, true);
+        button7.setText("Rimuovi batteria");
+        enable(button7);
+        button7.setOnAction(e -> {
+            singleSelector = new SingleTileSelector(batteryHub -> {
+                try {
+                    client.sendAction(new RemoveBatteries(batteryHub.x(), batteryHub.y(), 1));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    singleSelector = null;
+                }
+            });
+        });
+    }
+
+    public void combatZoneCommands() {
+        // comandi di difesa
+        setupCannonBtn(button1);
+        setupEngineBtn(button2);
+        setupReadyBtn(button3);
+
+        // comandi per risolvere le penalità
+        setupShieldBtn(button4);
+        setupRemoveCrewBtn(button5);
+        setupDropGoodBtn(button6, true);
     }
 
 

@@ -397,9 +397,13 @@ public class GuiApplication extends Application implements ViewAPI {
                 case INIT_ABANDONEDSTATION -> {
                     flightPhaseController.abandonedStationCommands();
                 }
-                case GameStatus.Playing -> {
-
+                case INIT_SMUGGLERS -> {
+                    flightPhaseController.smugglersCommands();
                 }
+                case INIT_COMBATZONE -> {
+                    flightPhaseController.combatZoneCommands();
+                }
+
             }
         });
     }
