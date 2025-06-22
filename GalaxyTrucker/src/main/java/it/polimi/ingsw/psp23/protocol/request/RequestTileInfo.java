@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 
 import java.util.ArrayList;
@@ -20,8 +21,16 @@ public record RequestTileInfo(int x, int y) implements Action {
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
-        Component target = p.getTruck().getTile(x, y);
-        DirectMessage dm = new DirectMessage(new TileResponse(target));
+        Component c = p.getTruck().getTile(x, y);
+        StringBuilder sb = new StringBuilder();
+        sb.append(c.getInfo()).append('\n')
+                .append("Connettori:\n")
+                .append("  ↑ Sopra    : ").append(c.getUp()).append('\n')
+                .append("  → Destra   : ").append(c.getRight()).append('\n')
+                .append("  ↓ Sotto    : ").append(c.getDown()).append('\n')
+                .append("  ← Sinistra : ").append(c.getLeft());
+
+        DirectMessage dm = new DirectMessage(new StringResponse(sb.toString()));
         Server.getInstance().sendMessage(username, dm);
     }
 

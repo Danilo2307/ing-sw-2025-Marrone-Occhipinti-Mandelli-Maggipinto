@@ -567,6 +567,9 @@ public class BuildingPhaseController {
         finishedBtn.setManaged(false);
     }
 
+    public GridPane getBuildedGrid() {
+        return ship;
+    }
 
 
 }

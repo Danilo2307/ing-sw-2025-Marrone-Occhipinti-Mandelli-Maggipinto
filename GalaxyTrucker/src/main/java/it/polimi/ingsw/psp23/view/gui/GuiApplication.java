@@ -25,6 +25,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
@@ -56,6 +57,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private Color playerColor;
     private int level;
     private StackPane buildedShip = null;
+    private GridPane buildedGrid = null;
     private Scene buildingPhaseScene = null;
     private Scene flightBoardScene = null;
     private Scene flightPhaseScene = null;
@@ -171,6 +173,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 Scene scene = new Scene(root, 1152, 768);
                 buildingPhaseScene = scene;
                 buildedShip = buildingPhaseController.getShip();
+                buildedGrid = buildingPhaseController.getBuildedGrid();
                 Platform.runLater(() -> {stage.setScene(scene);});
                 buildingPhaseController.setCentral(playerColor);
             } catch (IOException e) {
@@ -469,14 +472,8 @@ public class GuiApplication extends Application implements ViewAPI {
                 this.flightPhaseController = loader.getController();
                 flightPhaseController.setClient(client);
                 Scene scene = new Scene(root, 1152, 768);
-                Button button1 = flightPhaseController.getButton1();
-                button1.setVisible(true);
-                button1.setManaged(true);
-                button1.setText("Pesca carta");
-                button1.setOnAction(e -> {
-                    flightPhaseController.drawCard();
-                });
-                flightPhaseController.setShip(buildedShip);
+                flightPhaseController.enable(flightPhaseController.getDrawBtn());
+                flightPhaseController.setShip(buildedShip, buildedGrid);
                 flightPhaseController.installClickHandlers();
                 flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
                 flightPhaseScene = scene;

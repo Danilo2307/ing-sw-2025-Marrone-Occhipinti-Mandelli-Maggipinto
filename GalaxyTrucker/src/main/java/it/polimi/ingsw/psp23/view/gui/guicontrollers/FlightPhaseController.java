@@ -54,13 +54,15 @@ public class FlightPhaseController {
     public Button getButton6() {
         return button6;
     }
+    public Button getDrawBtn() { return drawBtn; }
     public Label getTextLabel(){
         return textLabel;
     }
 
-    public void setShip(StackPane ship){
+    public void setShip(StackPane ship, GridPane shipGrid){
         this.ship.getChildren().clear();
         this.ship.getChildren().add(ship);
+        this.shipGrid = shipGrid;
     }
 
     public void installClickHandlers() {
@@ -400,6 +402,8 @@ public class FlightPhaseController {
 
         });
     }
+
+
 
 
 }
