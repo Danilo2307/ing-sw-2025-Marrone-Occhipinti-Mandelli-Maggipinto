@@ -150,45 +150,6 @@ public class FlightPhaseController {
         disable(button7);
     }
 
-    /// volendo, si potrebbe creare un "annulla" cioè permettere all'utente di cliccare "attiva cannone" e poi "attiva scudo" e
-    /// prenderebbe i comandi di "attiva scudo" . Basterebbe mettere i selettori a null prima di creare quello nuovo
-
-    public void openSpaceCommands() {
-        Platform.runLater(() -> {
-            button1.setText("Attiva motore");
-            button2.setText("Pronto");
-            enable(button1);
-            enable(button2);
-
-            button1.setOnAction(event -> {
-                // creo il selector
-                doubleSelector = new TwoStepsTileSelector( (engine, battery) -> {
-                    // callback dopo i 2 click
-                    int ex = engine.x();
-                    int ey = engine.y();
-                    int bx = battery.x();
-                    int by = battery.y();
-                    try {
-                        // invio azione e resetto il selettore
-                        client.sendAction(new ActivateEngine(ex, ey, bx, by));
-                        doubleSelector = null;
-                    }
-                    catch (RemoteException e) {
-                        e.printStackTrace();
-                    }
-                });
-            });
-
-            button2.setOnAction(e -> {
-                try {
-                    client.sendAction(new Ready());
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
-        });
-    }
 
     private void setupPassBtn(Button pass) {
         pass.setText("Passa");
@@ -260,6 +221,96 @@ public class FlightPhaseController {
         });
     }
 
+    private void setupReadyBtn(Button ready) {
+        ready.setText("Pronto");
+        enable(ready);
+        ready.setOnAction(e -> {
+            try {
+                client.sendAction(new Ready());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void setupCannonBtn(Button activeCannon) {
+        activeCannon.setText("Attiva cannone");
+        enable(activeCannon);
+
+        activeCannon.setOnAction(e -> {
+            doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
+                int cx = cannon.x();
+                int cy = cannon.y();
+                int bx = battery.x();
+                int by = battery.y();
+                try {
+                    client.sendAction(new ActivateCannon(cx,cy,bx,by));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    doubleSelector = null;
+                }
+            });
+        });
+    }
+
+    private void setupShieldBtn(Button s) {
+        s.setText("Attiva scudo");
+        enable(s);
+
+        s.setOnAction(e -> {
+            doubleSelector = new TwoStepsTileSelector((shield, battery) -> {
+                int sx = shield.x();
+                int sy = shield.y();
+                int bx = battery.x();
+                int by = battery.y();
+                try {
+                    client.sendAction(new ActivateShield(sx,sy,bx,by));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    doubleSelector = null;
+                }
+            });
+        });
+    }
+
+    private void setupEngineBtn(Button e) {
+        e.setText("Attiva motore");
+        enable(e);
+
+        e.setOnAction(event -> {
+            // creo il selector
+            doubleSelector = new TwoStepsTileSelector( (engine, battery) -> {
+                // callback dopo i 2 click
+                int ex = engine.x();
+                int ey = engine.y();
+                int bx = battery.x();
+                int by = battery.y();
+                try {
+                    // invio azione e resetto il selettore
+                    client.sendAction(new ActivateEngine(ex, ey, bx, by));
+                }
+                catch (RemoteException exception) {
+                    exception.printStackTrace();
+                }
+                finally {
+                    doubleSelector = null;
+                }
+            });
+        });
+    }
+
+    /// volendo, si potrebbe creare un "annulla" cioè permettere all'utente di cliccare "attiva cannone" e poi "attiva scudo" e
+    /// prenderebbe i comandi di "attiva scudo" . Basterebbe mettere i selettori a null prima di creare quello nuovo
+
+    public void openSpaceCommands() {
+        setupEngineBtn(button1);
+        setupReadyBtn(button2);
+    }
+
     public void planetsCommands(int id) {
         button1.setText("Atterra Pianeta 1");
         button2.setText("Atterra Pianeta 2");
@@ -306,245 +357,98 @@ public class FlightPhaseController {
     }
 
     public void startdustCommands() {
-        Platform.runLater(() -> {
-            textLabel.setText("Non puoi fare nulla: perderai giorni di volo in base al numero di connettori esposti");
-        });
+        textLabel.setText("Non puoi fare nulla: perderai giorni di volo in base al numero di connettori esposti");
     }
 
 
     public void abandonedshipCommands() {
-        ///  TODO: potrei levarlo runlater : sono già nel thread UI. capire se metterlo/toglierlo in tutti
-        Platform.runLater(() -> {
-            button1.setText("Compra nave");
-            enable(button1);
-            button2.setText("Passa");
-            enable(button2);
-            button3.setText("Riduci equipaggio");
-            enable(button3);
+        button1.setText("Compra nave");
+        enable(button1);
 
-            button1.setOnAction(e -> {
+        button1.setOnAction(e -> {
+            try {
+                client.sendAction(new BuyShip());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        setupPassBtn(button2);
+
+        button3.setText("Riduci equipaggio");
+        enable(button3);
+        button3.setOnAction(e -> {
+            // creo selettore per ridurre
+            singleSelector = new SingleTileSelector(coord -> {
+                int x = coord.x();
+                int y = coord.y();
                 try {
-                    client.sendAction(new BuyShip());
-                } catch (RemoteException ex) {
+                    // invio azione e resetto selettore
+                    client.sendAction(new ReduceCrew(x, y, 1));
+                    singleSelector = null;
+                }
+                catch (RemoteException ex) {
                     ex.printStackTrace();
                 }
             });
-
-            button2.setOnAction(e -> {
-                try {
-                    client.sendAction(new NextTurn());
-                } catch (RemoteException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
-
-            button3.setOnAction(e -> {
-                // creo selettore per ridurre
-                singleSelector = new SingleTileSelector(coord -> {
-                    int x = coord.x();
-                    int y = coord.y();
-                    try {
-                        // invio azione e resetto selettore
-                        client.sendAction(new ReduceCrew(x, y, 1));
-                        singleSelector = null;
-                    }
-                    catch (RemoteException ex) {
-                        ex.printStackTrace();
-                    }
-                });
-            });
-
         });
     }
 
     public void slaversCommands() {
-        Platform.runLater(() -> {
-            button1.setText("Attiva cannone");
-           enable(button1);
-           button2.setText("Pronto");
-           enable(button2);
-           button3.setText("Riduci equipaggio");
-           enable(button3);
-           button4.setText("Balza la ricompensa");
-           enable(button4);
-           button5.setText("Prendi i crediti");
-           enable(button5);
 
-           button1.setOnAction(e -> {
-               doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
-                  int cx = cannon.x();
-                  int cy = cannon.y();
-                  int bx = battery.x();
-                  int by = battery.y();
-                  try {
-                      client.sendAction(new ActivateCannon(cx, cy, bx, by));
-                      doubleSelector = null;
-                  }
-                  catch (RemoteException ex) {
-                      ex.printStackTrace();
-                  }
-              });
-           });
+        setupCannonBtn(button1);
+        setupReadyBtn(button2);
 
-           button2.setOnAction(e -> {
-               try {
-                   client.sendAction(new Ready());
-               } catch (RemoteException ex) {
-                   throw new RuntimeException(ex);
-               }
-           });
+        button3.setText("Riduci equipaggio");
+        enable(button3);
+        button3.setOnAction(e -> {
+            singleSelector = new SingleTileSelector(coord -> {
+                int x = coord.x();
+                int y = coord.y();
 
-           button3.setOnAction(e -> {
-              singleSelector = new SingleTileSelector(coord -> {
-                  int x = coord.x();
-                  int y = coord.y();
-
-                  try {
-                      client.sendAction(new ReduceCrew(x,y,1));
-                      singleSelector = null;
-                  } catch (RemoteException ex) {
-                      throw new RuntimeException(ex);
-                  }
-              });
-           });
-
-           button4.setOnAction(e -> {
-               try {
-                   client.sendAction(new NextTurn());
-               } catch (RemoteException ex) {
-                   ex.printStackTrace();
-               }
-           });
-
-           button5.setOnAction(e -> {
-               try {
-                   client.sendAction(new EarnCredits());
-               } catch (RemoteException ex) {
-                   ex.printStackTrace();
-               }
-           });
-
+                try {
+                    client.sendAction(new ReduceCrew(x,y,1));
+                    singleSelector = null;
+                } catch (RemoteException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         });
+
+        setupPassBtn(button4);
+
+        button5.setText("Prendi i crediti");
+        enable(button5);
+        button5.setOnAction(e -> {
+            try {
+               client.sendAction(new EarnCredits());
+            } catch (RemoteException ex) {
+               ex.printStackTrace();
+            }
+        });
+
     }
 
     public void meteorSwarmCommands() {
-        Platform.runLater(() -> {
-            button1.setText("Attiva cannone");
-            enable(button1);
-            button2.setText("Attiva scudo");
-            enable(button2);
-            button3.setText("Pronto");
-            enable(button3);
+        setupCannonBtn(button1);
+        setupShieldBtn(button2);
+        setupReadyBtn(button3);
 
-            button1.setOnAction(e -> {
-                doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
-                    int cx = cannon.x();
-                    int cy = cannon.y();
-                    int bx = battery.x();
-                    int by = battery.y();
-                    try {
-                        client.sendAction(new ActivateCannon(cx,cy,bx,by));
-                    } catch (RemoteException ex) {
-                        ex.printStackTrace();
-                    }
-                    finally {
-                        doubleSelector = null;
-                    }
-                });
-            });
-
-            button2.setOnAction(e -> {
-                doubleSelector = new TwoStepsTileSelector((shield, battery) -> {
-                    int sx = shield.x();
-                    int sy = shield.y();
-                    int bx = battery.x();
-                    int by = battery.y();
-                    try {
-                        client.sendAction(new ActivateShield(sx,sy,bx,by));
-                    } catch (RemoteException ex) {
-                        ex.printStackTrace();
-                    }
-                    finally {
-                        doubleSelector = null;
-                    }
-                });
-            });
-
-            button3.setOnAction(e -> {
-                try {
-                    client.sendAction(new Ready());
-                } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                }
-            });
-
-        });
     }
 
     public void epidemicCommands() {
-        Platform.runLater(() -> {
-            textLabel.setText("Non puoi fare nulla: perderai 1 membro dell'equipaggio per ogni cabina contagiata");
-        });
+        textLabel.setText("Non puoi fare nulla: perderai 1 membro dell'equipaggio per ogni cabina contagiata");
     }
 
     public void piratesCommands() {
-        button1.setText("Attiva cannone");
-        enable(button1);
-        button2.setText("Pronto");
-        enable(button2);
-        button3.setText("Attiva scudo");
-        enable(button3);
-        button4.setText("Balza la ricompensa");
-        enable(button4);
-        button5.setText("Prendi i crediti");
+
+        setupCannonBtn(button1);
+        setupReadyBtn(button2);
+        setupShieldBtn(button3);
+        setupPassBtn(button4);
+
+        button5.setText("Prendi crediti");
         enable(button5);
-
-        button1.setOnAction(e -> {
-            doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
-                int cx = cannon.x();
-                int cy = cannon.y();
-                int bx = battery.x();
-                int by = battery.y();
-                try {
-                    client.sendAction(new ActivateCannon(cx,cy,bx,by));
-                } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                }
-                finally {
-                    doubleSelector = null;
-                }
-            });
-        });
-
-        button2.setOnAction(e -> {
-            try {
-                client.sendAction(new Ready());
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
-            }
-        });
-
-        button3.setOnAction(e -> {
-            doubleSelector = new TwoStepsTileSelector((shield, battery) -> {
-                try {
-                    client.sendAction(new ActivateShield(shield.x(), shield.y(), battery.x(), battery.y()));
-                } catch (RemoteException ex) {
-                    ex.printStackTrace();
-                }
-                finally {
-                    doubleSelector = null;
-                }
-            });
-        });
-
-        button4.setOnAction(e -> {
-            try {
-                client.sendAction(new NextTurn());
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
-            }
-        });
-
         button5.setOnAction(e -> {
             try {
                 client.sendAction(new EarnCredits());
