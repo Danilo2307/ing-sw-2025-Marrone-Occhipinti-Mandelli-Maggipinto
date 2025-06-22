@@ -367,34 +367,34 @@ public class GuiApplication extends Application implements ViewAPI {
             flightPhaseController.getTextLabel().setText("");
             flightPhaseController.disableAllButtons();
             flightPhaseController.setCardImage(id);
+
+            switch (gameStatus) {
+                case INIT_STARDUST -> {
+                    flightPhaseController.startdustCommands();
+                }
+                case INIT_OPENSPACE -> {
+                    flightPhaseController.openSpaceCommands();
+                }
+                case GameStatus.INIT_ABANDONEDSHIP -> {
+                    flightPhaseController.abandonedshipCommands();
+                }
+                case INIT_SLAVERS -> {
+                    flightPhaseController.slaversCommands();
+                }
+                case INIT_METEORSWARM -> {
+                    flightPhaseController.meteorSwarmCommands();
+                }
+                case INIT_EPIDEMIC -> {
+                    flightPhaseController.epidemicCommands();
+                }
+                case GameStatus.INIT_PLANETS -> {
+                    flightPhaseController.planetsCommands(id);
+                }
+                case GameStatus.Playing -> {
+
+                }
+            }
         });
-
-        switch(gameStatus) {
-            case INIT_STARDUST -> {
-                flightPhaseController.startdustCommands();
-            }
-            case INIT_OPENSPACE -> {
-                flightPhaseController.openSpaceCommands();
-            }
-            case GameStatus.INIT_ABANDONEDSHIP -> {
-                flightPhaseController.abandonedshipCommands();
-            }
-            case INIT_SLAVERS -> {
-                flightPhaseController.slaversCommands();
-            }
-            case INIT_METEORSWARM -> {
-                flightPhaseController.meteorSwarmCommands() ;
-            }
-            case INIT_EPIDEMIC -> {
-                flightPhaseController.epidemicCommands();
-            }
-            case GameStatus.INIT_PLANETS -> {
-                flightPhaseController.planetsCommands(id);
-            }
-            case GameStatus.Playing -> {
-
-            }
-        }
     }
 
     @Override

@@ -274,7 +274,10 @@ public class Controller {
 
     // Questo onGameEvent inoltra gli eventi rivolti a tutti i client
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
-        Server.getInstance().getGame(gameId).setGameStatus(event.getNewStatus());
+        Game game = Server.getInstance().getGame(gameId);
+        game.setGameStatus(event.getNewStatus());
+        BroadcastMessage broadcastMessage = new BroadcastMessage(new StateChanged(game.getGameStatus()));
+        Server.getInstance().notifyAllObservers(broadcastMessage, gameId);
         //qui serve tutta la gestione della chiamata alla view poichè giunti a questo punto
         //avremo l'evento pronto con le informazioni della carta e lo stato già aggiornato dal model con una ripetizione
         // del suo cambiamento all'interno dell'evento (si può anche togliere in futuro)

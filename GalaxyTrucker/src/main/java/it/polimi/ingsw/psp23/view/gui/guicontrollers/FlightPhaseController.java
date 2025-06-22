@@ -293,6 +293,7 @@ public class FlightPhaseController {
 
 
     public void abandonedshipCommands() {
+        /// potrei levarlo runlater : sono già nel thread UI
         Platform.runLater(() -> {
             button1.setText("Compra nave");
             enable(button1);
