@@ -4,5 +4,5 @@ public enum ConnectorType {
     NONE,
     SINGLE,
     DOUBLE,
-    UNIVERSAL
+    UNIVERSAL;
 }

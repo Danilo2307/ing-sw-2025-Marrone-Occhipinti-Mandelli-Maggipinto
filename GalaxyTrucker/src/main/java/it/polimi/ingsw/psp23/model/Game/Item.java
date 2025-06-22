@@ -2,6 +2,10 @@ package it.polimi.ingsw.psp23.model.Game;
 
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 
+/**
+ * Represents an item characterized by a specific color.
+ * The color of the item is immutable and defined during object construction.
+ */
 public class Item {
     private final Color color;
 
