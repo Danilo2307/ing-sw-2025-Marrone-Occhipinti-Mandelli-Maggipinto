@@ -1111,7 +1111,7 @@ public class Board {
                 if (container == -1) {
                     throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
                 }
-                Item itemToRemove = containers.get(index).getItems().get(index - 1);
+                Item itemToRemove = containers.get(container).getItems().get(index - 1);
 
                 // provo a rimuovere item: se loseItem lancia eccezione, la raccolgo e la rilancio con contesto affinchè venga gestita meglio dal controller
                 try {

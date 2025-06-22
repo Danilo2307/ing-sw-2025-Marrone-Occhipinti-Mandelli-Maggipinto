@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import it.polimi.ingsw.psp23.network.Client;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,7 +13,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.rmi.RemoteException;
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class FlightPhaseController {
     private Client client;
@@ -22,6 +25,7 @@ public class FlightPhaseController {
     @FXML Button button4;
     @FXML Button button5;
     @FXML Button button6;
+    @FXML Button button7;
     @FXML ImageView card;
     @FXML Button drawBtn;
     @FXML Label textLabel;
@@ -143,6 +147,7 @@ public class FlightPhaseController {
         disable(button4);
         disable(button5);
         disable(button6);
+        disable(button7);
     }
 
     /// volendo, si potrebbe creare un "annulla" cioè permettere all'utente di cliccare "attiva cannone" e poi "attiva scudo" e
@@ -185,102 +190,117 @@ public class FlightPhaseController {
         });
     }
 
+    private void setupPassBtn(Button pass) {
+        pass.setText("Passa");
+        enable(pass);
+        pass.setOnAction(e -> {
+            try {
+                client.sendAction(new NextTurn());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+    }
+
+    private void setupLoadGoodBtn(Button load) {
+        load.setText("Carica merce");
+        enable(load);
+        load.setOnAction(e -> {
+            singleSelector = new SingleTileSelector((container) -> {
+                try {
+                    client.sendAction(new LoadGood(container.x(), container.y()));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    singleSelector = null;
+                }
+            });
+        });
+    }
+
+    private void setupDropGoodBtn(Button drop) {
+        drop.setText("Scarica merce");
+        enable(drop);
+        drop.setOnAction(e -> {
+            singleSelector = new SingleTileSelector((container) -> {
+                int x = container.x();
+                int y = container.y();
+
+                List<Integer> choices = List.of(1,2,3);
+                ChoiceDialog<Integer> dialog = new ChoiceDialog<>(1, choices);
+                dialog.setTitle("Scarica merce");
+                dialog.setHeaderText("Scegli la merce da rimuovere");
+                dialog.setContentText("Indice: ");
+
+                dialog.showAndWait().ifPresent(idx -> {
+                    try {
+                        client.sendAction(new LoseGood(x,y, idx));
+                    }
+                    catch (RemoteException ex) {
+                        ex.printStackTrace();
+                    }
+                    finally {
+                        singleSelector = null;
+                    }
+                });
+            });
+        });
+    }
+
+    private void setupLandBtn(Button land, int planetIndex) {
+        enable(land);
+        land.setOnAction(e -> {
+            try {
+                client.sendAction(new Land(planetIndex));
+            }
+            catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
     public void planetsCommands(int id) {
         button1.setText("Atterra Pianeta 1");
         button2.setText("Atterra Pianeta 2");
         button3.setText("Atterra Pianeta 3");
         button4.setText("Atterra Pianeta 4");
-        button5.setText("Atterra Pianeta 5");
 
         switch (id) {
             // 4 pianeti
             case 112, 206 -> {
-                enable(button1);
-                button1.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(0));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupLandBtn(button1, 1);
+                setupLandBtn(button2, 2);
+                setupLandBtn(button3, 3);
+                setupLandBtn(button4, 4);
 
-                enable(button2);
-                button2.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(1));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupPassBtn(button5);
+                setupLoadGoodBtn(button6);
+                setupDropGoodBtn(button7);
 
-                enable(button3);
-                button3.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(2));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
-
-                enable(button4);
-                button4.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(3));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
             }
 
             // 3 pianeti
             case 102, 114, 204, 207 -> {
-                enable(button1);
-                button1.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(0));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupLandBtn(button1, 1);
+                setupLandBtn(button2, 2);
+                setupLandBtn(button3, 3);
 
-                enable(button2);
-                button2.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(1));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupPassBtn(button4);
+                setupLoadGoodBtn(button5);
+                setupDropGoodBtn(button6);
 
-                enable(button3);
-                button3.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(2));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
             }
 
             // 2 pianeti
             case 113, 205 -> {
-                enable(button1);
-                button1.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(0));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupLandBtn(button1, 1);
+                setupLandBtn(button2, 2);
 
-                enable(button2);
-                button2.setOnAction(e -> {
-                    try {
-                        client.sendAction(new Land(1));
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                });
+                setupPassBtn(button3);
+                setupLoadGoodBtn(button4);
+                setupDropGoodBtn(button5);
+
             }
         }
     }
@@ -533,6 +553,8 @@ public class FlightPhaseController {
             }
         });
     }
+
+
 
 
 
