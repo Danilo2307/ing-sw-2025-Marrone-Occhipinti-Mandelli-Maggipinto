@@ -145,6 +145,9 @@ public class FlightPhaseController {
         disable(button6);
     }
 
+    /// volendo, si potrebbe creare un "annulla" cioè permettere all'utente di cliccare "attiva cannone" e poi "attiva scudo" e
+    /// prenderebbe i comandi di "attiva scudo" . Basterebbe mettere i selettori a null prima di creare quello nuovo
+
     public void openSpaceCommands() {
         Platform.runLater(() -> {
             button1.setText("Attiva motore");
@@ -403,7 +406,63 @@ public class FlightPhaseController {
         });
     }
 
+    public void meteorSwarmCommands() {
+        Platform.runLater(() -> {
+            button1.setText("Attiva cannone");
+            enable(button1);
+            button2.setText("Attiva scudo");
+            enable(button2);
+            button3.setText("Pronto");
+            enable(button3);
 
+            button1.setOnAction(e -> {
+                doubleSelector = new TwoStepsTileSelector((cannon, battery) -> {
+                    int cx = cannon.x();
+                    int cy = cannon.y();
+                    int bx = battery.x();
+                    int by = battery.y();
+                    try {
+                        client.sendAction(new ActivateCannon(cx,cy,bx,by));
+                    } catch (RemoteException ex) {
+                        ex.printStackTrace();
+                    }
+                    finally {
+                        doubleSelector = null;
+                    }
+                });
+            });
 
+            button2.setOnAction(e -> {
+                doubleSelector = new TwoStepsTileSelector((shield, battery) -> {
+                    int sx = shield.x();
+                    int sy = shield.y();
+                    int bx = battery.x();
+                    int by = battery.y();
+                    try {
+                        client.sendAction(new ActivateShield(sx,sy,bx,by));
+                    } catch (RemoteException ex) {
+                        ex.printStackTrace();
+                    }
+                    finally {
+                        doubleSelector = null;
+                    }
+                });
+            });
 
+            button3.setOnAction(e -> {
+                try {
+                    client.sendAction(new Ready());
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+            });
+
+        });
+    }
+
+    public void epidemicCommands() {
+        Platform.runLater(() -> {
+            textLabel.setText("Non puoi fare nulla: perderai 1 membro dell'equipaggio per ogni cabina contagiata");
+        });
+    }
 }

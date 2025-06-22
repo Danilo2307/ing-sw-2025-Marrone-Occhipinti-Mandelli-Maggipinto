@@ -294,12 +294,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showPlayerLanded(String username, int planet) {
-
+        showMessage("Il giocatore " + username + " e' atterrato sul pianeta numero " + (planet + 1));
     }
 
     @Override
     public void showTimeExpired() {
-
+        showMessage("Tempo scaduto");
     }
 
     @Override
@@ -324,12 +324,12 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showMeteor(Meteor meteor) {
-
+        showMessage("Sta arrivando una meteora " + meteor.isBig() + " dalla direzione " + meteor.getDirection());
     }
 
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
-
+        showMessage("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
 
     @Override
@@ -381,6 +381,12 @@ public class GuiApplication extends Application implements ViewAPI {
             }
             case INIT_SLAVERS -> {
                 flightPhaseController.slaversCommands();
+            }
+            case INIT_METEORSWARM -> {
+                flightPhaseController.meteorSwarmCommands() ;
+            }
+            case INIT_EPIDEMIC -> {
+                flightPhaseController.epidemicCommands();
             }
             case GameStatus.INIT_PLANETS -> {
                 flightPhaseController.planetsCommands(id);
