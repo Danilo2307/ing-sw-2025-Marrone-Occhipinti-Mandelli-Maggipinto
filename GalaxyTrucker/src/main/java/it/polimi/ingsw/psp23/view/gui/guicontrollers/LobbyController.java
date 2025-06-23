@@ -16,6 +16,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -27,6 +29,7 @@ public class LobbyController {
 
     // scelta partita
     @FXML private Button createGameBtn;
+    @FXML private Label lobbyLabel;
     @FXML private VBox lobbiesContainer;
     private boolean creator = false;
     private int RMIIdGameChosen;
@@ -64,6 +67,9 @@ public class LobbyController {
 
                 String label = String.format("Partita %d:::  livello: %d ||| giocatori presenti: %d ||| numero massimo: %d", id+1, level, current, max);
                 Button joinButton = new Button(label);
+                joinButton.setFont(Font.font("Arial Black"));
+                joinButton.setPrefHeight(40);
+                joinButton.setPrefWidth(1000);
                 joinButton.setOnAction(ev -> {
                     // la lambda cattura il rispettivo lobbyId al momento della creazione
                     try {
@@ -97,6 +103,7 @@ public class LobbyController {
             lobbiesContainer.getChildren().clear();
             lobbiesContainer.setVisible(false);
             lobbiesContainer.setManaged(false);
+            lobbyLabel.setVisible(false);
         });
     }
 
