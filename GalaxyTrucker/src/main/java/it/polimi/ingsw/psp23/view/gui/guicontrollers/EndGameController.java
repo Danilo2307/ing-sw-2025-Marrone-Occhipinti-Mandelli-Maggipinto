@@ -59,6 +59,8 @@ public class EndGameController {
                 cosmicCredits2.setText(ranking.get(1).getValue().toString());
                 player3.setText(ranking.get(2).getKey());
                 cosmicCredits3.setText(ranking.get(2).getValue().toString());
+                player4.setText(ranking.get(3).getKey());
+                cosmicCredits4.setText(ranking.get(3).getValue().toString());
             }
 
         }
