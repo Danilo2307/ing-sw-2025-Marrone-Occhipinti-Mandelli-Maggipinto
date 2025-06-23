@@ -280,7 +280,7 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showTurn(String turn) {
-
+        flightPhaseController.getTextLabel().setText("Turno di " + turn + " iniziato");
     }
 
     @Override
@@ -300,12 +300,16 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showTimeExpired() {
-        showMessage("Tempo scaduto");
+        Platform.runLater(() -> {
+            showMessage("Tempo scaduto");
+        });
     }
 
     @Override
     public void showEndTurn(String username) {
-
+        Platform.runLater(() -> {
+            flightPhaseController.getTextLabel().setText("Turno di " + username + " finito");
+        });
     }
 
     @Override
@@ -320,7 +324,9 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showCardUpdate(String message) {
-
+        Platform.runLater(() -> {
+            flightPhaseController.getTextLabel().setText(message);
+        });
     }
 
     @Override

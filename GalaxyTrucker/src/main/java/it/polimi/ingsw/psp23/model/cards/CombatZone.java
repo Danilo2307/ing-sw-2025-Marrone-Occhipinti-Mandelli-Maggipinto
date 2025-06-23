@@ -402,6 +402,7 @@ public class CombatZone extends Card {
      */
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
+        game.setGameStatus(GameStatus.INIT_COMBATZONE);
         game.fireEvent(new EventForCombatZone(
                 game.getGameStatus(), daysLost, goodsLost, membersLost, penalties, cannonShot));
         for(Player p : game.getPlayers()){
