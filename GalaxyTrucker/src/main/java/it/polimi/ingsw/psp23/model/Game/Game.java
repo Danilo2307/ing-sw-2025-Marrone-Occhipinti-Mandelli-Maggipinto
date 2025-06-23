@@ -146,7 +146,7 @@ public class Game {
      * This method checks the status of all players in the game to determine whether they should
      * be eliminated from the flight. A player is eliminated from the flight if either:
      * - Their truck's human crew count is zero.
-     * - The gap between their position and the leading player's position exceeds 24.
+     * - The gap between their position and the leading player's position exceeds 24 or 18, depending on the level.
      *
      * The method assumes that `maxPosition` refers to the position of the leading player,
      * even if they are eliminated during the process. It does not update `maxPosition` dynamically
@@ -154,6 +154,13 @@ public class Game {
      */
 
     public void checkEliminationPlayers() {
+        int maxDistanceBetweenPlayers;
+        if (level == 0) {
+            maxDistanceBetweenPlayers = 18;
+        }
+        else {
+            maxDistanceBetweenPlayers = 24;
+        }
         // ricavo posizione del leader
         int maxPosition = players.stream().mapToInt(Player::getPosition).max().orElse(0);
 
@@ -162,7 +169,7 @@ public class Game {
             if (player.getTruck().calculateHumanCrew() == 0)
                 player.leaveFlight();
             // check doppiaggio
-            if (maxPosition - player.getPosition() > 24)
+            if (maxPosition - player.getPosition() > maxDistanceBetweenPlayers)
                 player.leaveFlight();
         }
     // OSS: se elimino il leader non riaggiorno maxPosition: potremmo supporre che si faccia riferimento sempre a lui anche se eliminato (non specificato su regolamento)

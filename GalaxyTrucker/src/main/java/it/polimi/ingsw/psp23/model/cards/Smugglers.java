@@ -1,11 +1,8 @@
 package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
-import it.polimi.ingsw.psp23.model.Events.EnemyDefeated;
-import it.polimi.ingsw.psp23.model.Events.TurnOf;
+import it.polimi.ingsw.psp23.model.Events.*;
 import it.polimi.ingsw.psp23.model.Game.*;
-import it.polimi.ingsw.psp23.model.Events.EventForSmugglers;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -339,7 +336,7 @@ public class Smugglers extends Card {
         if (power > firePower) {
             winner = username;
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
-            game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
+            game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SMUGGLERS);
         } else if (power < firePower){
             loser = username;
