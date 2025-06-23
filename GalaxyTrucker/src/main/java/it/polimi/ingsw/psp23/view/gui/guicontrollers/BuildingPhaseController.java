@@ -36,14 +36,20 @@ public class BuildingPhaseController {
     @FXML private ImageView board;
     @FXML private GridPane ship;
 
+    // build
     @FXML private Button releaseBtn;
     @FXML private Button rotateBtn;
     @FXML private Button putBtn;
     @FXML private Button turnBtn;
     @FXML private Button leaveBtn;
     @FXML private Button drawHeapBtn;
-    @FXML private Button spyOthersBtn;
 
+    // view other ships
+    @FXML private Button player1;
+    @FXML private Button player2;
+    @FXML private Button player3;
+
+    // build
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
@@ -51,6 +57,7 @@ public class BuildingPhaseController {
     @FXML private StackPane reserved1;
     @FXML private StackPane reserved2;
 
+    // helpers
     boolean reservedInHand = false;
     Component componentInHand;
     private StackPane cellToRemove = null;
@@ -68,6 +75,16 @@ public class BuildingPhaseController {
     int selectedCrewType;
     boolean inAddCrew = false;
 
+
+    private void enable(Button button) {
+        button.setVisible(true);
+        button.setManaged(true);
+    }
+
+    private void disable(Button button) {
+        button.setVisible(false);
+        button.setManaged(false);
+    }
 
     public ImageView getTileInHand() {
         return tileInHand;
@@ -286,6 +303,22 @@ public class BuildingPhaseController {
             ship.add(pane, 3, 2);
         });
 
+    }
+
+    public void setupViewOtherShipsBtn() {
+        ArrayList<String> otherPlayers = GuiApplication.getInstance().getOtherUsers();
+
+        player1.setText(otherPlayers.get(0));
+        enable(player1);
+
+        if (otherPlayers.size() == 2 || otherPlayers.size() == 3) {
+            player2.setText(otherPlayers.get(1));
+            enable(player2);
+        }
+        if (otherPlayers.size() == 3) {
+            player3.setText(otherPlayers.get(2));
+            enable(player3);
+        }
     }
 
     @FXML
@@ -576,8 +609,11 @@ public class BuildingPhaseController {
     }
 
     @FXML
-    public void onSpyOthersClicked() {
+    public void onSpyOthersClicked(javafx.event.ActionEvent event) throws RemoteException {
+        Button clickedButton = (Button) event.getSource();  // bottone che ha scatenato l’evento
+        String username = clickedButton.getText();          // testo del bottone = username
 
+        client.sendAction(new RequestShip(username));       // invia richiesta con username selezionato
     }
 
 

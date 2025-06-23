@@ -1,21 +1,13 @@
 package it.polimi.ingsw.psp23.view.gui;
 
-import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.GetEventVisitor;
-import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
-import it.polimi.ingsw.psp23.network.socket.ClientSocket;
-import it.polimi.ingsw.psp23.protocol.response.HandleEventVisitor;
 import it.polimi.ingsw.psp23.protocol.response.LobbyAvailable;
-import it.polimi.ingsw.psp23.protocol.response.SelectLevel;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import it.polimi.ingsw.psp23.view.gui.guicontrollers.*;
 import javafx.application.Application;
@@ -30,13 +22,9 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import javafx.scene.image.ImageView;
 import java.io.IOException;
-import java.net.Socket;
-import java.net.SocketException;
-import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
-import javafx.scene.control.Button;
 
 
 // carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
@@ -49,8 +37,9 @@ public class GuiApplication extends Application implements ViewAPI {
     private  FlightPhaseController flightPhaseController;
     private FlightBoardController2 flightBoardController2;
     private FlightBoardController0 flightBoardController0;
-    private  LobbyController lobbyController;
+    private LobbyController lobbyController;
     private DeckViewController deckViewController;
+    private OpponentShipController opponentShipController;
     private  TimerController timerController;
     private EndGameController endGameController;
     private Stage stage;
@@ -171,6 +160,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 Parent root = loader.load();
                 this.buildingPhaseController = loader.getController();
                 buildingPhaseController.setClient(client);
+                buildingPhaseController.setupViewOtherShipsBtn();
                 Scene scene = new Scene(root, 1152, 768);
                 buildingPhaseScene = scene;
                 buildedShip = buildingPhaseController.getShip();
@@ -238,7 +228,20 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void showShip(Component[][] ship, String owner) {
         if (!owner.equals(myNickname)) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/opponent-ship-view.fxml"));
+            try {
+                Parent root = loader.load();
+                this.opponentShipController = loader.getController();
+                Scene scene = new Scene(root, 1152, 768);
 
+                Platform.runLater(() -> {
+                    opponentShipController.setLabel(owner);
+                    opponentShipController.renderShip(ship, level);
+                    stage.setScene(scene);
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
         }
 

@@ -1,59 +1,61 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
+import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.Client;
-import it.polimi.ingsw.psp23.protocol.request.RequestShip;
-import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.Objects;
+
 
 public class OpponentShipController {
-    private Client client;
 
-    @FXML private Button player1;
-    @FXML private Button player2;
-    @FXML private Button player3;
+    @FXML private Label labelOwner;
+    @FXML private Button returnBtn;
+    @FXML private StackPane stackShip;
+    @FXML private ImageView imageGrid;
+    @FXML private GridPane gridShip;
 
-    public void initialize() {
-        ArrayList<String> otherPlayers = GuiApplication.getInstance().getOtherUsers();
 
-        player1.setText(otherPlayers.get(0));
-        enable(player1);
+    public void setLabel(String owner) {
+        labelOwner.setText("Ecco la nave di " + owner);
+    }
 
-        if (otherPlayers.size() == 2 || otherPlayers.size() == 3) {
-            player2.setText(otherPlayers.get(1));
-            enable(player2);
+
+    public void renderShip(Component[][] ship, int level) {
+        gridShip.getChildren().clear();
+
+        /*imageGrid.fitWidthProperty().bind(stackShip.widthProperty());
+        imageGrid.fitHeightProperty().bind(stackShip.heightProperty());
+        gridShip.prefWidthProperty().bind(stackShip.widthProperty());
+        gridShip.prefHeightProperty().bind(stackShip.heightProperty());*/
+
+        if (level == 0) {
+            imageGrid.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1.jpg"))));
         }
-        if (otherPlayers.size() == 3) {
-            player3.setText(otherPlayers.get(2));
-            enable(player3);
+        else {
+            imageGrid.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1b.jpg"))));
+        }
+
+        for (int row = 0; row < ship.length; row++) {
+            for (int col = 0; col < ship[row].length; col++) {
+                Component component = ship[row][col];
+
+                if (component != null) {
+                    String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
+                    ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+                    imageView.setFitWidth(120);
+                    imageView.setFitHeight(90);
+                    imageView.setPreserveRatio(true);
+                    gridShip.add(imageView, col, row);
+                }
+            }
         }
     }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    private void enable(Button button) {
-        button.setVisible(true);
-        button.setManaged(true);
-    }
-
-    private void disable(Button button) {
-        button.setVisible(false);
-        button.setManaged(false);
-    }
-
-    @FXML
-    public void viewShip(javafx.event.ActionEvent event) throws RemoteException {
-        Button clickedButton = (Button) event.getSource();  // bottone che ha scatenato l’evento
-        String username = clickedButton.getText();          // testo del bottone = username
-
-        client.sendAction(new RequestShip(username));       // invia richiesta con username selezionato
-    }
-
-
 }
 
