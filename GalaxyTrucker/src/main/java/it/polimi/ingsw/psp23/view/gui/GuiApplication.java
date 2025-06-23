@@ -237,6 +237,10 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showShip(Component[][] ship, String owner) {
+        if (!owner.equals(myNickname)) {
+
+
+        }
 
     }
 
@@ -547,6 +551,11 @@ public class GuiApplication extends Application implements ViewAPI {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void savePlayersNames(List<String> players) {
+        usernames = new ArrayList<>(players);
     }
 
 }

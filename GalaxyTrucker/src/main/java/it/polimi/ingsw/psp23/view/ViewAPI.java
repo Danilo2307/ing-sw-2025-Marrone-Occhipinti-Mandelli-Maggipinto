@@ -47,4 +47,5 @@ public interface ViewAPI {
     void showFlightBoard(Map<Color, Integer> flightMap);
     void showAvailableLobbies(List<List<Integer>> availableLobbies);
     void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking);
+    void savePlayersNames(List<String> players);
 }

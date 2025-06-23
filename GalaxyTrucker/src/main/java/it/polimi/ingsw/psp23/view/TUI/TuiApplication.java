@@ -776,5 +776,13 @@ public class TuiApplication implements ViewAPI {
         io.print("=============================");
     }
 
+    @Override
+    public void savePlayersNames(List<String> players) {
+        io.print("I giocatori in partita sono:\n");
+        for (String player : players) {
+            io.print(player + "\n");
+        }
+    }
+
 
 }

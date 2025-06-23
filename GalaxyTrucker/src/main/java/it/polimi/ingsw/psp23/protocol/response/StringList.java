@@ -7,7 +7,7 @@ import java.util.List;
 public record StringList(List<String> players) implements Event {
 
         public void handle(ViewAPI viewAPI) {
-            ;
+            viewAPI.savePlayersNames(players);
         }
 
         @Override
