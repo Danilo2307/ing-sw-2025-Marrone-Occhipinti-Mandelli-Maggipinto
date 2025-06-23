@@ -28,6 +28,7 @@ public class EndGameController {
                 text1.setVisible(true);
                 player1.setText(ranking.get(0).getKey());
                 cosmicCredits1.setText(ranking.get(0).getValue().toString());
+                break;
             }
             case 2: {
                 text1.setVisible(true);
@@ -36,6 +37,7 @@ public class EndGameController {
                 cosmicCredits1.setText(ranking.get(0).getValue().toString());
                 player2.setText(ranking.get(1).getKey());
                 cosmicCredits2.setText(ranking.get(1).getValue().toString());
+                break;
             }
             case 3: {
                 text1.setVisible(true);
@@ -47,6 +49,7 @@ public class EndGameController {
                 cosmicCredits2.setText(ranking.get(1).getValue().toString());
                 player3.setText(ranking.get(2).getKey());
                 cosmicCredits3.setText(ranking.get(2).getValue().toString());
+                break;
             }
             case 4: {
                 text1.setVisible(true);
@@ -61,6 +64,7 @@ public class EndGameController {
                 cosmicCredits3.setText(ranking.get(2).getValue().toString());
                 player4.setText(ranking.get(3).getKey());
                 cosmicCredits4.setText(ranking.get(3).getValue().toString());
+                break;
             }
 
         }
