@@ -22,15 +22,22 @@ public record RequestTileInfo(int x, int y) implements Action {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
         Component c = p.getTruck().getTile(x, y);
-        StringBuilder sb = new StringBuilder();
-        sb.append(c.getInfo()).append('\n')
-                .append("Connettori:\n")
-                .append("  ↑ Sopra    : ").append(c.getUp()).append('\n')
-                .append("  → Destra   : ").append(c.getRight()).append('\n')
-                .append("  ↓ Sotto    : ").append(c.getDown()).append('\n')
-                .append("  ← Sinistra : ").append(c.getLeft());
+        String description = null;
+        if (c != null) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(c.getInfo()).append('\n')
+                    .append("Connettori:\n")
+                    .append("  ↑ Sopra    : ").append(c.getUp()).append('\n')
+                    .append("  → Destra   : ").append(c.getRight()).append('\n')
+                    .append("  ↓ Sotto    : ").append(c.getDown()).append('\n')
+                    .append("  ← Sinistra : ").append(c.getLeft());
+            description = sb.toString();
+        }
+        else {
+            description = "Tile vuota: refresha la nave";
+        }
 
-        DirectMessage dm = new DirectMessage(new StringResponse(sb.toString()));
+        DirectMessage dm = new DirectMessage(new StringResponse(description));
         Server.getInstance().sendMessage(username, dm);
     }
 
