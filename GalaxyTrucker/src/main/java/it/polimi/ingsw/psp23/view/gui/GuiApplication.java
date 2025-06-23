@@ -236,7 +236,7 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     @Override
-    public void showShip(Component[][] ship, int[][] validCoordinates) {
+    public void showShip(Component[][] ship, String owner) {
 
     }
 

@@ -25,7 +25,7 @@ public interface ViewAPI {
     void showAppropriateUsername(String username, int level);
     void showWrongUsername();
     void showTile(Component requested);
-    void showShip(Component[][] ship, int[][] validCoordinates);
+    void showShip(Component[][] ship, String owner);
     void showUncovered(ArrayList<Component> uncovered, int lastVersion);
     void showError(String error);
     void showMessage(String message);

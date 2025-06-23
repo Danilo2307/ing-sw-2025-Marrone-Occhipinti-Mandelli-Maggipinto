@@ -4,10 +4,10 @@ import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
-public record ShipResponse(Component[][] ship, int[][] validCoordinates) implements Event {
+public record ShipResponse(Component[][] ship, String owner) implements Event {
 
     public void handle(ViewAPI viewAPI) {
-        viewAPI.showShip(ship, validCoordinates);
+        viewAPI.showShip(ship, owner);
     }
 
     @Override

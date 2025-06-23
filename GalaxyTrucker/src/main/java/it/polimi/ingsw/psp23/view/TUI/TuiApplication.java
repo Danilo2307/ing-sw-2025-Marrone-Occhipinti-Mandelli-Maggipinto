@@ -36,6 +36,7 @@ public class TuiApplication implements ViewAPI {
     private int lastUncoveredVersion;
     private final IOManager io;
     private TuiState currentTuiState;
+    private int level;
 
     public TuiApplication() {
         io = new IOManager();
@@ -614,6 +615,7 @@ public class TuiApplication implements ViewAPI {
             e.printStackTrace();
         }
         io.print("Benvenuto in Galaxy Trucker!!\n");
+        this.level = level;
         setState(TuiState.LOBBY);
     }
 
@@ -633,8 +635,9 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void showShip(Component[][] ship, int[][] validCoordinates) {
-        io.printShip(ship, validCoordinates);
+    public void showShip(Component[][] ship, String owner) {
+        io.print("Ecco la nave di " + owner + "\n");
+        io.printShip(ship, level);
     }
 
     @Override

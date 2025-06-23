@@ -20,23 +20,30 @@ public class OpponentShipController {
         ArrayList<String> otherPlayers = GuiApplication.getInstance().getOtherUsers();
 
         player1.setText(otherPlayers.get(0));
-        player1.setVisible(true);
-        player1.setManaged(true);
+        enable(player1);
 
         if (otherPlayers.size() == 2 || otherPlayers.size() == 3) {
             player2.setText(otherPlayers.get(1));
-            player2.setVisible(true);
-            player2.setManaged(true);
+            enable(player2);
         }
         if (otherPlayers.size() == 3) {
             player3.setText(otherPlayers.get(2));
-            player3.setVisible(true);
-            player3.setManaged(true);
+            enable(player3);
         }
     }
 
     public void setClient(Client client) {
         this.client = client;
+    }
+
+    private void enable(Button button) {
+        button.setVisible(true);
+        button.setManaged(true);
+    }
+
+    private void disable(Button button) {
+        button.setVisible(false);
+        button.setManaged(false);
     }
 
     @FXML

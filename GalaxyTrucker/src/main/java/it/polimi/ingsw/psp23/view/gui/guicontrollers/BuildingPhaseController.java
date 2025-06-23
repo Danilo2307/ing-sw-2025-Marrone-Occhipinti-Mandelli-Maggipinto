@@ -35,18 +35,22 @@ public class BuildingPhaseController {
     @FXML private StackPane boardStack;
     @FXML private ImageView board;
     @FXML private GridPane ship;
+
     @FXML private Button releaseBtn;
     @FXML private Button rotateBtn;
     @FXML private Button putBtn;
     @FXML private Button turnBtn;
     @FXML private Button leaveBtn;
     @FXML private Button drawHeapBtn;
+    @FXML private Button spyOthersBtn;
+
     @FXML private ImageView tileInHand;
     @FXML private HBox uncoveredBox;
     @FXML private ScrollPane uncoveredScrollPane;
     @FXML private Button uncoveredRefresh;
     @FXML private StackPane reserved1;
     @FXML private StackPane reserved2;
+
     boolean reservedInHand = false;
     Component componentInHand;
     private StackPane cellToRemove = null;
@@ -569,6 +573,11 @@ public class BuildingPhaseController {
 
     public GridPane getBuildedGrid() {
         return ship;
+    }
+
+    @FXML
+    public void onSpyOthersClicked() {
+
     }
 
 
