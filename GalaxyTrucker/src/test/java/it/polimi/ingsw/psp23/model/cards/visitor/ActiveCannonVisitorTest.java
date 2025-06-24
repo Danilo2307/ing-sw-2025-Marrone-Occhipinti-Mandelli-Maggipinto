@@ -120,8 +120,8 @@ public class ActiveCannonVisitorTest {
     @Test
     public void testVisitForSmugglersCallsActiveCannon() {
         String username = "Albi";
-        int i = 5;
-        int j = 3;
+        int i = 1;
+        int j = 4;
 
         visitor = new ActiveCannonVisitor();
 
@@ -133,7 +133,7 @@ public class ActiveCannonVisitorTest {
         assertEquals("Cannot activate cannon now: phase is Setup", ex.getMessage());
 
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
-        visitor.visitForSmugglers(smugglers, username, 1, 4);
+        visitor.visitForSmugglers(smugglers, username, i, j);
 
         assertEquals(true, p1.getTruck().getCannons().get(p1.getTruck().getCannons().indexOf(p1.getTruck().getShip()[1][4])).isActive() );
 
@@ -142,8 +142,8 @@ public class ActiveCannonVisitorTest {
     @Test
     public void testVisitForCombatZone() {
         String username = "Albi";
-        int i = 5;
-        int j = 3;
+        int i = 1;
+        int j = 4;
 
         visitor = new ActiveCannonVisitor();
 
@@ -155,7 +155,7 @@ public class ActiveCannonVisitorTest {
         assertEquals("Cannot activate cannon now: phase is Setup", ex.getMessage());
 
         game.setGameStatus(GameStatus.FIRST_COMBATZONE);
-        visitor.visitForCombatZone(combatZone, username, 1, 4);
+        visitor.visitForCombatZone(combatZone, username, i, j);
 
         assertEquals(true, p1.getTruck().getCannons().get(p1.getTruck().getCannons().indexOf(p1.getTruck().getShip()[1][4])).isActive() );
 
@@ -164,8 +164,8 @@ public class ActiveCannonVisitorTest {
     @Test
     public void testVisitForMeteorSwarm() {
         String username = "Albi";
-        int i = 5;
-        int j = 3;
+        int i = 1;
+        int j = 4;
 
         visitor = new ActiveCannonVisitor();
 
@@ -177,7 +177,7 @@ public class ActiveCannonVisitorTest {
         assertEquals("Cannot activate cannon now: phase is Setup", ex.getMessage());
 
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
-        visitor.visitForMeteorSwarm(meteorSwarm, username, 1, 4);
+        visitor.visitForMeteorSwarm(meteorSwarm, username, i, j);
 
         assertEquals(true, p1.getTruck().getCannons().get(p1.getTruck().getCannons().indexOf(p1.getTruck().getShip()[1][4])).isActive() );
 
@@ -186,8 +186,8 @@ public class ActiveCannonVisitorTest {
     @Test
     public void testVisitForPirates() {
         String username = "Albi";
-        int i = 5;
-        int j = 3;
+        int i = 1;
+        int j = 4;
 
         visitor = new ActiveCannonVisitor();
 
@@ -199,7 +199,7 @@ public class ActiveCannonVisitorTest {
         assertEquals("Cannot activate cannon now: phase is Setup", ex.getMessage());
 
         game.setGameStatus(GameStatus.INIT_PIRATES);
-        visitor.visitForPirates(pirates, username, 1, 4);
+        visitor.visitForPirates(pirates, username, i, j);
 
         assertEquals(true, p1.getTruck().getCannons().get(p1.getTruck().getCannons().indexOf(p1.getTruck().getShip()[1][4])).isActive() );
 
@@ -208,8 +208,8 @@ public class ActiveCannonVisitorTest {
     @Test
     public void testVisitForSlavers() {
         String username = "Albi";
-        int i = 5;
-        int j = 3;
+        int i = 1;
+        int j = 4;
 
         visitor = new ActiveCannonVisitor();
 
@@ -221,7 +221,7 @@ public class ActiveCannonVisitorTest {
         assertEquals("Cannot activate cannon now: phase is Setup", ex.getMessage());
 
         game.setGameStatus(GameStatus.INIT_SLAVERS);
-        visitor.visitForSlavers(slavers, username, 1, 4);
+        visitor.visitForSlavers(slavers, username, i, j);
 
         assertEquals(true, p1.getTruck().getCannons().get(p1.getTruck().getCannons().indexOf(p1.getTruck().getShip()[1][4])).isActive() );
 
