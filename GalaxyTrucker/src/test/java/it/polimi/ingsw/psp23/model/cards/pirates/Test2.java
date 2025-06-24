@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
+import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -100,6 +101,15 @@ public class Test2 {
         Engine ea1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         ea1.moveToHand();
         p1.getTruck().addComponent(ea1, 3, 2);
+        Engine ea2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
+        ea2.moveToHand();
+        p1.getTruck().addComponent(ea2, 3, 5);
+        Engine ea3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
+        ea3.moveToHand();
+        p1.getTruck().addComponent(ea3, 3, 1);
+        Shield sa1 = new Shield(Side.SHIELD, Side.SHIELD, Side.SHIELD, Side.SHIELD,1);
+        sa1.moveToHand();
+        p1.getTruck().addComponent(sa1, 1, 5);
 
         Item ia1 = new Item(Color.Yellow);
         ca1.loadItem(ia1);
@@ -164,7 +174,7 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Pirates(1, 4, 1, 4, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)),1);
+        card = new Pirates(1, 4, 1, 5, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)),1);
     }
 
     @Test
@@ -173,7 +183,7 @@ public class Test2 {
         card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
-        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
+        // Albi attiva un cannone doppio e perde
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
@@ -189,6 +199,8 @@ public class Test2 {
         card.activeCannon("Gigi", 1, 3);
         card.ready("Gigi");
         assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
+        String resultHelpEndPirates = card.help("Fede");
+        assertEquals("Available commands: ACTIVESHIELD, READY, PASS, CREDIT\n", resultHelpEndPirates);
 
         assertEquals(12, p1.getPosition());
         assertEquals(10, p2.getPosition());
@@ -196,11 +208,15 @@ public class Test2 {
 
         card.ready("Gigi");
         card.ready("Fede");
+        ActiveShieldVisitor visitor = new ActiveShieldVisitor();
+        visitor.visitForPirates(card, "Albi", 1, 5);
+        card.ready("Albi");
         assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
 
         card.ready("Gigi");
         GameStatus before = game.getGameStatus();
         card.ready("Fede");
+        card.ready("Albi");
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
 

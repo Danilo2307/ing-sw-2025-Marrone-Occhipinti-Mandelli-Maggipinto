@@ -128,7 +128,7 @@ public class Pirates extends Card {
      */
     public void getCosmicCredits(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+        if (game.getGameStatus() != GameStatus.END_PIRATES) {
             throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
         if (!username.equals(winner)) {
@@ -166,7 +166,7 @@ public class Pirates extends Card {
      */
     public void pass(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.INIT_PIRATES) {
+        if (game.getGameStatus() != GameStatus.END_PIRATES) {
             throw new CardException("Cannot get money now: phase is " + game.getGameStatus());
         }
         if (!username.equals(winner)) {
@@ -225,14 +225,14 @@ public class Pirates extends Card {
             winner = username;
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
             game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), winner);
+            game.setGameStatus(GameStatus.END_PIRATES);
+            return;
         } else if(playerFirepower < firepower){
             game.fireEvent(new DefeatedFromPirates(game.getGameStatus()), username);
             losers.add(username);
         }
         if (game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1) {
-            game.setCurrentPlayer(
-                    game.getPlayerFromNickname(losers.getFirst())
-            );
+            game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
             game.setGameStatus(GameStatus.END_PIRATES);
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
@@ -248,6 +248,7 @@ public class Pirates extends Card {
         }
         else{
             game.getNextPlayer();
+            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
         }
     }
 

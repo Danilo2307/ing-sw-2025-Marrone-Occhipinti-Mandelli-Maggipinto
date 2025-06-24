@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.CombatZone;
+import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -190,10 +191,21 @@ public class Test2 {
 
     @Test
     void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "è uscita la carta Combat Zone:\n" +
+                " La prima sfida riguarda la potenza di fuoco (penalità: 4 giorni)\n" +
+                "la seconda sfida riguarda la potenza motrice (penalità: 3 merci importanti)\n" +
+                "la terza sfida riguarda i membri dell'equipaggio (penalità colpi di cannone: " +
+                card.getCannonShot().toString() + "\n";
+        String resultComplex = card.toString();
+
+        assertEquals(expected, resultComplex);
         // INIT
         card.initPlay("Fede");
         //SI PARTE CON LA PRIMA SFIDA
         assertEquals(GameStatus.FIRST_COMBATZONE, game.getGameStatus());
+        String resultFirst = card.help("Fede");
+        assertEquals("Available commands: ATTIVACANNONE, READY\n", resultFirst);
+
         //ALBI ATTIVA UNO DEI SUOI CANNONI
         card.activeCannon("Albi", 1,4);
         card.ready("Albi");
@@ -237,7 +249,8 @@ public class Test2 {
         assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
 
         //ALBI PERDE LA SFIDA E AFFRONTA IL PRIMO CANNONE CON LO SCUDO
-        card.activeShield("Albi", 1, 5);
+        ActiveShieldVisitor visitor = new ActiveShieldVisitor();
+        visitor.visitForCombatZone(card, "Albi", 1, 5);
         card.ready("Albi");
         card.ready("Albi");
         GameStatus before = game.getGameStatus();

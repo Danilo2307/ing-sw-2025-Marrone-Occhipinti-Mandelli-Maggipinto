@@ -60,7 +60,7 @@ public class Smugglers extends Card {
     /**
      * Tracks how many prize items have been loaded by the winner.
      */
-    private int loadedCount;
+    private int loadedCount = 0;
 
     private List<String> noGoods = new ArrayList<>();
 
@@ -84,9 +84,6 @@ public class Smugglers extends Card {
         this.numItemsStolen = numItemsStolen;
         this.days = days;
         this.prize = prize;
-        this.loadedCount = 0;
-
-
     }
 
     /**

@@ -96,8 +96,17 @@ public class Test1 {
 
     @Test
     void testBuyAndReduce() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "è uscita la carta Abandoned Ship\n" +
+                "l'equipaggio da perdere ammonta a 3\n" +
+                "i crediti cosmici disponibili sono 4\n" +
+                "i giorni persi sarebbero 1";
+        assertEquals(expected, card.toString());
         // INIT
         card.initPlay("Fede");
+        String result = card.help("Fede");
+        assertEquals("Available commands: COMPRANAVE, PASSA\n", result);
+        card.toString();
+        card.help("Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
 
         // Albi passa
@@ -108,6 +117,9 @@ public class Test1 {
         card.buyShip("Fede");
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_ABANDONEDSHIP, game.getGameStatus());
+
+        String result1 = card.help("Fede");
+        assertEquals("Available commands: REDUCECREW\n", result1);
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());

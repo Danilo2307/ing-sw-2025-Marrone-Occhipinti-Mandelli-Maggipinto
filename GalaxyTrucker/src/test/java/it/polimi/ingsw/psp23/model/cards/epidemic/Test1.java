@@ -169,8 +169,14 @@ public class Test1 {
     }
 
     @Test
-    void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
+    void testEpidemic() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
+        String expected = "è uscita la carta Epidemic\n";
+        String resultEpidemic = card.toString();
+        assertEquals(expected, resultEpidemic);
+        String resultHelpEpidemic = card.help("Fede");
+        assertEquals("This card triggers immediately: no commands available.", resultHelpEpidemic);
+
         assertEquals(4, p3.getTruck().calculateCrew());
         card.initPlay("Fede");
         //SOLO GIGI NE RISENTE

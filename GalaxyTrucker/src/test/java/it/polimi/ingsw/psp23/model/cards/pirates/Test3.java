@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
+import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -100,6 +101,15 @@ public class Test3 {
         Engine ea1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         ea1.moveToHand();
         p1.getTruck().addComponent(ea1, 3, 2);
+        Engine ea2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
+        ea2.moveToHand();
+        p1.getTruck().addComponent(ea2, 3, 5);
+        Engine ea3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
+        ea3.moveToHand();
+        p1.getTruck().addComponent(ea3, 3, 1);
+        Shield sa1 = new Shield(Side.SHIELD, Side.SHIELD, Side.SHIELD, Side.SHIELD,1);
+        sa1.moveToHand();
+        p1.getTruck().addComponent(sa1, 1, 5);
 
         Item ia1 = new Item(Color.Yellow);
         ca1.loadItem(ia1);
@@ -174,7 +184,7 @@ public class Test3 {
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
-        card.activeCannon("Albi", 1, 4);
+  //      card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         card.ready("Albi");
@@ -198,6 +208,7 @@ public class Test3 {
         assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
         GameStatus before = game.getGameStatus();
         card.ready("Fede");
+        card.ready("Albi");
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

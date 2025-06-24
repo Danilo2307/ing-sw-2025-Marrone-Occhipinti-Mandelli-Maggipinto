@@ -95,6 +95,13 @@ public class Test1 {
 
     @Test
     void testStardust() throws CardException, InvocationTargetException, IllegalAccessException {
+        String resultToStringStardust = card.toString();
+        String expected = "è uscita la carta Stardust\n" +
+                "si perdono tanti giorni quanti sono i connettori esposti";
+        assertEquals(expected, resultToStringStardust);
+        String resultHelpStardust = card.help("Fede");
+        assertEquals("No commands available for Stardust; effect is automatic.", resultHelpStardust);
+
         // INIT
         card.initPlay("Fede");
         assertEquals(4, p1.getPosition());

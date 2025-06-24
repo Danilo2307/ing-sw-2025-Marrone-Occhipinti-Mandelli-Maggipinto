@@ -143,10 +143,7 @@ public class MeteorSwarm extends Card {
      * Returns available commands for the Meteor Swarm card.
      */
     public String help(String username) {
-        if (UsersConnected.getInstance().getGameFromUsername(username).getGameStatus() == GameStatus.INIT_METEORSWARM) {
-            return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY\n";
-        }
-        return "No commands available in current phase.\n";
+        return "Available commands: ATTIVACANNONE, ATTIVASCUDO, READY\n";
     }
 
     @Override

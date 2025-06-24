@@ -188,6 +188,13 @@ public class Test1 {
 
     @Test
     void testOpenSpace() throws CardException, InvocationTargetException, IllegalAccessException {
+        String resultHelpEngineAlwaysAvailable = card.help("Fede");
+        assertEquals("Available commands: ATTIVA MOTORE, PRONTO\n", resultHelpEngineAlwaysAvailable);
+        String resultToStringOpenSpace = card.toString();
+        String expected = "È uscita la carta open space\n" +
+                "più motori si attivano, più si va avanti!";
+        assertEquals(expected, resultToStringOpenSpace);
+
         // INIT
         card.initPlay("Fede");
         assertEquals(GameStatus.INIT_OPENSPACE, game.getGameStatus());

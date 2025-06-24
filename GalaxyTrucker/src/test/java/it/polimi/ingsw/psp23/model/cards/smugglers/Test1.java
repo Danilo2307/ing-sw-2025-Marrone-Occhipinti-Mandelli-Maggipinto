@@ -168,9 +168,20 @@ public class Test1 {
 
     @Test
     void testPag14() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "è uscita la carta Smugglers\n" +
+                "la potenza di fuoco è 4\n" +
+                "le merci importanti che andrebbero perse sono 2\n" +
+                "i giorni persi sono 1\n" +
+                "le merci vinte sarebbero: [gialla, verde, blu]\n";
+        String resultToStringSmugglers = card.toString();
+        assertEquals(expected, resultToStringSmugglers);
+
         // INIT
         card.initPlay("Fede");
         assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
+        String resultHelpInitSmugglers = card.help("Fede");
+        assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSmugglers);
+
 
         // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
         card.activeCannon("Albi", 1, 4);
@@ -185,6 +196,8 @@ public class Test1 {
 //        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
+        String resultHelpEndSmugglers = card.help("Fede");
+        assertEquals("Available commands: LOADGOOD, PASS, PERDI, BATTERIE\n", resultHelpEndSmugglers);
 
         //Fede non ha spazio, toglia la merce blu e carica le altre
         card.loadGoods("Fede", 2, 2);

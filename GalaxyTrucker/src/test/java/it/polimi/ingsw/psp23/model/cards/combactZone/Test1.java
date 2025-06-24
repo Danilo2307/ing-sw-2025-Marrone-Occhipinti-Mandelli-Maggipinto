@@ -6,8 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.CombatZone;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
+import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -191,6 +190,15 @@ public class Test1 {
 
     @Test
     void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected =
+                "è uscita la carta Combat Zone:\n" +
+                        " La prima sfida riguarda i membri dell'equipaggio (penalità: 3 giorni)\n" +
+                        "la seconda sfida riguarda la potenza motrice (penalità: 2 membri dell'equipaggio)\n" +
+                        "la terza sfida riguarda la potenza di fuoco (penalità colpi di cannone: " +
+                        card.getCannonShot().toString() + " \n";
+        String resultCombat = card.toString();
+        assertEquals(expected, resultCombat);
+
         // INIT
         card.initPlay("Fede");
         //ALBI HA PERSO LA PRIMA SFIDA
@@ -200,6 +208,9 @@ public class Test1 {
         assertEquals("Fede", game.getCurrentPlayer().getNickname());
         //SI PASSA ALLA SECONDA SFIDA
         assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
+        String resultSecond = card.help("Fede");
+        assertEquals("Available commands: ATTIVAMOTORE, READY, REMOVEITEM, CREW\n", resultSecond);
+
 
         //SECONDA SFIDA
         //FEDE ATTIVA I SUOI MOTORI
@@ -221,6 +232,8 @@ public class Test1 {
         //SI PASSA ALLA TERZA CON FEDE IN TESTA
         assertEquals("Fede", game.getCurrentPlayer().getNickname());
         assertEquals(GameStatus.THIRD_COMBATZONE, game.getGameStatus());
+        String resultThird = card.help("Fede");
+        assertEquals("Available commands: ATTIVAMOTORE, READY\n", resultThird);
 
         //TUTTI SONO PRONTI, E' FEDE AD AVERE POTENZA DI 0,5 A PERDERE
         assertEquals(2, p1.getTruck().calculateCannonStrength());
@@ -232,6 +245,8 @@ public class Test1 {
 
         //FEDE DEVE AFFRONTARE I CANNONI SENZA SCUDI
         assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
+        String resultEndThird = card.help("Fede");
+        assertEquals("Available commands: ATTIVASCUDO, READY\n", resultEndThird);
         GameStatus before = game.getGameStatus();
         card.ready("Fede");
 

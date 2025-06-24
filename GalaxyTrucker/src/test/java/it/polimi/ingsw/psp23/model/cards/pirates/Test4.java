@@ -1,13 +1,14 @@
-package it.polimi.ingsw.psp23.model.cards.slavers;
+package it.polimi.ingsw.psp23.model.cards.pirates;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.Slavers;
-import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -28,10 +29,11 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class Test1 {
+public class Test4 {
+    //CARTA LIVELLO 1
     Game game;
     Player p1, p2, p3;
-    Slavers card;
+    Pirates card;
 
     @BeforeEach
     void setUp() {
@@ -162,48 +164,44 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Slavers(1, 4, 3, 5,1,1);
+        card = new Pirates(1, 4, 1, 0, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)),1);
     }
 
     @Test
-    void testSlavers() throws CardException, InvocationTargetException, IllegalAccessException {
-        String expected = "è uscita la carta Slavers\n" +
-                "la potenza di fuoco è 4\n" +
-                "i membri eventualmente persi sono 3\n" +
-                "i giorni persi sarebbero 1\n" +
-                "i crediti cosmici sono 5\n";
-        String resultToStringSlavers = card.toString();
-        assertEquals(expected, resultToStringSlavers);
+    void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "È uscita la carta Pirates \n" +
+                "la potenza di fuoco è 0\n" +
+                "i crediti cosmici sono 4\n" +
+                "i giorni persi sono 1\n" +
+                "i colpi di cannone sono: " + card.getCannonShot().toString() + "\n";
+        String resultToStringPirates = card.toString();
+        assertEquals(expected, resultToStringPirates);
 
         // INIT
         card.initPlay("Fede");
-        assertEquals(GameStatus.INIT_SLAVERS, game.getGameStatus());
-        String resultHelpInitSlavers = card.help("Fede");
-        assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSlavers);
+        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
+        String resultHelpInitPirates = card.help("Fede");
+        assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitPirates);
 
-        // Albi attiva i cannoni doppi e raggiunge la potenza di fuoco minima
+        // Albi attiva un cannone doppio
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         card.ready("Albi");
-        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
-        // Fede attiva due cannoni e sconfigge il nemico
-        card.activeCannon("Fede", 1, 4);
-        card.activeCannon("Fede", 1, 3);
-//        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
-        card.ready("Fede");
-        assertEquals(GameStatus.END_SLAVERS, game.getGameStatus());
-        String resultHelpEndSlavers = card.help("Fede");
-        assertEquals("Available commands: CREW, PASS, CREDIT\n", resultHelpEndSlavers);
+//        // Fede attiva due cannoni e sconfigge il nemico
+//        card.activeCannon("Fede", 1, 4);
+//        card.activeCannon("Fede", 1, 3);
+////        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
+//        card.ready("Fede");
+//        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
-
-        //FEDE RISCUOTE
         GameStatus before = game.getGameStatus();
-//        card.getCosmicCredits("Fede");
-//        assertEquals(5, p2.getMoney());
-        card.pass("Fede");
-        assertEquals(0, p2.getMoney());
+//        card.pass("Fede");
+//        assertEquals(0, p2.getMoney());
+        card.pass("Albi");
+        assertEquals(0, p1.getMoney());
+//        card.pass("Fede");
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());

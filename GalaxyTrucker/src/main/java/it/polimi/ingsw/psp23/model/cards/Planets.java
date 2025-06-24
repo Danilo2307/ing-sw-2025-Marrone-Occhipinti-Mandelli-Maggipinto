@@ -252,33 +252,15 @@ public class Planets extends Card {
     }
 
     @Override
-    public String toString(){
-
-        if(planetGoods.size() == 2){
-            return
-                    "è uscita la carta Planets\n" +
-                            "I pianeti sono 2\n" +
-                            "● ->" + planetGoods.get(0).toString() +"\n" +
-                            "● ->" + planetGoods.get(1).toString() +"\n" +
-                            "i giorni persi sono " + getDaysLost();
-        }else if(planetGoods.size() == 3){
-            return
-                    "è uscita la carta Planets\n" +
-                            "I pianeti sono 3\n" +
-                            "● ->" + planetGoods.get(0).toString() +"\n" +
-                            "● ->" + planetGoods.get(1).toString() +"\n" +
-                            "● ->" + planetGoods.get(2).toString() +"\n" +
-                            "i giorni persi sono " + getDaysLost();
-        }else if(planetGoods.size() == 4){
-            return
-                    "è uscita la carta Planets\n" +
-                            "I pianeti sono 4\n" +
-                            "● ->" + planetGoods.get(0).toString() +"\n" +
-                            "● ->" + planetGoods.get(1).toString() +"\n" +
-                            "● ->" + planetGoods.get(2).toString() +"\n" +
-                            "● ->" + planetGoods.get(3).toString() +"\n" +
-                            "i giorni persi sono " + getDaysLost();
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("è uscita la carta Planets\n");
+        sb.append("I pianeti sono ").append(planetGoods.size()).append("\n");
+        for (Object goods : planetGoods) {
+            sb.append("● -> ").append(goods.toString()).append("\n");
         }
-        return "Errore in carta Planets\n";
+        sb.append("i giorni persi sono ").append(getDaysLost());
+        return sb.toString();
     }
+
 }

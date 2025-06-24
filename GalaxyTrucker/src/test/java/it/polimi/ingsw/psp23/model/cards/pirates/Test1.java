@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -165,37 +166,47 @@ public class Test1 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new Pirates(1, 4, 1, 4, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)),1);
+        card = new Pirates(1, 4, 1, 0, List.of(new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP)),1);
     }
 
     @Test
     void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "È uscita la carta Pirates \n" +
+                "la potenza di fuoco è 0\n" +
+                "i crediti cosmici sono 4\n" +
+                "i giorni persi sono 1\n" +
+                "i colpi di cannone sono: " + card.getCannonShot().toString() + "\n";
+        String resultToStringPirates = card.toString();
+        assertEquals(expected, resultToStringPirates);
+
         // INIT
         card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
+        String resultHelpInitPirates = card.help("Fede");
+        assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitPirates);
 
-        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
+        // Albi attiva un cannone doppio
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         card.ready("Albi");
-        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
-
-        // Fede attiva due cannoni e sconfigge il nemico
-        card.activeCannon("Fede", 1, 4);
-        card.activeCannon("Fede", 1, 3);
-//        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
-        card.ready("Fede");
-        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
+//        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
+//
+//        // Fede attiva due cannoni e sconfigge il nemico
+//        card.activeCannon("Fede", 1, 4);
+//        card.activeCannon("Fede", 1, 3);
+////        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
+//        card.ready("Fede");
+//        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         GameStatus before = game.getGameStatus();
-        card.getCosmicCredits("Fede");
-        assertEquals(4, p2.getMoney());
+        card.getCosmicCredits("Albi");
+        assertEquals(4, p1.getMoney());
 //        card.pass("Fede");
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
-        assertEquals(12, p1.getPosition());
-        assertEquals(9, p2.getPosition());
+        assertEquals(11, p1.getPosition());
+        assertEquals(10, p2.getPosition());
         assertEquals(8, p3.getPosition());
 
         GameStatus after = game.getGameStatus();

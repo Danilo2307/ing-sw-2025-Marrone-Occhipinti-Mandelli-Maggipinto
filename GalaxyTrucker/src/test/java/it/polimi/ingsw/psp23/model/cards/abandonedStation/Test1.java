@@ -96,10 +96,19 @@ public class Test1 {
 
     @Test
     void testDockAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "è uscita la carta Abandoned Station\n" +
+                "i membri richiesti sono 5\n" +
+                "le merci disponibili sono [gialla, verde]\n" +
+                "i giorni persi sarebbero 1";
+        assertEquals(expected, card.toString());
+
         // INIT
         card.initPlay("Fede");
         card.help("Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSTATION, game.getGameStatus());
+
+        String result = card.help("Fede");
+        assertEquals("Available commands: ATTRACCA, PASSA\n", result);
 
         // Albi passa
         card.pass("Albi");
@@ -109,6 +118,8 @@ public class Test1 {
 //        card.pass("Fede");
         card.dockStation("Fede");
         assertEquals(GameStatus.END_ABANDONEDSTATION, game.getGameStatus());
+        String resultEnd = card.help("Fede");
+        assertEquals("Available commands: LOADGOODS, PERDI, PASSA\n", resultEnd);
 
         assertEquals(12, p1.getPosition());
         assertEquals(9, p2.getPosition());

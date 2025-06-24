@@ -90,9 +90,21 @@ class PlanetsTest {
 
     @Test
     void testLandingAndLoading() throws CardException, InvocationTargetException, IllegalAccessException {
+        StringBuilder expected = new StringBuilder();
+        expected.append("è uscita la carta Planets\n");
+        expected.append("I pianeti sono 3\n");
+        expected.append("● -> ").append(card.getPlanetGoods().get(0).toString()).append("\n");
+        expected.append("● -> ").append(card.getPlanetGoods().get(1).toString()).append("\n");
+        expected.append("● -> ").append(card.getPlanetGoods().get(2).toString()).append("\n");
+        expected.append("i giorni persi sono 4");
+        String resultToStringPlanets = card.toString();
+        assertEquals(expected.toString(), resultToStringPlanets);
+
         // INIT
         card.initPlay("Fede");
         assertEquals(GameStatus.INIT_PLANETS, game.getGameStatus());
+        String resultHelpInitPlanets = card.help("Fede");
+        assertEquals("Available commands: LAND, PASS\n", resultHelpInitPlanets);
 
         // Albi atterra sul pianeta 1
         card.landOnPlanet("Albi", 1);
@@ -104,6 +116,8 @@ class PlanetsTest {
         assertEquals("Fede", card.getPlanetsOccupied()[1]);
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_PLANETS, game.getGameStatus());
+        String resultHelpEndPlanets = card.help("Fede");
+        assertEquals("Available commands: LOADGOODS, PERDI, PASS\n", resultHelpEndPlanets);
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(8, p1.getPosition());
