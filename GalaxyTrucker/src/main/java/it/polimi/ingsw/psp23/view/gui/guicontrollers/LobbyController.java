@@ -57,41 +57,43 @@ public class LobbyController {
 
     public void showLobbies(List<List<Integer>> availableLobbies) {
         Platform.runLater(() -> {
-            // Crea un bottone per ogni lobby
-            for (int i = 0; i < availableLobbies.size(); i++) {
-                List<Integer> lobby = availableLobbies.get(i);
-                int id = lobby.get(0);
-                int current = lobby.get(1);
-                int max = lobby.get(2);
-                int level = lobby.get(3);
+            if (!availableLobbies.isEmpty()) {
+                lobbyLabel.setText("Lobby disponibili");
+                // Crea un bottone per ogni lobby
+                for (int i = 0; i < availableLobbies.size(); i++) {
+                    List<Integer> lobby = availableLobbies.get(i);
+                    int id = lobby.get(0);
+                    int current = lobby.get(1);
+                    int max = lobby.get(2);
+                    int level = lobby.get(3);
 
-                String label = String.format("Partita %d:::  livello: %d ||| giocatori presenti: %d ||| numero massimo: %d", id+1, level, current, max);
-                Button joinButton = new Button(label);
-                joinButton.setFont(Font.font("Arial Black"));
-                joinButton.setPrefHeight(40);
-                joinButton.setPrefWidth(1000);
-                joinButton.setOnAction(ev -> {
-                    // la lambda cattura il rispettivo lobbyId al momento della creazione
-                    try {
-                        if (!client.isRmi()) {
-                            try {
-                                client.sendAction(new UserDecision(id+1));   // server fa la conversione a 0-based
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
+                    String label = String.format("Partita %d:::  livello: %d ||| giocatori presenti: %d ||| numero massimo: %d", id + 1, level, current, max);
+                    Button joinButton = new Button(label);
+                    joinButton.setFont(Font.font("Arial Black"));
+                    joinButton.setPrefHeight(40);
+                    joinButton.setPrefWidth(1000);
+                    joinButton.setOnAction(ev -> {
+                        // la lambda cattura il rispettivo lobbyId al momento della creazione
+                        try {
+                            if (!client.isRmi()) {
+                                try {
+                                    client.sendAction(new UserDecision(id + 1));   // server fa la conversione a 0-based
+                                } catch (RemoteException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            } else {
+                                RMIIdGameChosen = id + 1;
                             }
+                        } catch (RemoteException e) {
+                            throw new RuntimeException(e);
                         }
-                        else {
-                            RMIIdGameChosen = id+1;
-                        }
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    hideLobbiesView();
-                    showUserChoice();  // il server avvia login+join
-                    client.setId(id);  // setto 0-based come nel server
-                });
+                        hideLobbiesView();
+                        showUserChoice();  // il server avvia login+join
+                        client.setId(id);  // setto 0-based come nel server
+                    });
 
-                lobbiesContainer.getChildren().add(joinButton);
+                    lobbiesContainer.getChildren().add(joinButton);
+                }
             }
         });
     }
