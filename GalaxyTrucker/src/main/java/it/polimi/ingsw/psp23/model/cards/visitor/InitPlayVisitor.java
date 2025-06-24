@@ -1,6 +1,8 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class InitPlayVisitor implements VisitorUsername<Void>{
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class InitPlayVisitor implements VisitorUsername<Void> {
 
     public Void visitForPlanets(Planets planets, String username){
         planets.initPlay(username);

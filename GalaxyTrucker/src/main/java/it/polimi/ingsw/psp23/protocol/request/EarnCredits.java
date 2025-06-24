@@ -3,7 +3,7 @@ package it.polimi.ingsw.psp23.protocol.request;
 import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.GetCosmicCreditsVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.GetCosmicCreditsVisitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 

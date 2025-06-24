@@ -1,6 +1,8 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class BuyShipVisitor implements VisitorUsername<Void> {
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class DockStationVisitor implements VisitorUsername<Void> {
 
     @Override
     public Void visitForPlanets(Planets planets, String username){
@@ -9,12 +11,12 @@ public class BuyShipVisitor implements VisitorUsername<Void> {
 
     @Override
     public Void visitForAbandonedShip(AbandonedShip abandonedShip, String username){
-        abandonedShip.buyShip(username);
         return null;
     }
 
     @Override
     public Void visitForAbandonedStation(AbandonedStation abandonedStation, String username){
+        abandonedStation.dockStation(username);
         return null;
     }
 
@@ -49,12 +51,13 @@ public class BuyShipVisitor implements VisitorUsername<Void> {
     }
 
     @Override
-    public Void visitForStardust(Stardust stardust, String username){
+    public Void visitForEpidemic(Epidemic epidemic, String username){
         return null;
     }
 
     @Override
-    public Void visitForEpidemic(Epidemic epidemic, String username){
+    public Void visitForStardust(Stardust stardust, String username){
         return null;
     }
+
 }

@@ -1,17 +1,19 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class GetDaysVisitor implements Visitor<Integer> {
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class GetCosmicCreditsVisitor implements Visitor<Integer> {
 
     public Integer visitForPlanets(Planets planets){
-        return planets.getDaysLost();
+        return null;
     }
 
     public Integer visitForAbandonedShip(AbandonedShip abandonedShip){
-        return abandonedShip.getDays();
+        return abandonedShip.getCosmicCredits();
     }
 
     public Integer visitForAbandonedStation(AbandonedStation abandonedStation){
-        return abandonedStation.getDays();
+        return null;
     }
 
     public Integer visitForCannonShot(CannonShot cannonShot){
@@ -19,7 +21,7 @@ public class GetDaysVisitor implements Visitor<Integer> {
     }
 
     public Integer visitForCombatZone(CombatZone combatZone){
-        return combatZone.getDaysLost();
+        return null;
     }
 
     public Integer visitForEpidemic(Epidemic epidemic){
@@ -35,19 +37,18 @@ public class GetDaysVisitor implements Visitor<Integer> {
     }
 
     public Integer visitForPirates(Pirates pirates){
-        return pirates.getDays();
+        return pirates.getPrize();
     }
 
     public Integer visitForSlavers(Slavers slavers){
-        return slavers.getDays();
+        return slavers.getPrize();
     }
 
     public Integer visitForSmugglers(Smugglers smugglers){
-        return smugglers.getDays();
+        return null;
     }
 
     public Integer visitForStardust(Stardust stardust){
         return null;
     }
-
 }

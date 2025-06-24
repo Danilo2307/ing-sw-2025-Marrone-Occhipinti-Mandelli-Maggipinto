@@ -1,55 +1,57 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class PassVisitor implements VisitorUsername<Void>{
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class ReadyVisitor implements VisitorUsername<Void> {
 
     @Override
     public Void visitForPlanets(Planets planets, String username){
-        planets.pass(username);
         return null;
     }
 
     @Override
     public Void visitForAbandonedShip(AbandonedShip abandonedShip, String username){
-        abandonedShip.pass(username);
         return null;
     }
 
     @Override
     public Void visitForAbandonedStation(AbandonedStation abandonedStation, String username){
-        abandonedStation.pass(username);
         return null;
     }
 
     @Override
     public Void visitForPirates(Pirates pirates, String username){
-        pirates.pass(username);
+        pirates.ready(username);
         return null;
     }
 
     @Override
     public Void visitForSlavers(Slavers slavers, String username){
-        slavers.pass(username);
+        slavers.ready(username);
         return null;
     }
 
     @Override
     public Void visitForSmugglers(Smugglers smugglers, String username){
-        smugglers.pass(username);
+        smugglers.ready(username);
         return null;
     }
 
     @Override
     public Void visitForCombatZone(CombatZone combatZone, String username){
+        combatZone.ready(username);
         return null;
     }
 
     @Override
     public Void visitForMeteorSwarm(MeteorSwarm meteorSwarm, String username){
+        meteorSwarm.ready(username);
         return null;
     }
 
     @Override
     public Void visitForOpenSpace(OpenSpace openSpace, String username){
+        openSpace.ready(username);
         return null;
     }
 
@@ -62,5 +64,4 @@ public class PassVisitor implements VisitorUsername<Void>{
     public Void visitForStardust(Stardust stardust, String username){
         return null;
     }
-
 }

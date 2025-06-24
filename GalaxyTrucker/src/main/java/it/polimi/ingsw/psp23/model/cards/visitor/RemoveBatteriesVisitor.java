@@ -1,13 +1,15 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class RemovePreciousItemVisitor implements VisitorCoordinateNum<Void> {
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class RemoveBatteriesVisitor implements VisitorCoordinateNum<Void> {
 
     public Void visitForAbandonedShip(AbandonedShip abandonedShip, String username, int i, int j, int num){
         return null;
     }
 
     public Void visitForCombatZone(CombatZone combatZone, String username, int i, int j, int num){
-        combatZone.removePreciousItem(username, i, j, num);
+        combatZone.removeBatteries(username, i, j, num);
         return null;
     }
 
@@ -16,8 +18,7 @@ public class RemovePreciousItemVisitor implements VisitorCoordinateNum<Void> {
     }
 
     public Void visitForSmugglers(Smugglers smugglers, String username, int i, int j, int num){
-        smugglers.removePreciousItem(username, i, j, num);
+        smugglers.removeBatteries(username, i, j, num);
         return null;
     }
-
 }

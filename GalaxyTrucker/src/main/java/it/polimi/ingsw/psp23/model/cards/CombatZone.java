@@ -369,21 +369,6 @@ public class CombatZone extends Card {
         return visitor.visitForCombatZone(this);
     }
 
-    /**
-     * Accepts a parameterized visitor with rendering index.
-     *
-     * @param visitorParametrico visitor to handle this card with index
-     * @param index              index parameter (1-3)
-     * @return result of the parameterized visitor method
-     * @throws IndexOutOfBoundsException if index is out of range
-     */
-    @Override
-    public <T> T call(VisitorParametrico<T> visitorParametrico, int index) {
-        if (index < 1 || index > 3) {
-            throw new CardException("Index must be between 1 and 3");
-        }
-        return visitorParametrico.visitForCombatZone(this, index);
-    }
 
     public <T> T call(VisitorCoordinateNum<T> visitorCoordinateNum, String username, int i, int j, int num) {
         return visitorCoordinateNum.visitForCombatZone(this, username, i, j, num);

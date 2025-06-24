@@ -1,23 +1,14 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
-import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.PassVisitor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.MatchFinished;
-import it.polimi.ingsw.psp23.protocol.response.StartTurn;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public record LeaveFlight() implements Action {
 

@@ -5,8 +5,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.Event;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.inizializzazioneNave;
-import it.polimi.ingsw.psp23.model.cards.*;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -20,12 +19,9 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.*;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class Controller {
-    // private CardHandler cardHandler;
-    // private static Controller instance = null;
     private Timer timer;
     private boolean isFirstBuildingPhaseEnded; // variabile che serve all'handle timeout per capire se la clessidra deve ancora essere girata
     private int currentPosition;
@@ -34,7 +30,6 @@ public class Controller {
 
 
     public Controller(int gameId) {
-        // cardHandler = new CardHandler();
         timer = new Timer();
         isFirstBuildingPhaseEnded = false;
         currentPosition = 0;
@@ -42,13 +37,6 @@ public class Controller {
         Server.getInstance().getGame(gameId).setEventListener(this::onGameEvent);
         Server.getInstance().getGame(gameId).setEventListener2(this::onGameEventString);
     }
-
-    /*public static synchronized Controller getInstance() {
-        if (instance == null) {
-            instance = new Controller();
-        }
-        return instance;
-    }*/
 
     public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
         Game game = Server.getInstance().getGame(gameId);
@@ -101,7 +89,6 @@ public class Controller {
     }
 
 
-
     public void handleTimeout() {
         if (!isFirstBuildingPhaseEnded) {
             isFirstBuildingPhaseEnded = true;
@@ -113,11 +100,8 @@ public class Controller {
             }catch (IllegalStateException e) {
                 handleTimeout();
             }
-
         }
-
     }
-
 
 
     public void startCheckBoard() throws IllegalTruckException {
@@ -141,9 +125,7 @@ public class Controller {
             player.getTruck().updateAllowedAliens();
         }
 
-
         startSetCrew();
-
     }
 
     public void startSetCrew() {
@@ -167,31 +149,6 @@ public class Controller {
         }
     }
 
-    public void removeComponent(String username,int i, int j){
-        Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().delete(i,j);
-    }
-
-
-
-    public void addComponent(String username, Component c, int x, int y) {
-        Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().addComponent(c, x, y);
-    }
-
-    public Component getTileFromHeap() {
-        return Server.getInstance().getGame(gameId).getTileFromHeap();
-    }
-
-    /*public Component getTileUncovered(int position) {
-        return Game.getInstance().getTileUncovered(position);
-    }*/
-
-    public void releaseTile(Component c) {
-        Server.getInstance().getGame(gameId).releaseTile(c);
-    }
-
-    public void rotate(Component c) {
-        c.rotate();
-    }
 
 //TODO: va gestita la possibilità del player di attaccare ancora pezzi una volta che dichiara di aver terminato ovvero dovremmo mettere una lista temporanea per dire chi ha finito
 
@@ -222,16 +179,7 @@ public class Controller {
         game.setGameStatus(event.getNewStatus());
         BroadcastMessage broadcastMessage = new BroadcastMessage(new StateChanged(game.getGameStatus()));
         Server.getInstance().notifyAllObservers(broadcastMessage, gameId);
-        //qui serve tutta la gestione della chiamata alla view poichè giunti a questo punto
-        //avremo l'evento pronto con le informazioni della carta e lo stato già aggiornato dal model con una ripetizione
-        // del suo cambiamento all'interno dell'evento (si può anche togliere in futuro)
-        // quindi da qui chiamiamo la view e dopo la view chiamerà un altro metodo per mandarci l'input da mandare a play
 
-        // Invia i dati alla View (come JSON, socket, ecc.)
-
-        //network.sendToAllClients("game_event", event);
-
-        // TODO: capire quale evento effettivo bisogna inviare
         Message message = new BroadcastMessage(new UpdateFromCard(event.describe(gameId)));
         Server.getInstance().notifyAllObservers(message, gameId);
 
@@ -245,102 +193,4 @@ public class Controller {
         Server.getInstance().sendMessage(playerUsername, message);
 
     }
-
-
-    public void buyShip(String username) {
-        BuyShipVisitor buyShip = new BuyShipVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(buyShip, username);
-
-    }
-
-    public void reduceCrew(String username, int i, int j, int num) {
-        ReduceCrewVisitorNum reduceCrew = new ReduceCrewVisitorNum();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(reduceCrew, username, i, j, num);
-    }
-
-    public void pass(String username) {
-        PassVisitor pass = new PassVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(pass, username);
-    }
-
-    public String help(String username) {
-        HelpVisitor help = new HelpVisitor();
-        return Server.getInstance().getGame(gameId).getCurrentCard().call(help, username);
-    }
-
-    public void activeCannon(String username, int i , int j, int iBattery, int jBattery){
-        Board truck = Server.getInstance().getGame(gameId).getCurrentPlayer().getTruck();
-        Component[][] nave = truck.getShip();
-        int cannonIndex = truck.getCannons().indexOf(nave[i][j]);
-        if(truck.getCannons().get(cannonIndex).isActive()){
-            throw new InvalidActionException("Cannon already activated");
-        }
-        else {
-            ActiveCannonVisitor activeCannon = new ActiveCannonVisitor();
-            Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery, jBattery, 1);
-            Server.getInstance().getGame(gameId).getCurrentCard().call(activeCannon, username, i, j);
-        }
-    }
-
-    public void activeEngine(String username, int i, int j, int iBattery, int jBattery){
-        ActiveEngineVisitor activeEngine = new ActiveEngineVisitor();
-        Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
-        Server.getInstance().getGame(gameId).getCurrentCard().call(activeEngine, username, i, j);
-    }
-
-    public void activeShield(String username, int i, int j, int iBattery, int jBattery){
-        ActiveShieldVisitor activeShield = new ActiveShieldVisitor();
-        Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().reduceBatteries(iBattery,jBattery,1);
-        Server.getInstance().getGame(gameId).getCurrentCard().call(activeShield, username, i, j);
-    }
-
-    public void dockStation(String username){
-        DockStationVisitor dockStation = new DockStationVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(dockStation, username);
-    }
-
-    public void loadGoods(String username, int i, int j){
-        LoadGoodsVisitor loadGoods = new LoadGoodsVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(loadGoods, username, i, j);
-    }
-
-    public void removePreciousItems(String username, int i, int j, int num){
-        RemovePreciousItemVisitor removePreciousItem = new RemovePreciousItemVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(removePreciousItem, username, i, j, num);
-    }
-
-    public void ready(String username){
-        ReadyVisitor ready = new ReadyVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(ready, username);
-    }
-
-    public void landOnPlanet(String username, int i){
-        LandOnPlanetVisitor landOnPlanet = new LandOnPlanetVisitor();
-        Server.getInstance().getGame(gameId).getCurrentCard().call(landOnPlanet, username, i);
-    }
-
-    public void removeItem(String username, int i, int j, int index){
-        if(!Server.getInstance().getGame(gameId).getGameStatus().equals(GameStatus.Playing))
-            throw new InvalidActionException("Not a possible instruction in this game state");
-        Server.getInstance().getGame(gameId).getPlayerFromNickname(username).getTruck().removeGood(i, j, index);
-    }
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

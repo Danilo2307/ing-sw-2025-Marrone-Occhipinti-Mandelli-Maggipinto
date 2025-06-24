@@ -1,4 +1,7 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
+
+import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.cards.VisitorUsernameIntero;
 
 public class LandOnPlanetVisitor implements VisitorUsernameIntero<Void> {
 

@@ -28,5 +28,7 @@ module it.polimi.ingsw.psp23 {
     opens it.polimi.ingsw.psp23.view.gui.guicontrollers to javafx.fxml;
     opens it.polimi.ingsw.psp23.view.gui to javafx.graphics, javafx.fxml;
     opens it.polimi.ingsw.psp23.model.Game to javafx.fxml;
+    exports it.polimi.ingsw.psp23.model.cards.visitor;
+    opens it.polimi.ingsw.psp23.model.cards.visitor to javafx.fxml;
 
 }
