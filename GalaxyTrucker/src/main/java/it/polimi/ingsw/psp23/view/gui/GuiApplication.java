@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.view.gui;
 
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -241,6 +242,13 @@ public class GuiApplication extends Application implements ViewAPI {
                 });
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+        else {
+            if (flightPhaseScene != null) {
+                Platform.runLater(() -> {
+                    flightPhaseController.updateShip(ship);
+                });
             }
 
         }
@@ -560,6 +568,10 @@ public class GuiApplication extends Application implements ViewAPI {
     @Override
     public void savePlayersNames(List<String> players) {
         usernames = new ArrayList<>(players);
+    }
+
+    public String getMyNickname() {
+        return myNickname;
     }
 
 }

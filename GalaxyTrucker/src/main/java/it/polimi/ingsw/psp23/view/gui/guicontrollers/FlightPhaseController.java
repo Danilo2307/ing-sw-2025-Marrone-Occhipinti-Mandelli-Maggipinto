@@ -1,4 +1,5 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
+import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.application.Platform;
@@ -34,6 +35,7 @@ public class FlightPhaseController {
     @FXML StackPane ship;
     @FXML GridPane shipGrid;
 
+    @FXML Button refreshShipBtn;
     @FXML Button player1;
     @FXML Button player2;
     @FXML Button player3;
@@ -543,5 +545,36 @@ public class FlightPhaseController {
         client.sendAction(new RequestShip(username));       // invia richiesta con username selezionato
     }
 
+    @FXML
+    public void onRefreshShipClicked() throws RemoteException{
+        String myName = GuiApplication.getInstance().getMyNickname();
+        client.sendAction(new RequestShip(myName));
+    }
 
+
+    public void updateShip(Component[][] ship) {
+        shipGrid.getChildren().clear();
+
+        for (int row = 0; row < ship.length; row++) {
+            for (int col = 0; col < ship[row].length; col++) {
+                Component component = ship[row][col];
+                if (component != null) {
+                    String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
+                    ImageView imageView = new ImageView(
+                            new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)))
+                    );
+                    imageView.setFitWidth(120);
+                    imageView.setFitHeight(95);
+                    imageView.setPreserveRatio(true);
+                    imageView.setRotate(component.getRotate());
+                    shipGrid.add(imageView, col, row);
+                }
+            }
+        }
+
+        // reinstall click handlers sui nuovi nodi
+        installClickHandlers();
+
+
+    }
 }

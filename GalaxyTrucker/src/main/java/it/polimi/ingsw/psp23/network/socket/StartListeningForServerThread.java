@@ -55,6 +55,7 @@ public class StartListeningForServerThread extends Thread {
             }
         }
         catch(Exception e){
+            e.printStackTrace();
             throw new RuntimeException("Errore in run di StartListeningForServerThread: " + e.getMessage());
         }
     }
