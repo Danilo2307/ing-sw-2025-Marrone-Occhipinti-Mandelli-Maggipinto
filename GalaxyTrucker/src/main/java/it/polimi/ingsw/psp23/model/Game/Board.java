@@ -887,7 +887,7 @@ public class Board {
 
     public void activeEngine(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j))
-            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Housing Unit.");
+            throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Engine.");
 
         Component tile = ship[i][j];
         switch (tile) {
