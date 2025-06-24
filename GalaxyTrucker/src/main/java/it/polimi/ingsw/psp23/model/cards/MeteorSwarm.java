@@ -68,7 +68,6 @@ public class MeteorSwarm extends Card {
             game.fireEvent(new MeteorIncoming(game.getGameStatus(),m.isBig(), line, m.getDirection()));
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
-
         Meteor meteor = meteors.getFirst();
         int line = meteor.getImpactLine();
         game.fireEvent(new MeteorIncoming(game.getGameStatus(), meteor.isBig(), line, meteor.getDirection()));

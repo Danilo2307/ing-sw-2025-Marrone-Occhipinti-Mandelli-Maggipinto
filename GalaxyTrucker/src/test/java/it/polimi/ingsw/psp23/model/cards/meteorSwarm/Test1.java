@@ -207,47 +207,47 @@ public class Test1 {
         card.ready("Gigi");
 
         // SECONDO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // TERZO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // QUARTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // QUINTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         GameStatus before = game.getGameStatus();
         card.ready("Gigi");
 

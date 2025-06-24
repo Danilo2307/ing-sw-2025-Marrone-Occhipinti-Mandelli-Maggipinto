@@ -24,8 +24,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test3 {
     //TESTA UN PO DI ERRORI
@@ -182,9 +181,8 @@ public class Test3 {
         assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
 
-        //Gigi attiva tutto ma perde
-        card.activeCannon("Gigi", 1, 3);
-        card.ready("Gigi");
+        assertThrows(CardException.class, () -> card.activeCannon("Gigi", 1, 3));
+        assertThrows(CardException.class, () -> card.ready("Gigi"));
 
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
 
@@ -198,8 +196,8 @@ public class Test3 {
         card.removeBatteries("Fede", 2, 4, 2);
 
         //GIGI RIMUOVE UNA ED UNA
-        card.removePreciousItem("Gigi", 2, 4, 1);
-        card.removeBatteries("Gigi", 2, 2, 1);
+        assertThrows(CardException.class, () -> card.removePreciousItem("Gigi", 2, 4, 1));
+        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 2, 2, 1));
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

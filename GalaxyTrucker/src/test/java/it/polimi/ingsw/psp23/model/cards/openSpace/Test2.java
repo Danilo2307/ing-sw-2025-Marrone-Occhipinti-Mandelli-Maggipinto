@@ -23,8 +23,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test2 {
     Game game;
@@ -193,7 +192,7 @@ public class Test2 {
         card.activeEngine("Albi", 3, 5);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Fede");
+        card.ready("Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attiva due motori
@@ -206,7 +205,7 @@ public class Test2 {
 
         // Gigi non attiva niente
 //        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
-//        card.ready("Gigi");
+        card.ready("Gigi");
 
 //        assertEquals(15, p1.getPosition());
 //        assertEquals(16, p2.getPosition());

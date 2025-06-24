@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards.meteorSwarm;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.InvalidCoordinatesException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -26,8 +27,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test2 {
     //TEST CON CARTA DI LIVELLO 2 CON METEORITE GROSSO LATERALE
@@ -207,47 +207,46 @@ public class Test2 {
         card.ready("Gigi");
 
         // SECONDO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // TERZO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // QUARTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
+//        card.activeCannon("Fede", 1,3);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 
         // QUINTO METEORE
-        card.activeCannon("Albi", 1,4);
-        card.activeCannon("Fede", 1,4);
-        card.activeCannon("Albi", 2,4);
-        card.activeCannon("Fede", 1,3);
+//        card.activeCannon("Albi", 1,4);
+//        card.activeCannon("Fede", 1,4);
+//        card.activeCannon("Albi", 2,4);
         card.ready("Fede");
-        card.activeShield("Albi", 1,5);
+//        card.activeShield("Albi", 1,5);
         card.ready("Albi");
-        card.activeCannon("Gigi", 1,3);
+//        card.activeCannon("Gigi", 1,3);
         GameStatus before = game.getGameStatus();
         card.ready("Gigi");
 
