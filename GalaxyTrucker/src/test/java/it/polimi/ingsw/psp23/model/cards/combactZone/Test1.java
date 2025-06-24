@@ -177,7 +177,7 @@ public class Test1 {
         p3.getTruck().addComponent(eg3, 3, 1);
         hg2.setAstronaut();
 
-        Item ig1 = new Item(Color.Blue);
+        Item ig1 = new Item(Color.Red);
         cg1.loadItem(ig1);
 
         //SET POS INIZIALI

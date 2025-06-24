@@ -32,7 +32,7 @@ public final class HousingUnit extends Component {
         if (numAstronaut == 0 && canContainAlien(color) && !isStartingCabin)
             this.alien = color;
         else if(!canContainAlien(color)){
-            throw new InvalidComponentActionException("Cannot place alien: you can have just one alien " + color );
+            throw new InvalidComponentActionException("Non hai il supporto per alieno " + color );
         }
         else
             throw new InvalidComponentActionException("Cannot place alien: cabin is not eligible (check crew, adjacency, or central module).");

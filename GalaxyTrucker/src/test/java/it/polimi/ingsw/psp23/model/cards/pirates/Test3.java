@@ -155,7 +155,7 @@ public class Test3 {
         Engine eg1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         eg1.moveToHand();
         p3.getTruck().addComponent(eg1, 3, 2);
-        Item ig1 = new Item(Color.Blue);
+        Item ig1 = new Item(Color.Red);
         cg1.loadItem(ig1);
 
         //SET POS INIZIALI

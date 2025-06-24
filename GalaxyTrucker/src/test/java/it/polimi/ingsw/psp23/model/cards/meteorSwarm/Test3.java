@@ -172,7 +172,7 @@ public class Test3 {
         eg3.moveToHand();
         p3.getTruck().addComponent(eg3, 3, 1);
 
-        Item ig1 = new Item(Color.Blue);
+        Item ig1 = new Item(Color.Red);
         cg1.loadItem(ig1);
 
         //SET POS INIZIALI

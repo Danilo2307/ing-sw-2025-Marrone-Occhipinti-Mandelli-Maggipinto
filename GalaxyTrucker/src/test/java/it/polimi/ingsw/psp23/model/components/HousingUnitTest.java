@@ -41,6 +41,7 @@ public class HousingUnitTest {
     @Test
     public void testReduceAlien() {
         HousingUnit cabin = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
+        cabin.addConnectedAddon(Color.Brown);
         // aggiungo alieno
         cabin.setAlien(Color.Brown);
         // avendo l'alieno nella cabin, posso rimuovere solo 1 occupant -> lancio eccezione
