@@ -14,10 +14,18 @@ import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.network.UsersConnected;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
+import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
+import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
+import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
+import it.polimi.ingsw.psp23.network.socket.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +41,22 @@ public class PlanetsTest1 {
 
     @BeforeEach
     void setUp() {
-        this.game = new Game(2,1);;
+        try {
+            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+            ClientRegistryInterface clientRegistry = new ClientRegistry();
+            rmiRegistry.rebind("ClientRegistry", clientRegistry);
+            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+            rmiRegistry.rebind("GameServer", rmiServer);
+            Server.getInstance("localhost", 8000, rmiServer);
+        }
+        catch (Exception e) {
+            System.out.println("\n\n\nerrore!!!\n\n\n");
+        }
+        this.game = new Game(2,0);
+        Server.getInstance().addGame(game);
+        UsersConnected.getInstance().addGame();
+        UsersConnected.getInstance().addClient("Albi", 0);
+        UsersConnected.getInstance().addClient("Fede", 0);
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
