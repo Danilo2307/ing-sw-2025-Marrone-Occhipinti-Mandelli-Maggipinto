@@ -105,7 +105,8 @@ public class Controller {
     public void handleTimeout() {
         if (!isFirstBuildingPhaseEnded) {
             isFirstBuildingPhaseEnded = true;
-            System.out.println("First building phase ended\n");
+            BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
+            Server.getInstance().notifyAllObservers(bm, gameId);
         } else { //TODO: in questo else controllo se i player hanno finito tutti, in caso contrario assegno posizioni in ordine di entrata e in case 4 dello switch chiamo startcheckboards
             try {
                 startCheckBoard();
@@ -214,64 +215,6 @@ public class Controller {
         game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
         Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la prima carta\n")), gameId);
     }
-
-
-    public ArrayList<Card> getVisibleDeck1(String username){
-        ArrayList<Card> deck;
-        deck = Server.getInstance().getGame(gameId).getVisibleDeck1(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-        if(deck != null){
-            return deck;
-        }else{
-            throw new DeckAlreadyTakenException("The deck is already taken by another player");
-        }
-    }
-
-    public ArrayList<Card> getVisibleDeck2(String username){
-        ArrayList<Card> deck;
-        deck = Server.getInstance().getGame(gameId).getVisibleDeck2(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-        if(deck != null){
-            return deck;
-        }else{
-            throw new DeckAlreadyTakenException("The deck is already taken by another player");
-        }
-    }
-
-    public ArrayList<Card> getVisibleDeck3(String username){
-        ArrayList<Card> deck;
-        deck = Server.getInstance().getGame(gameId).getVisibleDeck3(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-        if(deck != null){
-            return deck;
-        }else{
-            throw new DeckAlreadyTakenException("The deck is already taken by another player");
-        }
-    }
-
-    public void releaseDeck1(String username){
-        Server.getInstance().getGame(gameId).releaseVisibleDeck1(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-    }
-
-    public void releaseDeck2(String username){
-        Server.getInstance().getGame(gameId).releaseVisibleDeck2(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-    }
-
-    public void releaseDeck3(String username){
-        Server.getInstance().getGame(gameId).releaseVisibleDeck3(Server.getInstance().getGame(gameId).getPlayerFromNickname(username));
-    }
-
-    public ArrayList<Player> calculateFinalRanking(){
-        Server.getInstance().getGame(gameId).sortPlayersByPosition();
-        Server.getInstance().getGame(gameId).calculateFinalScores();
-        Server.getInstance().getGame(gameId).getPlayers().sort(Comparator.comparingInt(Player::getMoney).reversed());
-        return Server.getInstance().getGame(gameId).getPlayers();
-    }
-
-
-
-    /*//arriva un input dalla view
-    public void handleInput(Object input) {
-        //currentCard.play(Game.getInstance(),input);
-    }*/
-
 
     // Questo onGameEvent inoltra gli eventi rivolti a tutti i client
     public void onGameEvent(Event event) { //metodo triggerato dall'evento generico di play nel model
