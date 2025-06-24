@@ -1,25 +1,29 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class ActiveEngineVisitor implements VisitorCoordinate<Void> {
+import it.polimi.ingsw.psp23.model.cards.*;
+
+public class LoadGoodsVisitor implements VisitorCoordinate<Void> {
 
     @Override
     public Void visitForAbandonedStation(AbandonedStation abandonedStation, String username, int i, int j){
+        abandonedStation.loadGoods(username, i, j);
         return null;
     }
 
     @Override
     public Void visitForPlanets(Planets planets, String username, int i, int j){
+        planets.loadGoods(username, i, j);
         return null;
     }
 
     @Override
     public Void visitForSmugglers(Smugglers smugglers, String username, int i, int j){
+        smugglers.loadGoods(username, i, j);
         return null;
     }
 
     @Override
     public Void visitForCombatZone(CombatZone combatZone, String username, int i, int j){
-        combatZone.activeEngine(username, i, j);
         return null;
     }
 
@@ -40,7 +44,6 @@ public class ActiveEngineVisitor implements VisitorCoordinate<Void> {
 
     @Override
     public Void visitForOpenSpace(OpenSpace openSpace, String username, int i, int j){
-        openSpace.activeEngine(username, i, j);
         return null;
     }
 

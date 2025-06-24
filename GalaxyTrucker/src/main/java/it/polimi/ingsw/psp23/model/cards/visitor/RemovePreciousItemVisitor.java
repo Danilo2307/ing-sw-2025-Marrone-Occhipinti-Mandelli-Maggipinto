@@ -1,27 +1,24 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
 
-public class ReduceCrewVisitorNum implements VisitorCoordinateNum<Void> {
+import it.polimi.ingsw.psp23.model.cards.*;
 
-    @Override
+public class RemovePreciousItemVisitor implements VisitorCoordinateNum<Void> {
+
     public Void visitForAbandonedShip(AbandonedShip abandonedShip, String username, int i, int j, int num){
-        abandonedShip.reduceCrew(username, i, j, num);
         return null;
     }
 
-    @Override
     public Void visitForCombatZone(CombatZone combatZone, String username, int i, int j, int num){
-        combatZone.reduceCrew(username, i, j, num);
+        combatZone.removePreciousItem(username, i, j, num);
         return null;
     }
 
-    @Override
     public Void visitForSlavers(Slavers slavers, String username, int i, int j, int num){
-        slavers.reduceCrew(username, i, j, num);
         return null;
     }
 
-    @Override
     public Void visitForSmugglers(Smugglers smugglers, String username, int i, int j, int num){
+        smugglers.removePreciousItem(username, i, j, num);
         return null;
     }
 

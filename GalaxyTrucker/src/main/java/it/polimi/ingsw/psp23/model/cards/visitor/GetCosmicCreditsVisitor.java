@@ -1,4 +1,6 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.cards.visitor;
+
+import it.polimi.ingsw.psp23.model.cards.*;
 
 public class GetCosmicCreditsVisitor implements Visitor<Integer> {
 
