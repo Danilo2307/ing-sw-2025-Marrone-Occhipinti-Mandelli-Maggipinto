@@ -79,20 +79,20 @@ public class Planets extends Card {
     public void landOnPlanet(String username, int i) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_PLANETS) {
-            throw new CardException("Cannot land in " + game.getGameStatus());
+            throw new CardException("Non puoi atterrare in " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+            throw new CardException("E' il turno di " + game.getCurrentPlayer().getNickname());
         }
         if (i <= 0 || i > planetsOccupied.size()) {
-            throw new CardException("Planet index out of bounds: " + i);
+            throw new CardException("Pianeta non disponibile: " + i);
         }
         if (planetsOccupied.get(i-1) == null) {
             game.fireEvent(new PlanetOccupation(game.getGameStatus(), i));
             game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             planetsOccupied.set(i-1, username);
         } else {
-            throw new CardException("Planet " + (i) + " is already occupied by " + planetsOccupied.get(i-1));
+            throw new CardException("Pianeta " + (i) + " è già occupato da " + planetsOccupied.get(i-1));
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
@@ -165,10 +165,10 @@ public class Planets extends Card {
     public void loadGoods(String username, int i, int j) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_PLANETS) {
-            throw new CardException("Cannot load goods in this phase");
+            throw new CardException("Non puoi caricare merci in questa fase");
         }
         if (!planetsOccupied.contains(username)) {
-            throw new CardException("Player is not on any planet");
+            throw new CardException(username + " non è atterrato in nessun pianeta");
         }
         int player = planetsOccupied.indexOf(username);
         List<Item> items = planetGoods.get(player);
@@ -186,7 +186,7 @@ public class Planets extends Card {
                 throw new ItemException("Caricamento non valido", e);
             }
         } else {
-            throw new CardException("No goods left");
+            throw new CardException("Merci finite");
         }
     }
 

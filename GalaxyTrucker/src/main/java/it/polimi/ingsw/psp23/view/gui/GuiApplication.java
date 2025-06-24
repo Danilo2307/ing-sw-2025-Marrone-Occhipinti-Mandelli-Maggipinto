@@ -505,6 +505,7 @@ public class GuiApplication extends Application implements ViewAPI {
                 flightPhaseController.enable(flightPhaseController.getDrawBtn());
                 flightPhaseController.setShip(buildedShip, buildedGrid);
                 flightPhaseController.installClickHandlers();
+                flightPhaseController.setupViewOtherShipsBtn();
                 flightPhaseController.getTextLabel().setText("Aspettando che il Leader peschi la prima carta  ...");
                 flightPhaseScene = scene;
                 Platform.runLater(() -> {

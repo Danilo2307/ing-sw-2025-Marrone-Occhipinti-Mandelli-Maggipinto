@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 import it.polimi.ingsw.psp23.protocol.request.*;
+import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -31,6 +33,10 @@ public class FlightPhaseController {
     @FXML Label textLabel;
     @FXML StackPane ship;
     @FXML GridPane shipGrid;
+
+    @FXML Button player1;
+    @FXML Button player2;
+    @FXML Button player3;
 
     private SingleTileSelector singleSelector = null;
     private TwoStepsTileSelector doubleSelector = null;
@@ -511,6 +517,30 @@ public class FlightPhaseController {
         setupShieldBtn(button4);
         setupRemoveCrewBtn(button5);
         setupDropGoodBtn(button6, true);
+    }
+
+    public void setupViewOtherShipsBtn() {
+        ArrayList<String> otherPlayers = GuiApplication.getInstance().getOtherUsers();
+
+        player1.setText(otherPlayers.get(0));
+        enable(player1);
+
+        if (otherPlayers.size() == 2 || otherPlayers.size() == 3) {
+            player2.setText(otherPlayers.get(1));
+            enable(player2);
+        }
+        if (otherPlayers.size() == 3) {
+            player3.setText(otherPlayers.get(2));
+            enable(player3);
+        }
+    }
+
+    @FXML
+    public void onSpyOthersClicked(javafx.event.ActionEvent event) throws RemoteException {
+        Button clickedButton = (Button) event.getSource();  // bottone che ha scatenato l’evento
+        String username = clickedButton.getText();          // testo del bottone = username
+
+        client.sendAction(new RequestShip(username));       // invia richiesta con username selezionato
     }
 
 

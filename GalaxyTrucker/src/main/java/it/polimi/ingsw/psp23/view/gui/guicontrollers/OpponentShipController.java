@@ -2,6 +2,7 @@ package it.polimi.ingsw.psp23.view.gui.guicontrollers;
 
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.Client;
+import it.polimi.ingsw.psp23.view.gui.GuiApplication;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -26,14 +27,8 @@ public class OpponentShipController {
         labelOwner.setText("Ecco la nave di " + owner);
     }
 
-
     public void renderShip(Component[][] ship, int level) {
         gridShip.getChildren().clear();
-
-        /*imageGrid.fitWidthProperty().bind(stackShip.widthProperty());
-        imageGrid.fitHeightProperty().bind(stackShip.heightProperty());
-        gridShip.prefWidthProperty().bind(stackShip.widthProperty());
-        gridShip.prefHeightProperty().bind(stackShip.heightProperty());*/
 
         if (level == 0) {
             imageGrid.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/cardboard/cardboard-1.jpg"))));
@@ -50,12 +45,18 @@ public class OpponentShipController {
                     String imagePath = "/it/polimi/ingsw/psp23/images/tiles/" + component.getId() + ".jpg";
                     ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
                     imageView.setFitWidth(120);
-                    imageView.setFitHeight(90);
+                    imageView.setFitHeight(95);
                     imageView.setPreserveRatio(true);
+                    imageView.setRotate(component.getRotate());
                     gridShip.add(imageView, col, row);
                 }
             }
         }
+    }
+
+    @FXML
+    public void onReturnClicked() {
+        GuiApplication.getInstance().backToShip();
     }
 }
 

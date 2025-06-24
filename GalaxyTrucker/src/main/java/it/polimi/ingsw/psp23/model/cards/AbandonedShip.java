@@ -60,10 +60,10 @@ public class AbandonedShip extends Card {
     public void pass(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
-            throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
+            throw new CardException(username + " non può comprare la nave nella fase: " + game.getGameStatus());
         }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
+            throw new CardException("E' il turno di " + game.getCurrentPlayer().getNickname());
         }
         if (game.getCurrentPlayerIndex() < game.getPlayers().size() - 1) {
             game.getNextPlayer();
@@ -83,21 +83,22 @@ public class AbandonedShip extends Card {
     public void buyShip(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(isSold != null){
-            throw new CardException("Ship was bought by " + isSold );
+            throw new CardException("La nave è stata già comprata da " + isSold );
         }
         if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSHIP) {
-            throw new CardException("User '" + username + "' cannot buy the ship in phase: " + game.getGameStatus());
+            throw new CardException(username + " non può comprare la nave nella fase: " + game.getGameStatus());
         }
         if (!username.equals(game.getCurrentPlayer().getNickname())) {
-            throw new CardException("User '" + username + "' is not the current player");
+            throw new CardException(username + " non è il giocatore corrente");
         }
         Player p = game.getPlayerFromNickname(username);
         int crew = p.getTruck().calculateCrew();
         if (crew < numMembers) {
-            throw new CardException("User '" + username + "' can't buy ship, he does not have enough crew");
+            throw new CardException(username + "non può comprare la nave, non ha abbastanza equipaggio");
         }
         isSold = username;
         game.fireEvent(new AbandonedShipOccupation(game.getGameStatus()));
+        game.fireEvent(new CosmicCreditsEarned(game.getGameStatus()), username);
         Utility.updatePosition(game.getPlayers(), game.getPlayers().indexOf(p), -days);
         game.sortPlayersByPosition();
         p.updateMoney(cosmicCredits);
@@ -114,10 +115,10 @@ public class AbandonedShip extends Card {
     public void reduceCrew(String username, int i, int j, int num) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_ABANDONEDSHIP) {
-            throw new CardException("User '" + username + "' cannot remove crew in phase: " + game.getGameStatus());
+            throw new CardException(username + " non può rimuovere la crew nella fase: " + game.getGameStatus());
         }
         if (!username.equals(isSold)) {
-            throw new CardException("User '" + username + "' is not the buyer");
+            throw new CardException(username + " non ha comprato la nave");
         }
         Board board = game.getPlayerFromNickname(username).getTruck();
         try{
