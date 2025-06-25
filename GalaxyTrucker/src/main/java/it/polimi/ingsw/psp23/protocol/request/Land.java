@@ -8,6 +8,16 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 
 public record Land(int pi) implements Action {
+
+
+    /**
+     * Handles the landing action for a player in the game. This method checks the current game status
+     * to ensure the action can be performed. If the game is not in the initialization phase for planets,
+     * an exception is thrown. The method uses a visitor pattern to execute the landing on a planet.
+     *
+     * @param username The username of the player attempting to perform the landing action.
+     * @throws InvalidActionException If the action is attempted when the game status is not INIT_PLANETS.
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.INIT_PLANETS){

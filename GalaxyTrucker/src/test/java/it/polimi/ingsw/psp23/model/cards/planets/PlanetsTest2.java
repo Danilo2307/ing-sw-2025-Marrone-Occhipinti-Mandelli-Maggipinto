@@ -2,9 +2,9 @@ package it.polimi.ingsw.psp23.model.cards.planets;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.components.Container;
@@ -22,7 +22,6 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;

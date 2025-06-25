@@ -10,6 +10,12 @@ import java.util.List;
 
 public record ReserveTile() implements Action {
 
+    /**
+     * Handles the reserve tile action for the given user by reserving a tile for the player
+     * associated with the provided username.
+     *
+     * @param username the username of the player for whom the reserve action is performed
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

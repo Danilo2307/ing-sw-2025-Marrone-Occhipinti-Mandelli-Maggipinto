@@ -10,6 +10,11 @@ import java.util.List;
 
 public record TakeReservedTile(int index) implements Action{
 
+    /**
+     * Handles the action of a player taking a reserved tile based on the provided index.
+     *
+     * @param username the username of the player performing the action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

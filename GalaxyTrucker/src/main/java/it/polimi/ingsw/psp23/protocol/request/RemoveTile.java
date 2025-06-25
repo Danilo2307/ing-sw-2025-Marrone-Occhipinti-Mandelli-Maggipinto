@@ -15,12 +15,18 @@ import java.util.List;
 public record RemoveTile(int x, int y) implements Action {
 
 
+    /**
+     * Handles the removal of a specific tile from the player's truck and triggers
+     * an automatic update for the ship view by simulating a user request.
+     *
+     * @param username the username of the player for whom the tile removal action is being performed
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
         p.getTruck().delete(x,y);
-        // Gestisco l'aggiornamento automatico della ship nella tui a seguito del fissaggio delle tile chiamando
-        // l'handle dell'azione RequestShip in modo da simulare (QUASI) una richiesta dell'utente
+        // Gestisco l'aggiornamento automatico della ship nella view a seguito del fissaggio delle tile chiamando
+        // l'handle dell'azione RequestShip in modo da simulare una richiesta dell'utente
         new RequestShip(username).handle(username);
     }
 

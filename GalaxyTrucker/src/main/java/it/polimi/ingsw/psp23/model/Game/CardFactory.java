@@ -5,6 +5,9 @@ import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Item;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 
 
 import java.util.ArrayList;

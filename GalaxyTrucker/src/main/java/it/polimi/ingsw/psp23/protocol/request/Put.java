@@ -1,19 +1,18 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
-// Azione relativa al comando della TUI "posziona"
 
-import it.polimi.ingsw.psp23.controller.Controller;
-import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.socket.Server;
-import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
-import java.util.List;
 
 public record Put() implements Action {
 
+    /**
+     * Handles the action when the user has finished building their ship and places their piece on the board.
+     * This method interacts with the game controller to finalize the building phase for the specific user
+     * and determine the player's placement.
+     *
+     * @param username The username of the player who has completed the building phase and is placing their piece.
+     */
     public void handle(String username){
         UsersConnected.getInstance().getGameFromUsername(username).getController().playerFinishedBuilding(username);
     }

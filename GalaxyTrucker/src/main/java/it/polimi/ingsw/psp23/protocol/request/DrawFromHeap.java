@@ -17,6 +17,14 @@ import java.util.List;
 public record DrawFromHeap() implements Action {
 
 
+    /**
+     * Handles the action of a user attempting to draw a component from the heap.
+     * Retrieves the game and player associated with the provided username,
+     * lets the player choose a tile from the heap, and sends a direct message
+     * containing the drawn tile back to the user.
+     *
+     * @param username The username of the player initiating the action to draw a tile from the heap.
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

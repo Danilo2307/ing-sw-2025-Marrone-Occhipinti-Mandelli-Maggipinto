@@ -15,6 +15,17 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
 
 
+    /**
+     * Handles the activation of a double engine in the player's ship during specific game phases.
+     *
+     * The method checks if the action can be executed based on the current game phase, verifies
+     * the validity of the selected engine, and executes the activation logic if requirements are met.
+     * If the engine is already active or no valid engine is selected, the method sends an error message
+     * to the player.
+     *
+     * @param username the username of the player attempting to activate an engine
+     * @throws InvalidActionException if the game phase does not allow engine activation
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Board truck = game.getCurrentPlayer().getTruck();
@@ -37,6 +48,7 @@ public record ActivateEngine(int ex, int ey, int bx, int by) implements Action {
             }
         }
     }
+
 
     @Override
     public <T> T call(ActionVisitor<T> actionVisitor, String username){

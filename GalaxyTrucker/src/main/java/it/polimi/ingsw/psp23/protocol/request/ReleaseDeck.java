@@ -13,6 +13,12 @@ import java.util.List;
 
 public record ReleaseDeck(int x) implements Action {
 
+    /**
+     * Handles the logic to release a specific visible deck in a game based on the player's action.
+     *
+     * @param username the username of the player performing the action
+     * @throws InvalidActionException if the deck index 'x' has an unexpected value
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player player = game.getPlayerFromNickname(username);

@@ -11,10 +11,15 @@ import java.net.ProtocolException;
 import java.util.ArrayList;
 import java.util.List;
 
-// Questa è l'azione che invia il client per comunicare se vuole creare una nuova partita o partecipare ad una partita esistente
 
 public record UserDecision(int choice) implements Action {
 
+    /**
+     * Handles the action initiated by the client to either create a new game or join an existing one.
+     *
+     * @param username the username of the client making the decision
+     * @throws LobbyUnavailableException if the provided choice is invalid or if no available lobbies match the choice
+     */
     public void handle(String username){
 
         List<Integer> idsAvailable = new ArrayList<>();

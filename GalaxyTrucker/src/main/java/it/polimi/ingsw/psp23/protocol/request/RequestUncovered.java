@@ -8,13 +8,15 @@ import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
 
-import java.time.temporal.ValueRange;
-import java.util.ArrayList;
-import java.util.List;
-
 public record RequestUncovered() implements Action {
 
-
+    /**
+     * Handles the processing of a request to view the uncovered list of tiles.
+     * It retrieves the game associated with the specified username, constructs a response
+     * with the uncovered items and their version, and sends the response as a direct message.
+     *
+     * @param username the username of the user requesting the uncovered list
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         DirectMessage dm = new DirectMessage(new UncoveredListResponse(game.getUncovered(), game.getLastUncoveredVersion()));

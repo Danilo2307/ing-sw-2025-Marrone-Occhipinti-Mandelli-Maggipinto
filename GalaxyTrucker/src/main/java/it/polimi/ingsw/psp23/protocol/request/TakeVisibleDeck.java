@@ -18,6 +18,13 @@ import java.util.List;
 public record TakeVisibleDeck(int index) implements Action{
 
 
+    /**
+     * Handles the action of retrieving a visible deck for the given player, based on the specified index.
+     * Depending on the state of the game, the selected visible deck will be sent to the player.
+     * If the deck cannot be accessed, an appropriate message will be sent to inform the player.
+     *
+     * @param username the username of the player who initiated the action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player player = game.getPlayerFromNickname(username);

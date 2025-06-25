@@ -1,8 +1,7 @@
 package it.polimi.ingsw.psp23.view.gui;
 
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;

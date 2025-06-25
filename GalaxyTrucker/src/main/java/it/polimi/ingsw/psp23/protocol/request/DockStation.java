@@ -8,6 +8,15 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 
 public record DockStation() implements Action {
+
+
+    /**
+     * Handles the action of docking at a station for a specific user. This method ensures that the game
+     * is in the appropriate state for the action to be performed and processes the action using a DockStationVisitor.
+     *
+     * @param username the username of the player attempting to perform the docking action
+     * @throws InvalidActionException if the game is not in the INIT_ABANDONEDSTATION state
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION){

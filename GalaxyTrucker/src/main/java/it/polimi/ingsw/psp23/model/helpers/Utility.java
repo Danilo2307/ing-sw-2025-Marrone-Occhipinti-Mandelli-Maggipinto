@@ -1,4 +1,6 @@
-package it.polimi.ingsw.psp23.model.Game;
+package it.polimi.ingsw.psp23.model.helpers;
+import it.polimi.ingsw.psp23.model.Game.Player;
+
 import java.util.Random;
 import java.util.List;
 

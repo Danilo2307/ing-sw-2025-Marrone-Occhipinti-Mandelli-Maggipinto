@@ -2,16 +2,13 @@ package it.polimi.ingsw.psp23.model.cards.epidemic;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Epidemic;
-import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
 import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -27,7 +24,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

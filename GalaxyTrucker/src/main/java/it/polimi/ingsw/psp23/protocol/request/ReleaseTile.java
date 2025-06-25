@@ -17,13 +17,20 @@ import java.util.List;
  * Event triggered when the user wants to release the tile currently held in hand.
  * After drawing a tile (e.g., from the heap or from the uncovered components), the server stores it
  * in the player's internal field (currentTileInHand).
- * When the user types a command like "rilascia", the client sends this event to indicate
+ * When the user types a command like "rilascia", the client sends this action to indicate
  * that they want to discard the tile in hand.
  * The server will verify that the player is actually holding a tile and, if so,
  * remove it from their hand and place it back into the uncovered area.
  */
 public record ReleaseTile() implements Action {
 
+    /**
+     * Handles the release tile action for the specified user. This method retrieves the game and player
+     * instances associated with the given username, discards the current component held by the player,
+     * and sends a confirmation message back to the user.
+     *
+     * @param username the username of the player initiating the release tile action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

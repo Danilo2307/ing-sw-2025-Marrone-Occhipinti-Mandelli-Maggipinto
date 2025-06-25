@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp23.model.Events;
 
-import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.socket.Server;
 

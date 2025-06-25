@@ -17,6 +17,11 @@ import java.util.List;
 public record RotateTile() implements Action {
 
 
+    /**
+     * Handles the action of rotating the current tile in the player's hand by 90 degrees clockwise.
+     *
+     * @param username The username of the player whose tile in hand will be rotated.
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

@@ -3,15 +3,12 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
 import it.polimi.ingsw.psp23.model.Events.PlanetOccupation;
-import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.Game.Utility;
+import it.polimi.ingsw.psp23.model.helpers.Utility;
 import it.polimi.ingsw.psp23.model.Events.EventForPlanets;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
@@ -175,7 +172,7 @@ public class Planets extends Card {
         if (loadedCount.get(player) < items.size()) {
             try {
                 Board board = game.getPlayerFromNickname(username).getTruck();
-                board.loadGoods(items.get(loadedCount.get(player)), i, j);
+                board.loadGood(items.get(loadedCount.get(player)), i, j);
                 loadedCount.set(player, loadedCount.get(player) + 1);
                 if (verifyAll()) {
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);

@@ -1,10 +1,6 @@
 package it.polimi.ingsw.psp23.model.Events;
 
-import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Event for the Meteor Swarm (Open Space / Meteor Swarm) card:

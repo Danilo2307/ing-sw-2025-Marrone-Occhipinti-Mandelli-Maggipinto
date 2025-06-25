@@ -11,6 +11,13 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 public record Help() implements Action {
 
 
+    /**
+     * Handles the help action for the specified user. This involves retrieving the game associated
+     * with the user, obtaining the current card, and processing the card with a visitor to generate
+     * a response containing the which is then sent back to the user.
+     *
+     * @param username the username of the user for whom the help action is being handled
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Card currentCard = game.getCurrentCard();

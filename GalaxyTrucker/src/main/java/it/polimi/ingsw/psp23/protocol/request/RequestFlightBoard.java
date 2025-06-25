@@ -17,6 +17,13 @@ import java.util.Map;
 public record RequestFlightBoard() implements Action{
 
 
+    /**
+     * Handles the action of requesting the flight board for a specific user.
+     * This method retrieves the game instance associated with the given username,
+     * extracts the flight board data, and sends it back to the user.
+     *
+     * @param username the username of the player requesting the flight board
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Map<Color, Integer> flightMap = new HashMap();

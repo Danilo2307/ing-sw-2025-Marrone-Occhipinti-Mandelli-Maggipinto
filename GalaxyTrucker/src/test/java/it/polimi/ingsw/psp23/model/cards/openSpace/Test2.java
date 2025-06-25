@@ -2,7 +2,7 @@ package it.polimi.ingsw.psp23.model.cards.openSpace;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.OpenSpace;
 import it.polimi.ingsw.psp23.model.components.*;

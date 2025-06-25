@@ -19,6 +19,20 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
  * */
 public record ActivateCannon(int cx, int cy, int bx, int by) implements Action {
 
+    /**
+     * Handles the activation of a double cannon during the action phase.
+     * This method verifies the game state, validates the cannon selection,
+     * and processes the activation if conditions are met. It also ensures
+     * appropriate messages are sent to the user and resources are consumed.
+     *
+     * @param username The username of the player attempting to activate the cannon.
+     *                 The player must specify the cannon's position and the battery hub
+     *                 from which one battery will be consumed during activation.
+     *
+     * @throws InvalidActionException if the action is attempted outside of allowable game statuses.
+     *                                Applicable game statuses include FIRST_COMBATZONE, THIRD_COMBATZONE,
+     *                                INIT_METEORSWARM, INIT_PIRATES, INIT_SLAVERS, and INIT_SMUGGLERS.
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Board truck = game.getCurrentPlayer().getTruck();

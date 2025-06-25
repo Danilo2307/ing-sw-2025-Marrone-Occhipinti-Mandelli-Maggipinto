@@ -5,6 +5,13 @@ import it.polimi.ingsw.psp23.view.ViewAPI;
 import java.util.AbstractMap;
 import java.util.List;
 
+/**
+ * This interface defines a visitor for handling various types of events in a system.
+ * It contains methods to process specific event types and perform the appropriate operations
+ * using the given ViewAPI instance.
+ *
+ * @param <T> The return type of the visitor methods.
+ */
 public interface EventVisitor<T> {
 
     public T visitForShipResponse(ShipResponse shipResponse, ViewAPI viewAPI);
@@ -17,11 +24,7 @@ public interface EventVisitor<T> {
 
     public T visitForStartGame(StartGame startGame, ViewAPI viewAPI);
 
-    public T visitForEndGame(EndGame endGame, ViewAPI viewAPI);
-
     public T visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI);
-
-    public T visitForEndTurn(EndTurn endTurn, ViewAPI viewAPI);
 
     public T visitForStateChanged(StateChanged stateChanged, ViewAPI viewAPI);
 
@@ -30,8 +33,6 @@ public interface EventVisitor<T> {
     public T visitForErrorResponse(ErrorResponse errorResponse, ViewAPI viewAPI);
 
     public T visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, ViewAPI viewAPI);
-
-    public T visitForMeteorIncoming(MeteorIncoming meteorIncoming, ViewAPI viewAPI);
 
     public T visitForPlayerLanded(PlayerLanded playerLanded, ViewAPI viewAPI);
 

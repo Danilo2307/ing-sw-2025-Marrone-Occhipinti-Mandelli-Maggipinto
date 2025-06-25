@@ -4,6 +4,16 @@ import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 import javafx.css.Match;
 
+/**
+ * The HandleEventVisitor class implements the EventVisitor<Void> interface,
+ * providing concrete implementations for handling various types of events.
+ * Each visit method delegates the handling of the event to the corresponding
+ * event's `handle` method, passing an instance of ViewAPI to perform necessary
+ * operations.
+ *
+ * This class is used as part of the Visitor pattern to decouple the operations
+ * performed on event types from the actual event classes themselves.
+ */
 public class HandleEventVisitor implements EventVisitor<Void>{
 
     @Override
@@ -37,22 +47,9 @@ public class HandleEventVisitor implements EventVisitor<Void>{
     }
 
     @Override
-    public Void visitForEndGame(EndGame endGame, ViewAPI viewAPI){
-        endGame.handle(viewAPI);
-        return null;
-    }
-
-    @Override
     public Void visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI){
         timeExpired.handle(viewAPI);
         return null;
-    }
-
-    @Override
-    public Void visitForEndTurn(EndTurn endTurn, ViewAPI viewAPI){
-        endTurn.handle(viewAPI);
-        return null;
-
     }
 
     @Override
@@ -76,12 +73,6 @@ public class HandleEventVisitor implements EventVisitor<Void>{
     @Override
     public Void visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, ViewAPI viewAPI){
         cannonShotIncoming.handle(viewAPI);
-        return null;
-    }
-
-    @Override
-    public Void visitForMeteorIncoming(MeteorIncoming meteorIncoming, ViewAPI viewAPI){
-        meteorIncoming.handle(viewAPI);
         return null;
     }
 

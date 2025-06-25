@@ -237,12 +237,6 @@ public class HandleActionVisitor implements ActionVisitor<Void> {
     }
 
     @Override
-    public Void visitForAccessMatch(AccessMatch accessMatch, String username){
-        accessMatch.handle(username);
-        return null;
-    }
-
-    @Override
     public Void visitForRequestFlightBoard(RequestFlightBoard requestFlightBoard, String username){
         requestFlightBoard.handle(username);
         return null;

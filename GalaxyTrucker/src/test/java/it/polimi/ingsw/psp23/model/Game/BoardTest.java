@@ -1,13 +1,14 @@
 package it.polimi.ingsw.psp23.model.Game;
 
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.ComponentLocation;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;

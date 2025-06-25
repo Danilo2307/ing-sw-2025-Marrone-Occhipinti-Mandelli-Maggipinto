@@ -1,8 +1,10 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Item;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class Board {
     private final ArrayList<Container> containers;
     private final ArrayList<HousingUnit> housingUnits;
     private final ArrayList<StructuralComponent> structuralComponents;
+
     private final ArrayList<Component> reservedTiles;
     private final int ROWS = 5;
     private final int COLS = 7;
@@ -57,9 +60,13 @@ public class Board {
     }
 
     /**
-     * Verifica se due lati sono compatibili ai fini del check().
-     * A differenza di canConnect, considera anche EMPTY/SHIELD come compatibili tra loro.
-     * @return true se i lati sono compatibili, false altrimenti
+     * Determines if two sides are compatible based on their connection rules.
+     * Compatibility is checked using the `canConnect` method, as well as ensuring
+     * that both sides have a `ConnectorType` of NONE when they are empty or shields.
+     *
+     * @param a the first side to be checked for compatibility
+     * @param b the second side to be checked for compatibility
+     * @return true if the two sides are compatible, false otherwise
      */
     private boolean areSidesCompatible(Side a, Side b) {
         if (canConnect(a, b))
@@ -71,11 +78,13 @@ public class Board {
     }
 
     /**
-     * Controlla la legalità della nave secondo le regole del gioco:
-     * - Ogni modulo deve avere connessioni valide ai lati adiacenti
-     * - Nessun motore o cannone deve essere puntato contro un altro modulo
-     * - Tutte le tile devono essere raggiungibili dalla cabina centrale (2,3)
-     * @return true se la nave è legalmente costruita, false altrimenti
+     * Checks the validity and compatibility of all components in the ship's grid.
+     * This includes verifying that engines and guns are appropriately positioned,
+     * that adjacent components have compatible sides, and that all components are
+     * reachable from the central cabin.
+     *
+     * @return true if all components in the ship's grid are correctly placed, compatible,
+     *         and reachable, false otherwise
      */
     public boolean check() {
         for (int i = 0; i < ROWS; i++) {
@@ -137,7 +146,14 @@ public class Board {
     }
 
 
-    // indica se nella posizione i,j può starci un componente oppure no: la plancia non ha una forma perfettamente matriciale
+    /**
+     * Determines if the specified position (i, j) can contain a component on the board.
+     * The board does not have a perfectly matrix-like shape, so certain positions may be invalid.
+     *
+     * @param i the row index to be checked
+     * @param j the column index to be checked
+     * @return true if the position (i, j) can contain a component, false otherwise
+     */
     public boolean isValid(int i, int j) {
         // estraggo la coppia corrente e controllo se matcha
         for (int[] coord : validCoords) {
@@ -152,7 +168,14 @@ public class Board {
         return validCoords;
     }
 
-    // determina se ship[i][j] contiene un component oppure no
+    /**
+     * Determines whether the specified position in the ship's grid is free,
+     * meaning it does not contain any component.
+     *
+     * @param i the row index of the position to be checked
+     * @param j the column index of the position to be checked
+     * @return true if the position at (i, j) is free, false otherwise
+     */
     public boolean isFree(int i, int j) {
         return ship[i][j] == null;
     }
@@ -162,9 +185,13 @@ public class Board {
     }
 
     /**
-     * Verifica se due connettori sono compatibili ai fini della raggiungibilità.
-     * Viene usato da isReachable, quindi considera solo i veri connettori (esclude EMPTY, SHIELD, ENGINE, GUN).
-     * @return true se i due connettori sono compatibili, false altrimenti
+     * Determines if two sides can connect based on their connector types.
+     * The method evaluates compatibility rules, including specific behaviors
+     * for universal connectors and ensuring that non-connector types cannot connect.
+     *
+     * @param a the first side to check for compatibility
+     * @param b the second side to check for compatibility
+     * @return true if the two sides can connect, false otherwise
      */
     private boolean canConnect(Side a, Side b) {
         ConnectorType ca = a.connectorType();
@@ -183,7 +210,16 @@ public class Board {
     }
 
 
-    /** verifica se le due tile (x,y) e (nx,ny) sono unite da connettori compatibili */
+    /**
+     * Determines if two tiles on the board are connected based on their positions and compatibility.
+     * The method checks the adjacency and connection between the tiles at the specified coordinates.
+     *
+     * @param x the X coordinate of the first tile
+     * @param y the Y coordinate of the first tile
+     * @param nx the X coordinate of the second, potentially adjacent tile
+     * @param ny the Y coordinate of the second, potentially adjacent tile
+     * @return true if the two tiles are connected, false otherwise
+     */
     public boolean areTilesConnected(int x,int y,int nx,int ny){
         Component from = ship[x][y];
         Component to   = ship[nx][ny];
@@ -202,14 +238,15 @@ public class Board {
         return false;
     }
 
-    /** Il ragionamento di questo metodo è: partendo dal modulo centrale, controlla che il componente in posizione i e j
-     che stiamo cercando non sia l'adiacente, se non è l'adiacente, fai una chiamata ricorsiva sui moduli
-     * @param alreadyChecked matrice che indica le celle già visitate
-     * @param modCentrX coordinata X da cui parte la ricerca
-     * @param modCentrY coordinata Y da cui parte la ricerca
-     * @param i coordinata X da raggiungere
-     * @param j coordinata Y da raggiungere
-     * @return True se la tile in ship[i][j] è raggiungibile da ship[modCentrX][modCentrY]
+    /**
+     * Determines if a specific cell is reachable from the starting point in a grid.
+     *
+     * @param alreadyChecked a 2D array representing already visited cells in the grid
+     * @param modCentrX the x-coordinate of the starting (central) position
+     * @param modCentrY the y-coordinate of the starting (central) position
+     * @param i the x-coordinate of the target cell to check for reachability
+     * @param j the y-coordinate of the target cell to check for reachability
+     * @return true if the target cell (i, j) is reachable from the central cell (modCentrX, modCentrY), otherwise false
      */
     private boolean isReachable(boolean[][] alreadyChecked, int modCentrX, int modCentrY, int i, int j) {
         // inizializzo scorrX e scorrY alle coordinate del modulo centrale del livello due
@@ -257,11 +294,22 @@ public class Board {
     }
 
 
-    // elimina elemento in posizione i,j della ship e lo rimuove dalla rispettiva lista
-    // funziona perchè ship[i][j] e l'elemento della rispettiva lista puntano allo stesso oggetto in memoria:
-    // la prima lo "vede" come Component (sovraclasse), mentre la lista lo vede come oggetto della sottoclasse.
-    /** Grazie al sealed pattern matching, il compilatore riconosce il tipo effettivo dell'oggetto
-     * e lo assegna alla variabile del case senza bisogno di instanceof o cast manuali. */
+
+    /**
+     * Deletes a component located at the specified coordinates on the board.
+     * The method checks the validity of the provided indices and ensures the
+     * slot is not empty before attempting to remove the component. If the removal
+     * is unsuccessful, appropriate exceptions are thrown. This method also updates
+     * related structures and ensures disconnected components are recursively removed
+     * and updates the garbage if the game is level 2.
+     *
+     * @param i the row index of the component to be deleted
+     * @param j the column index of the component to be deleted
+     * @throws InvalidCoordinatesException if the specified indices are invalid
+     *         or there is no component at the given coordinates
+     * @throws ComponentMismatchException if the component at the specified
+     *         coordinates cannot be found in the corresponding list
+     */
     public void delete(int i, int j) {
         if (!isValid(i, j) || isFree(i, j))
             throw new InvalidCoordinatesException("There isn't any component in this slot or your indexes are invalid: exception in delete(i,j) of Board");
@@ -311,6 +359,14 @@ public class Board {
         }
     }
 
+    /**
+     * Reserves a tile on the board for the specified component. A maximum of two tiles
+     * can be reserved at a time. If the limit is exceeded, an exception is thrown.
+     * This operation marks the component as reserved and adds it to the reserved tiles list.
+     *
+     * @param c the component to be reserved
+     * @throws InvalidComponentActionException if more than two tiles are reserved
+     */
     public void reserveTile(Component c) {
         if (reservedTiles.size() >= 2)
             throw new InvalidComponentActionException("Puoi prenotare al massimo due tiles!");
@@ -322,6 +378,14 @@ public class Board {
         return reservedTiles;
     }
 
+    /**
+     * Checks if there is at least one adjacent tile in a valid position.
+     * This method is necessary for determining if a tile can be joined with others.
+     *
+     * @param i the row index of the tile to check
+     * @param j the column index of the tile to check
+     * @return true if there is at least one adjacent tile in a valid position, false otherwise
+     */
     private boolean hasAdjacentTile(int i, int j) {
         // verifico se vi sia almeno un componente adiacente in una posizione valida (controllo necessario per saldatura tile)
         return (isValid(i - 1, j) && !isFree(i - 1, j)) ||
@@ -330,6 +394,18 @@ public class Board {
                 (isValid(i, j + 1) && !isFree(i, j + 1));
     }
 
+    /**
+     * Adds a component to the ship at the specified coordinates. Ensures that the position
+     * is valid, free, and satisfies the adjacency or starting cabin constraints.
+     * If the component is already reserved, it will be removed from the reserved tiles.
+     * The component is placed in the specified position and added to its respective category list.
+     *
+     * @param c the component to be added to the ship
+     * @param i the row index where the component will be placed
+     * @param j the column index where the component will be placed
+     * @throws InvalidCoordinatesException if the specified position is invalid, not free, or
+     *                                     does not satisfy adjacency or starting cabin constraints
+     */
     public void addComponent(Component c, int i, int j) {
         // solo la cabina centrale non avrà tile adiacenti al momento dell'inserimento; tutte le altre avranno questo vincolo.
         // Inoltre, la posizione deve essere valida e libera
@@ -343,6 +419,7 @@ public class Board {
         c.setX(i);
         c.setY(j);
         c.placeOnTruck();
+
         // aggiungo nella rispettiva lista in base al tipo. I due oggetti (in ship e nella lista) avranno
         // lo stesso riferimento, ma verranno visti da "due punti di vista diversi"
         switch (c) {
@@ -359,8 +436,12 @@ public class Board {
     }
 
     /**
-     * @param item è l'oggetto che l'utente desidera rimuovere
-     * @return true se l'item è tra i più preziosi disponibili, false altrimenti
+     * Determines whether an item is the most precious on the ship based on its color.
+     * The preciousness is determined by a predefined order of colors
+     * which is Red,Yellow,Green, Blue
+     *
+     * @param item the item to be checked for preciousness
+     * @return true if the specified item is the most precious, otherwise false
      */
     public boolean isMostPrecious(Item item) {
         Color[] preciousness = {Color.Red, Color.Yellow, Color.Green, Color.Blue};
@@ -384,10 +465,17 @@ public class Board {
     }
 
     /**
-     * Rimuove una merce da un container in posizione (i,j), solo se risulta tra le più preziose ancora presenti a bordo.
-     * @param i coordinata riga del container
-     * @param j coordinata colonna del container
-     * @param item indice Item che il giocatore ha scelto di rimuovere
+     * Removes a specified precious item from a container located at the given coordinates on the ship.
+     * Validates that the component at the specified coordinates is a container and that the item is among
+     * the most precious items on board before removal.
+     *
+     * @param i the row index of the ship matrix where the container is located
+     * @param j the column index of the ship matrix where the container is located
+     * @param item the 1-based index of the precious item to be removed from the container
+     * @throws ComponentMismatchException if the component at the given coordinates is not a container or an invalid index for the container is provided
+     * @throws IllegalArgumentException if the item to be removed is not among the most precious items
+     * @throws ContainerException if there is an issue with removing the item from the container
+     * @throws TypeMismatchException if the component at the given coordinates is not of the expected type (e.g., not a container)
      */
     public void removePreciousItem(int i, int j, int item) {
         Component tile = ship[i][j];
@@ -420,6 +508,17 @@ public class Board {
     }
 
 
+    /**
+     * Handles the impact of a cannon shot on a target, determining its effects
+     * based on the direction, size of the shot, and whether a shield is active.
+     * If the shot hits a valid target, it destroys the target or triggers the shield.
+     *
+     * This method adjusts the impact location based on the game's internal coordinate system
+     * and processes the effect differently for big and small cannon shots.
+     *
+     * @param cannonShot The cannon shot being processed, containing information about its size and direction.
+     * @param impactLine The line or axis of impact, which is adjusted to align with the internal game grid.
+     */
     public void handleCannonShot(CannonShot cannonShot, int impactLine) {
 
         /* Se la cannonata è grande, distrugge sempre il primo componente colpito.
@@ -527,6 +626,16 @@ public class Board {
         }
     }
 
+    /**
+     * Handles the impact of a meteor on the ship depending on its size, direction, and whether it is
+     * shielded or destroyed by a cannon. The method evaluates the position of the meteor's impact,
+     * checks for active shields or cannons, and determines whether the meteor causes damage to the ship.
+     *
+     * @param meteor The Meteor object representing the meteor that is approaching.
+     *               Contains properties such as size and direction.
+     * @param impactLine The line (row or column) on the ship where the meteor is expected to impact.
+     *                   Its interpretation depends on the direction of the meteor (vertical or horizontal).
+     */
     public void handleMeteor(Meteor meteor, int impactLine) {
 
         //prima di tutto converto la impactLine per far sì che rientri nei limiti della mia matrice
@@ -691,13 +800,23 @@ public class Board {
     }
 
     /**
-     Il metodo loadGoods carica una lista di item in un singolo container in posizione (i,j).
-     Si assume che la lista sia stata già validata dal Controller come carico destinato a quel container specifico.
-     Il metodo prova a caricare ogni item e, se anche uno solo non rispetta le regole (colore o spazio disponibile),
-     viene lanciata un'eccezione (presente in loadItem) e nessun item successivo viene caricato (ma i preceedenti si!).
-     Eventuali scelte strategiche o ripartizioni su più container devono essere gestite dal Controller.
+     * Loads the specified item into a container located at the given coordinates
+     * on the ship. The method verifies that the coordinates are valid and point
+     * to a container. If the coordinates are invalid, do not point to a container,
+     * or if the container cannot accept the item, an exception is thrown.
+     *
+     * @param item the item to be loaded into the container
+     * @param i the row index of the container's location
+     * @param j the column index of the container's location
+     * @throws InvalidCoordinatesException if the coordinates are invalid or do
+     *         not point to a tile on the ship
+     * @throws ComponentMismatchException if the container at the specified
+     *         coordinates is not found in the containers list
+     * @throws TypeMismatchException if the component at the specified coordinates
+     *         is not a container
+     * @throws ContainerException if the item cannot be loaded into the container
      */
-    public void loadGoods(Item item, int i, int j) {
+    public void loadGood(Item item, int i, int j) {
         if (!isValid(i, j) || isFree(i,j)) {
             throw new InvalidCoordinatesException("Coordinates(" + i + "," + j + ") cannon contain a tile or don't contain one");
         }
@@ -721,6 +840,16 @@ public class Board {
     }
 
 
+    /**
+     * Updates the allowed aliens for each HousingUnit by checking for adjacent AlienAddOns.
+     * For each HousingUnit, this method iterates through all available AlienAddOns and checks
+     * if any of them are adjacent to the current HousingUnit. If an adjacent AlienAddOn is found,
+     * its associated color is added to the list of connected addons for that specific HousingUnit.
+     *
+     * The adjacency is determined based on the AlienAddOn being either directly horizontal or vertical
+     * to the position of the HousingUnit (not diagonal). Multiple adjacent AlienAddOns can be added
+     * for a single HousingUnit.
+     */
     public void updateAllowedAliens() {
         /* per ogni housingunit faccio un ciclo che controlli eventuali addons adiacenti, per poi aggiungere
            il colore dell'alienaddon corrispondente; non ho messo un break nel for
@@ -750,6 +879,17 @@ public class Board {
     }
 
 
+    /**
+     * Reduces the number of batteries in a BatteryHub at the specified coordinates.
+     *
+     * @param i the row index of the tile on the ship
+     * @param j the column index of the tile on the ship
+     * @param num the number of batteries to be removed
+     * @throws InvalidCoordinatesException if the coordinates do not contain a valid tile or no tile exists
+     * @throws ComponentMismatchException if no matching BatteryHub is found at the specified coordinates
+     * @throws BatteryOperationException if an error occurs while removing batteries
+     * @throws TypeMismatchException if the component at the given coordinates is not a BatteryHub
+     */
     public void reduceBatteries(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i, j))
             throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
@@ -773,6 +913,20 @@ public class Board {
     }
 
 
+    /**
+     * Reduces the number of crew members in a specified housing unit of the ship.
+     * This method validates the provided coordinates and checks for the presence
+     * of a HousingUnit tile at the specified location. If the tile exists and is
+     * valid, it attempts to reduce the crew count by the specified number.
+     *
+     * @param i the row index of the tile to target
+     * @param j the column index of the tile to target
+     * @param num the number of crew members to remove from the housing unit
+     * @throws InvalidCoordinatesException if the coordinates are invalid or the tile is empty
+     * @throws ComponentMismatchException if the specified HousingUnit is not found in the housing unit list
+     * @throws CrewOperationException if the operation to remove crew members fails
+     * @throws TypeMismatchException if the tile is not a HousingUnit
+     */
     public void reduceCrew(int i, int j, int num) {
         if ((!isValid(i, j)) || isFree(i,j))
             throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
@@ -797,6 +951,15 @@ public class Board {
         }
     }
 
+    /**
+     * Calculates the number of exposed connectors on the border of the ship.
+     * The method iterates through each side of the ship (up, down, left, right),
+     * examines the edge components, and counts any exposed connectors.
+     * A connector is considered exposed if it belongs to one of the following types:
+     * SINGLE_CONNECTOR, DOUBLE_CONNECTOR, SHIELD_SINGLE_CONNECTOR, SHIELD_DOUBLE_CONNECTOR, or UNIVERSAL_CONNECTOR.
+     *
+     * @return the total count of exposed connectors on the ship's border.
+     */
     public int calculateExposedConnectors() {
         /* Fa dei controlli lato per lato, analizzando esclusivamente i component che definiscono il bordo della nave,
          * e controlla se ci sono dei controllori esposti. In quel caso aggiorno il contatore*/
@@ -850,6 +1013,20 @@ public class Board {
         return count;
     }
 
+    /**
+     * Activates a cannon located at specified coordinates on the ship.
+     * This method ensures the specified coordinates contain a valid
+     * double cannon and activates it. Throws exceptions if the input
+     * coordinates are invalid, the component is not a cannon, or the
+     * cannon does not meet the required conditions.
+     *
+     * @param i the row index of the cannon on the ship to be activated
+     * @param j the column index of the cannon on the ship to be activated
+     * @throws InvalidCoordinatesException if the specified coordinates do not contain a tile
+     * @throws ComponentMismatchException if the cannon at the specified coordinates is not in the list of cannons
+     * @throws InvalidComponentActionException if the cannon at the specified coordinates is not a double cannon
+     * @throws TypeMismatchException if the component at the specified coordinates is not a cannon
+     */
     public void activeCannon(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j))
             throw new InvalidCoordinatesException("Coordinates("+i+","+j+") cannon contain a tile or don't contain one");
@@ -869,6 +1046,19 @@ public class Board {
         }
     }
 
+    /**
+     * Activates the shield at the specified coordinates on the ship. If the shield
+     * is not present or the specified component is not a shield, an exception is thrown.
+     *
+     * @param i the row index of the shield on the ship
+     * @param j the column index of the shield on the ship
+     * @throws InvalidCoordinatesException if the specified coordinates are invalid
+     *         or do not contain a tile
+     * @throws ComponentMismatchException if the shield at the given coordinates
+     *         is not found in the shields list
+     * @throws TypeMismatchException if the component at the specified coordinates
+     *         is not a shield
+     */
     public void activeShield(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j))
             throw new InvalidCoordinatesException("Coordinates("+i+","+j+") shield contain a tile or don't contain one");
@@ -885,6 +1075,17 @@ public class Board {
         }
     }
 
+    /**
+     * Activates a specific engine in the ship, provided its coordinates are valid and
+     * it meets the necessary conditions for activation.
+     *
+     * @param i the row index of the engine's location on the ship
+     * @param j the column index of the engine's location on the ship
+     * @throws InvalidCoordinatesException if the provided coordinates are invalid or the location is free
+     * @throws ComponentMismatchException if the engine at the specified coordinates is not found in the engines list
+     * @throws InvalidComponentActionException if the engine at the specified coordinates is not a double engine
+     * @throws TypeMismatchException if the component at the specified coordinates is not an engine
+     */
     public void activeEngine(int i, int j) {
         if ((!isValid(i, j)) || isFree(i,j))
             throw new InvalidCoordinatesException("Ship[" + i + "][" + j + "] does not contain a valid Engine.");
@@ -904,6 +1105,15 @@ public class Board {
         }
     }
 
+    /**
+     * Calculates the total cannon strength based on the current state of the cannons and any relevant modifiers.
+     * Single forward-facing cannons contribute +1 to the strength, while non-forward-facing single cannons contribute +0.5.
+     * Double cannons, when activated, contribute +2 if forward-facing or +1 if not.
+     * Activations for double cannons are consumed and cannot be reused.
+     * If a purple alien is present in the housing units, it adds +2 to the strength only if the calculated strength is already greater than 0.
+     *
+     * @return the total power-strength of the ship.
+     */
     public double calculateCannonStrength() {
 
         // I cannoni singoli puntati in avanti contano +1, gli altri +½. Se spendi una batteria, i cannoni doppi puntati in avanti contano +2, gli altri +1.
@@ -944,6 +1154,17 @@ public class Board {
         return strength;
     }
 
+    /**
+     * Calculates the engine strength based on the status and type of engines and the presence
+     * of specific conditions such as a brown alien in the housing units.
+     *
+     * The calculation considers:
+     * - Single engines contribute +1 each.
+     * - Double engines contribute +2 if they are activated (and are then deactivated after usage).
+     * - A brown alien in a housing unit contributes +2 if the engine strength is already greater than 0.
+     *
+     * @return the total engine strength as an integer value.
+     */
     public int calculateEngineStrength() {
         //  I motori singoli contano +1. I motori doppi contano +2 se spendi una batteria.
         int strength = 0;
@@ -972,6 +1193,11 @@ public class Board {
         return strength;
     }
 
+    /**
+     * Calculates the total number of batteries available across all battery hubs.
+     *
+     * @return the total number of batteries available
+     */
     public int calculateBatteriesAvailable() {
         int numbatteries = 0;
         for (BatteryHub BatteryHub : batteryHubs) {
@@ -980,6 +1206,13 @@ public class Board {
         return numbatteries;
     }
 
+    /**
+     * Calculates the total number of goods stored within all containers.
+     * Iterates through the list of containers and sums up the number of items
+     * in each container.
+     *
+     * @return the total count of goods across all containers
+     */
     public int calculateGoods() {
         int numGoods = 0;
         for (Container c : containers) {
@@ -1017,8 +1250,12 @@ public class Board {
 
 
     /**
-     * @return somma totale in crediti ricavati dalle merci.
-     * */
+     * Calculates the total sales value of goods based on their color coding.
+     * Each item's color contributes a specific value to the total based on the predefined rules:
+     * Red contributes 4, Yellow contributes 3, Green contributes 2, and Blue contributes 1.
+     *
+     * @return the total monetary value of the goods sales as an integer
+     */
     public int calculateGoodsSales() {
         int money = 0;
         for (Container c : containers) {
@@ -1037,10 +1274,19 @@ public class Board {
         return money;
     }
 
-    public boolean isWelded(){ //restituisce vero se il player ha almeno un pezzo saldato
+    /**
+     * Checks if the player has at least one welded piece on the ship grid.
+     *
+     * This method iterates through the ship grid, excluding the central cabin,
+     * and determines if any cell contains a non-null value, which indicates a welded piece.
+     *
+     * @return true if the ship grid contains at least one welded piece outside the central cabin,
+     *         false otherwise.
+     */
+    public boolean isWelded(){
         for(int i = 0; i < ROWS ; i++){
             for(int j = 0; j < COLS ; j++){
-                if(!(i == 2 && j == 3)) { // non considero la cabina centrale
+                if(!(i == 2 && j == 3)) {
                     if (ship[i][j] != null) {
                         return true;
                     }
@@ -1093,6 +1339,17 @@ public class Board {
         return ship;
     }
 
+    /**
+     * Removes an item from a container located at the specified position on the ship.
+     *
+     * @param i the row index of the container on the ship
+     * @param j the column index of the container on the ship
+     * @param index the 1-based index of the item to remove from the container
+     * @throws ContainerException if the specified position does not contain a valid container or if a removal action fails
+     * @throws ComponentMismatchException if the specified component is not a valid container or if the index is invalid
+     * @throws InvalidActionException if the specified index exceeds the number of items in the container
+     * @throws TypeMismatchException if the component at the specified position is not a container
+     */
     public void removeGood(int i, int j, int index){
         if(!isValid(i,j)){
             throw new ContainerException("Not a valid position for a component");

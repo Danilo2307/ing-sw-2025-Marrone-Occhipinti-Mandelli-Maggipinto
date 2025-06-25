@@ -1,23 +1,14 @@
 package it.polimi.ingsw.psp23.view.TUI;
 
-import it.polimi.ingsw.psp23.controller.Controller;
-import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
-import it.polimi.ingsw.psp23.exceptions.PlayerNotExistsException;
 import it.polimi.ingsw.psp23.exceptions.TuiInputException;
-import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
-import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.*;
-import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
-import it.polimi.ingsw.psp23.network.socket.ClientSocket;
-import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.request.*;
 import it.polimi.ingsw.psp23.protocol.response.*;
 import it.polimi.ingsw.psp23.view.ViewAPI;
@@ -27,7 +18,6 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
  *  cambio stato. */

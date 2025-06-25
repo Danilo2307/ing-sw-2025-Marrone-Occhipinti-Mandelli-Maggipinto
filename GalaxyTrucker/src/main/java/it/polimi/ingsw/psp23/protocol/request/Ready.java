@@ -8,6 +8,14 @@ import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 
 public record Ready() implements Action {
+
+    /**
+     * Handles the "ready" action, indicating the user has completed activating effects or actions
+     * related to a specific game card. This action is only allowed during specific game statuses.
+     *
+     * @param username the username of the player performing the action
+     * @throws InvalidActionException if the action is performed during an invalid game status
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.FIRST_COMBATZONE && game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.THIRD_COMBATZONE && game.getGameStatus() != GameStatus.ENDTHIRD_COMBATZONE && game.getGameStatus() != GameStatus.INIT_METEORSWARM && game.getGameStatus() != GameStatus.INIT_OPENSPACE && game.getGameStatus() != GameStatus.INIT_PIRATES && game.getGameStatus() != GameStatus.END_PIRATES && game.getGameStatus() != GameStatus.INIT_SLAVERS && game.getGameStatus() != GameStatus.INIT_SMUGGLERS){
