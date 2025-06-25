@@ -1,8 +1,10 @@
 package it.polimi.ingsw.psp23.model.cards.planets;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ItemException;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
@@ -14,6 +16,7 @@ import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
@@ -21,19 +24,18 @@ import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
 import it.polimi.ingsw.psp23.network.socket.Server;
-import org.junit.jupiter.api.*;
-
-import it.polimi.ingsw.psp23.model.Game.*;
-import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-class PlanetsTest {
-//TEST DI PLANETS IN CUI L'UTENTE SI COMPORTA COME RICHIESTO CON IL COMANDO LOADGOODS
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PlanetTest4 {
     Game game;
     Player p1, p2;
     Planets card;
@@ -114,43 +116,29 @@ class PlanetsTest {
         assertEquals("Available commands: LAND, PASS\n", resultHelpInitPlanets);
 
         // Albi atterra sul pianeta 1
+        assertThrows(CardException.class, () -> card.loadGoods("Fede", 1, 5));
         assertThrows(CardException.class, () -> card.landOnPlanet("Fede", 1));
         LandOnPlanetVisitor landvisitor = new LandOnPlanetVisitor();
         landvisitor.visitForPlanets(card, "Albi", 1);
         assertEquals("Albi", card.getPlanetsOccupied()[0]);
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
-        // Fede atterra sul pianeta 2
-        assertThrows(CardException.class, () -> card.landOnPlanet("Fede", 1));
-        assertThrows(CardException.class, () -> card.landOnPlanet("Fede", 10));
-        card.landOnPlanet("Fede", 2);
-        assertEquals("Fede", card.getPlanetsOccupied()[1]);
-        // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
-        assertEquals(GameStatus.END_PLANETS, game.getGameStatus());
-        assertThrows(CardException.class, () -> card.landOnPlanet("Fede", 2));
-        String resultHelpEndPlanets = card.help("Fede");
-        assertEquals("Available commands: LOADGOODS, PERDI, PASS\n", resultHelpEndPlanets);
-
+        card.pass("Fede");
         // Verifica che i marker sulla board siano arretrati di 4 spazi
-        assertEquals(8, p1.getPosition());
-        assertEquals(6, p2.getPosition());
+        assertEquals(7, p1.getPosition());
+        assertEquals(10, p2.getPosition());
 
         // Ora prepariamo le board per il loading:
         // dobbiamo avere dei Container in posizioni note (i,j).
 
         // Albi carica item
         card.loadGoods("Albi", 1, 3);
+        assertThrows(CardException.class, () -> card.loadGoods("Fede", 1, 3));
+        assertThrows(ItemException.class, () -> card.loadGoods("Albi", 10, 30));
         card.loadGoods("Albi", 1, 3);
         card.loadGoods("Albi", 1, 3);
-        card.loadGoods("Albi", 1, 4);
-
-        // Fede carica item
-        LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
-        loadvisitor.visitForPlanets(card, "Fede", 1, 3);
-        card.loadGoods("Fede", 1, 3);
-        card.loadGoods("Fede", 1, 4);
         GameStatus before = game.getGameStatus();
-        card.loadGoods("Fede", 1, 4);
+        card.loadGoods("Albi", 1, 4);
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

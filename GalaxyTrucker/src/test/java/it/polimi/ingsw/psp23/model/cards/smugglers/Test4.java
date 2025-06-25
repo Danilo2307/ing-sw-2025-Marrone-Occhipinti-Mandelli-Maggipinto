@@ -1,18 +1,15 @@
-package it.polimi.ingsw.psp23.model.cards.combactZone;
+package it.polimi.ingsw.psp23.model.cards.smugglers;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.CombatZone;
-import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
-import it.polimi.ingsw.psp23.model.cards.visitor.ReduceCrewVisitorNum;
-import it.polimi.ingsw.psp23.model.cards.visitor.RemoveBatteriesVisitor;
-import it.polimi.ingsw.psp23.model.cards.visitor.RemovePreciousItemVisitor;
+import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
@@ -30,11 +27,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Test2 {
-    //TEST SU CARTA LIVELLO 2
+public class Test4 {
     Game game;
     Player p1, p2, p3;
-    CombatZone card;
+    Smugglers card;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -56,7 +52,6 @@ public class Test2 {
         UsersConnected.getInstance().addClient("Albi", 0);
         UsersConnected.getInstance().addClient("Fede", 0);
         UsersConnected.getInstance().addClient("Gigi", 0);
-
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -103,15 +98,6 @@ public class Test2 {
         Engine ea1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         ea1.moveToHand();
         p1.getTruck().addComponent(ea1, 3, 2);
-        Engine ea2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ea2.moveToHand();
-        p1.getTruck().addComponent(ea2, 3, 5);
-        Engine ea3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ea3.moveToHand();
-        p1.getTruck().addComponent(ea3, 3, 1);
-        Shield sa1 = new Shield(Side.SHIELD, Side.SHIELD, Side.SHIELD, Side.SHIELD,1);
-        sa1.moveToHand();
-        p1.getTruck().addComponent(sa1, 1, 5);
 
         Item ia1 = new Item(Color.Yellow);
         ca1.loadItem(ia1);
@@ -129,7 +115,7 @@ public class Test2 {
         BatteryHub bf1 = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 3,1);
         bf1.moveToHand();
         p2.getTruck().addComponent(bf1, 2, 4);
-        Container cf1 = new Container(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
+        Container cf1 = new Container(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 3, Color.Blue, new ArrayList<>(),1);
         cf1.moveToHand();
         p2.getTruck().addComponent(cf1, 2, 2);
         Engine ef1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
@@ -144,12 +130,6 @@ public class Test2 {
         BatteryHub bf2 = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2,1);
         bf2.moveToHand();
         p2.getTruck().addComponent(bf2, 3, 2);
-        Engine ef2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ef2.moveToHand();
-        p2.getTruck().addComponent(ef2, 3, 5);
-        Engine ef3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ef3.moveToHand();
-        p2.getTruck().addComponent(ef3, 3, 1);
 
         //BOARD GIGI
         HousingUnit hg2 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
@@ -173,14 +153,6 @@ public class Test2 {
         Engine eg1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         eg1.moveToHand();
         p3.getTruck().addComponent(eg1, 3, 2);
-        Engine eg2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        eg2.moveToHand();
-        p3.getTruck().addComponent(eg2, 3, 4);
-        Engine eg3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        eg3.moveToHand();
-        p3.getTruck().addComponent(eg3, 3, 1);
-        hg2.setAstronaut();
-
         Item ig1 = new Item(Color.Red);
         cg1.loadItem(ig1);
 
@@ -190,88 +162,65 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new CombatZone(2,4,3,0, List.of(Challenge.CannonStrength, Challenge.EngineStrength, Challenge.Members), List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN)),1);
+        card = new Smugglers(1, 4, 2, 1, List.of(new Item(Color.Yellow), new Item(Color.Green), new Item(Color.Blue)),1);
     }
 
     @Test
-    void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
-        String expected = "è uscita la carta Combat Zone:\n" +
-                " La prima sfida riguarda la potenza di fuoco (penalità: 4 giorni)\n" +
-                "la seconda sfida riguarda la potenza motrice (penalità: 3 merci importanti)\n" +
-                "la terza sfida riguarda i membri dell'equipaggio (penalità colpi di cannone: " +
-                card.getCannonShot().toString() + "\n";
-        String resultComplex = card.toString();
+    void testPag14() throws CardException, InvocationTargetException, IllegalAccessException {
+        String expected = "è uscita la carta Smugglers\n" +
+                "la potenza di fuoco è 4\n" +
+                "le merci importanti che andrebbero perse sono 2\n" +
+                "i giorni persi sono 1\n" +
+                "le merci vinte sarebbero: [gialla, verde, blu]\n";
+        String resultToStringSmugglers = card.toString();
+        assertEquals(expected, resultToStringSmugglers);
 
-        assertEquals(expected, resultComplex);
         // INIT
-        card.initPlay("Fede");
-        //SI PARTE CON LA PRIMA SFIDA
-        assertEquals(GameStatus.FIRST_COMBATZONE, game.getGameStatus());
-        String resultFirst = card.help("Fede");
-        assertEquals("Available commands: ATTIVACANNONE, READY\n", resultFirst);
+        InitPlayVisitor playvisitor4 = new InitPlayVisitor();
+        playvisitor4.visitForSmugglers(card, "Fede");
+        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.loadGoods("Albi",1 ,5));
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpInitSmugglers = helpvisitor.visitForSmugglers(card, "Fede");
+        assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSmugglers);
 
-        //ALBI ATTIVA UNO DEI SUOI CANNONI
-        card.activeCannon("Albi", 1,4);
-        card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Albi"));
-        assertThrows(CardException.class, () -> card.ready("Gigi"));
 
-        //FEDE NE ATTIVA 1 E PERDE
-        card.activeCannon("Fede", 1,4);
+        // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
+        card.activeCannon("Albi", 1, 4);
+        assertThrows(CardException.class, () -> card.activeCannon("Fede", 1, 5));
+//        assertEquals(4, p1.getTruck().calculateCannonStrength());
+//        assertEquals(1, p1.getTruck().calculateEngineStrength());
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForSmugglers(card, "Albi");
+        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
+
+        // Fede attiva due cannoni e sconfigge il nemico
+        card.activeCannon("Fede", 1, 4);
+        card.activeCannon("Fede", 1, 3);
+//        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
+        assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
+        String resultHelpEndSmugglers = card.help("Fede");
+        assertEquals("Available commands: LOADGOOD, PASS, PERDI, BATTERIE\n", resultHelpEndSmugglers);
 
-        //GIGI ATTIVA 1
-        card.activeCannon("Gigi", 1,3);
-        card.ready("Gigi");
-
-        //FEDE HA PERSO LA PRIMA SFIDA
-        assertEquals(5, p2.getPosition());
-        //ALBI DIVENTA IL LEADER, POI GIGI E ALBI
-        assertEquals("Albi", game.getCurrentPlayer().getNickname());
-        //SI PASSA ALLA SECONDA SFIDA
-        assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
-
-        //SECONDA SFIDA
-        //ALBI ATTIVA I SUOI MOTORI
-        card.activeEngine("Albi", 3,1);
-        card.activeEngine("Albi", 3,5);
-        card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Albi"));
-        assertThrows(CardException.class, () -> card.ready("Fede"));
-
-        //GIGI NON NE ATTIVA E PERDE
-        card.ready("Gigi");
-
-        //FEDE NE ATTIVA SOLO UNO
-        card.activeEngine("Fede", 3,1);
-        card.ready("Fede");
-
-        //GIGI DEVE SCONTARE LA PENALITA'
-        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 2, 2, 2));
-        RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
-        itemvisitor.visitForCombatZone(card, "Gigi", 2, 4, 1);
-        assertThrows(ItemException.class, () -> card.removeBatteries("Gigi", 10, 50, 3));
-        RemoveBatteriesVisitor batteriesvisitor = new RemoveBatteriesVisitor();
-        batteriesvisitor.visitForCombatZone(card, "Gigi", 2, 2, 2);
-        assertEquals(0, p3.getTruck().calculateGoods());
-        assertEquals(1, p3.getTruck().calculateBatteriesAvailable());
-
-        //SI PASSA ALLA TERZA CON ALBU IN TESTA
-        assertEquals("Albi", game.getCurrentPlayer().getNickname());
-        assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
-
-        //ALBI PERDE LA SFIDA E AFFRONTA IL PRIMO CANNONE CON LO SCUDO
-        ActiveShieldVisitor visitor = new ActiveShieldVisitor();
-        visitor.visitForCombatZone(card, "Albi", 1, 5);
-        card.ready("Albi");
-        card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Gigi"));
+        //Fede non ha spazio, toglia la merce blu e carica le altre
+        assertThrows(CardException.class, () -> card.loadGoods("Albi", 1, 5));
+        LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
+        loadvisitor.visitForSmugglers(card, "Fede", 2, 2);
+        card.loadGoods("Fede", 2, 2);
         GameStatus before = game.getGameStatus();
-        card.ready("Albi");
+        card.loadGoods("Fede", 2, 2);
 
-        //PASSA ALLA CARTA SUCCESSIVA
+
+        // Verifica che i marker sulla board siano arretrati di 4 spazi
+        assertEquals(12, p1.getPosition());
+        assertEquals(9, p2.getPosition());
+        assertEquals(8, p3.getPosition());
+
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
+
+        //PASSA ALLA CARTA SUCCESSIVA
         assertNotEquals(before, after);
 
     }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards.abandonedShip;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.CrewOperationException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -30,8 +31,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     // PRIMO PASSA E SECONDO COMPRA LA NAVE
@@ -40,18 +40,19 @@ public class Test1 {
     AbandonedShip card;
 
     @BeforeEach
-    void setUp() {
-        try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    void setUp() throws Exception {
+        
+            try {
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -110,11 +111,13 @@ public class Test1 {
         assertEquals("Available commands: COMPRANAVE, PASSA\n", result);
         card.toString();
         card.help("Fede");
+        assertThrows(CardException.class, () -> card.reduceCrew(("Gigi"), 1, 5, 2));
         assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
 
         // Albi passa
         PassVisitor passvisitor = new PassVisitor();
         passvisitor.visitForAbandonedShip(card, "Albi");
+        assertThrows(CardException.class, () -> card.pass("Albi"));
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede compra la nave
@@ -122,6 +125,8 @@ public class Test1 {
         visitorship.visitForAbandonedShip(card, "Fede");
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_ABANDONEDSHIP, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.pass("Gigi"));
+        assertThrows(CardException.class, () -> card.buyShip("Gigi"));
 
         String result1 = card.help("Fede");
         assertEquals("Available commands: REDUCECREW\n", result1);
@@ -132,6 +137,7 @@ public class Test1 {
 
         //Riduzione crew Fede
         GameStatus before = game.getGameStatus();
+        assertThrows(CrewOperationException.class, () -> card.reduceCrew("Fede", 10, 50, 2));
         ReduceCrewVisitorNum crewvisitor = new ReduceCrewVisitorNum();
         crewvisitor.visitForAbandonedShip(card, "Fede", 1, 3, 2);
         card.reduceCrew("Fede", 1, 4, 1);

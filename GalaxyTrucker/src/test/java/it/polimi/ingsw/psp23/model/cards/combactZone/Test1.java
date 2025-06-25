@@ -24,8 +24,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     //TEST SU CARTA LIVELLO 1
@@ -34,18 +33,19 @@ public class Test1 {
     CombatZone card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -218,6 +218,7 @@ public class Test1 {
         //FEDE ATTIVA I SUOI MOTORI
         card.activeEngine("Fede", 3,1);
         card.activeEngine("Fede", 3,5);
+        assertThrows(CardException.class, () -> card.activeEngine("Gigi", 3, 5));
         card.ready("Fede");
 
         //GIGI NON NE ATTIVA E PERDE
@@ -225,10 +226,13 @@ public class Test1 {
 
         //ALBI NE ATTIVA SOLO UNO
         card.activeEngine("Albi", 3,1);
+        assertThrows(CardException.class, () -> card.activeCannon("Gigi", 1, 5));
+        assertThrows(CardException.class, () -> card.activeCannon("Albi", 1, 5));
         ReadyVisitor readyvisitor = new ReadyVisitor();
         readyvisitor.visitForCombatZone(card, "Albi");
 
         //GIGI DEVE SCONTARE LA PENALITA'
+        assertThrows(CardException.class, () -> card.activeShield("Fede", 1, 5));
         ReduceCrewVisitorNum crewvisitor = new ReduceCrewVisitorNum();
         crewvisitor.visitForCombatZone(card, "Gigi", 3, 3, 2);
         assertEquals(2, p3.getTruck().calculateCrew());
@@ -236,6 +240,9 @@ public class Test1 {
         //SI PASSA ALLA TERZA CON FEDE IN TESTA
         assertEquals("Fede", game.getCurrentPlayer().getNickname());
         assertEquals(GameStatus.THIRD_COMBATZONE, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 1, 5, 2));
+        assertThrows(CardException.class, () -> card.activeShield("Gigi", 1, 5));
+        assertThrows(CardException.class, () -> card.reduceCrew("Gigi", 1, 5, 2));
         String resultThird = card.help("Fede");
         assertEquals("Available commands: ATTIVAMOTORE, READY\n", resultThird);
 
@@ -244,6 +251,8 @@ public class Test1 {
         assertEquals(0.5, p2.getTruck().calculateCannonStrength());
         assertEquals(1, p3.getTruck().calculateCannonStrength());
         card.ready("Fede");
+        assertThrows(CardException.class, () -> card.ready("Fede"));
+        assertThrows(CardException.class, () -> card.ready("Albi"));
         card.ready("Gigi");
         card.ready("Albi");
 
@@ -252,6 +261,7 @@ public class Test1 {
         String resultEndThird = card.help("Fede");
         assertEquals("Available commands: ATTIVASCUDO, READY\n", resultEndThird);
         GameStatus before = game.getGameStatus();
+        assertThrows(CardException.class, () -> card.activeShield("Gigi", 1, 5));
         card.ready("Fede");
 
         //PASSA ALLA CARTA SUCCESSIVA

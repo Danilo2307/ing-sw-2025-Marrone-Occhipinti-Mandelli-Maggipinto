@@ -79,15 +79,6 @@ public class Slavers extends Card {
         return days;
     }
 
-    /** @return current winner nickname or null */
-    public String getWinner() {
-        return winner;
-    }
-
-    /** sets the encounter winner */
-    public void setWinner(String winner) {
-        this.winner = winner;
-    }
 
     @Override
     public <T> T call(Visitor<T> visitor) {
@@ -203,13 +194,7 @@ public class Slavers extends Card {
      */
     private void readyStartPhase(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (!game.getCurrentPlayer().getNickname().equals(username)) {
-            throw new CardException("User '" + username + "' is not the current player");
-        }
-        double playerFirepower = game.getPlayerFromNickname(username)
-                .getTruck()
-                .calculateCannonStrength();
-
+        double playerFirepower = game.getPlayerFromNickname(username).getTruck().calculateCannonStrength();
         if (playerFirepower > cannonStrength) {
             winner = username;
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));

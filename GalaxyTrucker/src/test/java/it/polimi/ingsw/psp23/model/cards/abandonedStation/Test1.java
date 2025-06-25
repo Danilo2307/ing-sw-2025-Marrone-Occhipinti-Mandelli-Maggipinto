@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards.abandonedStation;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -27,8 +28,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     //TEST COMPLETO (MOLTE FUNZIONALITA' GIA' TESTATE IN ABANDONEDSHIP)
@@ -37,18 +37,19 @@ public class Test1 {
     AbandonedStation card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -113,6 +114,9 @@ public class Test1 {
         assertEquals("Available commands: ATTRACCA, PASSA\n", result);
 
         // Albi passa
+        assertThrows(CardException.class, () -> card.loadGoods("Gigi", 1, 5));
+        assertThrows(CardException.class, () -> card.dockStation("Gigi"));
+        assertThrows(CardException.class, () -> card.pass("Gigi"));
         card.pass("Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
@@ -121,6 +125,8 @@ public class Test1 {
         DockStationVisitor visitor = new DockStationVisitor();
         visitor.visitForAbandonedStation(card, "Fede");
         assertEquals(GameStatus.END_ABANDONEDSTATION, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.loadGoods("Gigi", 1, 5));
+        assertThrows(CardException.class, () -> card.dockStation("Gigi"));
         String resultEnd = card.help("Fede");
         assertEquals("Available commands: LOADGOODS, PERDI, PASSA\n", resultEnd);
 
@@ -129,6 +135,7 @@ public class Test1 {
 
         //Caricamento
         GameStatus before = game.getGameStatus();
+        assertThrows(ItemException.class, () -> card.loadGoods("Fede", 10, 20));
         LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
         loadvisitor.visitForAbandonedStation(card, "Fede", 1, 5);
         PassVisitor passvisitor = new PassVisitor();

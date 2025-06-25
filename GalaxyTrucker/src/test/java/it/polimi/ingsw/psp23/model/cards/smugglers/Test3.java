@@ -1,10 +1,13 @@
 package it.polimi.ingsw.psp23.model.cards.smugglers;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemoveBatteriesVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemovePreciousItemVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -27,13 +30,13 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class Test3 {
-    //TESTA UN PO DI ERRORI
     Game game;
     Player p1, p2, p3;
     Smugglers card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(1099);
             ClientRegistryInterface clientRegistry = new ClientRegistry();
@@ -41,10 +44,10 @@ public class Test3 {
             ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
             rmiRegistry.rebind("GameServer", rmiServer);
             Server.getInstance("localhost", 8000, rmiServer);
+        } catch (Exception ignored) {
+            // Silently ignore RMI registry errors in tests
         }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -111,9 +114,6 @@ public class Test3 {
         Cannon caf1 = new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
         caf1.moveToHand();
         p2.getTruck().addComponent(caf1, 1, 3);
-        BatteryHub bf1 = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 3,1);
-        bf1.moveToHand();
-        p2.getTruck().addComponent(bf1, 2, 4);
         Container cf1 = new Container(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2, Color.Blue, new ArrayList<>(),1);
         cf1.moveToHand();
         p2.getTruck().addComponent(cf1, 2, 2);
@@ -126,9 +126,6 @@ public class Test3 {
         Cannon caf3 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         caf3.moveToHand();
         p2.getTruck().addComponent(caf3, 3, 4);
-        BatteryHub bf2 = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2,1);
-        bf2.moveToHand();
-        p2.getTruck().addComponent(bf2, 3, 2);
 
         //BOARD GIGI
         HousingUnit hg2 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
@@ -180,24 +177,33 @@ public class Test3 {
         // Fede viene sconfitto
         assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
+        //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
+        assertThrows(CardException.class, () -> card.removePreciousItem("Albi", 1, 5, 2));
+        assertThrows(CardException.class, () -> card.removePreciousItem("Fede", 1, 5, 2));
+        assertEquals(0, p2.getTruck().calculateBatteriesAvailable());
+        assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
 
-        assertThrows(CardException.class, () -> card.activeCannon("Gigi", 1, 3));
-        assertThrows(CardException.class, () -> card.ready("Gigi"));
-
+        //Gigi attiva tutto ma perde
+        card.activeCannon("Gigi", 1, 3);
+        assertThrows(CardException.class, () -> card.ready("Albi"));
+        card.ready("Gigi");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
-
+        assertThrows(CardException.class, () -> card.removeBatteries("Albi", 10, 50, 2));
+        assertThrows(CardException.class, () -> card.ready("Gigi"));
+        //GIGI RIMUOVE UNA ED UNA
+        assertThrows(ItemException.class, () -> card.removePreciousItem("Gigi", 1, 4, 1));
+        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 10, 50, 2));
+        RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
+        itemvisitor.visitForSmugglers(card, "Gigi", 2, 4, 1);
         GameStatus before = game.getGameStatus();
+        assertThrows(ItemException.class, () -> card.removeBatteries("Gigi", 10, 50, 2));
+        card.removeBatteries("Gigi", 2, 2, 1);
+        assertEquals(0, p3.getTruck().calculateGoods());
+        assertEquals(2, p3.getTruck().calculateBatteriesAvailable());
 
         assertEquals(12, p1.getPosition());
         assertEquals(10, p2.getPosition());
         assertEquals(8, p3.getPosition());
-
-        //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
-        card.removeBatteries("Fede", 2, 4, 2);
-
-        //GIGI RIMUOVE UNA ED UNA
-        assertThrows(CardException.class, () -> card.removePreciousItem("Gigi", 2, 4, 1));
-        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 2, 2, 1));
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

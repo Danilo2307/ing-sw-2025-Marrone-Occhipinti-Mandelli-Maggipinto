@@ -70,42 +70,6 @@ public class CombatZone extends Card {
     }
 
     /**
-     * Returns a copy of the penalty challenges list.
-     *
-     * @return list of Challenge enums
-     */
-    public List<Challenge> getPenalties() {
-        return new ArrayList<>(penalties);
-    }
-
-    /**
-     * Returns the number of days to deduct for the first challenge loser.
-     *
-     * @return daysLost field
-     */
-    public int getDaysLost() {
-        return daysLost;
-    }
-
-    /**
-     * Returns the number of goods to remove for the second challenge loser.
-     *
-     * @return goodsLost field
-     */
-    public int getGoodsLost() {
-        return goodsLost;
-    }
-
-    /**
-     * Returns the number of crew members to remove for the second challenge loser.
-     *
-     * @return membersLost field
-     */
-    public int getMembersLost() {
-        return membersLost;
-    }
-
-    /**
      * Returns a copy of the cannon shot sequence for final resolution.
      *
      * @return list of CannonShot objects
