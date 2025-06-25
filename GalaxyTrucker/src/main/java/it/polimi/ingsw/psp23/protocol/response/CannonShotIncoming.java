@@ -1,7 +1,6 @@
 package it.polimi.ingsw.psp23.protocol.response;
 
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.view.TUI.TuiApplication;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
 import it.polimi.ingsw.psp23.view.ViewAPI;
 
 

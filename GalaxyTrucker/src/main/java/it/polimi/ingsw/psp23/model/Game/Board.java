@@ -1,8 +1,10 @@
 package it.polimi.ingsw.psp23.model.Game;
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.cards.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Item;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 
 import java.util.ArrayList;

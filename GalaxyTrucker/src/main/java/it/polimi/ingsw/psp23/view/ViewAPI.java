@@ -1,14 +1,11 @@
 package it.polimi.ingsw.psp23.view;
 
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.Card;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.Client;
-import it.polimi.ingsw.psp23.network.rmi.ClientRMI;
-import it.polimi.ingsw.psp23.network.socket.ClientSocket;
 
 import java.rmi.RemoteException;
 import java.util.AbstractMap;
