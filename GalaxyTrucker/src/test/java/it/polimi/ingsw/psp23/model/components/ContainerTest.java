@@ -66,4 +66,10 @@ public class ContainerTest {
         // caso 4: c contiene solo itemGreen -> se si cerca di rimuovere uno yellow devo lanciare eccezione
         assertThrows(ContainerException.class, () -> c.loseItem(itemYellow2));
     }
+
+    @Test
+    public void testLoadMismatchColors() {
+        Container c = new Container(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, 3, Color.Blue, new ArrayList<>(),1);
+        assertFalse(c.canLoadItem(new Item(Color.Red)));
+    }
 }

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.model.components;
 
+import it.polimi.ingsw.psp23.exceptions.InvalidActionException;
+import it.polimi.ingsw.psp23.exceptions.InvalidComponentActionException;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import org.junit.jupiter.api.Test;
@@ -50,4 +52,22 @@ public class HousingUnitTest {
         cabin.reduceOccupants(1);
         assertNull(cabin.getAlien());
     }
+
+    @Test
+    public void testExceptionSetAlien() {
+        HousingUnit h = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
+        h.setAstronaut();
+        assertThrows(InvalidComponentActionException.class, () -> h.setAlien(Color.Brown));
+    }
+
+    @Test
+    public void testExceptionSetAstronaut() {
+        HousingUnit h = new HousingUnit(Side.EMPTY, Side.EMPTY, Side.EMPTY, Side.EMPTY, false,1);
+        h.addConnectedAddon(Color.Brown);
+        h.setAlien(Color.Brown);
+        assertThrows(InvalidComponentActionException.class, () -> h.setAstronaut());
+    }
+
+
+
 }
