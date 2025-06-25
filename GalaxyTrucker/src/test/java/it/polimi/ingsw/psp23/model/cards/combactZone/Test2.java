@@ -7,6 +7,9 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.CombatZone;
 import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.ReduceCrewVisitorNum;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemoveBatteriesVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemovePreciousItemVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -239,8 +242,10 @@ public class Test2 {
         card.ready("Fede");
 
         //GIGI DEVE SCONTARE LA PENALITA'
-        card.removePreciousItem("Gigi", 2, 4, 1);
-        card.removeBatteries("Gigi", 2, 2, 2);
+        RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
+        itemvisitor.visitForCombatZone(card, "Gigi", 2, 4, 1);
+        RemoveBatteriesVisitor batteriesvisitor = new RemoveBatteriesVisitor();
+        batteriesvisitor.visitForCombatZone(card, "Gigi", 2, 2, 2);
         assertEquals(0, p3.getTruck().calculateGoods());
         assertEquals(1, p3.getTruck().calculateBatteriesAvailable());
 

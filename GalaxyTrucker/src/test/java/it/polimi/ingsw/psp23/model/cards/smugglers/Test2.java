@@ -5,6 +5,8 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemoveBatteriesVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.RemovePreciousItemVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -183,7 +185,8 @@ public class Test2 {
         card.ready("Fede");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
         //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
-        card.removeBatteries("Fede", 2, 4, 2);
+        RemoveBatteriesVisitor batteriesvisitor = new RemoveBatteriesVisitor();
+        batteriesvisitor.visitForSmugglers(card, "Fede", 2, 4, 2);
         assertEquals(3, p2.getTruck().calculateBatteriesAvailable());
         assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
 
@@ -192,7 +195,8 @@ public class Test2 {
         card.ready("Gigi");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
         //GIGI RIMUOVE UNA ED UNA
-        card.removePreciousItem("Gigi", 2, 4, 1);
+        RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
+        itemvisitor.visitForSmugglers(card, "Gigi", 2, 4, 1);
         GameStatus before = game.getGameStatus();
         card.removeBatteries("Gigi", 2, 2, 1);
         assertEquals(0, p3.getTruck().calculateGoods());

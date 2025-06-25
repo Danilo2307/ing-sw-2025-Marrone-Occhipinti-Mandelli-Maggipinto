@@ -227,4 +227,12 @@ public class ActiveCannonVisitorTest {
 
     }
 
+    @Test
+    void testReturnNullStubs() {
+        ActiveCannonVisitor visitor = new ActiveCannonVisitor();
+        visitor.visitForAbandonedStation(null, "Fede", 0, 0);
+        visitor.visitForPlanets(null, "Fede", 0, 0);
+        visitor.visitForOpenSpace(null, "Fede", 0, 0);
+    }
+
 }

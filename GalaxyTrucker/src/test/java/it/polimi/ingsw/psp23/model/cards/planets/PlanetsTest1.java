@@ -8,6 +8,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.cards.visitor.PassVisitor;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -117,7 +118,8 @@ public class PlanetsTest1 {
         // dobbiamo avere dei Container in posizioni note (i,j).
 
         // Albi carica item
-        card.pass("Albi");
+        PassVisitor passvisitor = new PassVisitor();
+        passvisitor.visitForPlanets(card, "Albi");
 
         // Fede carica item
         card.loadGoods("Fede", 1, 3);

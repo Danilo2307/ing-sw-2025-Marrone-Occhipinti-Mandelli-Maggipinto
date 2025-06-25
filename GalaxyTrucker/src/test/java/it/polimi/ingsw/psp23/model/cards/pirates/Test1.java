@@ -7,7 +7,7 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
-import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -180,16 +180,19 @@ public class Test1 {
         assertEquals(expected, resultToStringPirates);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor7 = new InitPlayVisitor();
+        playvisitor7.visitForPirates(card, "Fede");
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
-        String resultHelpInitPirates = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpInitPirates = helpvisitor.visitForPirates(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitPirates);
 
         // Albi attiva un cannone doppio
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForPirates(card, "Albi");
 //        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 //
 //        // Fede attiva due cannoni e sconfigge il nemico
@@ -200,7 +203,8 @@ public class Test1 {
 //        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         GameStatus before = game.getGameStatus();
-        card.getCosmicCredits("Albi");
+        GetCosmicCreditsVisitor visitor = new GetCosmicCreditsVisitor();
+        visitor.visitForPirates(card, "Albi");
         assertEquals(4, p1.getMoney());
 //        card.pass("Fede");
 

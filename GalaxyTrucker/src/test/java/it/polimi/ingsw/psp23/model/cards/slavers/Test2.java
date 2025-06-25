@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Slavers;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.ReduceCrewVisitorNum;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -184,7 +185,8 @@ public class Test2 {
         card.ready("Fede");
         assertEquals(GameStatus.END_SLAVERS, game.getGameStatus());
         //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
-        card.reduceCrew("Fede", 2, 3, 2);
+        ReduceCrewVisitorNum crewvisitor = new ReduceCrewVisitorNum();
+        crewvisitor.visitForSlavers(card, "Fede", 2, 3, 2);
         assertEquals(0, p2.getTruck().calculateCrew());
         assertEquals(GameStatus.INIT_SLAVERS, game.getGameStatus());
 

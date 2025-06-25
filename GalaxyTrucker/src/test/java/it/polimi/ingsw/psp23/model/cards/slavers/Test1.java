@@ -6,6 +6,10 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Slavers;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.PassVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.ReadyVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -176,16 +180,19 @@ public class Test1 {
         assertEquals(expected, resultToStringSlavers);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor8 = new InitPlayVisitor();
+        playvisitor8.visitForSlavers(card, "Fede");
         assertEquals(GameStatus.INIT_SLAVERS, game.getGameStatus());
-        String resultHelpInitSlavers = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpInitSlavers = helpvisitor.visitForSlavers(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSlavers);
 
         // Albi attiva i cannoni doppi e raggiunge la potenza di fuoco minima
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForSlavers(card, "Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attiva due cannoni e sconfigge il nemico
@@ -202,7 +209,8 @@ public class Test1 {
         GameStatus before = game.getGameStatus();
 //        card.getCosmicCredits("Fede");
 //        assertEquals(5, p2.getMoney());
-        card.pass("Fede");
+        PassVisitor passvisitor = new PassVisitor();
+        passvisitor.visitForSlavers(card, "Fede");
         assertEquals(0, p2.getMoney());
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi

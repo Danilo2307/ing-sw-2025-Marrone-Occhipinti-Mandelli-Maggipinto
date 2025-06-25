@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedShip;
 import it.polimi.ingsw.psp23.model.cards.AbandonedStation;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -103,11 +104,12 @@ public class Test1 {
         assertEquals(expected, card.toString());
 
         // INIT
-        card.initPlay("Fede");
-        card.help("Fede");
+        InitPlayVisitor playvisitor2 = new InitPlayVisitor();
+        playvisitor2.visitForAbandonedStation(card, "Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String result = helpvisitor.visitForAbandonedStation(card, "Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSTATION, game.getGameStatus());
 
-        String result = card.help("Fede");
         assertEquals("Available commands: ATTRACCA, PASSA\n", result);
 
         // Albi passa
@@ -116,7 +118,8 @@ public class Test1 {
 
         // Fede attracca
 //        card.pass("Fede");
-        card.dockStation("Fede");
+        DockStationVisitor visitor = new DockStationVisitor();
+        visitor.visitForAbandonedStation(card, "Fede");
         assertEquals(GameStatus.END_ABANDONEDSTATION, game.getGameStatus());
         String resultEnd = card.help("Fede");
         assertEquals("Available commands: LOADGOODS, PERDI, PASSA\n", resultEnd);
@@ -126,8 +129,10 @@ public class Test1 {
 
         //Caricamento
         GameStatus before = game.getGameStatus();
-        card.loadGoods("Fede", 1, 5);
-        card.pass("Fede");
+        LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
+        loadvisitor.visitForAbandonedStation(card, "Fede", 1, 5);
+        PassVisitor passvisitor = new PassVisitor();
+        passvisitor.visitForAbandonedStation(card, "Fede");
 
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);

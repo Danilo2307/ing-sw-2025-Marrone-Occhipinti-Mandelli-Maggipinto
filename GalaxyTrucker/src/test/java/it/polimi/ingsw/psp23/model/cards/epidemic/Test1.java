@@ -7,6 +7,8 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.Epidemic;
 import it.polimi.ingsw.psp23.model.cards.Pirates;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -174,11 +176,13 @@ public class Test1 {
         String expected = "è uscita la carta Epidemic\n";
         String resultEpidemic = card.toString();
         assertEquals(expected, resultEpidemic);
-        String resultHelpEpidemic = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpEpidemic = helpvisitor.visitForEpidemic(card, "Fede");
         assertEquals("This card triggers immediately: no commands available.", resultHelpEpidemic);
 
         assertEquals(4, p3.getTruck().calculateCrew());
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor = new InitPlayVisitor();
+        playvisitor.visitForEpidemic(card, "Fede");
         //SOLO GIGI NE RISENTE
         assertEquals(2, p1.getTruck().calculateCrew());
         assertEquals(2, p2.getTruck().calculateCrew());

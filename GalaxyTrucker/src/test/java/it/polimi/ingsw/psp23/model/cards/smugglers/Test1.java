@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedStation;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -177,9 +178,11 @@ public class Test1 {
         assertEquals(expected, resultToStringSmugglers);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor4 = new InitPlayVisitor();
+        playvisitor4.visitForSmugglers(card, "Fede");
         assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
-        String resultHelpInitSmugglers = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpInitSmugglers = helpvisitor.visitForSmugglers(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSmugglers);
 
 
@@ -187,7 +190,8 @@ public class Test1 {
         card.activeCannon("Albi", 1, 4);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForSmugglers(card, "Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attiva due cannoni e sconfigge il nemico
@@ -200,10 +204,12 @@ public class Test1 {
         assertEquals("Available commands: LOADGOOD, PASS, PERDI, BATTERIE\n", resultHelpEndSmugglers);
 
         //Fede non ha spazio, toglia la merce blu e carica le altre
-        card.loadGoods("Fede", 2, 2);
+        LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
+        loadvisitor.visitForSmugglers(card, "Fede", 2, 2);
         card.loadGoods("Fede", 2, 2);
         GameStatus before = game.getGameStatus();
-        card.pass("Fede");
+        PassVisitor passvisitor = new PassVisitor();
+        passvisitor.visitForSmugglers(card, "Fede");
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());

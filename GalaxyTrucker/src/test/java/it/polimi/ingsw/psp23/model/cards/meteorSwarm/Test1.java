@@ -7,6 +7,9 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.ReadyVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
@@ -192,7 +195,8 @@ public class Test1 {
 
     @Test
     void testMeteorSwarm() throws CardException, InvocationTargetException, IllegalAccessException {
-        String resultHelpAlwaysAvailable = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpAlwaysAvailable = helpvisitor.visitForMeteorSwarm(card, "Fede");
         assertEquals("Available commands: ATTIVACANNONE, ATTIVASCUDO, READY\n", resultHelpAlwaysAvailable);
         String expected = "è uscita la carta Meteor Swarm\n" +
                 "le meteore sono le seguenti:\n" +
@@ -201,7 +205,8 @@ public class Test1 {
         assertEquals(expected, resultToStringMeteorSwarm);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor6 = new InitPlayVisitor();
+        playvisitor6.visitForMeteorSwarm(card, "Fede");
         assertEquals(GameStatus.INIT_METEORSWARM, game.getGameStatus());
 
         // PRIMO METEORE
@@ -212,7 +217,8 @@ public class Test1 {
         card.ready("Fede");
         ActiveShieldVisitor visitor = new ActiveShieldVisitor();
         visitor.visitForMeteorSwarm(card, "Albi", 1, 5);
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForMeteorSwarm(card, "Albi");
         card.activeCannon("Gigi", 1,3);
         card.ready("Gigi");
 

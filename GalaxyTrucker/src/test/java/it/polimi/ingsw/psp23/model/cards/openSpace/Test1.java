@@ -6,6 +6,9 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.OpenSpace;
 import it.polimi.ingsw.psp23.model.cards.Smugglers;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.ReadyVisitor;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -188,7 +191,8 @@ public class Test1 {
 
     @Test
     void testOpenSpace() throws CardException, InvocationTargetException, IllegalAccessException {
-        String resultHelpEngineAlwaysAvailable = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpEngineAlwaysAvailable = helpvisitor.visitForOpenSpace(card, "Fede");
         assertEquals("Available commands: ATTIVA MOTORE, PRONTO\n", resultHelpEngineAlwaysAvailable);
         String resultToStringOpenSpace = card.toString();
         String expected = "È uscita la carta open space\n" +
@@ -196,14 +200,16 @@ public class Test1 {
         assertEquals(expected, resultToStringOpenSpace);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor9 = new InitPlayVisitor();
+        playvisitor9.visitForOpenSpace(card, "Fede");
         assertEquals(GameStatus.INIT_OPENSPACE, game.getGameStatus());
 
         // Albi attiva un motore
         card.activeEngine("Albi", 3, 5);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForOpenSpace(card, "Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attiva due motori

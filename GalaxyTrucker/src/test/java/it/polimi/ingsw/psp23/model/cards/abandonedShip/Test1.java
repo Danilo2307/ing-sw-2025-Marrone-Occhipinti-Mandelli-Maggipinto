@@ -5,6 +5,7 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedShip;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
@@ -102,19 +103,23 @@ public class Test1 {
                 "i giorni persi sarebbero 1";
         assertEquals(expected, card.toString());
         // INIT
-        card.initPlay("Fede");
-        String result = card.help("Fede");
+        InitPlayVisitor playvisitor = new InitPlayVisitor();
+        playvisitor.visitForAbandonedShip(card, "Fede");
+        HelpVisitor visitor = new HelpVisitor();
+        String result = visitor.visitForAbandonedShip(card, "Fede");
         assertEquals("Available commands: COMPRANAVE, PASSA\n", result);
         card.toString();
         card.help("Fede");
         assertEquals(GameStatus.INIT_ABANDONEDSHIP, game.getGameStatus());
 
         // Albi passa
-        card.pass("Albi");
+        PassVisitor passvisitor = new PassVisitor();
+        passvisitor.visitForAbandonedShip(card, "Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede compra la nave
-        card.buyShip("Fede");
+        BuyShipVisitor visitorship = new BuyShipVisitor();
+        visitorship.visitForAbandonedShip(card, "Fede");
         // Dopo l’ultimo atterraggio, si applica la penalty e finisce la fase
         assertEquals(GameStatus.END_ABANDONEDSHIP, game.getGameStatus());
 
@@ -127,7 +132,8 @@ public class Test1 {
 
         //Riduzione crew Fede
         GameStatus before = game.getGameStatus();
-        card.reduceCrew("Fede", 1, 3, 2);
+        ReduceCrewVisitorNum crewvisitor = new ReduceCrewVisitorNum();
+        crewvisitor.visitForAbandonedShip(card, "Fede", 1, 3, 2);
         card.reduceCrew("Fede", 1, 4, 1);
 
         GameStatus after = game.getGameStatus();

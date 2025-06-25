@@ -6,6 +6,8 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedStation;
 import it.polimi.ingsw.psp23.model.cards.Stardust;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -99,11 +101,13 @@ public class Test1 {
         String expected = "è uscita la carta Stardust\n" +
                 "si perdono tanti giorni quanti sono i connettori esposti";
         assertEquals(expected, resultToStringStardust);
-        String resultHelpStardust = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpStardust = helpvisitor.visitForStardust(card, "Fede");
         assertEquals("No commands available for Stardust; effect is automatic.", resultHelpStardust);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor = new InitPlayVisitor();
+        playvisitor.visitForStardust(card, "Fede");
         assertEquals(4, p1.getPosition());
         assertEquals(3, p2.getPosition());
         GameStatus after = game.getGameStatus();

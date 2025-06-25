@@ -6,7 +6,7 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
 import it.polimi.ingsw.psp23.model.cards.CombatZone;
-import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.*;
 import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.*;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -200,7 +200,8 @@ public class Test1 {
         assertEquals(expected, resultCombat);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor5 = new InitPlayVisitor();
+        playvisitor5.visitForCombatZone(card, "Fede");
         //ALBI HA PERSO LA PRIMA SFIDA
         assertEquals(2, p1.getTruck().calculateCrew());
         assertEquals(7, p1.getPosition());
@@ -208,7 +209,8 @@ public class Test1 {
         assertEquals("Fede", game.getCurrentPlayer().getNickname());
         //SI PASSA ALLA SECONDA SFIDA
         assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
-        String resultSecond = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultSecond = helpvisitor.visitForCombatZone(card, "Fede");
         assertEquals("Available commands: ATTIVAMOTORE, READY, REMOVEITEM, CREW\n", resultSecond);
 
 
@@ -223,10 +225,12 @@ public class Test1 {
 
         //ALBI NE ATTIVA SOLO UNO
         card.activeEngine("Albi", 3,1);
-        card.ready("Albi");
+        ReadyVisitor readyvisitor = new ReadyVisitor();
+        readyvisitor.visitForCombatZone(card, "Albi");
 
         //GIGI DEVE SCONTARE LA PENALITA'
-        card.reduceCrew("Gigi", 3, 3, 2);
+        ReduceCrewVisitorNum crewvisitor = new ReduceCrewVisitorNum();
+        crewvisitor.visitForCombatZone(card, "Gigi", 3, 3, 2);
         assertEquals(2, p3.getTruck().calculateCrew());
 
         //SI PASSA ALLA TERZA CON FEDE IN TESTA

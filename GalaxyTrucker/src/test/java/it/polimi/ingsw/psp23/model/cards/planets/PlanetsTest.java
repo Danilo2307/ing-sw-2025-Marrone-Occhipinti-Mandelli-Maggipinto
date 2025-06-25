@@ -6,6 +6,10 @@ import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.cards.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
+import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.LandOnPlanetVisitor;
+import it.polimi.ingsw.psp23.model.cards.visitor.LoadGoodsVisitor;
 import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
@@ -101,13 +105,16 @@ class PlanetsTest {
         assertEquals(expected.toString(), resultToStringPlanets);
 
         // INIT
-        card.initPlay("Fede");
+        InitPlayVisitor playvisitor3 = new InitPlayVisitor();
+        playvisitor3.visitForPlanets(card, "Fede");
         assertEquals(GameStatus.INIT_PLANETS, game.getGameStatus());
-        String resultHelpInitPlanets = card.help("Fede");
+        HelpVisitor helpvisitor = new HelpVisitor();
+        String resultHelpInitPlanets = helpvisitor.visitForPlanets(card, "Fede");
         assertEquals("Available commands: LAND, PASS\n", resultHelpInitPlanets);
 
         // Albi atterra sul pianeta 1
-        card.landOnPlanet("Albi", 1);
+        LandOnPlanetVisitor landvisitor = new LandOnPlanetVisitor();
+        landvisitor.visitForPlanets(card, "Albi", 1);
         assertEquals("Albi", card.getPlanetsOccupied()[0]);
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
@@ -133,7 +140,8 @@ class PlanetsTest {
         card.loadGoods("Albi", 1, 4);
 
         // Fede carica item
-        card.loadGoods("Fede", 1, 3);
+        LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
+        loadvisitor.visitForPlanets(card, "Fede", 1, 3);
         card.loadGoods("Fede", 1, 3);
         card.loadGoods("Fede", 1, 4);
         GameStatus before = game.getGameStatus();

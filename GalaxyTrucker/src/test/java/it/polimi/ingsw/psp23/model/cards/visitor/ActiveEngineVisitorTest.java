@@ -166,4 +166,15 @@ public class ActiveEngineVisitorTest {
 
     }
 
+    @Test
+    void testReturnNullStubs() {
+        ActiveEngineVisitor visitor = new ActiveEngineVisitor();
+        visitor.visitForAbandonedStation(null, "Fede", 0, 0);
+        visitor.visitForPlanets(null, "Fede", 0, 0);
+        visitor.visitForSmugglers(null, "Fede", 0, 0);
+        visitor.visitForMeteorSwarm(null, "Fede", 0, 0);
+        visitor.visitForPirates(null, "Fede", 0, 0);
+        visitor.visitForSlavers(null, "Fede", 0, 0);
+    }
+
 }
