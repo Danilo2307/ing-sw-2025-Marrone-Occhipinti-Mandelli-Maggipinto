@@ -27,8 +27,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test2 {
     //CARTA LIVELLO 1
@@ -37,18 +36,19 @@ public class Test2 {
     Pirates card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -196,6 +196,7 @@ public class Test2 {
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         //Gigi attiva tutto ma perde
+        assertThrows(CardException.class, () -> card.activeShield("Gigi", 1, 5));
         card.activeCannon("Gigi", 1, 3);
         card.ready("Gigi");
         assertEquals(GameStatus.END_PIRATES, game.getGameStatus());

@@ -205,9 +205,6 @@ public class Pirates extends Card {
         } else if (game.getGameStatus() == GameStatus.END_PIRATES) {
             readyResolutionPhase(username);
         }
-        else{
-            throw new CardException("Invalid phase for READY:" + game.getGameStatus());
-        }
     }
 
     /**

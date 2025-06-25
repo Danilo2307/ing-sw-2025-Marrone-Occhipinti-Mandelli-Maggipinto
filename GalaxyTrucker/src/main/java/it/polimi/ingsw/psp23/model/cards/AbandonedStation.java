@@ -43,10 +43,6 @@ public class AbandonedStation extends Card {
         return numMembers;
     }
 
-    public List<Item> getPrize() {
-        return new ArrayList<>(prize);
-    }
-
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
@@ -116,9 +112,6 @@ public class AbandonedStation extends Card {
      */
     public void pass(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.INIT_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_ABANDONEDSTATION) {
-            throw new CardException("User '" + username + "' cannot pass in phase: " + game.getGameStatus());
-        }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }

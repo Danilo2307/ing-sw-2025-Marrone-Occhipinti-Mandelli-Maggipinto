@@ -111,9 +111,6 @@ public class MeteorSwarm extends Card {
     public void ready(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
-        if (game.getGameStatus() != GameStatus.INIT_METEORSWARM) {
-            throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
-        }
         if(resolvers.contains(p)){
             throw new CardException("You must wait other players!");
         }

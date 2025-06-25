@@ -1,18 +1,16 @@
-package it.polimi.ingsw.psp23.model.cards.combactZone;
+package it.polimi.ingsw.psp23.model.cards.pirates;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.CannonShot;
-import it.polimi.ingsw.psp23.model.cards.CombatZone;
-import it.polimi.ingsw.psp23.model.cards.visitor.ActiveShieldVisitor;
-import it.polimi.ingsw.psp23.model.cards.visitor.ReduceCrewVisitorNum;
-import it.polimi.ingsw.psp23.model.cards.visitor.RemoveBatteriesVisitor;
-import it.polimi.ingsw.psp23.model.cards.visitor.RemovePreciousItemVisitor;
+import it.polimi.ingsw.psp23.model.cards.Pirates;
 import it.polimi.ingsw.psp23.model.components.*;
-import it.polimi.ingsw.psp23.model.enumeration.*;
+import it.polimi.ingsw.psp23.model.enumeration.Color;
+import it.polimi.ingsw.psp23.model.enumeration.Direction;
+import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
+import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
@@ -30,11 +28,11 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Test2 {
-    //TEST SU CARTA LIVELLO 2
+public class Test6 {
+    //CARTA LIVELLO 2
     Game game;
     Player p1, p2, p3;
-    CombatZone card;
+    Pirates card;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -56,7 +54,6 @@ public class Test2 {
         UsersConnected.getInstance().addClient("Albi", 0);
         UsersConnected.getInstance().addClient("Fede", 0);
         UsersConnected.getInstance().addClient("Gigi", 0);
-
 
         game.addPlayer("Albi");
         game.addPlayer("Fede");
@@ -91,10 +88,10 @@ public class Test2 {
         Cannon caa2 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.GUN, true,1);
         caa2.moveToHand();
         p1.getTruck().addComponent(caa2, 2, 4);
-        Cannon caa3 = new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
+        Cannon caa3 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.GUN, Side.UNIVERSAL_CONNECTOR, false,1);
         caa3.moveToHand();
         p1.getTruck().addComponent(caa3, 1, 2);
-        Cannon caa4 = new Cannon(Side.GUN, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
+        Cannon caa4 = new Cannon(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.GUN, Side.UNIVERSAL_CONNECTOR, true,1);
         caa4.moveToHand();
         p1.getTruck().addComponent(caa4, 1, 4);
         Container ca2 = new Container(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 1, Color.Red, new ArrayList<>(),1);
@@ -144,12 +141,6 @@ public class Test2 {
         BatteryHub bf2 = new BatteryHub(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, 2,1);
         bf2.moveToHand();
         p2.getTruck().addComponent(bf2, 3, 2);
-        Engine ef2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ef2.moveToHand();
-        p2.getTruck().addComponent(ef2, 3, 5);
-        Engine ef3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        ef3.moveToHand();
-        p2.getTruck().addComponent(ef3, 3, 1);
 
         //BOARD GIGI
         HousingUnit hg2 = new HousingUnit(Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
@@ -173,14 +164,6 @@ public class Test2 {
         Engine eg1 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, false,1);
         eg1.moveToHand();
         p3.getTruck().addComponent(eg1, 3, 2);
-        Engine eg2 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        eg2.moveToHand();
-        p3.getTruck().addComponent(eg2, 3, 4);
-        Engine eg3 = new Engine(Side.UNIVERSAL_CONNECTOR, Side.ENGINE, Side.UNIVERSAL_CONNECTOR, Side.UNIVERSAL_CONNECTOR, true,1);
-        eg3.moveToHand();
-        p3.getTruck().addComponent(eg3, 3, 1);
-        hg2.setAstronaut();
-
         Item ig1 = new Item(Color.Red);
         cg1.loadItem(ig1);
 
@@ -190,88 +173,47 @@ public class Test2 {
         p3.setPosition(8);
         game.sortPlayersByPosition();
 
-        card = new CombatZone(2,4,3,0, List.of(Challenge.CannonStrength, Challenge.EngineStrength, Challenge.Members), List.of(new CannonShot(false, Direction.UP), new CannonShot(false, Direction.LEFT), new CannonShot(false, Direction.RIGHT), new CannonShot(true, Direction.DOWN)),1);
+        card = new Pirates(2, 5, 1, 2, List.of(new CannonShot(true, Direction.UP), new CannonShot(false, Direction.UP), new CannonShot(true, Direction.UP)),1);
     }
 
     @Test
-    void testCombatZone() throws CardException, InvocationTargetException, IllegalAccessException {
-        String expected = "è uscita la carta Combat Zone:\n" +
-                " La prima sfida riguarda la potenza di fuoco (penalità: 4 giorni)\n" +
-                "la seconda sfida riguarda la potenza motrice (penalità: 3 merci importanti)\n" +
-                "la terza sfida riguarda i membri dell'equipaggio (penalità colpi di cannone: " +
-                card.getCannonShot().toString() + "\n";
-        String resultComplex = card.toString();
-
-        assertEquals(expected, resultComplex);
+    void testPirates() throws CardException, InvocationTargetException, IllegalAccessException {
         // INIT
         card.initPlay("Fede");
-        //SI PARTE CON LA PRIMA SFIDA
-        assertEquals(GameStatus.FIRST_COMBATZONE, game.getGameStatus());
-        String resultFirst = card.help("Fede");
-        assertEquals("Available commands: ATTIVACANNONE, READY\n", resultFirst);
+        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
-        //ALBI ATTIVA UNO DEI SUOI CANNONI
-        card.activeCannon("Albi", 1,4);
+        // Albi perde
+        //      card.activeCannon("Albi", 1, 4);
+//        assertEquals(4, p1.getTruck().calculateCannonStrength());
+//        assertEquals(1, p1.getTruck().calculateEngineStrength());
         card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Albi"));
-        assertThrows(CardException.class, () -> card.ready("Gigi"));
+        assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
+        assertThrows(CardException.class, () -> card.getCosmicCredits("Fede"));
 
-        //FEDE NE ATTIVA 1 E PERDE
-        card.activeCannon("Fede", 1,4);
+        // Fede viene sconfitto
+        assertEquals(0.5 , p2.getTruck().calculateCannonStrength());
         card.ready("Fede");
+        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
-        //GIGI ATTIVA 1
-        card.activeCannon("Gigi", 1,3);
+        //Gigi attiva tutto e vince
+        card.activeCannon("Gigi", 1, 3);
         card.ready("Gigi");
+        assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
 
-        //FEDE HA PERSO LA PRIMA SFIDA
-        assertEquals(5, p2.getPosition());
-        //ALBI DIVENTA IL LEADER, POI GIGI E ALBI
-        assertEquals("Albi", game.getCurrentPlayer().getNickname());
-        //SI PASSA ALLA SECONDA SFIDA
-        assertEquals(GameStatus.SECOND_COMBATZONE, game.getGameStatus());
+        assertEquals(12, p1.getPosition());
+        assertEquals(10, p2.getPosition());
+        assertEquals(8, p3.getPosition());
 
-        //SECONDA SFIDA
-        //ALBI ATTIVA I SUOI MOTORI
-        card.activeEngine("Albi", 3,1);
-        card.activeEngine("Albi", 3,5);
-        card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Albi"));
-        assertThrows(CardException.class, () -> card.ready("Fede"));
-
-        //GIGI NON NE ATTIVA E PERDE
-        card.ready("Gigi");
-
-        //FEDE NE ATTIVA SOLO UNO
-        card.activeEngine("Fede", 3,1);
-        card.ready("Fede");
-
-        //GIGI DEVE SCONTARE LA PENALITA'
-        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 2, 2, 2));
-        RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
-        itemvisitor.visitForCombatZone(card, "Gigi", 2, 4, 1);
-        assertThrows(ItemException.class, () -> card.removeBatteries("Gigi", 10, 50, 3));
-        RemoveBatteriesVisitor batteriesvisitor = new RemoveBatteriesVisitor();
-        batteriesvisitor.visitForCombatZone(card, "Gigi", 2, 2, 2);
-        assertEquals(0, p3.getTruck().calculateGoods());
-        assertEquals(1, p3.getTruck().calculateBatteriesAvailable());
-
-        //SI PASSA ALLA TERZA CON ALBU IN TESTA
-        assertEquals("Albi", game.getCurrentPlayer().getNickname());
-        assertEquals(GameStatus.ENDTHIRD_COMBATZONE, game.getGameStatus());
-
-        //ALBI PERDE LA SFIDA E AFFRONTA IL PRIMO CANNONE CON LO SCUDO
-        ActiveShieldVisitor visitor = new ActiveShieldVisitor();
-        visitor.visitForCombatZone(card, "Albi", 1, 5);
-        card.ready("Albi");
-        card.ready("Albi");
-        assertThrows(CardException.class, () -> card.ready("Gigi"));
+        card.pass("Gigi");
+        assertEquals(GameStatus.END_PIRATES, game.getGameStatus());
         GameStatus before = game.getGameStatus();
+        card.ready("Fede");
         card.ready("Albi");
 
-        //PASSA ALLA CARTA SUCCESSIVA
         GameStatus after = game.getGameStatus();
         System.out.println("GameStatus: " + before + " → " + after);
+
+        //PASSA ALLA CARTA SUCCESSIVA
         assertNotEquals(before, after);
 
     }

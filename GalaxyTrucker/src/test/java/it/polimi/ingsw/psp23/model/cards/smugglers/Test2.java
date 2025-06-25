@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards.smugglers;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -26,8 +27,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test2 {
     //TEST A PAGINA 14 MANUALE GALAXY TRUCKER MODIFICATO CON IL TERZO PLAYER E TUTTI TRANNE IL PRIMO PERDENTI
@@ -36,18 +36,19 @@ public class Test2 {
     Smugglers card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -185,6 +186,8 @@ public class Test2 {
         card.ready("Fede");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
         //FEDE RIMUOVE BATTERIE PERCHE NON HA MERCI
+        assertThrows(CardException.class, () -> card.removePreciousItem("Albi", 1, 5, 2));
+        assertThrows(CardException.class, () -> card.removePreciousItem("Fede", 1, 5, 2));
         RemoveBatteriesVisitor batteriesvisitor = new RemoveBatteriesVisitor();
         batteriesvisitor.visitForSmugglers(card, "Fede", 2, 4, 2);
         assertEquals(3, p2.getTruck().calculateBatteriesAvailable());
@@ -192,12 +195,17 @@ public class Test2 {
 
         //Gigi attiva tutto ma perde
         card.activeCannon("Gigi", 1, 3);
+        assertThrows(CardException.class, () -> card.ready("Albi"));
         card.ready("Gigi");
         assertEquals(GameStatus.END_SMUGGLERS, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.ready("Gigi"));
         //GIGI RIMUOVE UNA ED UNA
+        assertThrows(ItemException.class, () -> card.removePreciousItem("Gigi", 1, 4, 1));
+        assertThrows(CardException.class, () -> card.removeBatteries("Gigi", 10, 50, 2));
         RemovePreciousItemVisitor itemvisitor = new RemovePreciousItemVisitor();
         itemvisitor.visitForSmugglers(card, "Gigi", 2, 4, 1);
         GameStatus before = game.getGameStatus();
+        assertThrows(ItemException.class, () -> card.removeBatteries("Gigi", 10, 50, 2));
         card.removeBatteries("Gigi", 2, 2, 1);
         assertEquals(0, p3.getTruck().calculateGoods());
         assertEquals(2, p3.getTruck().calculateBatteriesAvailable());

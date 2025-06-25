@@ -29,8 +29,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     Game game;
@@ -38,18 +37,19 @@ public class Test1 {
     Slavers card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -183,12 +183,14 @@ public class Test1 {
         InitPlayVisitor playvisitor8 = new InitPlayVisitor();
         playvisitor8.visitForSlavers(card, "Fede");
         assertEquals(GameStatus.INIT_SLAVERS, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.pass("Albi"));
         HelpVisitor helpvisitor = new HelpVisitor();
         String resultHelpInitSlavers = helpvisitor.visitForSlavers(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSlavers);
 
         // Albi attiva i cannoni doppi e raggiunge la potenza di fuoco minima
         card.activeCannon("Albi", 1, 4);
+        assertThrows(CardException.class, () -> card.activeCannon("Fede", 1, 4));
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         ReadyVisitor readyvisitor = new ReadyVisitor();
@@ -209,6 +211,7 @@ public class Test1 {
         GameStatus before = game.getGameStatus();
 //        card.getCosmicCredits("Fede");
 //        assertEquals(5, p2.getMoney());
+        assertThrows(CardException.class, () -> card.pass("Albi"));
         PassVisitor passvisitor = new PassVisitor();
         passvisitor.visitForSlavers(card, "Fede");
         assertEquals(0, p2.getMoney());

@@ -37,18 +37,19 @@ public class Test4 {
     Pirates card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();

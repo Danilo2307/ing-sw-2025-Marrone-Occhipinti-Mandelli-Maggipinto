@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards.smugglers;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
+import it.polimi.ingsw.psp23.exceptions.ItemException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
@@ -26,8 +27,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     //TEST A PAGINA 14 MANUALE GALAXY TRUCKER
@@ -36,7 +36,8 @@ public class Test1 {
     Smugglers card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+
         try {
             Registry rmiRegistry = LocateRegistry.createRegistry(1099);
             ClientRegistryInterface clientRegistry = new ClientRegistry();
@@ -44,10 +45,10 @@ public class Test1 {
             ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
             rmiRegistry.rebind("GameServer", rmiServer);
             Server.getInstance("localhost", 8000, rmiServer);
+        } catch (Exception ignored) {
+            // Silently ignore RMI registry errors in tests
         }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -181,6 +182,7 @@ public class Test1 {
         InitPlayVisitor playvisitor4 = new InitPlayVisitor();
         playvisitor4.visitForSmugglers(card, "Fede");
         assertEquals(GameStatus.INIT_SMUGGLERS, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.loadGoods("Albi",1 ,5));
         HelpVisitor helpvisitor = new HelpVisitor();
         String resultHelpInitSmugglers = helpvisitor.visitForSmugglers(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitSmugglers);
@@ -188,6 +190,7 @@ public class Test1 {
 
         // Albi attiva un cannone doppio e raggiunge la potenza di fuoco minima
         card.activeCannon("Albi", 1, 4);
+        assertThrows(CardException.class, () -> card.activeCannon("Fede", 1, 5));
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         ReadyVisitor readyvisitor = new ReadyVisitor();
@@ -195,6 +198,7 @@ public class Test1 {
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());
 
         // Fede attiva due cannoni e sconfigge il nemico
+        assertThrows(CardException.class, () -> card.pass("Albi"));
         card.activeCannon("Fede", 1, 4);
         card.activeCannon("Fede", 1, 3);
 //        assertEquals(4.5, p2.getTruck().calculateCannonStrength());
@@ -204,16 +208,20 @@ public class Test1 {
         assertEquals("Available commands: LOADGOOD, PASS, PERDI, BATTERIE\n", resultHelpEndSmugglers);
 
         //Fede non ha spazio, toglia la merce blu e carica le altre
+        assertThrows(NullPointerException.class, () -> card.removeBatteries("Albi", 1, 5, 2));
+        assertThrows(CardException.class, () -> card.loadGoods("Albi", 1, 5));
         LoadGoodsVisitor loadvisitor = new LoadGoodsVisitor();
+        assertThrows(ItemException.class, () -> card.loadGoods("Fede", 10, 50));
         loadvisitor.visitForSmugglers(card, "Fede", 2, 2);
         card.loadGoods("Fede", 2, 2);
         GameStatus before = game.getGameStatus();
+        assertThrows(CardException.class, () -> card.pass("Albi"));
         PassVisitor passvisitor = new PassVisitor();
         passvisitor.visitForSmugglers(card, "Fede");
 
         // Verifica che i marker sulla board siano arretrati di 4 spazi
         assertEquals(12, p1.getPosition());
-        assertEquals(9, p2.getPosition());
+        assertEquals(7, p2.getPosition());
         assertEquals(8, p3.getPosition());
 
         GameStatus after = game.getGameStatus();

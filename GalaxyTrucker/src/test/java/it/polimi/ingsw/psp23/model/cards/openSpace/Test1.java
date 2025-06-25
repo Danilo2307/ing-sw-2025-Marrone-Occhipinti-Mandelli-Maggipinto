@@ -28,8 +28,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     //TEST FUNZIONALITA CORRETTA
@@ -38,18 +37,19 @@ public class Test1 {
     OpenSpace card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -208,6 +208,8 @@ public class Test1 {
         card.activeEngine("Albi", 3, 5);
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
+        assertThrows(CardException.class, () -> card.activeEngine("Fede", 1, 5));
+        assertThrows(CardException.class, () -> card.ready("Fede"));
         ReadyVisitor readyvisitor = new ReadyVisitor();
         readyvisitor.visitForOpenSpace(card, "Albi");
         assertEquals(p2.getNickname(), game.getCurrentPlayer().getNickname());

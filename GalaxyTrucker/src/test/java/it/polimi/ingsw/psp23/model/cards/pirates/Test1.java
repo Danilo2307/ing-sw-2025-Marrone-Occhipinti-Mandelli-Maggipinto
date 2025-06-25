@@ -28,8 +28,7 @@ import java.rmi.registry.Registry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Test1 {
     //CARTA LIVELLO 1
@@ -38,18 +37,19 @@ public class Test1 {
     Pirates card;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws Exception {
+        
         try {
-            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-            ClientRegistryInterface clientRegistry = new ClientRegistry();
-            rmiRegistry.rebind("ClientRegistry", clientRegistry);
-            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-            rmiRegistry.rebind("GameServer", rmiServer);
-            Server.getInstance("localhost", 8000, rmiServer);
-        }
-        catch (Exception e) {
-            System.out.println("\n\n\nerrore!!!\n\n\n");
-        }
+    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+    ClientRegistryInterface clientRegistry = new ClientRegistry();
+    rmiRegistry.rebind("ClientRegistry", clientRegistry);
+    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+    rmiRegistry.rebind("GameServer", rmiServer);
+    Server.getInstance("localhost", 8000, rmiServer);
+} catch (Exception ignored) {
+    // Silently ignore RMI registry errors in tests
+}
+        
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);
         UsersConnected.getInstance().addGame();
@@ -183,12 +183,15 @@ public class Test1 {
         InitPlayVisitor playvisitor7 = new InitPlayVisitor();
         playvisitor7.visitForPirates(card, "Fede");
         assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
+        assertThrows(CardException.class, () -> card.getCosmicCredits("Fede"));
+        assertThrows(CardException.class, () -> card.pass("Fede"));
         HelpVisitor helpvisitor = new HelpVisitor();
         String resultHelpInitPirates = helpvisitor.visitForPirates(card, "Fede");
         assertEquals("Available commands: ACTIVECANNON, READY\n", resultHelpInitPirates);
 
         // Albi attiva un cannone doppio
         card.activeCannon("Albi", 1, 4);
+        assertThrows(CardException.class, () -> card.activeCannon("Fede", 1, 5));
 //        assertEquals(4, p1.getTruck().calculateCannonStrength());
 //        assertEquals(1, p1.getTruck().calculateEngineStrength());
         ReadyVisitor readyvisitor = new ReadyVisitor();
@@ -203,6 +206,7 @@ public class Test1 {
 //        assertEquals(GameStatus.INIT_PIRATES, game.getGameStatus());
 
         GameStatus before = game.getGameStatus();
+        assertThrows(CardException.class, () -> card.getCosmicCredits("Fede"));
         GetCosmicCreditsVisitor visitor = new GetCosmicCreditsVisitor();
         visitor.visitForPirates(card, "Albi");
         assertEquals(4, p1.getMoney());

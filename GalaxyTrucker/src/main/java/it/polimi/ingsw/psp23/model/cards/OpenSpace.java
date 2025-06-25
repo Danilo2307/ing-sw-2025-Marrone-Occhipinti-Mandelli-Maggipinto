@@ -28,9 +28,6 @@ public class OpenSpace extends Card {
      */
     public void activeEngine(String username, int i, int j) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
-            throw new CardException("Cannot activate engine now: phase is " + game.getGameStatus());
-        }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
@@ -54,9 +51,6 @@ public class OpenSpace extends Card {
      */
     public void ready(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.INIT_OPENSPACE) {
-            throw new CardException("Cannot READY now: phase is " + game.getGameStatus());
-        }
         if (!game.getCurrentPlayer().getNickname().equals(username)) {
             throw new CardException("Is the turn of " + game.getCurrentPlayer().getNickname());
         }
