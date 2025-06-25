@@ -18,10 +18,7 @@ import it.polimi.ingsw.psp23.protocol.request.UserDecision;
 import it.polimi.ingsw.psp23.protocol.response.*;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -39,7 +36,7 @@ public class Server {
     Server(int port) {
         try {
 
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("localhost"));
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("192.168.147.4"));
 
             this.serverSocket.setReuseAddress(true);
 

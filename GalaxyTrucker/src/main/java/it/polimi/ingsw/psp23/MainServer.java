@@ -14,14 +14,21 @@ import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.network.socket.Users;
 import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Enumeration;
 import java.util.UUID;
 
 
 public class MainServer {
     public static void main(String[] args) throws RemoteException {
+
+        System.setProperty("java.rmi.server.hostname", "192.168.147.4");
 
         // 2) --- Avvio del registry RMI sulla 1099 ---
         Registry rmiRegistry = LocateRegistry.createRegistry(1099);
@@ -36,7 +43,7 @@ public class MainServer {
 
         System.out.println("RMI registry avviato su port 1099");
 
-        Server.getInstance("localhost", 8000, rmiServer);
+        Server.getInstance("192.168.147.4", 8000, rmiServer);
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();

@@ -102,6 +102,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             callback.onReceivedMessage(msg);
         } catch (RemoteException e) {
             // Se il client non risponde, rimuovilo dalla lista
+            e.printStackTrace();
             System.err.println("sendToUser: impossibile inviare a \"" + nameConnection + "\": " + e.getMessage());
         }
     }
@@ -118,6 +119,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             callback.onReceivedMessage(msg);
         } catch (RemoteException e) {
             // Se il client non risponde, rimuovilo dalla lista
+            e.printStackTrace();
             System.err.println("sendToUser: impossibile inviare a \"" + nameConnection + "\": " + e.getMessage());
         }
     }
