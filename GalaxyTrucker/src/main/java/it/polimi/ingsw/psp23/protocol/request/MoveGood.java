@@ -7,10 +7,6 @@ import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-
-import java.util.List;
 
 public record MoveGood(int fromX, int fromY, int index, int toX, int toY) implements Action {
 
@@ -32,7 +28,7 @@ public record MoveGood(int fromX, int fromY, int index, int toX, int toY) implem
         int containerIndex = board.getContainers().indexOf(ship[fromX][fromY]);
         Item item = board.getContainers().get(containerIndex).getItems().get(index);
         board.removeGood(fromX,fromY , index);
-        board.loadGoods(item, toX, toY);
+        board.loadGood(item, toX, toY);
 
     }
 

@@ -3,22 +3,18 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.exceptions.*;
 import it.polimi.ingsw.psp23.model.Events.AbandonedStationOccupation;
 import it.polimi.ingsw.psp23.model.Events.ItemsEarned;
-import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Utility;
 import it.polimi.ingsw.psp23.model.Events.EventForAbandonedStation;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.components.Component;
-import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedStation extends Card {
@@ -93,7 +89,7 @@ public class AbandonedStation extends Card {
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();
-            board.loadGoods(prize.get(counterItem), i, j);
+            board.loadGood(prize.get(counterItem), i, j);
             counterItem++;
             if (counterItem == prize.size()) {
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
