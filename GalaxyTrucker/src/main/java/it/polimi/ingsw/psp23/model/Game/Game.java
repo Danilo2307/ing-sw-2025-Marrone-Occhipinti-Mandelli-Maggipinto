@@ -635,5 +635,24 @@ public class Game {
         this.controller = new Controller(Id);
     }
 
+    public ArrayList<Component> getHeap() {
+        return heap;
+    }
+
+    public String getDeck1Owner() {
+        return deck1Owner;
+    }
+
+    public String getDeck2Owner() {
+        return deck2Owner;
+    }
+
+    public String getDeck3Owner() {
+        return deck3Owner;
+    }
+
+
+
+
 }
 
