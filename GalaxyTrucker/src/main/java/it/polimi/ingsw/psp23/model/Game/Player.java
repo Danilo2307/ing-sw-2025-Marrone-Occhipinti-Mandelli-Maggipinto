@@ -34,8 +34,9 @@ public class Player {
     }
 
     /**
-     * Setta il game a cui il player sta partecipando
-     * @game è il riferimento alla sessione di gioco a cui il player partecipa
+     * Sets the game associated with the player.
+     *
+     * @param game the game instance to be associated with the player
      */
     public void setGame(Game game){
         this.game = game;
@@ -63,6 +64,11 @@ public class Player {
         this.money += moneyVariation;
     }
 
+    /**
+     * Adjusts the player's position by adding the given offset to the current position.
+     *
+     * @param offset the value to be added to the player's current position
+     */
     public void setPosition(int offset) {
         position = position + offset;
     }

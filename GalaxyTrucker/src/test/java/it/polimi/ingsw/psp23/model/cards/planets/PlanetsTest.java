@@ -3,7 +3,7 @@ package it.polimi.ingsw.psp23.model.cards.planets;
 import static org.junit.jupiter.api.Assertions.*;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
+import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
 import it.polimi.ingsw.psp23.model.cards.Planets;
 import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.*;
 
 import it.polimi.ingsw.psp23.model.Game.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;

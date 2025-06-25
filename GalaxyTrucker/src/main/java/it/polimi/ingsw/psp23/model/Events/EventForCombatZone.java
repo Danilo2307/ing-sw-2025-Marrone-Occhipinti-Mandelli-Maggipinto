@@ -1,6 +1,6 @@
 package it.polimi.ingsw.psp23.model.Events;
 
-import it.polimi.ingsw.psp23.model.cards.CannonShot;
+import it.polimi.ingsw.psp23.model.helpers.CannonShot;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 

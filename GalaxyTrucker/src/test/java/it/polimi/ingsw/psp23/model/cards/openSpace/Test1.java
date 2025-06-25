@@ -2,10 +2,9 @@ package it.polimi.ingsw.psp23.model.cards.openSpace;
 
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
+import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.OpenSpace;
-import it.polimi.ingsw.psp23.model.cards.Smugglers;
 import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
 import it.polimi.ingsw.psp23.model.cards.visitor.InitPlayVisitor;
 import it.polimi.ingsw.psp23.model.cards.visitor.ReadyVisitor;
@@ -26,7 +25,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

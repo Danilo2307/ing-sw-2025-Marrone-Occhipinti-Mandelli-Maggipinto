@@ -3,17 +3,10 @@ package it.polimi.ingsw.psp23.model.cards.abandonedShip;
 import it.polimi.ingsw.psp23.exceptions.CardException;
 import it.polimi.ingsw.psp23.exceptions.CrewOperationException;
 import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.model.Game.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.AbandonedShip;
 import it.polimi.ingsw.psp23.model.cards.visitor.*;
-import it.polimi.ingsw.psp23.model.cards.Meteor;
-import it.polimi.ingsw.psp23.model.cards.MeteorSwarm;
-import it.polimi.ingsw.psp23.model.cards.Planets;
-import it.polimi.ingsw.psp23.model.components.Container;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
-import it.polimi.ingsw.psp23.model.enumeration.Color;
-import it.polimi.ingsw.psp23.model.enumeration.Direction;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.enumeration.Side;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -28,8 +21,6 @@ import org.junit.jupiter.api.Test;
 import java.lang.reflect.InvocationTargetException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 

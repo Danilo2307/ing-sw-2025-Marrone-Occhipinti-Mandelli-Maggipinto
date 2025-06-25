@@ -1,4 +1,4 @@
-package it.polimi.ingsw.psp23.model.cards;
+package it.polimi.ingsw.psp23.model.helpers;
 
 import it.polimi.ingsw.psp23.model.enumeration.Direction;
 
