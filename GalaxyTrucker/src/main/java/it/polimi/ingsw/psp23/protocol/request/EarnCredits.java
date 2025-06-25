@@ -11,13 +11,12 @@ public record EarnCredits() implements Action{
 
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        if (game.getGameStatus() != GameStatus.END_SLAVERS) {
+        if (game.getGameStatus() != GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.END_PIRATES) {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
-
         Card currentCard = game.getCurrentCard();
         GetCosmicCreditsVisitor visitor = new GetCosmicCreditsVisitor();
-        currentCard.call(visitor);
+        currentCard.call(visitor, username);
     }
 
     @Override

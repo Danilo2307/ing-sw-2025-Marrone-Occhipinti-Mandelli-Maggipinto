@@ -2,53 +2,54 @@ package it.polimi.ingsw.psp23.model.cards.visitor;
 
 import it.polimi.ingsw.psp23.model.cards.*;
 
-public class GetCosmicCreditsVisitor implements Visitor<Integer> {
+public class GetCosmicCreditsVisitor implements VisitorUsername<Void> {
 
-    public Integer visitForPlanets(Planets planets){
+    @Override
+    public Void visitForPlanets(Planets planets, String username){return null;}
+
+    @Override
+    public Void visitForAbandonedShip(AbandonedShip abandonedShip, String username){return null;}
+
+    @Override
+    public Void visitForAbandonedStation(AbandonedStation abandonedStation, String username){return null;}
+
+    @Override
+    public Void visitForPirates(Pirates pirates, String username){
+        pirates.getCosmicCredits(username);
         return null;
     }
 
-    public Integer visitForAbandonedShip(AbandonedShip abandonedShip){
-        return abandonedShip.getCosmicCredits();
-    }
-
-    public Integer visitForAbandonedStation(AbandonedStation abandonedStation){
+    @Override
+    public Void visitForSlavers(Slavers slavers, String username){
+        slavers.getCosmicCredits(username);
         return null;
     }
 
-    public Integer visitForCannonShot(CannonShot cannonShot){
+    @Override
+    public Void visitForSmugglers(Smugglers smugglers, String username){return null;}
+
+    @Override
+    public Void visitForCombatZone(CombatZone combatZone, String username){
         return null;
     }
 
-    public Integer visitForCombatZone(CombatZone combatZone){
+    @Override
+    public Void visitForMeteorSwarm(MeteorSwarm meteorSwarm, String username){
         return null;
     }
 
-    public Integer visitForEpidemic(Epidemic epidemic){
+    @Override
+    public Void visitForOpenSpace(OpenSpace openSpace, String username){
         return null;
     }
 
-    public Integer visitForMeteorSwarm(MeteorSwarm meteorSwarm){
+    @Override
+    public Void visitForEpidemic(Epidemic epidemic, String username){
         return null;
     }
 
-    public Integer visitForOpenSpace(OpenSpace openSpace){
-        return null;
-    }
-
-    public Integer visitForPirates(Pirates pirates){
-        return pirates.getPrize();
-    }
-
-    public Integer visitForSlavers(Slavers slavers){
-        return slavers.getPrize();
-    }
-
-    public Integer visitForSmugglers(Smugglers smugglers){
-        return null;
-    }
-
-    public Integer visitForStardust(Stardust stardust){
+    @Override
+    public Void visitForStardust(Stardust stardust, String username){
         return null;
     }
 }

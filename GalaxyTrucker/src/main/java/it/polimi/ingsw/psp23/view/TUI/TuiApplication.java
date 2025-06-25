@@ -517,6 +517,9 @@ public class TuiApplication implements ViewAPI {
             case "passa" -> {
                 client.sendAction(new NextTurn());
             }
+            case "crediti" -> {
+                client.sendAction(new EarnCredits());
+            }
             case "compra" -> {
                 client.sendAction(new BuyShip());
             }
