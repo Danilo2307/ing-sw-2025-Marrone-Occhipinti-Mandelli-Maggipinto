@@ -1,18 +1,17 @@
 package it.polimi.ingsw.psp23.protocol.request;
 
-import it.polimi.ingsw.psp23.controller.Controller;
-import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
-import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.socket.Server;
-import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
-import java.util.List;
 
 public record SetUsername(String username) implements Action {
 
+    /**
+     * Handles the action of adding a player to the game associated with the specified username.
+     * This method retrieves the game using the given username and invokes the game controller
+     * to add the player to the game.
+     *
+     * @param username the username of the player to be added to the game
+     */
     public void handle(String username){
         UsersConnected.getInstance().getGameFromUsername(username).getController().addPlayerToGame(username);
     }

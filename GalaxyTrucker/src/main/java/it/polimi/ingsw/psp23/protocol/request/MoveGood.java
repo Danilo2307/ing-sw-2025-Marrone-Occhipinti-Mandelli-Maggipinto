@@ -13,6 +13,15 @@ import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import java.util.List;
 
 public record MoveGood(int fromX, int fromY, int index, int toX, int toY) implements Action {
+
+
+    /**
+     * Handles the action of moving a good from one container on the ship to another, performing necessary
+     * validations to ensure the action adheres to the game's current state and rules.
+     *
+     * @param username the username of the player attempting to perform the action
+     * @throws InvalidActionException if the game's current status does not permit this action
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.END_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_PLANETS && game.getGameStatus() != GameStatus.END_SMUGGLERS){

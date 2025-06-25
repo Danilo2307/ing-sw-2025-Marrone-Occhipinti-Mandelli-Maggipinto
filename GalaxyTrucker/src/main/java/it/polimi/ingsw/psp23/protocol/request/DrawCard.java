@@ -7,6 +7,15 @@ import it.polimi.ingsw.psp23.network.UsersConnected;
 
 public class DrawCard implements Action{
 
+    /**
+     * Handles the action of drawing the next card during a game.
+     * Validates the game status and ensures that only the leader or
+     * the appropriate player can perform this action.
+     *
+     * @param username The username of the player attempting to draw the next card.
+     * @throws InvalidActionException If the game is not in the correct status or
+     *                                 if the action is attempted by a non-leader player.
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD){

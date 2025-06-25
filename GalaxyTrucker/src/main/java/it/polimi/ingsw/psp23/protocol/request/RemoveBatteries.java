@@ -12,6 +12,14 @@ import it.polimi.ingsw.psp23.network.UsersConnected;
  * ServerActionHandler will call getPlayerFromNickname().getBoard().delete(x,y) */
 public record RemoveBatteries(int x, int y, int num) implements Action {
 
+
+    /**
+     * Handles the removal of a tile from the player's board at the specified coordinates in the game.
+     * The action is executed if the game status allows it. Otherwise, an exception is thrown.
+     *
+     * @param username the username of the player attempting to perform the action
+     * @throws InvalidActionException if the current game status does not permit this action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SMUGGLERS){

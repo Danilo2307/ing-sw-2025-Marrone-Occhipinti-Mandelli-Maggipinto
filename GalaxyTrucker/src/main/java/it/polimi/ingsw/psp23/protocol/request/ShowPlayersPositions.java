@@ -15,6 +15,14 @@ import java.util.List;
 public record ShowPlayersPositions() implements Action{
 
 
+    /**
+     * Handles the action of displaying the positions of all players
+     * in the game associated with the provided username. The player
+     * will receive a direct message containing the list of all players
+     * and their positions in the game.
+     *
+     * @param username the username of the player requesting the list of players and their positions
+     */
     public void handle(String username) {
         StringBuilder sb = new StringBuilder();
         Game game = UsersConnected.getInstance().getGameFromUsername(username);

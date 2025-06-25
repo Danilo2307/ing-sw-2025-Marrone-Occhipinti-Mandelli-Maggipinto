@@ -17,7 +17,14 @@ import java.util.List;
 /** event triggered when the user wants to view the details of a component at ship[x][y] */
 public record RequestTileInfo(int x, int y) implements Action {
 
-
+    /**
+     * Handles a user's request to view the details of a specific component at a position on their ship.
+     * Retrieves the game, player, and component details from the user's session, constructs a description
+     * of the component and its connectors, or indicates that the tile is empty. The constructed message
+     * is then sent as a direct response to the user.
+     *
+     * @param username the username of the user making the request
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

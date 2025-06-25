@@ -20,6 +20,13 @@ import java.util.List;
 /** Event triggered when the user wants to draw a face-up component at position x. */
 public record DrawFromFaceUp (int x, int version) implements Action {
 
+    /**
+     * Handles the action when a user attempts to draw a face-up component from the game.
+     * This method retrieves the game and player information based on the username,
+     * processes the drawing of a component, and sends appropriate responses back to the user.
+     *
+     * @param username the username of the player performing the action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);

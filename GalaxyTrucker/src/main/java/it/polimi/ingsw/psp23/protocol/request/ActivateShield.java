@@ -15,6 +15,17 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 public record ActivateShield(int sx, int sy, int bx, int by) implements Action{
 
 
+    /**
+     * Handles the activation of a shield for the current player in the game.
+     * This method first verifies the validity of the action based on the current game state,
+     * checks if the specified shield exists and is not already activated, and then activates the shield
+     * while adjusting the player's battery level accordingly.
+     * If the game is not in a state where the action is allowed, an exception is thrown.
+     * If the shield is already active or not selected, appropriate messages are sent to the user.
+     *
+     * @param username the username of the player attempting to activate the shield
+     * @throws InvalidActionException if the action is attempted at an invalid game state
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Board truck = game.getCurrentPlayer().getTruck();

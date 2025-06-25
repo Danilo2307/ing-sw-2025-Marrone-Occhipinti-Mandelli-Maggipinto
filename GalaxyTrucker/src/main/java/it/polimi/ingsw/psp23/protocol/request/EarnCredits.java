@@ -9,6 +9,13 @@ import it.polimi.ingsw.psp23.network.UsersConnected;
 
 public record EarnCredits() implements Action{
 
+    /**
+     * Handles the logic for earning cosmic credits based on the current game state and card.
+     * Validates the game status before proceeding with the credit earning process.
+     *
+     * @param username the username of the player performing the action
+     * @throws InvalidActionException if the action is performed when the game status is not END_SLAVERS or END_PIRATES
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if (game.getGameStatus() != GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.END_PIRATES) {

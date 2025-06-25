@@ -10,6 +10,13 @@ import java.util.List;
 /** event triggered when a user wants to turn the hourglass during the building phase */
 public record TurnHourglass() implements Action {
 
+    /**
+     * Handles the action of starting the hoursglass countdown timer for the specified user's game.
+     * This method retrieves the game associated with the provided username and interacts
+     * with its controller to initiate the timer.
+     *
+     * @param username The username of the player whose game timer should be started.
+     */
     public void handle(String username){
         UsersConnected.getInstance().getGameFromUsername(username).getController().startTimer();
     }

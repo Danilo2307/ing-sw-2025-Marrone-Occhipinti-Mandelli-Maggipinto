@@ -13,6 +13,13 @@ import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 public record LeaveFlight() implements Action {
 
 
+    /**
+     * Handles the action of a player leaving the flight in the game.
+     * Ensures that the game state allows this action, and notifies all relevant players.
+     *
+     * @param username the username of the player who is leaving the flight
+     * @throws InvalidActionException if the action is not allowed in the current game state
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.CheckBoards && game.getGameStatus() != GameStatus.Building) {

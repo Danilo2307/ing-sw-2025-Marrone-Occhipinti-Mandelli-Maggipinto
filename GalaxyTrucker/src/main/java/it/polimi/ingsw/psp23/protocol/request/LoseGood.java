@@ -10,6 +10,17 @@ import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import java.util.List;
 
 public record LoseGood(int i, int j, int index) implements Action {
+
+
+    /**
+     * Handles the action to remove a specific good from a player's truck.
+     * This method ensures that the game is in an appropriate terminal state
+     * before performing the action. Loose the index-th good at ship[i][j]
+     *
+     * @param username the username of the player performing the action
+     * @throws InvalidActionException if the action is attempted when the game
+     *                                is not in a valid end state
+     */
     public void handle(String username){
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.END_ABANDONEDSTATION && game.getGameStatus() != GameStatus.END_PLANETS && game.getGameStatus() != GameStatus.END_SMUGGLERS){

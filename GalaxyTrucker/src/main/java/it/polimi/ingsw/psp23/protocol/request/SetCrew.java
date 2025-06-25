@@ -21,18 +21,17 @@ import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Event triggered when the user wants to add crew to a housing unit located at ship[x][y].
- * The crew can be either an alien or a number of astronauts, depending on the `alien` flag.
- * If `alien` is true, the specified alien color is placed at that location.
- * Otherwise, 2 astronauts are added (as defined in the rules).
- * The server will process this by accessing the housing unit at the specified coordinates
- * and modifying its internal state accordingly.
- * Note: the Color enum used here must be serializable (which is true by default in Java).
- */
+
 public record SetCrew(int x, int y, boolean alien, Color color) implements Action {
 
 
+    /**
+     * Handles the action of adding crew to a housing unit at the specified coordinates within a player's ship.
+     * The crew can be either an alien or astronauts, determined by the `alien` flag. The method performs several
+     * validation checks before applying the action. If the conditions are not met, an appropriate exception is thrown.
+     *
+     * @param username the username of the player performing the action
+     */
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         if(game.getGameStatus() != GameStatus.SECOND_COMBATZONE && game.getGameStatus() != GameStatus.END_SLAVERS && game.getGameStatus() != GameStatus.SetCrew){
