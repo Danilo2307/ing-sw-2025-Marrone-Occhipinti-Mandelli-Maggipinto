@@ -7,7 +7,15 @@ import it.polimi.ingsw.psp23.view.ViewAPI;
 
 import javax.swing.text.View;
 
-/** response event sent from the server; sends the component requested from the client */
+/**
+ * Represents a response event that involves handling a specific tile represented by a {@code Component}.
+ * This response is typically invoked when a request for a tile has been processed.
+ *
+ * Implements the {@link Event} interface, enabling it to be processed via the visitor pattern
+ * with an {@link EventVisitor}.
+ *
+ * @param requested the {@link Component} that represents the requested tile in the system.
+ */
 public record TileResponse(Component requested) implements Event {
 
     public void handle(ViewAPI viewAPI) {

@@ -10,10 +10,12 @@ public class Timer {
     }
 
     /**
-     * Avvia il countdown.
+     * Starts a countdown for the specified amount of seconds, triggering the provided
+     * callback when the countdown ends. If a countdown is already active, it will be canceled
+     * before starting the new one.
      *
-     * @param seconds durata in secondi
-     * @param onTimeout cosa eseguire allo scadere del tempo
+     * @param seconds the duration of the countdown in seconds
+     * @param onTimeout the callback to execute when the countdown ends
      */
     public void startCountdown(int seconds, Runnable onTimeout) {
         // Se c'è già un countdown attivo, lo cancello
@@ -25,7 +27,10 @@ public class Timer {
     }
 
     /**
-     * Annulla il timer, se attivo
+     * Cancels the currently active countdown task, if one is running.
+     * If there is no active countdown task, this method will have no effect.
+     * The cancellation will not interrupt the currently executing task,
+     * but will prevent it from running if it has not yet started.
      */
     public void cancel() {
         if (countdownTask != null && !countdownTask.isDone()) {
@@ -34,7 +39,12 @@ public class Timer {
     }
 
     /**
-     * Ferma il timer e chiude il thread (da chiamare alla fine della fase di building)
+     * Shuts down the scheduled executor service, halting the execution of any running tasks immediately
+     * and preventing any further tasks from being scheduled. This method should be called when the
+     * Timer instance is no longer needed to release resources.
+     *
+     * It is important to note that tasks currently executing will be interrupted, and all
+     * scheduled-but-not-yet-executed tasks will be canceled.
      */
     public void shutdown() {
         scheduler.shutdownNow();

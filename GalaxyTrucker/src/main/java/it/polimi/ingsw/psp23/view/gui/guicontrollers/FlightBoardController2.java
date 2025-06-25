@@ -132,11 +132,15 @@ public class FlightBoardController2 {
                 Color color = entry.getKey();
                 String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
                 javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+                int newPosition = entry.getValue();
+                if (newPosition < 0) {
+                    newPosition = 24 + newPosition;
+                }
                 switch (color){
-                    case Red ->  positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
-                    case Blue ->  positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
-                    case Yellow -> positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
-                    case Green -> positions[entry.getValue() % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
+                    case Red ->  positions[newPosition % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/red.jpg"))));
+                    case Blue ->  positions[newPosition % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/blue.jpg"))));
+                    case Yellow -> positions[newPosition % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/yellow.jpg"))));
+                    case Green -> positions[newPosition % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
                 }
             });
 
