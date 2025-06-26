@@ -21,7 +21,7 @@ public class ShotsIncoming extends Event {
     @Override
     public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Attento! Dovrai affrontare queste cannonate:\n");
+        sb.append("Attento! Se perdi la sfida dovrai affrontare queste cannonate:\n");
         for(CannonShot c : cannonShots){
             if(c.isBig()) {
                 sb.append("Una cannonata grossa da ").append(c.getDirection()).append(" all'indice ").append(c.getImpactLine()).append("\n");
