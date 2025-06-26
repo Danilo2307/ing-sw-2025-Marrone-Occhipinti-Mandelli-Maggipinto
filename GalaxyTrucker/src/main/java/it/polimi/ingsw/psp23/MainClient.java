@@ -70,12 +70,14 @@ public class MainClient {
                 }
                 view.setClient(clientRmi);
                 view.setupRMI(clientRmi.getNameConnection());
-                GuiApplication.getInstance().showLobby();
+                if(interfaceChosen == 2)
+                    GuiApplication.getInstance().showLobby();
             } else if (protocol == 2) {
                 client = new ClientSocket("172.26.190.81", 8000, null, clientEventHandler);
                 view.setClient(client);
                 view.setup();  // Avvio della view scelta
-                GuiApplication.getInstance().showLobby();
+                if(interfaceChosen == 2)
+                    GuiApplication.getInstance().showLobby();
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;
