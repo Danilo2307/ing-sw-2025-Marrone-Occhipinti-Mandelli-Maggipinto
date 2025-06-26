@@ -369,18 +369,20 @@ public class GuiApplication extends Application implements ViewAPI {
         try {
             Parent root = loader.load();
             this.deckViewController = loader.getController();
-            Scene scene = new Scene(root, 1152, 768);
+            Platform.runLater(() -> {
+                Scene scene = new Scene(root, 1152, 768);
+                stage.setScene(scene);
+            });
             String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
             String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
             String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
             card1 = deckViewController.getCard1();
             card2 = deckViewController.getCard2();
             card3 = deckViewController.getCard3();
-            card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
-            card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
-            card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
             Platform.runLater(() -> {
-                stage.setScene(scene);
+                card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
+                card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
+                card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
             });
         } catch (IOException e) {
             e.printStackTrace();
