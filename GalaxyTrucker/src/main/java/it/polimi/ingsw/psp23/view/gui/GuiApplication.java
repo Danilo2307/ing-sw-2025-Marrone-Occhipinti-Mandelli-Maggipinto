@@ -394,38 +394,38 @@ public class GuiApplication extends Application implements ViewAPI {
             flightPhaseController.disableAllButtons();
             flightPhaseController.setCardImage(id);
 
-            switch (gameStatus) {
-                case INIT_STARDUST -> {
+            switch (id) {
+                case 105, 212  -> {
                     flightPhaseController.startdustCommands();
                 }
-                case INIT_OPENSPACE -> {
+                case 101, 109, 110, 111, 201, 202, 203-> {
                     flightPhaseController.openSpaceCommands();
                 }
-                case GameStatus.INIT_ABANDONEDSHIP -> {
+                case 103, 115, 208, 209 -> {
                     flightPhaseController.abandonedshipCommands();
                 }
-                case INIT_SLAVERS -> {
+                case 117, 213  -> {
                     flightPhaseController.slaversCommands();
                 }
-                case INIT_METEORSWARM -> {
+                case 107, 119, 120, 216, 217, 218 -> {
                     flightPhaseController.meteorSwarmCommands();
                 }
-                case INIT_EPIDEMIC -> {
+                case 219 -> {
                     flightPhaseController.epidemicCommands();
                 }
-                case INIT_PIRATES -> {
+                case 118, 215 -> {
                     flightPhaseController.piratesCommands();
                 }
-                case GameStatus.INIT_PLANETS -> {
+                case 102, 112, 113, 114, 204, 205, 206, 207 -> {
                     flightPhaseController.planetsCommands(id);
                 }
-                case INIT_ABANDONEDSTATION -> {
+                case 104, 116, 210, 211 -> {
                     flightPhaseController.abandonedStationCommands();
                 }
-                case INIT_SMUGGLERS -> {
+                case 106, 214 -> {
                     flightPhaseController.smugglersCommands();
                 }
-                case INIT_COMBATZONE -> {
+                case 108, 220 -> {
                     flightPhaseController.combatZoneCommands();
                 }
 
