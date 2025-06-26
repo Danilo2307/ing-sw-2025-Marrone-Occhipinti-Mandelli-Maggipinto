@@ -11,6 +11,7 @@ import it.polimi.ingsw.psp23.model.enumeration.Direction;
 public class CannonShot {
     private final boolean big;
     private final Direction direction;
+    private int impactLine;
 
     public CannonShot(boolean big, Direction direction) {
         this.big = big;
@@ -32,4 +33,8 @@ public class CannonShot {
             return "Small shot from " + direction;
         }
     }
+
+    public void setImpactLine(int impactLine) {this.impactLine =  impactLine;}
+
+    public int getImpactLine() {return impactLine;}
 }

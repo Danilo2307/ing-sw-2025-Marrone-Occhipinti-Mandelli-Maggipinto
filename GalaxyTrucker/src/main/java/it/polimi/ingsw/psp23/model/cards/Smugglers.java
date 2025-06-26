@@ -8,8 +8,10 @@ import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
+import it.polimi.ingsw.psp23.protocol.response.UpdateFromCard;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -334,9 +336,11 @@ public class Smugglers extends Card {
             game.fireEvent(new EnemyDefeated(game.getGameStatus()));
             game.fireEvent(new ItemsEarned(game.getGameStatus()), username);
             game.setGameStatus(GameStatus.END_SMUGGLERS);
+            Server.getInstance().sendMessage(username, new DirectMessage(new UpdateFromCard(username+" ha sconfitto i contrabbandieri! ")));
         } else if (power < firePower){
             loser = username;
             if(noGoods.contains(loser)){
+                Server.getInstance().sendMessage(username, new DirectMessage(new UpdateFromCard(username+" è stato sconfitto dai contrabbandieri! ")));
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                     Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());

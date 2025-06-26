@@ -1,6 +1,7 @@
 package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.model.Events.CannonShotIncoming;
+import it.polimi.ingsw.psp23.model.Events.ShotsIncoming;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.CannonShot;
@@ -202,8 +203,7 @@ public class CombatZone extends Card {
         }
         if(cannonShot.size() - cannonShotIndex == 2){
             for(CannonShot c : cannonShot.subList(cannonShotIndex, cannonShot.size())){
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()), loserThirdChallenge);
+                int impactLine = c.getImpactLine();
                 game.getPlayerFromNickname(loserThirdChallenge)
                         .getTruck().handleCannonShot(c, impactLine);
             }
@@ -212,8 +212,7 @@ public class CombatZone extends Card {
         }
         else{
             CannonShot shot = cannonShot.get(cannonShotIndex);
-            int impactLine = Utility.roll2to12();
-            game.fireEvent(new CannonShotIncoming(game.getGameStatus(), shot.isBig(), impactLine, shot.getDirection()), loserThirdChallenge);
+            int impactLine = shot.getImpactLine();
             game.getPlayerFromNickname(loserThirdChallenge)
                     .getTruck().handleCannonShot(shot, impactLine);
             cannonShotIndex++;
@@ -369,6 +368,11 @@ public class CombatZone extends Card {
             game.setCurrentPlayer(game.getPlayers().getFirst());
             game.setGameStatus(GameStatus.SECOND_COMBATZONE);
         }
+        for(CannonShot c : cannonShot){
+            int impactLine = Utility.roll2to12();
+            c.setImpactLine(impactLine);
+        }
+        game.fireEvent(new ShotsIncoming(game.getGameStatus(), cannonShot));
     }
 
     /**
