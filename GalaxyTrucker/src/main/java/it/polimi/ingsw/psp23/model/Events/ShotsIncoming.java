@@ -21,13 +21,13 @@ public class ShotsIncoming extends Event {
     @Override
     public String describe(int gameId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("Nella terza sfida ti arriveranno:\n");
+        sb.append("Attento! Dovrai affrontare queste cannonate:\n");
         for(CannonShot c : cannonShots){
             if(c.isBig()) {
-                sb.append("È in arrivo una cannonata grossa da ").append(c.getDirection()).append(" all'indice ").append(c.getImpactLine()).append("\n");
+                sb.append("Una cannonata grossa da ").append(c.getDirection()).append(" all'indice ").append(c.getImpactLine()).append("\n");
             }
             else{
-                sb.append("È in arrivo una cannonata piccola da ").append(c.getDirection()).append(" all'indice ").append(c.getImpactLine()).append("\n");
+                sb.append("Una cannonata piccola da ").append(c.getDirection()).append(" all'indice ").append(c.getImpactLine()).append("\n");
             }
         }
         return sb.toString();

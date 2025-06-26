@@ -76,6 +76,11 @@ public class Pirates extends Card {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_PIRATES);
         UsersConnected.getInstance().getGameFromUsername(username).setCurrentPlayer(UsersConnected.getInstance().getGameFromUsername(username).getPlayers().getFirst());
+        for(CannonShot c : cannonShot){
+            int impactLine = Utility.roll2to12();
+            c.setImpactLine(impactLine);
+        }
+        game.fireEvent(new ShotsIncoming(game.getGameStatus(), cannonShot));
     }
 
     /**
@@ -145,12 +150,10 @@ public class Pirates extends Card {
             game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
-                            .handleCannonShot(c, impactLine);
+                            .handleCannonShot(c, c.getImpactLine());
                 }
                 countCannonShot++;
             }
@@ -179,12 +182,10 @@ public class Pirates extends Card {
             game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
-                            .handleCannonShot(c, impactLine);
+                            .handleCannonShot(c, c.getImpactLine());
                 }
                 countCannonShot++;
             }
@@ -231,12 +232,10 @@ public class Pirates extends Card {
             game.setGameStatus(GameStatus.END_PIRATES);
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
-                            .handleCannonShot(c, impactLine);
+                            .handleCannonShot(c, c.getImpactLine());
                 }
                 countCannonShot++;
             }
@@ -261,12 +260,10 @@ public class Pirates extends Card {
         }
         if(getLevel() == 2){
             for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size())){
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
-                            .handleCannonShot(c, impactLine);
+                            .handleCannonShot(c, c.getImpactLine());
                 }
             }
             game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
@@ -275,24 +272,20 @@ public class Pirates extends Card {
         else {
             if (countCannonShot == 0) {
                 for (CannonShot c : cannonShot.subList(countCannonShot, cannonShot.size() - 1)) {
-                    int impactLine = Utility.roll2to12();
-                    game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                     for (String player : losers) {
                         game.getPlayerFromNickname(player)
                                 .getTruck()
-                                .handleCannonShot(c, impactLine);
+                                .handleCannonShot(c, c.getImpactLine());
                     }
                     countCannonShot++;
                     resolvers.clear();
                 }
             } else {
                 CannonShot c = cannonShot.get(countCannonShot);
-                int impactLine = Utility.roll2to12();
-                game.fireEvent(new CannonShotIncoming(game.getGameStatus(), c.isBig(), impactLine, c.getDirection()));
                 for (String player : losers) {
                     game.getPlayerFromNickname(player)
                             .getTruck()
-                            .handleCannonShot(c, impactLine);
+                            .handleCannonShot(c, c.getImpactLine());
                 }
                 game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                 Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
