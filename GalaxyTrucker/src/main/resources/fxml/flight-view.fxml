@@ -41,41 +41,41 @@
                 </GridPane>
             </children>
         </StackPane>
-        <Button fx:id="leaveBtn" layoutX="1033.0" layoutY="721.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLeaveClicked" prefHeight="32.0" prefWidth="105.0" styleClass="quit-button" text="abbandona" textFill="RED">
+        <Button fx:id="leaveBtn" layoutX="1032.0" layoutY="721.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLeaveClicked" prefHeight="32.0" prefWidth="105.0" styleClass="quit-button" text="abbandona" textFill="RED">
             <font>
                 <Font name="Arial Black" size="14.0" />
             </font></Button>
-        <ToolBar fx:id="mainCommands" layoutX="831.0" layoutY="420.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="293.0" prefWidth="242.0" style="-fx-background-color: transparent;">
+        <ToolBar fx:id="mainCommands" layoutX="818.0" layoutY="393.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="304.0" prefWidth="242.0" style="-fx-background-color: transparent;">
             <items>
-                <Button fx:id="button1" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="209.0" styleClass="default-button" text="Bottone 1" visible="false">
+                <Button fx:id="button1" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" styleClass="default-button" text="Bottone 1" visible="false">
                     <font>
-                        <Font name="Arial Black" size="18.0" />
+                        <Font name="Arial Black" size="16.0" />
                     </font></Button>
-                <Button fx:id="button2" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 2" visible="false">
+                <Button fx:id="button2" layoutX="733.0" layoutY="345.0" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" styleClass="default-button" text="Bottone 2" visible="false">
                     <font>
-                        <Font name="Arial Black" size="18.0" />
+                        <Font name="Arial Black" size="16.0" />
                     </font></Button>
-                <Button fx:id="button3" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="210.0" styleClass="default-button" text="Bottone 3" visible="false">
+                <Button fx:id="button3" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" styleClass="default-button" text="Bottone 3" visible="false">
                     <font>
-                        <Font name="Arial Black" size="18.0" />
+                        <Font name="Arial Black" size="16.0" />
                     </font></Button>
-                <Button fx:id="button4" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="211.0" styleClass="default-button" text="Bottone 4" textFill="#121212" visible="false">
+                <Button fx:id="button4" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" styleClass="default-button" text="Bottone 4" textFill="#121212" visible="false">
                     <font>
-                        <Font name="Arial Black" size="18.0" />
+                        <Font name="Arial Black" size="16.0" />
                     </font></Button>
-                <Button fx:id="button5" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 5" visible="false">
+                <Button fx:id="button5" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" styleClass="default-button" text="Bottone 5" visible="false">
                     <font>
-                        <Font name="Arial Black" size="18.0" />
+                        <Font name="Arial Black" size="16.0" />
                     </font></Button>
-            <Button fx:id="button7" managed="false" mnemonicParsing="false" prefHeight="46.0" prefWidth="186.0" text="Bottone 7" visible="false">
+                <Button fx:id="button6" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="199.0" styleClass="default-button" text="Bottone 6" visible="false">
+                    <font>
+                        <Font name="Arial Black" size="16.0" />
+                    </font></Button>
+            <Button fx:id="button7" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" text="Bottone 7" visible="false">
                <font>
-                  <Font name="Arial Black" size="12.0" />
+                  <Font name="Arial Black" size="16.0" />
                </font>
             </Button>
-                <Button fx:id="button6" managed="false" mnemonicParsing="false" prefHeight="39.0" prefWidth="212.0" styleClass="default-button" text="Bottone 6" visible="false">
-                    <font>
-                        <Font name="Arial Black" size="18.0" />
-                    </font></Button>
             </items>
         </ToolBar>
         <Button fx:id="toFlightBoard" layoutX="1011.0" layoutY="14.0" mnemonicParsing="false" onAction="#onFlightBoardClicked" prefHeight="39.0" prefWidth="106.0" styleClass="default-button" text="Flight Board">
@@ -88,7 +88,7 @@
             <Font name="Arial Black" size="18.0" />
          </font>
       </Label>
-      <ImageView fx:id="card" fitHeight="320.0" fitWidth="268.0" layoutX="822.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="card" fitHeight="314.0" fitWidth="268.0" layoutX="822.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="drawBtn" layoutX="629.0" layoutY="156.0" mnemonicParsing="false" onAction="#drawCard" prefHeight="39.0" prefWidth="147.0" text="Pesca nuova carta">
          <font>
             <Font name="Arial Black" size="12.0" />
