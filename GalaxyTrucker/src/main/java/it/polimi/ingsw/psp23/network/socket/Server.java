@@ -36,7 +36,7 @@ public class Server {
     Server(int port) {
         try {
 
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("192.168.147.12"));
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("172.26.52.89"));
 
             this.serverSocket.setReuseAddress(true);
 

@@ -19,7 +19,6 @@ import java.util.Scanner;
 public class MainClient {
     public static void main(String[] args) {
         try {
-            System.setProperty("java.rmi.server.hostname", "192.168.147.12");
             System.out.println("Vuoi usare un'interfaccia testuale o grafica?");
             System.out.println("Digita 1 per TUI, 2 per GUI:");
             Scanner scanner = new Scanner(System.in);
@@ -63,7 +62,7 @@ public class MainClient {
             if (protocol == 1) {
                 ClientRMI clientRmi = null;
                 try {
-                    clientRmi = new ClientRMI("192.168.147.12", 4321, null, clientEventHandler);
+                    clientRmi = new ClientRMI("172.26.52.89", 4321, null, clientEventHandler);
                 }
                 catch (LobbyUnavailableException e) {
                     System.out.println("Lobby unavailable");
@@ -74,7 +73,7 @@ public class MainClient {
                 }
                 view.setupRMI(clientRmi.getNameConnection());
             } else if (protocol == 2) {
-                client = new ClientSocket("192.168.147.12", 8000, null, clientEventHandler);
+                client = new ClientSocket("172.26.52.89", 8000, null, clientEventHandler);
                 view.setClient(client);
                 if(interfaceChosen == 2) {
                     GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
