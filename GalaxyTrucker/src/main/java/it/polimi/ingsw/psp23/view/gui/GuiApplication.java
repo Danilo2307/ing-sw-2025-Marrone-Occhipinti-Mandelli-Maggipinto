@@ -54,6 +54,7 @@ public class GuiApplication extends Application implements ViewAPI {
     private GameStatus gameStatus;
     String myNickname;
     ArrayList<String> usernames = new ArrayList<>();
+    Parent rootLobby;
 
 
     public static void awaitStart() throws InterruptedException {
@@ -84,18 +85,22 @@ public class GuiApplication extends Application implements ViewAPI {
                 getClass().getResource("/fxml/lobby-view.fxml")
         );
 
-        Parent root = loader.load();
+        rootLobby = loader.load();
 
         this.lobbyController = loader.getController();
-        lobbyController.setClient(client);
-
-        stage.setResizable(false);
-        Scene scene = new Scene(root,1152,768);
-        stage.setTitle("Galaxy Trucker");
-        stage.setScene(scene);
-        stage.show();
         this.stage = stage;
         latch.countDown();
+    }
+
+    public void showLobby(){
+        Platform.runLater(() -> {
+            lobbyController.setClient(client);
+            stage.setResizable(false);
+            Scene scene = new Scene(rootLobby,1152,768);
+            stage.setTitle("Galaxy Trucker");
+            stage.setScene(scene);
+            stage.show();
+        });
     }
     public static void main(String[] args) {
         launch(args);
@@ -211,13 +216,13 @@ public class GuiApplication extends Application implements ViewAPI {
         if (requested.getId() >= 900) {
             switch (requested.getId()) {
                 case 900 ->
-                    playerColor = Color.Blue;
+                        playerColor = Color.Blue;
                 case 901 ->
-                    playerColor = Color.Green;
+                        playerColor = Color.Green;
                 case 902 ->
-                    playerColor = Color.Red;
+                        playerColor = Color.Red;
                 case 903 ->
-                    playerColor = Color.Yellow;
+                        playerColor = Color.Yellow;
             }
         }
         else {
@@ -358,28 +363,28 @@ public class GuiApplication extends Application implements ViewAPI {
         ImageView card1;
         ImageView card2;
         ImageView card3;
-            FXMLLoader loader = new FXMLLoader(
-                    getClass().getResource("/fxml/show-deck.fxml")
-            );
-            try {
-                    Parent root = loader.load();
-                    this.deckViewController = loader.getController();
-                    Scene scene = new Scene(root, 1152, 768);
-                    String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
-                    String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
-                    String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
-                    card1 = deckViewController.getCard1();
-                    card2 = deckViewController.getCard2();
-                    card3 = deckViewController.getCard3();
-                    card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
-                    card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
-                    card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
-                Platform.runLater(() -> {
-                    stage.setScene(scene);
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/fxml/show-deck.fxml")
+        );
+        try {
+            Parent root = loader.load();
+            this.deckViewController = loader.getController();
+            Scene scene = new Scene(root, 1152, 768);
+            String imagePath1 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(0) + ".jpg";
+            String imagePath2 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(1) + ".jpg";
+            String imagePath3 = "/it/polimi/ingsw/psp23/images/cards/" + idCards.get(2) + ".jpg";
+            card1 = deckViewController.getCard1();
+            card2 = deckViewController.getCard2();
+            card3 = deckViewController.getCard3();
+            card1.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath1))));
+            card2.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath2))));
+            card3.setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath3))));
+            Platform.runLater(() -> {
+                stage.setScene(scene);
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -389,40 +394,41 @@ public class GuiApplication extends Application implements ViewAPI {
             flightPhaseController.disableAllButtons();
             flightPhaseController.setCardImage(id);
 
-            switch (id) {
-                case 105, 212  -> {
+            switch (gameStatus) {
+                case INIT_STARDUST -> {
                     flightPhaseController.startdustCommands();
                 }
-                case 101, 109, 110, 111, 201, 202, 203-> {
+                case INIT_OPENSPACE -> {
                     flightPhaseController.openSpaceCommands();
                 }
-                case 103, 115, 208, 209 -> {
+                case GameStatus.INIT_ABANDONEDSHIP -> {
                     flightPhaseController.abandonedshipCommands();
                 }
-                case 117, 213  -> {
+                case INIT_SLAVERS -> {
                     flightPhaseController.slaversCommands();
                 }
-                case 107, 119, 120, 216, 217, 218 -> {
+                case INIT_METEORSWARM -> {
                     flightPhaseController.meteorSwarmCommands();
                 }
-                case 219 -> {
+                case INIT_EPIDEMIC -> {
                     flightPhaseController.epidemicCommands();
                 }
-                case 118, 215 -> {
+                case INIT_PIRATES -> {
                     flightPhaseController.piratesCommands();
                 }
-                case 102, 112, 113, 114, 204, 205, 206, 207 -> {
+                case GameStatus.INIT_PLANETS -> {
                     flightPhaseController.planetsCommands(id);
                 }
-                case 104, 116, 210, 211 -> {
+                case INIT_ABANDONEDSTATION -> {
                     flightPhaseController.abandonedStationCommands();
                 }
-                case 106, 214 -> {
+                case INIT_SMUGGLERS -> {
                     flightPhaseController.smugglersCommands();
                 }
-                case 108, 220 -> {
+                case INIT_COMBATZONE -> {
                     flightPhaseController.combatZoneCommands();
                 }
+
             }
         });
     }
@@ -573,5 +579,3 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
 }
-
-
