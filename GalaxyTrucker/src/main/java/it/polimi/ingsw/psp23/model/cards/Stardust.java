@@ -84,4 +84,8 @@ public class Stardust extends Card {
         return visitor.visitForStardust(this);
     }
 
+    public <T> T call(VisitorUsername<T> visitor, String username) {
+        return visitor.visitForStardust(this, username);
+    }
+
 }
