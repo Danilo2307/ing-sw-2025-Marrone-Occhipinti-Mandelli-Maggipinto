@@ -50,6 +50,7 @@ public class MainClient {
                     Thread.sleep(50);
                 }
                 view = GuiApplication.getInstance();
+                GuiApplication.awaitStart();
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;
@@ -62,23 +63,19 @@ public class MainClient {
             if (protocol == 1) {
                 ClientRMI clientRmi = null;
                 try {
-                    clientRmi = new ClientRMI("172.26.52.89", 4321, null, clientEventHandler);
+                    clientRmi = new ClientRMI("172.26.190.81", 4321, null, clientEventHandler);
                 }
                 catch (LobbyUnavailableException e) {
                     System.out.println("Lobby unavailable");
                 }
                 view.setClient(clientRmi);
-                if(interfaceChosen == 2) {
-                    GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
-                }
                 view.setupRMI(clientRmi.getNameConnection());
+                GuiApplication.getInstance().showLobby();
             } else if (protocol == 2) {
-                client = new ClientSocket("172.26.52.89", 8000, null, clientEventHandler);
+                client = new ClientSocket("172.26.190.81", 8000, null, clientEventHandler);
                 view.setClient(client);
-                if(interfaceChosen == 2) {
-                    GuiApplication.awaitStart(); //aspetta finchè il metodo start non ha finito
-                }
                 view.setup();  // Avvio della view scelta
+                GuiApplication.getInstance().showLobby();
             } else {
                 System.out.println("Scelta non valida. Riprova.");
                 return;
