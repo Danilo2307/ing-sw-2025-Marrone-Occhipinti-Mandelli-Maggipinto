@@ -339,8 +339,8 @@ public class Smugglers extends Card {
             Server.getInstance().sendMessage(username, new DirectMessage(new UpdateFromCard(username+" ha sconfitto i contrabbandieri! ")));
         } else if (power < firePower){
             loser = username;
+            Server.getInstance().sendMessage(username, new DirectMessage(new UpdateFromCard(username+" è stato sconfitto dai contrabbandieri! ")));
             if(noGoods.contains(loser)){
-                Server.getInstance().sendMessage(username, new DirectMessage(new UpdateFromCard(username+" è stato sconfitto dai contrabbandieri! ")));
                 if(game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1){
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
                     Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
