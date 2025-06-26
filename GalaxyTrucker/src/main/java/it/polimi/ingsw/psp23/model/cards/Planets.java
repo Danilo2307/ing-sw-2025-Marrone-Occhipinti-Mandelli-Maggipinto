@@ -7,7 +7,6 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
-import it.polimi.ingsw.psp23.model.Events.EventForPlanets;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -227,7 +226,6 @@ public class Planets extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_PLANETS);
-        game.fireEvent(new EventForPlanets(game.getGameStatus(), daysLost, planetGoods));
         game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
@@ -256,7 +254,7 @@ public class Planets extends Card {
         for (Object goods : planetGoods) {
             sb.append("● -> ").append(goods.toString()).append("\n");
         }
-        sb.append("i giorni persi sono ").append(getDaysLost());
+        sb.append("i giorni persi sono ").append(getDaysLost()).append("\n");
         return sb.toString();
     }
 

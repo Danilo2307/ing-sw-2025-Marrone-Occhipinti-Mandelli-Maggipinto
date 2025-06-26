@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.model.Events.EventForOpenSpace;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
@@ -39,7 +38,6 @@ public class OpenSpace extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_OPENSPACE);
-        game.fireEvent(new EventForOpenSpace(game.getGameStatus()));
         game.setCurrentPlayer(game.getPlayers().getFirst());
         resolvers.clear();
     }
@@ -95,6 +93,6 @@ public class OpenSpace extends Card {
     public String toString(){
         return
                 "È uscita la carta open space\n" +
-                "più motori si attivano, più si va avanti!";
+                "più motori si attivano, più si va avanti!\n";
     }
 }

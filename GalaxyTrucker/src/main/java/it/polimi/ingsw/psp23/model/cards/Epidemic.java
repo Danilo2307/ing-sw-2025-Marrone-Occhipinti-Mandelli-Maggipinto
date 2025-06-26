@@ -3,7 +3,6 @@ package it.polimi.ingsw.psp23.model.cards;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.model.Events.EventForEpidemic;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.HousingUnit;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -34,7 +33,6 @@ public class Epidemic extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_EPIDEMIC);
-        game.fireEvent(new EventForEpidemic(game.getGameStatus()));
         applyEffect(username);
     }
 
@@ -94,6 +92,11 @@ public class Epidemic extends Card {
     @Override
     public <T> T call(Visitor<T> visitor) {
         return visitor.visitForEpidemic(this);
+    }
+
+    @Override
+    public <T> T call(VisitorUsername<T> visitor, String username) {
+        return visitor.visitForEpidemic(this, username);
     }
 
     @Override

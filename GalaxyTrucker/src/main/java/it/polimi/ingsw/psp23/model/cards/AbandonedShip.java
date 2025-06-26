@@ -6,7 +6,6 @@ import it.polimi.ingsw.psp23.model.Events.CosmicCreditsEarned;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
-import it.polimi.ingsw.psp23.model.Events.EventForAbandonedShip;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -45,7 +44,6 @@ public class AbandonedShip extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_ABANDONEDSHIP);
-        game.fireEvent(new EventForAbandonedShip(game.getGameStatus(), days, cosmicCredits, numMembers));
         game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
@@ -166,7 +164,7 @@ public class AbandonedShip extends Card {
                 "è uscita la carta Abandoned Ship\n" +
                         "l'equipaggio da perdere ammonta a "+ getNumMembers() +
                 "\ni crediti cosmici disponibili sono "+ getCosmicCredits() +
-                "\ni giorni persi sarebbero " + getDays();
+                "\ni giorni persi sarebbero " + getDays() + "\n";
     }
 
 

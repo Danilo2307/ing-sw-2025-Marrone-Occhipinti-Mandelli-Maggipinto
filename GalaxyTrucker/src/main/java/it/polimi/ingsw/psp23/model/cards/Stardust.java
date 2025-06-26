@@ -2,7 +2,6 @@ package it.polimi.ingsw.psp23.model.cards;
 
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
-import it.polimi.ingsw.psp23.model.Events.EventForStardust;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -38,7 +37,6 @@ public class Stardust extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_STARDUST);
-        game.fireEvent(new EventForStardust(game.getGameStatus()));
         applyEffect(username);
     }
 
@@ -77,7 +75,7 @@ public class Stardust extends Card {
     public String toString(){
         return
                 "è uscita la carta Stardust\n" +
-                "si perdono tanti giorni quanti sono i connettori esposti";
+                "si perdono tanti giorni quanti sono i connettori esposti\n";
     }
 
     public <T> T call(Visitor<T> visitor) {

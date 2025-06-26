@@ -5,7 +5,6 @@ import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Meteor;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
 import it.polimi.ingsw.psp23.exceptions.CardException;
-import it.polimi.ingsw.psp23.model.Events.EventForMeteorSwarm;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -60,12 +59,10 @@ public class MeteorSwarm extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_METEORSWARM);
-        game.fireEvent(new EventForMeteorSwarm(game.getGameStatus()));
         resolvers.clear();
         for (Meteor m : meteors) {
             int line = Utility.roll2to12();
             m.setImpactLine(line);
-            game.fireEvent(new MeteorIncoming(game.getGameStatus(),m.isBig(), line, m.getDirection()));
         }
         game.setCurrentPlayer(game.getPlayers().getFirst());
         Meteor meteor = meteors.getFirst();

@@ -1,13 +1,11 @@
 package it.polimi.ingsw.psp23.model.cards;
 
-import it.polimi.ingsw.psp23.model.Events.CannonShotIncoming;
 import it.polimi.ingsw.psp23.model.Events.ShotsIncoming;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.CannonShot;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
 import it.polimi.ingsw.psp23.exceptions.*;
-import it.polimi.ingsw.psp23.model.Events.EventForCombatZone;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.Challenge;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -347,8 +345,6 @@ public class CombatZone extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_COMBATZONE);
-        game.fireEvent(new EventForCombatZone(
-                game.getGameStatus(), daysLost, goodsLost, membersLost, penalties, cannonShot));
         for(Player p : game.getPlayers()){
             if(p.getTruck().calculateCrew() == 0){
                 noCrew.add(p.getNickname());

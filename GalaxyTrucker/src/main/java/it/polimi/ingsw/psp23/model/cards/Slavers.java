@@ -7,7 +7,6 @@ import it.polimi.ingsw.psp23.model.Events.TurnOf;
 import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
-import it.polimi.ingsw.psp23.model.Events.EventForSlavers;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -103,9 +102,6 @@ public class Slavers extends Card {
      */
     public void initPlay(String username) {
         UsersConnected.getInstance().getGameFromUsername(username).setGameStatus(GameStatus.INIT_SLAVERS);
-        UsersConnected.getInstance().getGameFromUsername(username).fireEvent(new EventForSlavers(
-                UsersConnected.getInstance().getGameFromUsername(username).getGameStatus(),
-                cannonStrength, membersStolen, prize, days));
         UsersConnected.getInstance().getGameFromUsername(username).setCurrentPlayer(UsersConnected.getInstance().getGameFromUsername(username).getPlayers().getFirst());
         for(Player player : UsersConnected.getInstance().getGameFromUsername(username).getPlayers()) {
             if(player.getTruck().calculateCrew() == 0){

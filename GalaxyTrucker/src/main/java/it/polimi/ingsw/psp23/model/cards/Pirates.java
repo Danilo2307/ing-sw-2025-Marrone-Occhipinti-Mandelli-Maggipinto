@@ -75,9 +75,6 @@ public class Pirates extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_PIRATES);
-        game.fireEvent(new EventForPirates(
-                game.getGameStatus(), days, firepower, prize, cannonShot
-        ));
         UsersConnected.getInstance().getGameFromUsername(username).setCurrentPlayer(UsersConnected.getInstance().getGameFromUsername(username).getPlayers().getFirst());
     }
 

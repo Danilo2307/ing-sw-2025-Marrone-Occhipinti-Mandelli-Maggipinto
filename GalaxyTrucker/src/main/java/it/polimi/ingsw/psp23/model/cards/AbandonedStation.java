@@ -7,7 +7,6 @@ import it.polimi.ingsw.psp23.model.Game.Board;
 import it.polimi.ingsw.psp23.model.helpers.Item;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
-import it.polimi.ingsw.psp23.model.Events.EventForAbandonedStation;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
@@ -42,7 +41,6 @@ public class AbandonedStation extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_ABANDONEDSTATION);
-        game.fireEvent(new EventForAbandonedStation(game.getGameStatus(), days, numMembers, prize));
         game.setCurrentPlayer(game.getPlayers().getFirst());
     }
 
@@ -161,6 +159,6 @@ public class AbandonedStation extends Card {
                 "è uscita la carta Abandoned Station\n" +
                         "i membri richiesti sono "+ getNumMembers() +
                         "\nle merci disponibili sono "+ prize.toString() +
-                        "\ni giorni persi sarebbero " + getDays();
+                        "\ni giorni persi sarebbero " + getDays() + "\n";
     }
 }

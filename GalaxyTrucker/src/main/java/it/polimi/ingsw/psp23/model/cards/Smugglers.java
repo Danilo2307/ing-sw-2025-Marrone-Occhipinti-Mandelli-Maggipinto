@@ -285,13 +285,6 @@ public class Smugglers extends Card {
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         game.setGameStatus(GameStatus.INIT_SMUGGLERS);
-        game.fireEvent(new EventForSmugglers(
-                game.getGameStatus(),
-                firePower,
-                numItemsStolen,
-                prize,
-                days
-        ));
         game.setCurrentPlayer(game.getPlayers().getFirst());
         for(Player p : game.getPlayers()){
             if(p.getTruck().calculateGoods() == 0 && p.getTruck().calculateBatteriesAvailable() == 0){
