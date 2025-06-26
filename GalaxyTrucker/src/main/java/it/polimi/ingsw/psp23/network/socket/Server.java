@@ -36,7 +36,7 @@ public class Server {
     Server(int port) {
         try {
 
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("172.26.190.81"));
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("172.26.109.5"));
 
             this.serverSocket.setReuseAddress(true);
 
@@ -422,9 +422,34 @@ public class Server {
         return null;
     }
 
+    public void notifyAllPlayers(Message message, int gameId) {
+        synchronized (games.get(gameId)) {
+            List<String> players = games.get(gameId).getPlayers().stream().map(Player::getNickname).collect(Collectors.toList());
+            List<String> notOnFlight = games.get(gameId).getPlayersNotOnFlight().stream().map(Player::getNickname).collect(Collectors.toList());
+            players.addAll(notOnFlight);
+            try {
+                for (String s : clients.keySet()) {
+                    String username = getUsernameForConnection(s);
+                    if (players.contains(username)) {
+                        try {
+                            sendMessage(username, message);
+                        } catch (RuntimeException e) {
+                            System.out.println("Eccezione lanciata nel notifyAllObservers di Server. Se si è disconnesso inaspettatamente un player questo messaggio è del tutto normale, altrimenti c'è un problema!!" + e.getMessage());
+                        }
+                        System.out.println("Notify observer: " + username + " with message: " + message.toString());
+                        players.remove(getUsernameForConnection(s));
+                    }
+                }
+                rmiServer.sendToAllClients(message, players);
+            } catch (RemoteException e) {
+                System.out.println("Messaggio inviato con esito negativo");
+            }
+        }
+    }
+
     public void notifyAllObservers(Message message, int gameId) {
         synchronized (games.get(gameId)) {
-            List<String> players = new ArrayList<>(games.get(gameId).getPlayers().stream().map(p -> p.getNickname()).collect(Collectors.toList()));
+            List<String> players = games.get(gameId).getPlayers().stream().map(Player::getNickname).collect(Collectors.toList());
             try {
                 for (String s : clients.keySet()) {
                     String username = getUsernameForConnection(s);

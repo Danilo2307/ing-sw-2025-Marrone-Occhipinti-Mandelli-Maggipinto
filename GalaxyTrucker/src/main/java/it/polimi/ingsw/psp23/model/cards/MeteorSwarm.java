@@ -58,7 +58,7 @@ public class MeteorSwarm extends Card {
      */
     public void initPlay(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        game.setGameStatus(GameStatus.INIT_METEORSWARM);
+        game.   setGameStatus(GameStatus.INIT_METEORSWARM);
         resolvers.clear();
         for (Meteor m : meteors) {
             int line = Utility.roll2to12();

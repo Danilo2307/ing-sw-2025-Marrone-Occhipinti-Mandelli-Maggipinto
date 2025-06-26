@@ -417,6 +417,9 @@ public class CombatZone extends Card {
         if(resolvers.contains(p)){
             throw new CardException("You must wait other players!");
         }
+        else if(loserSecondChallenge != null){
+            throw new CardException(loserSecondChallenge + "deve rimuovere l'equipaggio!");
+        }
         resolvers.add(p);
         if (!resolvers.containsAll(game.getPlayers())) {
             game.getNextPlayer(); // wait for all
