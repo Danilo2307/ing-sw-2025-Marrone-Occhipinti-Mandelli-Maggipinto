@@ -239,6 +239,25 @@ public class TuiApplication implements ViewAPI {
         this.lastUncoveredVersion = lastUncoveredVersion;
     }
 
+    /**
+     * A mapping that associates specific commands (represented as sets of strings)
+     * to different states of the Text User Interface (TUI).
+     *
+     * This map defines which commands are valid for a given state of the TUI during the game lifecycle.
+     * Each key in the map corresponds to a particular `TuiState`, representing a phase or context of the application,
+     * and the associated value is a set of commands that are allowed in that state.
+     * The commands are used to interact with the game, perform actions, or update state.
+     *
+     * Key points:
+     * - PRELOBBY includes initial setup commands.
+     * - LOBBY allows only the "accetta" command for the first player in the game.
+     * - BUILDING involves commands for building actions such as drawing, positioning, rotating, and managing components.
+     * - CHECK provides commands for validation, corrections, and showing information.
+     * - ADDCREW is for placing the crew (astronauts or alien).
+     * - NOTYOURTURN permits `abbandona` as an exit command for scenarios when it's not the user's turn.
+     * - PLAY consists of commands for the main gameplay actions, such as moving, activating abilities, and passing turns.
+     * - ENDGAME restricts to commands relevant to the game's conclusion phase such as exiting.
+     */
     private static final Map<TuiState, Set<String>> aliasMap = Map.of(
             TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "abbandona", "", " ", "  "),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
@@ -247,11 +266,21 @@ public class TuiApplication implements ViewAPI {
             TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
             TuiState.NOTYOURTURN, Set.of("abbandona"),
-            // TODO: Questi ultimi due stati sono da completare
-            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta"),
+            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti"),
             TuiState.ENDGAME, Set.of("abbandona")
     );
 
+    /**
+     * Evaluates the legality of a command based on the current TUI (Text-Based User Interface) state.
+     *
+     * This method checks if the specified command (keyword) is allowed or disallowed within the context
+     * of the current application state. For the PRELOBBY state, it verifies that the command does not
+     * belong to a restricted list of commands. For all other states, it checks whether the command
+     * exists in the set of valid commands for the current state.
+     *
+     * @param keyword the command keyword to evaluate for legality
+     * @return true if the command is legal in the current state, false otherwise
+     */
     private boolean isCommandLegal(String keyword) {
         if(currentTuiState == TuiState.PRELOBBY) {
             return !aliasMap.get(TuiState.PRELOBBY).contains(keyword);
@@ -265,7 +294,15 @@ public class TuiApplication implements ViewAPI {
         currentTuiState = state;
     }
 
-    /** command è input utente: in base a questo creo evento e il ClientController lo manda al server*/
+    /**
+     * Executes a command by interpreting the input string and triggering the
+     * appropriate action based on the current TUI (Text User Interface) state.
+     * This method handles user input, validates the command format, and sends
+     * corresponding actions to the server depending on the command type.
+     *
+     * @param command the input string representing a command entered by the user
+     * @throws RemoteException if a network-related exception occurs during remote method invocation
+     */
     public void executeCommand(String command) throws RemoteException {
         String[] words = command.split(" ");
 
@@ -604,11 +641,22 @@ public class TuiApplication implements ViewAPI {
         return client;
     }
 
+    /**
+     * Prompts the user to enter the number of players for the match.
+     */
     @Override
     public void showRequestNumPlayers() {
         io.print("Inserisci il numero di giocatori che faranno parte della partita:\n");
     }
 
+    /**
+     * This method assigns the provided username to the client if the connection is not
+     * established via RMI. It also prints a welcome message, sets the game level,
+     * and transitions the application state to the LOBBY state.
+     *
+     * @param username the username to be assigned to the client
+     * @param level the initial level of the game to be set
+     */
     @Override
     public void showAppropriateUsername(String username, int level) {
         try {
@@ -623,27 +671,56 @@ public class TuiApplication implements ViewAPI {
         setState(TuiState.LOBBY);
     }
 
+    /**
+     * Displays a message to inform the user that the entered username is invalid
+     * and prompts them to input a new one.
+     */
     @Override
     public void showWrongUsername() {
         io.print("Username errato, inseriscine uno nuovo:\n");
     }
 
+    /**
+     * Prompts the user to enter the desired difficulty level for gameplay.
+     */
     @Override
     public void showRequestLevel() {
         io.print("Inserisci il livello di difficoltà a cui vuoi giocare (0 o 2): ");
     }
 
+    /**
+     * Displays the information of the specified tile component.
+     * This method invokes the IO manager to print details of the provided tile.
+     *
+     * @param requested the tile component to be displayed
+     */
     @Override
     public void showTile(Component requested) {
         io.printInfoTile(requested);
     }
 
+    /**
+     * Displays the ship grid for a specified owner.
+     *
+     * This method prints a message indicating whose ship is being displayed
+     * and delegates the actual printing of the ship grid to the IO manager.
+     *
+     * @param ship the 2D array of Components representing the ship's structure
+     * @param owner the name of the ship's owner
+     */
     @Override
     public void showShip(Component[][] ship, String owner) {
         io.print("Ecco la nave di " + owner + "\n");
         io.printShip(ship, level);
     }
 
+    /**
+     * Displays a list of uncovered components along with their respective symbols
+     * and updates the last uncovered version.
+     *
+     * @param uncovered a list of components that have been uncovered and need to be displayed
+     * @param lastVersion the version identifier for the most recently uncovered components
+     */
     @Override
     public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
         setLastUncoveredVersion(lastVersion);
@@ -654,16 +731,32 @@ public class TuiApplication implements ViewAPI {
         io.print("\n");
     }
 
+    /**
+     * Displays an error message to the user.
+     *
+     * @param error the error message to be displayed
+     */
     @Override
     public void showError(String error) {
         io.error(error);
     }
 
+    /**
+     * Displays a message to the user by printing it using the IO manager.
+     *
+     * @param message the message to be displayed to the user
+     */
     @Override
     public void showMessage(String message) {
         io.print(message);
     }
 
+    /**
+     * Handles state changes in the game by updating the current state of the TUI
+     * and notifying the user about the change
+     *
+     * @param newState the new state of the game, represented as a GameStatus value
+     */
     @Override
     public void stateChanged(GameStatus newState) {
         io.print("Stato modificato a: " + newState + "\n");
@@ -676,49 +769,103 @@ public class TuiApplication implements ViewAPI {
     }
 
 
+    /**
+     * Displays an error message to indicate that the player's ship does not comply
+     * with the standards of Galaxy Trucker. The message instructs the user to correct
+     * their ship and type "corretta" to proceed.
+     */
     @Override
     public void showIllegalTruck() {
         io.error("La tua nave non rispetta i criteri di Galaxy Trucker, sistemala e poi digita 'corretta'\n");
     }
 
+    /**
+     * Displays information about an incoming cannon shot on the user interface.
+     *
+     * @param coord the coordinate on which the cannon shot is being targeted
+     * @param cannonShot an instance of the CannonShot class containing details
+     *                   about the shot, such as its size and direction
+     */
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
         io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
 
 
+    /**
+     * Displays a message indicating that the time of the hourglass (90 seconds) has expired.
+     */
     @Override
     public void showTimeExpired() {
         io.print("Tempo scaduto\n");
     }
 
 
+    /**
+     * Ends the current match and displays a concluding message to the user.
+     *
+     * @param message the message to be displayed to indicate the end of the match
+     */
     @Override
     public void endMatch(String message) {
         io.print(message);
     }
 
+    /**
+     * Displays updates or messages specifically related to card gameflows
+     *
+     * @param message the message containing details about the card update
+     */
     @Override
     public void showCardUpdate(String message) {
         io.print(message);
     }
 
+    /**
+     * Displays the description of the deck requested by the user.
+     *
+     * @param idCards a list of card identifiers that constitute the deck
+     * @param description a textual description of the deck to be displayed
+     */
     @Override
     public void showDeck(ArrayList<Integer> idCards, String description) {
         io.print(description);
     }
 
+    /**
+     * Notifies the user of an incorrect tile placement during the gameplay.
+     */
     @Override
     public void incorrectTile(){}
 
+    /**
+     * Displays the details of a new card to the user.
+     *
+     * @param id  the unique identifier of the new card
+     * @param description the description or details of the card to be displayed
+     */
     @Override
     public void showNewCard(int id, String description) {
         io.print(description);
     }
 
+    /**
+     * Displays the flight board along with the current flight point rankings for each player.
+     * It is used to keep track of the progress of different players during the game.
+     *
+     * @param flightMap a mapping of colors (Color) to their respective flight points (Integer)
+     */
     @Override
     public void showFlightBoard(Map<Color, Integer> flightMap) {}
 
+    /**
+     * Displays a list of available game lobbies and provides the user with an option to either
+     * join an existing game or create a new one.
+     *
+     * @param availableLobbies a list of lists where each inner list represents a lobby, containing
+     *        information about the lobby such as its ID, the current number of players,
+     *        the maximum number of players, and the lobby level
+     */
     @Override
     public void showAvailableLobbies(List<List<Integer>> availableLobbies) {
         io.print("Scegli se partecipare ad una partita esistente o se crearne una nuova\n\t0: crea una nuova partita\n");
@@ -732,6 +879,14 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
+    /**
+     * Displays the final rankings by printing each entry in the provided ranking list.
+     * Each entry consists of a player's name and their corresponding score.
+     * Outputs a message indicating whether the player has won or lost based on their score.
+     *
+     * @param ranking a list of entries where each entry contains a player's name as a key
+     *                and their score as a value
+     */
     @Override
     public void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking) {
         io.print("===== CLASSIFICA FINALE =====\n");
@@ -752,6 +907,11 @@ public class TuiApplication implements ViewAPI {
         io.print("=============================");
     }
 
+    /**
+     * Saves and displays the names of the players in the game.
+     *
+     * @param players a list of player names to be saved and displayed
+     */
     @Override
     public void savePlayersNames(List<String> players) {
         io.print("I giocatori in partita sono:\n");
