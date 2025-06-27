@@ -25,19 +25,21 @@ public record LeaveFlight() implements Action {
         if(game.getGameStatus() != GameStatus.WAITING_FOR_NEW_CARD && game.getGameStatus() != GameStatus.SetCrew && game.getGameStatus() != GameStatus.CheckBoards && game.getGameStatus() != GameStatus.Building) {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
+
+        if(game.getCurrentPlayer().getNickname().equals(username)) {
+            game.getNextPlayer();
+        }
+
         game.getPlayerFromNickname(username).setInGame(false);
         Server.getInstance().sendMessage(username, new DirectMessage(new MatchFinished("Hai abbandonato il volo, attendi che finiscano anche gli altri giocatori\n")));
+
+        game.removePlayersNotInFlight();
 
         for(Player player : game.getPlayers()){
             Server.getInstance().sendMessage(player.getNickname(), new DirectMessage(new StringResponse(username + " ha abbandonato il volo, vi reincontrerete nella fase finale del calcolo del punteggio\n")));
         }
 
-        /*Card currentCard = game.getCurrentCard();
-        PassVisitor nextTurn = new PassVisitor();
-        currentCard.call(nextTurn, username);
-        Server.getInstance().notifyAllObservers(new BroadcastMessage(new StartTurn(game.getCurrentPlayer().getNickname())));*/
-        game.sortPlayersByPosition();
-        game.getNextPlayer();
+
     }
 
     @Override

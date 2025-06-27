@@ -182,6 +182,11 @@ public class Game {
      * The sorting process uses the `getPosition()` method of the `Player` class and orders players by their position in descending order.
      */
     public void sortPlayersByPosition() {
+        removePlayersNotInFlight();
+        players.sort(Comparator.comparingInt(Player::getPosition).reversed());
+    }
+
+    public void removePlayersNotInFlight(){
         // necessaria perchè non posso rimuovere un oggetto dalla stessa lista su cui sto iterando tramite for-each
         List<Player> toRemove = new ArrayList<>();
         // se player è uscito al turno corrente, lo levo dalla lista dei player correnti.
@@ -193,8 +198,6 @@ public class Game {
             }
         }
         players.removeAll(toRemove);
-
-        players.sort(Comparator.comparingInt(Player::getPosition).reversed());
     }
 
     public void addPlayer(String nickname) {
