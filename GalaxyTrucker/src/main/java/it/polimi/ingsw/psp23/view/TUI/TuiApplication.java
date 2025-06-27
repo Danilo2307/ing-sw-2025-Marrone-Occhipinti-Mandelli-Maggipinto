@@ -26,6 +26,7 @@ public class TuiApplication implements ViewAPI {
     private final IOManager io;
     private TuiState currentTuiState;
     private int level;
+    private boolean placed = false;
 
     public TuiApplication() {
         io = new IOManager();
@@ -263,7 +264,7 @@ public class TuiApplication implements ViewAPI {
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta","abbandona"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona", "posiziona"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
             TuiState.NOTYOURTURN, Set.of("abbandona"),
             TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti"),
@@ -400,44 +401,45 @@ public class TuiApplication implements ViewAPI {
                 client.sendAction(new ReserveTile());
             }
             case "rimuovi" -> {
-                if (words.length > 5) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }else {
-                    if (words[1].equals("equipaggio")) {
-                        if (words.length != 5) {
-                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                if(placed) {
+                    if (words.length > 5) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        if (words[1].equals("equipaggio")) {
+                            if (words.length != 5) {
+                                io.error("Non hai inviato il numero corretto di parametri, riprova");
+                            } else {
+                                int hx = Integer.parseInt(words[2]);
+                                int hy = Integer.parseInt(words[3]);
+                                int num = Integer.parseInt(words[4]);
+                                client.sendAction(new ReduceCrew(hx, hy, num));
+                            }
+                        } else if (words[1].equals("merce")) {
+                            if (words.length != 5) {
+                                io.error("Non hai inviato il numero corretto di parametri, riprova");
+                            } else {
+                                int cx = Integer.parseInt(words[2]);
+                                int cy = Integer.parseInt(words[3]);
+                                int num = Integer.parseInt(words[4]);
+                                client.sendAction(new RemovePreciousItem(cx, cy, num));
+                            }
+                        } else if (words[1].equals("batterie")) {
+                            if (words.length != 5) {
+                                io.error("Non hai inviato il numero corretto di parametri, riprova");
+                            } else {
+                                int cx = Integer.parseInt(words[2]);
+                                int cy = Integer.parseInt(words[3]);
+                                int num = Integer.parseInt(words[4]);
+                                client.sendAction(new RemoveBatteries(cx, cy, num));
+                            }
                         } else {
-                            int hx = Integer.parseInt(words[2]);
-                            int hy = Integer.parseInt(words[3]);
-                            int num = Integer.parseInt(words[4]);
-                            client.sendAction(new ReduceCrew(hx, hy, num));
-                        }
-                    } else if (words[1].equals("merce")) {
-                        if (words.length != 5) {
-                            io.error("Non hai inviato il numero corretto di parametri, riprova");
-                        } else {
-                            int cx = Integer.parseInt(words[2]);
-                            int cy = Integer.parseInt(words[3]);
-                            int num = Integer.parseInt(words[4]);
-                            client.sendAction(new RemovePreciousItem(cx, cy, num));
-                        }
-                    }else if (words[1].equals("batterie")) {
-                        if (words.length != 5) {
-                            io.error("Non hai inviato il numero corretto di parametri, riprova");
-                        } else {
-                            int cx = Integer.parseInt(words[2]);
-                            int cy = Integer.parseInt(words[3]);
-                            int num = Integer.parseInt(words[4]);
-                            client.sendAction(new RemoveBatteries(cx, cy, num));
-                        }
-                    }
-                    else {
-                        if (words.length != 3) {
-                            io.error("Non hai inviato il numero corretto di parametri, riprova");
-                        } else {
-                            int x = Integer.parseInt(words[1]);
-                            int y = Integer.parseInt(words[2]);
-                            client.sendAction(new RemoveTile(x, y));
+                            if (words.length != 3) {
+                                io.error("Non hai inviato il numero corretto di parametri, riprova");
+                            } else {
+                                int x = Integer.parseInt(words[1]);
+                                int y = Integer.parseInt(words[2]);
+                                client.sendAction(new RemoveTile(x, y));
+                            }
                         }
                     }
                 }
@@ -468,30 +470,34 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "mostra" -> {
-                if (words.length > 2) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    if (words.length == 1) {
-                        client.sendAction(new RequestShip(client.getUsername()));
+                if(placed) {
+                    if (words.length > 2) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
                     } else {
-                        String nickname = words[1];
-                        client.sendAction(new RequestShip(nickname));
+                        if (words.length == 1) {
+                            client.sendAction(new RequestShip(client.getUsername()));
+                        } else {
+                            String nickname = words[1];
+                            client.sendAction(new RequestShip(nickname));
+                        }
                     }
                 }
             }
             case "info" -> {
-                if (words.length != 3) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    int x = Integer.parseInt(words[1]);
-                    int y = Integer.parseInt(words[2]);
-                    client.sendAction(new RequestTileInfo(x, y));
+                if(placed) {
+                    if (words.length != 3) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        int x = Integer.parseInt(words[1]);
+                        int y = Integer.parseInt(words[2]);
+                        client.sendAction(new RequestTileInfo(x, y));
+                    }
                 }
             }
             case "rotta" -> {
-                client.sendAction(new ShowPlayersPositions());
+                if(placed) {
+                    client.sendAction(new ShowPlayersPositions());
+                }
             }
             case "attiva" -> {
                 if (words.length != 6) {
@@ -593,10 +599,15 @@ public class TuiApplication implements ViewAPI {
                 client.sendAction(new Finished());
             }
             case "posiziona" -> {
-                client.sendAction(new Put());
+                if(!placed) {
+                    client.sendAction(new Put());
+                    placed = true;
+                }
             }
             case "corretta" -> {
-                client.sendAction(new Fixed());
+                if(placed) {
+                    client.sendAction(new Fixed());
+                }
             }
             case "perdi" -> {
                 if (words.length != 4) {
@@ -623,11 +634,12 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "abbandona" -> {
-                if (words.length != 1) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    client.sendAction(new LeaveFlight());
+                if(placed) {
+                    if (words.length != 1) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        client.sendAction(new LeaveFlight());
+                    }
                 }
             }
             case "carta" -> {

@@ -194,7 +194,7 @@ public class Test1 {
         assertEquals("Available commands: ATTIVA MOTORE, PRONTO\n", resultHelpEngineAlwaysAvailable);
         String resultToStringOpenSpace = card.toString();
         String expected = "È uscita la carta open space\n" +
-                "più motori si attivano, più si va avanti!";
+                "più motori si attivano, più si va avanti!\n";
         assertEquals(expected, resultToStringOpenSpace);
 
         // INIT

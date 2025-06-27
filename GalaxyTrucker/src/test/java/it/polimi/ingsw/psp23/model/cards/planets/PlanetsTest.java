@@ -101,7 +101,7 @@ class PlanetsTest {
         expected.append("● -> ").append(card.getPlanetGoods().get(0).toString()).append("\n");
         expected.append("● -> ").append(card.getPlanetGoods().get(1).toString()).append("\n");
         expected.append("● -> ").append(card.getPlanetGoods().get(2).toString()).append("\n");
-        expected.append("i giorni persi sono 4");
+        expected.append("i giorni persi sono 4\n");
         String resultToStringPlanets = card.toString();
         assertEquals(expected.toString(), resultToStringPlanets);
 
