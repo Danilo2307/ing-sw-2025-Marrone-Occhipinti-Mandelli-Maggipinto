@@ -290,6 +290,7 @@ public class GuiApplication extends Application implements ViewAPI {
         Platform.runLater(() -> {
             switch(newState) {
                 case GameStatus.Building -> toBuildingPhase(playerColor);
+                case GameStatus.CheckBoards -> buildingPhaseController.hideBuildCommands();
                 case GameStatus.SetCrew -> buildingPhaseController.toAddCrew();
                 case GameStatus.Playing -> toFlightPhase();
             }

@@ -354,6 +354,10 @@ public class BuildingPhaseController {
         //GuiApplication.getInstance().disableDeckClick();
 
         // annullo tutti i bottoni della building
+        hideBuildCommands();
+    }
+
+    public void hideBuildCommands() {
         releaseBtn.setVisible(false);
         releaseBtn.setManaged(false);
         rotateBtn.setVisible(false);
