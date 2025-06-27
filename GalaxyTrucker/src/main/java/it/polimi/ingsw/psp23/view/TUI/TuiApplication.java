@@ -19,8 +19,7 @@ import java.net.SocketTimeoutException;
 import java.rmi.RemoteException;
 import java.util.*;
 
-/** Flusso generale dell'app: loop principale per input, mapping comandi utente -> chiamata a metodo ClientController,
- *  cambio stato. */
+
 public class TuiApplication implements ViewAPI {
     private Client client;
     private int lastUncoveredVersion;
@@ -43,6 +42,23 @@ public class TuiApplication implements ViewAPI {
         return io;
     }
 
+    /**
+     * Initializes the client's setup phase for the TUI application and handles the initial interaction flow.
+     *
+     * This method establishes a connection with the client, processes incoming events, and allows the user
+     * to perform initial actions such as selecting a match or creating a new game level. It also assigns a
+     * username to the client and transitions to the main game loop.
+     *
+     * It uses a loop to handle user input and ensure valid match selection, with retry logic implemented
+     * in case the match is not available or certain constraints are not met. Once a valid action is confirmed,
+     * it proceeds to either set up a custom game or join an existing game based on the user's input.
+     *
+     * Moreover, the method handles communication with the server using socket operations and message passing,
+     * leveraging a visitor pattern for processing event and message types.
+     *
+     * @throws RemoteException if any remote communication error occurs during setup
+     * @throws RuntimeException if a socket exception occurs while modifying socket timeout settings
+     */
     @Override
     public void setup() throws RemoteException {
         Socket socket = client.getSocket();
@@ -94,30 +110,6 @@ public class TuiApplication implements ViewAPI {
             client.setId(scelta-1);
         }
 
-        /*try {
-            socket.setSoTimeout(1000);
-            Message messaggio = client.readMessage();
-            messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), this);
-
-            int livello = scanner.nextInt();
-            scanner.nextLine();
-            messaggio = new LevelSelectionMessage(livello);
-            client.sendMessage(messaggio);
-
-            client.avvia();
-            socket.setSoTimeout(0);
-        } catch (SocketTimeoutException ste) {
-            try {
-                socket.setSoTimeout(0);
-                client.avvia();
-            }
-            catch (SocketException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        catch (SocketException e) {
-            throw new RuntimeException(e);
-        }*/
 
         System.out.println("Welcome to GALAXY TRUCKER! Inserisci il tuo username: ");
         String username = scanner.nextLine();
@@ -126,6 +118,17 @@ public class TuiApplication implements ViewAPI {
         runGame();
     }
 
+    /**
+     * Sets up the Remote Method Invocation (RMI) for initializing a connection between the client
+     * and the game server, and manages the client's interaction during the setup phase.
+     *
+     * The method facilitates tasks such as displaying and selecting available matches, creating new games,
+     * assigning a username, setting game levels, and determining the number of players in a new game. It also
+     * conducts error checks for invalid input scenarios, ensuring proper communication with the game server.
+     *
+     * @param nameConnection the identifier associated with the connection being established for the user
+     * @throws RemoteException if any remote communication error occurs
+     */
     public void setupRMI(String nameConnection) throws RemoteException {
 
         Scanner scanner = new Scanner(System.in);
@@ -206,7 +209,15 @@ public class TuiApplication implements ViewAPI {
         runGame();
     }
 
-    /** ciclo infinito che rimane in ascolto degli input dell'utente */
+    /**
+     * Executes the main loop of the text-based user interface (TUI) application.
+     *
+     * This method runs continuously in a loop, awaiting user input through the `io.read()` method.
+     * Each input command is processed using the `executeCommand` method. It handles both standard
+     * user input errors and exceptions related to remote method invocation (RMI) errors.
+     *
+     * This loop runs indefinitely unless interrupted or terminated externally.
+     */
     public void runGame() {
         while (true) {
             try {

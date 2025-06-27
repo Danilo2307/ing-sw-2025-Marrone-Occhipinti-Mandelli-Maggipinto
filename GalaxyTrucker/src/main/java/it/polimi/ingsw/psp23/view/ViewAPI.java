@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The ViewAPI interface defines the contract for the client-side view implementation, enabling interaction
+ * with the server and communication of game state updates to the client. This interface is implemented
+ * by both GUI and TUI classes, ensuring flexibility in the selection of the user interface.
+ * It provides methods for initializing the view, handling server responses, updating game state,
+ * and interacting with game components.
+ */
 public interface ViewAPI {
     void setClient(Client client);
     void setup() throws RemoteException;
