@@ -9,6 +9,7 @@ import it.polimi.ingsw.psp23.model.components.*;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.model.helpers.Utility;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.socket.Server;
 import it.polimi.ingsw.psp23.protocol.response.FinalRanking;
 import it.polimi.ingsw.psp23.protocol.response.NewCardDrawn;
@@ -406,7 +407,11 @@ public class Game {
             for (Player p: playersNotOnFlight) {
                 ranking.add(new AbstractMap.SimpleEntry<>(p.getNickname(), p.getMoney()));
             }
+
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new FinalRanking(ranking)), Id);
+            for (Player p: playersNotOnFlight) {
+                Server.getInstance().sendMessage(p.getNickname(), new DirectMessage(new FinalRanking(ranking)));
+            }
 
         }else{
             Server.getInstance().notifyAllObservers(new BroadcastMessage(new NewCardDrawn(currentCard.getId(), currentCard.toString())), Id);
