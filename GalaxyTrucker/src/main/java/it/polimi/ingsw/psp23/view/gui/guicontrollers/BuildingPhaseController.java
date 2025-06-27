@@ -379,8 +379,10 @@ public class BuildingPhaseController {
         uncoveredRefresh.setManaged(false);
 
         if (GuiApplication.getInstance().getLevel() == 2) {
+            reserved1.getChildren().clear();
             reserved1.setVisible(false);
             reserved1.setManaged(false);
+            reserved2.getChildren().clear();
             reserved2.setVisible(false);
             reserved2.setManaged(false);
         }
