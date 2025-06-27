@@ -261,11 +261,11 @@ public class TuiApplication implements ViewAPI {
      * - ENDGAME restricts to commands relevant to the game's conclusion phase such as exiting.
      */
     private static final Map<TuiState, Set<String>> aliasMap = Map.of(
-            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "abbandona", "", " ", "  "),
+            TuiState.PRELOBBY, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "rimuovi", "gira", "mostra", "info", "attiva", "equipaggio", "", " ", "  "),
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
-            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta","abbandona"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona"),
+            TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
             TuiState.NOTYOURTURN, Set.of("abbandona"),
             TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti"),
