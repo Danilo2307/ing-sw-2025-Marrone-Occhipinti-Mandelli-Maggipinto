@@ -678,13 +678,12 @@ public class TuiApplication implements ViewAPI {
 
     @Override
     public void showTimeExpired() {
-        io.print("Tempo scaduto");
+        io.print("Tempo scaduto\n");
     }
 
 
     @Override
     public void endMatch(String message) {
-        getClient().stopListeningForServerThread();
         io.print(message);
     }
 

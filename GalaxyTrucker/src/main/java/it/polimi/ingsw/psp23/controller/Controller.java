@@ -153,7 +153,7 @@ public class Controller {
             if (!isTimerRunning ) {
                 isTimerRunning = true;
                 timer.startCountdown(90, this::handleTimeout);
-                BroadcastMessage bm = new BroadcastMessage(new StringResponse("La clessidra è stata girata hai 90 secondi !"));
+                BroadcastMessage bm = new BroadcastMessage(new StringResponse("La clessidra è stata girata hai 90 secondi !\n"));
                 Server.getInstance().notifyAllObservers(bm, gameId);
             }
         }
