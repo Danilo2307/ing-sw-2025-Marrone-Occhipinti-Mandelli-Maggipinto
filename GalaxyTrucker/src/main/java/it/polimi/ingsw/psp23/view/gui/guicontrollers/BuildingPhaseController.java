@@ -93,8 +93,10 @@ public class BuildingPhaseController {
 
     public void timerEnded() {
         if(!putClicked) {
-            putBtn.setVisible(true);
-            putBtn.setManaged(true);
+            Platform.runLater(() -> {
+                putBtn.setVisible(true);
+                putBtn.setManaged(true);
+            });
         }
     }
 
