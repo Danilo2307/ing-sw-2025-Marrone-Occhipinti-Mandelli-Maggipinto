@@ -319,8 +319,10 @@ public class GuiApplication extends Application implements ViewAPI {
         if(!isHourGlassTurned)
             isHourGlassTurned = true;
         else {
-            buildingPhaseController.hideBuildCommands();
-            buildingPhaseController.timerEnded();
+            Platform.runLater(() -> {
+                buildingPhaseController.hideBuildCommands();
+                buildingPhaseController.timerEnded();
+            });
         }
         Platform.runLater(() -> {
             showMessage("Tempo scaduto");
