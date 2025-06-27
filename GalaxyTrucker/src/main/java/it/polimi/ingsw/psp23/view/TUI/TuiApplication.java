@@ -670,6 +670,11 @@ public class TuiApplication implements ViewAPI {
         io.error("La tua nave non rispetta i criteri di Galaxy Trucker, sistemala e poi digita 'corretta'\n");
     }
 
+    @Override
+    public void showCannonShot(int coord, CannonShot cannonShot) {
+        io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
+    }
+
 
     @Override
     public void showTimeExpired() {

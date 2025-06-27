@@ -294,8 +294,14 @@ public class GuiApplication extends Application implements ViewAPI {
                 case GameStatus.Playing -> toFlightPhase();
             }
         });
-
     }
+
+    @Override
+    public void showCannonShot(int coord, CannonShot cannonShot) {
+        showMessage("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
+    }
+
+
 
 
     @Override
