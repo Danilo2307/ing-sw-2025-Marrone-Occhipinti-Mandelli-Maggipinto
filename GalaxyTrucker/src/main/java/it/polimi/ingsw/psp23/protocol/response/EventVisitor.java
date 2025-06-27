@@ -22,19 +22,13 @@ public interface EventVisitor<T> {
 
     public T visitForStringResponse(StringResponse stringResponse, ViewAPI viewAPI);
 
-    public T visitForStartGame(StartGame startGame, ViewAPI viewAPI);
-
     public T visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI);
 
     public T visitForStateChanged(StateChanged stateChanged, ViewAPI viewAPI);
 
-    public T visitForStartTurn(StartTurn startTurn, ViewAPI viewAPI);
-
     public T visitForErrorResponse(ErrorResponse errorResponse, ViewAPI viewAPI);
 
     public T visitForCannonShotIncoming(CannonShotIncoming cannonShotIncoming, ViewAPI viewAPI);
-
-    public T visitForPlayerLanded(PlayerLanded playerLanded, ViewAPI viewAPI);
 
     public T visitForWrongUsername(WrongUsername wrongUsername, ViewAPI viewAPI);
 

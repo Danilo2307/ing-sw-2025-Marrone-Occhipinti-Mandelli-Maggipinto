@@ -297,15 +297,6 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
-    @Override
-    public void showTurn(String turn) {
-        flightPhaseController.getTextLabel().setText("Turno di " + turn + " iniziato");
-    }
-
-    @Override
-    public void showStart() {
-
-    }
 
     @Override
     public void showIllegalTruck() {

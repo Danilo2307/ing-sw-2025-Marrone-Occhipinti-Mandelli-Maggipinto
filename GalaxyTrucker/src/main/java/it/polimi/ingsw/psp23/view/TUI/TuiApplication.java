@@ -664,15 +664,6 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
-    @Override
-    public void showTurn(String player) {
-        io.print("Turno di " + player + " iniziato");
-    }
-
-    @Override
-    public void showStart() {
-        io.print("Partita iniziata");
-    }
 
     @Override
     public void showIllegalTruck() {

@@ -27,8 +27,6 @@ public interface ViewAPI {
     void showError(String error);
     void showMessage(String message);
     void stateChanged(GameStatus newState);
-    void showTurn(String turn);
-    void showStart();
     void showIllegalTruck();
     void showTimeExpired();
     void endMatch(String message);
