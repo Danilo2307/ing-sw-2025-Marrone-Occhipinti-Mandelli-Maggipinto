@@ -55,6 +55,10 @@ public class OpenSpace extends Card {
         resolvers.add(p);
         List<Player> players = game.getPlayers();
         int strength = p.getTruck().calculateEngineStrength();
+
+        if(strength == 0)
+            p.setInGame(false);
+
         Utility.updatePosition(players, players.indexOf(p), strength);
         if (!resolvers.containsAll(players)) {
             game.getNextPlayer();
