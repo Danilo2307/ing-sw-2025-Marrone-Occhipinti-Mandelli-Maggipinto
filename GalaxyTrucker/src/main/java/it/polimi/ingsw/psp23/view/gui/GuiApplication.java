@@ -56,6 +56,9 @@ public class GuiApplication extends Application implements ViewAPI {
     Parent rootLobby;
     boolean isHourGlassTurned = false;
 
+    public GameStatus getGameStatus() {
+        return gameStatus;
+    }
 
     public static void awaitStart() throws InterruptedException {
         latch.await(); // aspetta finché start() non ha finito
@@ -315,8 +318,10 @@ public class GuiApplication extends Application implements ViewAPI {
     public void showTimeExpired() {
         if(!isHourGlassTurned)
             isHourGlassTurned = true;
-        else
+        else {
+            buildingPhaseController.hideBuildCommands();
             buildingPhaseController.timerEnded();
+        }
         Platform.runLater(() -> {
             showMessage("Tempo scaduto");
         });

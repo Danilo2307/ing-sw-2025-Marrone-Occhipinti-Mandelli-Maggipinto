@@ -184,12 +184,8 @@ public class Controller {
             BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
             Server.getInstance().notifyAllObservers(bm, gameId);
         } else {
-            try {
-                BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
-                Server.getInstance().notifyAllObservers(bm, gameId);
-            }catch (IllegalStateException e) {
-                handleTimeout();
-            }
+            BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
+            Server.getInstance().notifyAllObservers(bm, gameId);
         }
     }
 
