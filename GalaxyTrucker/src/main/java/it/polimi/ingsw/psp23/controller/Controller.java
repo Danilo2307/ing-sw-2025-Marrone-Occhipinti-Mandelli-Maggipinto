@@ -321,8 +321,6 @@ public class Controller {
     public void onGameEvent(Event event) {
         Game game = Server.getInstance().getGame(gameId);
         game.setGameStatus(event.getNewStatus());
-        BroadcastMessage broadcastMessage = new BroadcastMessage(new StateChanged(game.getGameStatus()));
-        Server.getInstance().notifyAllObservers(broadcastMessage, gameId);
 
         Message message = new BroadcastMessage(new UpdateFromCard(event.describe(gameId)));
         Server.getInstance().notifyAllObservers(message, gameId);
