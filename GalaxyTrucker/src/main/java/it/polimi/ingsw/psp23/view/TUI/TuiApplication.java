@@ -664,15 +664,6 @@ public class TuiApplication implements ViewAPI {
         }
     }
 
-    @Override
-    public void showTurn(String player) {
-        io.print("Turno di " + player + " iniziato");
-    }
-
-    @Override
-    public void showStart() {
-        io.print("Partita iniziata");
-    }
 
     @Override
     public void showIllegalTruck() {
@@ -680,24 +671,16 @@ public class TuiApplication implements ViewAPI {
     }
 
     @Override
-    public void showPlayerLanded(String username, int index){
-        io.print("Il giocatore " + username + " e' atterrato sul pianeta numero " + (index + 1));
+    public void showCannonShot(int coord, CannonShot cannonShot) {
+        io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
+
 
     @Override
     public void showTimeExpired() {
         io.print("Tempo scaduto");
     }
 
-    @Override
-    public void showEndTurn(String username) {
-        io.print("Turno di " + username + " finito");
-    }
-
-    @Override
-    public void showEnd() {
-        io.print("Partita terminata");
-    }
 
     @Override
     public void endMatch(String message) {
@@ -708,16 +691,6 @@ public class TuiApplication implements ViewAPI {
     @Override
     public void showCardUpdate(String message) {
         io.print(message);
-    }
-
-    @Override
-    public void showMeteor(Meteor meteor) {
-        io.print("Sta arrivando una meteora " + meteor.isBig() + " dalla direzione " + meteor.getDirection());
-    }
-
-    @Override
-    public void showCannonShot(int coord, CannonShot cannonShot) {
-        io.print("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
 
     @Override

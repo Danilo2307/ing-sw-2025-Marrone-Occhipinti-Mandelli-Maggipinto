@@ -40,11 +40,6 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
-    @Override
-    public Void visitForStartGame(StartGame startGame, ViewAPI viewAPI){
-        startGame.handle(viewAPI);
-        return null;
-    }
 
     @Override
     public Void visitForTimeExpired(TimeExpired timeExpired, ViewAPI viewAPI){
@@ -58,11 +53,6 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
-    @Override
-    public Void visitForStartTurn(StartTurn startTurn, ViewAPI viewAPI){
-        startTurn.handle(viewAPI);
-        return null;
-    }
 
     @Override
     public Void visitForErrorResponse(ErrorResponse errorResponse, ViewAPI viewAPI){
@@ -76,11 +66,6 @@ public class HandleEventVisitor implements EventVisitor<Void>{
         return null;
     }
 
-    @Override
-    public Void visitForPlayerLanded(PlayerLanded playerLanded, ViewAPI viewAPI){
-        playerLanded.handle(viewAPI);
-        return null;
-    }
 
     @Override
     public Void visitForWrongUsername(WrongUsername wrongUsername, ViewAPI viewAPI){
