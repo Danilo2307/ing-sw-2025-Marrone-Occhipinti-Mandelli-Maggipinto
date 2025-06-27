@@ -16,9 +16,6 @@ public class DeckViewController {
     private int deck = 0;
 
 
-
-
-
     @FXML
     public void onBackToFlightBoardClicked(){
         int deck = GuiApplication.getInstance().getDeckNumber();
