@@ -6,6 +6,10 @@ import javafx.stage.Stage;
 import java.util.AbstractMap;
 import java.util.List;
 
+/**
+ * The EndGameController class handles the display and functionality
+ * of the end game screen. It manages the presentation of player rankings
+ */
 public class EndGameController {
     @FXML private Label text1;
     @FXML private Label text2;
@@ -21,6 +25,15 @@ public class EndGameController {
     @FXML private Label player4;
     Stage stage;
 
+    /**
+     * Displays the ranking information of players and their respective cosmic credits
+     * on the end game screen. Updates the visibility of elements based on the number
+     * of players passed in the ranking list.
+     *
+     * @param ranking a list of player rankings where each entry consists of a
+     *                player's name as the key and their cosmic credits as the value
+     * @param stage   the {@code Stage} object representing the current window to associate with this view
+     */
     public void printInfo(List<AbstractMap.SimpleEntry<String,Integer>> ranking, Stage stage){
         this.stage = stage;
         switch (ranking.size()){
