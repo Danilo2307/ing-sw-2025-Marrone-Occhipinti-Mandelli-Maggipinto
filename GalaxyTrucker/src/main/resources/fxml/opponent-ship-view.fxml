@@ -12,7 +12,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1152.0" stylesheets="@opponent-ship-view.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.psp23.view.gui.guicontrollers.OpponentShipController">
    <children>
-      <Label fx:id="labelOwner" alignment="CENTER" layoutX="344.0" layoutY="37.0" prefHeight="86.0" prefWidth="463.0" text="Label" textFill="#ececec">
+      <Label fx:id="labelOwner" alignment="CENTER" layoutX="20.0" layoutY="37.0" prefHeight="86.0" prefWidth="1106.0" text="Label" textFill="#ececec">
          <font>
             <Font name="Arial Black" size="34.0" />
          </font>
