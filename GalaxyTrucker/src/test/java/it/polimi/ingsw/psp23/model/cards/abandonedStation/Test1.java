@@ -100,7 +100,7 @@ public class Test1 {
         String expected = "è uscita la carta Abandoned Station\n" +
                 "i membri richiesti sono 5\n" +
                 "le merci disponibili sono [gialla, verde]\n" +
-                "i giorni persi sarebbero 1";
+                "i giorni persi sarebbero 1\n";
         assertEquals(expected, card.toString());
 
         // INIT

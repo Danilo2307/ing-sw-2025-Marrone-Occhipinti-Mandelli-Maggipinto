@@ -92,7 +92,7 @@ public class Test1 {
         String expected = "è uscita la carta Abandoned Ship\n" +
                 "l'equipaggio da perdere ammonta a 3\n" +
                 "i crediti cosmici disponibili sono 4\n" +
-                "i giorni persi sarebbero 1";
+                "i giorni persi sarebbero 1\n";
         assertEquals(expected, card.toString());
         // INIT
         InitPlayVisitor playvisitor = new InitPlayVisitor();

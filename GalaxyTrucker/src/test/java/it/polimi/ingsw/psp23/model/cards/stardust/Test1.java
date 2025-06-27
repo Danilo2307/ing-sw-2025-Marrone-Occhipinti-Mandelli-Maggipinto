@@ -97,7 +97,7 @@ public class Test1 {
     void testStardust() throws CardException, InvocationTargetException, IllegalAccessException {
         String resultToStringStardust = card.toString();
         String expected = "è uscita la carta Stardust\n" +
-                "si perdono tanti giorni quanti sono i connettori esposti";
+                "si perdono tanti giorni quanti sono i connettori esposti\n";
         assertEquals(expected, resultToStringStardust);
         HelpVisitor helpvisitor = new HelpVisitor();
         String resultHelpStardust = helpvisitor.visitForStardust(card, "Fede");
