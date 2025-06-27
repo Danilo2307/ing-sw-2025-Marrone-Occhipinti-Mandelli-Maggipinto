@@ -185,6 +185,8 @@ public class Controller {
             Server.getInstance().notifyAllObservers(bm, gameId);
         } else {
             try {
+                BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
+                Server.getInstance().notifyAllObservers(bm, gameId);
                 startCheckBoard();
             }catch (IllegalStateException e) {
                 handleTimeout();
