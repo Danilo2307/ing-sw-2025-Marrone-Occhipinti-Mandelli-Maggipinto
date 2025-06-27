@@ -14,6 +14,9 @@ import javafx.scene.layout.StackPane;
 import java.util.Objects;
 
 
+/**
+ * Controller class for managing the opponent's ship view in a graphical user interface.
+ */
 public class OpponentShipController {
 
     @FXML private Label labelOwner;
@@ -27,6 +30,14 @@ public class OpponentShipController {
         labelOwner.setText("Ecco la nave di " + owner);
     }
 
+    /**
+     * Renders the ship layout on the graphical grid based on the provided ship components and level.
+     *
+     * @param ship a 2D array of Component objects representing the ship layout, where each element
+     *             corresponds to a part of the ship or null if no component is present at that position
+     * @param level an integer indicating the level of detail or display mode for rendering the ship;
+     *              0 for default level, other values for alternate views
+     */
     public void renderShip(Component[][] ship, int level) {
         gridShip.getChildren().clear();
 
@@ -54,6 +65,9 @@ public class OpponentShipController {
         }
     }
 
+    /**
+     * Navigates the application back to the ship view.
+     */
     @FXML
     public void onReturnClicked() {
         GuiApplication.getInstance().backToShip();

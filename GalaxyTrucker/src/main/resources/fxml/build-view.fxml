@@ -44,10 +44,6 @@
             <StackPane fx:id="reserved2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#takeReserved2" prefHeight="86.0" prefWidth="86.0" translateX="295.0" translateY="-195.0" />
          </children>
       </StackPane>
-      <Button fx:id="leaveBtn" layoutX="993.0" layoutY="713.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#onLeaveClicked" styleClass="quit-button" text="abbandona" textFill="RED">
-         <font>
-            <Font name="Arial Black" size="18.0" />
-         </font></Button>
       <ImageView fx:id="tileInHand" fitHeight="133.0" fitWidth="132.0" layoutX="863.0" layoutY="193.0" onDragDetected="#handleDragDetected" pickOnBounds="true" preserveRatio="true">
 
       </ImageView>
