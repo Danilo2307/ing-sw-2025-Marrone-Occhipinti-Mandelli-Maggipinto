@@ -9,6 +9,10 @@ import javafx.scene.image.ImageView;
 
 import java.rmi.RemoteException;
 
+/**
+ * Controller class for the Deck view in a GUI application. This class manages the
+ * interaction with the deck view, handles user actions.
+ */
 public class DeckViewController {
     @FXML private ImageView card1;
     @FXML private ImageView card2;
@@ -16,6 +20,13 @@ public class DeckViewController {
     private int deck = 0;
 
 
+    /**
+     * Handles the action of navigating back to the Flight Board screen.
+     * It retrieves the current deck number from the application instance,
+     * sends a release action for the corresponding deck to the server,
+     * and resets the deck variable. Afterward, it sends a request to
+     * update and navigate to the Flight Board.
+     */
     @FXML
     public void onBackToFlightBoardClicked(){
         int deck = GuiApplication.getInstance().getDeckNumber();

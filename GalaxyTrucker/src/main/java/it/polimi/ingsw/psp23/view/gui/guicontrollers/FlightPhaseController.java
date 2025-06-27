@@ -188,10 +188,13 @@ public class FlightPhaseController {
     }
 
     private void setupDropGoodBtn(Button drop, boolean precious) {
-        if (precious)
+        if (precious) {
             drop.setText("Rimuovi merce preziosa");
-        else
+            drop.setPrefWidth(240);
+        }
+        else {
             drop.setText("Scarica merce");
+        }
 
         enable(drop);
         drop.setOnAction(e -> {
@@ -320,7 +323,7 @@ public class FlightPhaseController {
     }
 
     private void setupRemoveCrewBtn(Button reduceCrew) {
-        reduceCrew.setText("Rimuovi membro equipaggio");
+        reduceCrew.setText("Rimuovi membro");
         enable(reduceCrew);
 
         reduceCrew.setOnAction(e -> {
@@ -519,6 +522,20 @@ public class FlightPhaseController {
         setupShieldBtn(button4);
         setupRemoveCrewBtn(button5);
         setupDropGoodBtn(button6, true);
+        button7.setText("Rimuovi batteria");
+        enable(button7);
+        button7.setOnAction(e -> {
+            singleSelector = new SingleTileSelector(batteryHub -> {
+                try {
+                    client.sendAction(new RemoveBatteries(batteryHub.x(), batteryHub.y(), 1));
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                }
+                finally {
+                    singleSelector = null;
+                }
+            });
+        });
     }
 
     public void setupViewOtherShipsBtn() {
