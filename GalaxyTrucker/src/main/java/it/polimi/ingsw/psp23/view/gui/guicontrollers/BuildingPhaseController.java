@@ -377,6 +377,13 @@ public class BuildingPhaseController {
         uncoveredScrollPane.setManaged(false);
         uncoveredRefresh.setVisible(false);
         uncoveredRefresh.setManaged(false);
+
+        if (GuiApplication.getInstance().getLevel() == 2) {
+            reserved1.setVisible(false);
+            reserved1.setManaged(false);
+            reserved2.setVisible(false);
+            reserved2.setManaged(false);
+        }
     }
 
     @FXML
