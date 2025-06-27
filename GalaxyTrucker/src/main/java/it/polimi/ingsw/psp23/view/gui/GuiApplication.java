@@ -40,7 +40,6 @@ public class GuiApplication extends Application implements ViewAPI {
     private LobbyController lobbyController;
     private DeckViewController deckViewController;
     private OpponentShipController opponentShipController;
-    private  TimerController timerController;
     private EndGameController endGameController;
     private Stage stage;
     private static GuiApplication instance;
