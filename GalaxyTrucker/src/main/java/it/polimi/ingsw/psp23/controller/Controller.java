@@ -150,7 +150,7 @@ public class Controller {
 
         //la clessidra dura un minuto e mezzo
         synchronized (timerFlag) {
-            if (timerFlag < 2) {
+            if (timerFlag < 2 && timer.getCountdownTask().isDone()) {
                 timerFlag++;
                 timer.startCountdown(90, this::handleTimeout);
                 BroadcastMessage bm = new BroadcastMessage(new StringResponse("La clessidra è stata girata, altri 90 secondi !"));
