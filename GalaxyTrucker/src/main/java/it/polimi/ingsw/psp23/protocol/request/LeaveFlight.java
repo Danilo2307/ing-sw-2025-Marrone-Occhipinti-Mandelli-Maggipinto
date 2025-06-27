@@ -26,10 +26,6 @@ public record LeaveFlight() implements Action {
             throw new InvalidActionException("Non puoi eseguire questa azione in questo momento");
         }
 
-        if(game.getCurrentPlayer().getNickname().equals(username)) {
-            game.getNextPlayer();
-        }
-
         game.getPlayerFromNickname(username).setInGame(false);
         Server.getInstance().sendMessage(username, new DirectMessage(new MatchFinished("Hai abbandonato il volo, attendi che finiscano anche gli altri giocatori\n")));
 
@@ -38,7 +34,6 @@ public record LeaveFlight() implements Action {
         for(Player player : game.getPlayers()){
             Server.getInstance().sendMessage(player.getNickname(), new DirectMessage(new StringResponse(username + " ha abbandonato il volo, vi reincontrerete nella fase finale del calcolo del punteggio\n")));
         }
-
 
     }
 
