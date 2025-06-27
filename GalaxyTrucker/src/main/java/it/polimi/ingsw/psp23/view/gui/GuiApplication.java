@@ -312,10 +312,6 @@ public class GuiApplication extends Application implements ViewAPI {
         buildingPhaseController.toCheck();
     }
 
-    @Override
-    public void showPlayerLanded(String username, int planet) {
-        showMessage("Il giocatore " + username + " e' atterrato sul pianeta numero " + (planet + 1));
-    }
 
     @Override
     public void showTimeExpired() {
@@ -324,21 +320,11 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
-    @Override
-    public void showEndTurn(String username) {
-        Platform.runLater(() -> {
-            flightPhaseController.getTextLabel().setText("Turno di " + username + " finito");
-        });
-    }
 
-    @Override
-    public void showEnd() {
-
-    }
 
     @Override
     public void endMatch(String message) {
-
+        showMessage(message);
     }
 
     @Override
@@ -348,15 +334,6 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
-    @Override
-    public void showMeteor(Meteor meteor) {
-        showMessage("Sta arrivando una meteora " + meteor.isBig() + " dalla direzione " + meteor.getDirection());
-    }
-
-    @Override
-    public void showCannonShot(int coord, CannonShot cannonShot) {
-        showMessage("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
-    }
 
     @Override
     public void showDeck(ArrayList<Integer> idCards, String description) {

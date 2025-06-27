@@ -30,14 +30,9 @@ public interface ViewAPI {
     void showTurn(String turn);
     void showStart();
     void showIllegalTruck();
-    void showPlayerLanded(String username, int planet);
     void showTimeExpired();
-    void showEndTurn(String username);
-    void showEnd();
     void endMatch(String message);
     void showCardUpdate(String message);
-    void showMeteor(Meteor meteor);
-    void showCannonShot(int coord, CannonShot cannonShot);
     void showDeck(ArrayList<Integer> ids, String description);
     void incorrectTile();
     void showNewCard(int id, String description);
