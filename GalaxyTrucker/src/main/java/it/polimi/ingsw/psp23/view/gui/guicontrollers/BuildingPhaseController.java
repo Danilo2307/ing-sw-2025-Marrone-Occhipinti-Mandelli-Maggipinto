@@ -74,7 +74,7 @@ public class BuildingPhaseController {
     @FXML private Button finishedBtn;
     int selectedCrewType;
     boolean inAddCrew = false;
-
+    boolean putClicked = false;
 
     private void enable(Button button) {
         button.setVisible(true);
@@ -88,6 +88,13 @@ public class BuildingPhaseController {
 
     public ImageView getTileInHand() {
         return tileInHand;
+    }
+
+    public void timerEnded() {
+        if(!putClicked) {
+            putBtn.setVisible(true);
+            putBtn.setManaged(true);
+        }
     }
 
     public StackPane getCellToRemove() {
@@ -350,6 +357,7 @@ public class BuildingPhaseController {
 
     @FXML
     public void onPutClicked() throws RemoteException{
+        putClicked = true;
         client.sendAction(new Put());
         //GuiApplication.getInstance().disableDeckClick();
 

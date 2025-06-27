@@ -54,6 +54,7 @@ public class GuiApplication extends Application implements ViewAPI {
     String myNickname;
     ArrayList<String> usernames = new ArrayList<>();
     Parent rootLobby;
+    boolean isHourGlassTurned = false;
 
 
     public static void awaitStart() throws InterruptedException {
@@ -312,6 +313,10 @@ public class GuiApplication extends Application implements ViewAPI {
 
     @Override
     public void showTimeExpired() {
+        if(!isHourGlassTurned)
+            isHourGlassTurned = true;
+        else
+            buildingPhaseController.timerEnded();
         Platform.runLater(() -> {
             showMessage("Tempo scaduto");
         });
