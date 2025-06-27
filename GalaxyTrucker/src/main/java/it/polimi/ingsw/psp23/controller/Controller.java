@@ -32,7 +32,7 @@ public class Controller {
     private int currentPosition;
     List<Player> crewPositioned = new ArrayList<>();
     int gameId;
-    Integer timerFlag = 0;
+    Boolean isTimerRunning = false;
 
 
     /**
@@ -149,9 +149,9 @@ public class Controller {
         }
 
         //la clessidra dura un minuto e mezzo
-        synchronized (timerFlag) {
-            if (timerFlag < 2 && timer.getCountdownTask().isDone()) {
-                timerFlag++;
+        synchronized (isTimerRunning) {
+            if (!isTimerRunning ) {
+                isTimerRunning = true;
                 timer.startCountdown(90, this::handleTimeout);
                 BroadcastMessage bm = new BroadcastMessage(new StringResponse("La clessidra è stata girata, altri 90 secondi !"));
                 Server.getInstance().notifyAllObservers(bm, gameId);
@@ -179,6 +179,7 @@ public class Controller {
      */
     public void handleTimeout() {
         if (!isFirstBuildingPhaseEnded) {
+            isTimerRunning = false;
             isFirstBuildingPhaseEnded = true;
             BroadcastMessage bm = new BroadcastMessage(new TimeExpired());
             Server.getInstance().notifyAllObservers(bm, gameId);

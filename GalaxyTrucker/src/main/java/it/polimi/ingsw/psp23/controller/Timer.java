@@ -26,9 +26,6 @@ public class Timer {
         countdownTask = scheduler.schedule(onTimeout, seconds, TimeUnit.SECONDS);
     }
 
-    public ScheduledFuture<?> getCountdownTask() {
-        return countdownTask;
-    }
 
     /**
      * Cancels the currently active countdown task, if one is running.
