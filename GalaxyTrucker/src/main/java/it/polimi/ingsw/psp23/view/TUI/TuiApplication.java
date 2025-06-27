@@ -26,7 +26,8 @@ public class TuiApplication implements ViewAPI {
     private final IOManager io;
     private TuiState currentTuiState;
     private int level;
-    private boolean placed = false;
+    private boolean firstHourGlassExpired = false;
+    private boolean secondHourGlassExpired = false;
 
     public TuiApplication() {
         io = new IOManager();
@@ -264,7 +265,7 @@ public class TuiApplication implements ViewAPI {
             // "accetta" in LOBBY sarà permesso solo per il primo giocatore
             TuiState.LOBBY, Set.of("accetta"),
             TuiState.BUILDING, Set.of("pesca", "scoperte", "salda", "prendi", "rilascia", "ruota", "prenota", "gira", "mostra", "info", "mazzetto", "posiziona", "scarta","abbandona"),
-            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona", "posiziona"),
+            TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta", "abbandona"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
             TuiState.NOTYOURTURN, Set.of("abbandona"),
             TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti"),
@@ -347,130 +348,140 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "pesca" -> {
-                if (words.length <= 1 || words.length > 3) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else{
-                if (words[1].equals("mucchio")) {
-                    client.sendAction(new DrawFromHeap());
-                }
-                else if (words[1].equals("scoperta")) {
-                    int index = Integer.parseInt(words[2]);
-                    client.sendAction(new DrawFromFaceUp(index - 1, lastUncoveredVersion));
-                }
-                else
-                    throw new TuiInputException("Comando non valido");
+                if (!secondHourGlassExpired){
+                    if (words.length <= 1 || words.length > 3) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        if (words[1].equals("mucchio")) {
+                            client.sendAction(new DrawFromHeap());
+                        } else if (words[1].equals("scoperta")) {
+                            int index = Integer.parseInt(words[2]);
+                            client.sendAction(new DrawFromFaceUp(index - 1, lastUncoveredVersion));
+                        } else
+                            throw new TuiInputException("Comando non valido");
+                    }
                 }
             }
             case "scoperte" -> {
-                client.sendAction(new RequestUncovered());
+                if (!secondHourGlassExpired) {
+                    client.sendAction(new RequestUncovered());
+                }
             }
             case "salda" -> {
                 // TODO: inserire controlli interi ovunque e rendere gli indici delle tiles nella ship 1-based
-                try {
-                    if (words.length != 3) {
-                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                if (!secondHourGlassExpired){
+                    try {
+                        if (words.length != 3) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int x = Integer.parseInt(words[1]);
+                            int y = Integer.parseInt(words[2]);
+                            client.sendAction(new AddTile(x, y));
+                        }
+                    } catch (NumberFormatException e) {
+                        throw new TuiInputException("Devi inserire 2 interi!");
                     }
-                    else {
-                        int x = Integer.parseInt(words[1]);
-                        int y = Integer.parseInt(words[2]);
-                        client.sendAction(new AddTile(x, y));
-                    }
-                }
-                catch (NumberFormatException e) {
-                    throw new TuiInputException("Devi inserire 2 interi!");
                 }
             }
             case "prendi" -> {
-                // prendi prenotata x
-                if (words.length != 3) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    int index = Integer.parseInt(words[2]);
-                    client.sendAction(new TakeReservedTile(index - 1));
+                if (!secondHourGlassExpired) {
+                    // prendi prenotata x
+                    if (words.length != 3) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        int index = Integer.parseInt(words[2]);
+                        client.sendAction(new TakeReservedTile(index - 1));
+                    }
                 }
             }
             case "scarta" -> {
-                client.sendAction(new ReleaseTile());
+                if (!secondHourGlassExpired) {
+                    client.sendAction(new ReleaseTile());
+                }
             }
             case "ruota" -> {
-                client.sendAction(new RotateTile());
+                if (!secondHourGlassExpired) {
+                    client.sendAction(new RotateTile());
+                }
             }
             case "prenota" -> {
-                client.sendAction(new ReserveTile());
+                if (!secondHourGlassExpired) {
+                    client.sendAction(new ReserveTile());
+                }
             }
             case "rimuovi" -> {
-                if(placed) {
-                    if (words.length > 5) {
-                        io.error("Non hai inviato il numero corretto di parametri, riprova");
-                    } else {
-                        if (words[1].equals("equipaggio")) {
-                            if (words.length != 5) {
-                                io.error("Non hai inviato il numero corretto di parametri, riprova");
-                            } else {
-                                int hx = Integer.parseInt(words[2]);
-                                int hy = Integer.parseInt(words[3]);
-                                int num = Integer.parseInt(words[4]);
-                                client.sendAction(new ReduceCrew(hx, hy, num));
-                            }
-                        } else if (words[1].equals("merce")) {
-                            if (words.length != 5) {
-                                io.error("Non hai inviato il numero corretto di parametri, riprova");
-                            } else {
-                                int cx = Integer.parseInt(words[2]);
-                                int cy = Integer.parseInt(words[3]);
-                                int num = Integer.parseInt(words[4]);
-                                client.sendAction(new RemovePreciousItem(cx, cy, num));
-                            }
-                        } else if (words[1].equals("batterie")) {
-                            if (words.length != 5) {
-                                io.error("Non hai inviato il numero corretto di parametri, riprova");
-                            } else {
-                                int cx = Integer.parseInt(words[2]);
-                                int cy = Integer.parseInt(words[3]);
-                                int num = Integer.parseInt(words[4]);
-                                client.sendAction(new RemoveBatteries(cx, cy, num));
-                            }
+                if (words.length > 5) {
+                    io.error("Non hai inviato il numero corretto di parametri, riprova");
+                } else {
+                    if (words[1].equals("equipaggio")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
                         } else {
-                            if (words.length != 3) {
-                                io.error("Non hai inviato il numero corretto di parametri, riprova");
-                            } else {
-                                int x = Integer.parseInt(words[1]);
-                                int y = Integer.parseInt(words[2]);
-                                client.sendAction(new RemoveTile(x, y));
-                            }
+                            int hx = Integer.parseInt(words[2]);
+                            int hy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            client.sendAction(new ReduceCrew(hx, hy, num));
+                        }
+                    } else if (words[1].equals("merce")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int cx = Integer.parseInt(words[2]);
+                            int cy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            client.sendAction(new RemovePreciousItem(cx, cy, num));
+                        }
+                    } else if (words[1].equals("batterie")) {
+                        if (words.length != 5) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int cx = Integer.parseInt(words[2]);
+                            int cy = Integer.parseInt(words[3]);
+                            int num = Integer.parseInt(words[4]);
+                            client.sendAction(new RemoveBatteries(cx, cy, num));
+                        }
+                    } else {
+                        if (words.length != 3) {
+                            io.error("Non hai inviato il numero corretto di parametri, riprova");
+                        } else {
+                            int x = Integer.parseInt(words[1]);
+                            int y = Integer.parseInt(words[2]);
+                            client.sendAction(new RemoveTile(x, y));
                         }
                     }
                 }
             }
             case "gira" -> {
-                client.sendAction(new TurnHourglass());
+                if (!secondHourGlassExpired) {
+                    client.sendAction(new TurnHourglass());
+                }
             }
             case "mazzetto" -> {
-                if (words.length != 2) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    int x = Integer.parseInt(words[1]);
-                    if (x < 1 || x > 3)
-                        throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                    client.sendAction(new TakeVisibleDeck(x));
+                if (!secondHourGlassExpired) {
+                    if (words.length != 2) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        int x = Integer.parseInt(words[1]);
+                        if (x < 1 || x > 3)
+                            throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                        client.sendAction(new TakeVisibleDeck(x));
+                    }
                 }
             }
             case "rilascia" -> {
-                if (words.length != 2) {
-                    io.error("Non hai inviato il numero corretto di parametri, riprova");
-                }
-                else {
-                    int x = Integer.parseInt(words[1]);
-                    if (x < 1 || x > 3)
-                        throw new TuiInputException("I mazzetti visibili sono solo 3!");
-                    client.sendAction(new ReleaseDeck(x));
+                if (!secondHourGlassExpired) {
+                    if (words.length != 2) {
+                        io.error("Non hai inviato il numero corretto di parametri, riprova");
+                    } else {
+                        int x = Integer.parseInt(words[1]);
+                        if (x < 1 || x > 3)
+                            throw new TuiInputException("I mazzetti visibili sono solo 3!");
+                        client.sendAction(new ReleaseDeck(x));
+                    }
                 }
             }
             case "mostra" -> {
-                if(placed) {
+                if (!secondHourGlassExpired) {
                     if (words.length > 2) {
                         io.error("Non hai inviato il numero corretto di parametri, riprova");
                     } else {
@@ -484,7 +495,7 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "info" -> {
-                if(placed) {
+                if (!secondHourGlassExpired) {
                     if (words.length != 3) {
                         io.error("Non hai inviato il numero corretto di parametri, riprova");
                     } else {
@@ -495,9 +506,7 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "rotta" -> {
-                if(placed) {
-                    client.sendAction(new ShowPlayersPositions());
-                }
+                client.sendAction(new ShowPlayersPositions());
             }
             case "attiva" -> {
                 if (words.length != 6) {
@@ -599,15 +608,11 @@ public class TuiApplication implements ViewAPI {
                 client.sendAction(new Finished());
             }
             case "posiziona" -> {
-                if(!placed) {
-                    client.sendAction(new Put());
-                    placed = true;
-                }
+                client.sendAction(new Put());
+
             }
             case "corretta" -> {
-                if(placed) {
-                    client.sendAction(new Fixed());
-                }
+                client.sendAction(new Fixed());
             }
             case "perdi" -> {
                 if (words.length != 4) {
@@ -634,7 +639,7 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "abbandona" -> {
-                if(placed) {
+                if (!secondHourGlassExpired) {
                     if (words.length != 1) {
                         io.error("Non hai inviato il numero corretto di parametri, riprova");
                     } else {
@@ -810,6 +815,8 @@ public class TuiApplication implements ViewAPI {
     @Override
     public void showTimeExpired() {
         io.print("Tempo scaduto\n");
+        if(!firstHourGlassExpired && !secondHourGlassExpired) firstHourGlassExpired = true;
+        else if(firstHourGlassExpired && !secondHourGlassExpired) secondHourGlassExpired = true;
     }
 
 
