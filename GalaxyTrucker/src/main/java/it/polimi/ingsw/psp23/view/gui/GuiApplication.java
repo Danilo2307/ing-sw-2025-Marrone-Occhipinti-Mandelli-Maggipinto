@@ -419,6 +419,16 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     /**
+     * Stop the current match and close view.
+     *
+     * @param message the message to be displayed to indicate the end of the match
+     */
+    @Override
+    public void stopMatch(String message) {
+
+    }
+
+    /**
      * Updates the game interface with the provided message during the flight phase.
      * The method ensures that the user interface is updated on the JavaFX Application Thread.
      *

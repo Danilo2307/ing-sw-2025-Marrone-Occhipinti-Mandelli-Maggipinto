@@ -136,7 +136,7 @@ public class Server {
                         try {
                             SocketHandler socketHandler = clients.get(s);
                             socketHandler.sendMessage(new DirectMessage(new MatchFinished("La partita è terminata perchè un player è uscito")));
-                            socketHandler.close();
+                        socketHandler.close();
                             System.out.println("Chiuso client: " + s);
                         } catch (RuntimeException e) {
                             System.out.println("Eccezione lanciata nel disconnectAll di Server" + e.getMessage());

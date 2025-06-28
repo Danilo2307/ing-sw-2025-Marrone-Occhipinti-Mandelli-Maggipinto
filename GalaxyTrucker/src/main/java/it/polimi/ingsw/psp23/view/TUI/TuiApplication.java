@@ -831,6 +831,18 @@ public class TuiApplication implements ViewAPI {
     }
 
     /**
+     * Stop the current match and close view.
+     *
+     * @param message the message to be displayed to indicate the end of the match
+     */
+
+    @Override
+    public void stopMatch(String message) {
+        io.print(message);
+        System.exit(130);
+    }
+
+    /**
      * Displays updates or messages specifically related to card gameflows
      *
      * @param message the message containing details about the card update
