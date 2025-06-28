@@ -78,6 +78,7 @@ public class SocketHandler {
             catch (IOException e) {
                 // e.printStackTrace();
                 int gameId = UsersConnected.getInstance().getGameFromUsername(username).getId();
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata perchè un player è uscito")), gameId);
                 Server.getInstance().disconnectAll(gameId, username);
                 // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {
