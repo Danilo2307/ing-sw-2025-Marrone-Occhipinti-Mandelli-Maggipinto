@@ -165,6 +165,16 @@ public class FlightBoardController2 {
     }
 
 
+    /**
+     * Updates the images displayed on specific positions of the flight board
+     * based on the given map of colors and their associated positions.
+     * Each color is mapped to a UI representation, which is displayed
+     * at the specified position on the board.
+     *
+     * @param colors a map where the key is a {@code Color}, representing the color to display,
+     *               and the value is an {@code Integer} indicating the position on the board
+     *               where the color image should be set
+     */
     public void setColors(Map<Color,Integer> colors){
 
        for(int i =0; i<positions.length; i++){
