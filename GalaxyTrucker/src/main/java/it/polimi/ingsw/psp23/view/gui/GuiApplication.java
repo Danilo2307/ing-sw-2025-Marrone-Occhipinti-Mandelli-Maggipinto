@@ -419,6 +419,24 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     /**
+     * Stop the current match and close view.
+     *
+     * @param message the message to be displayed to indicate the end of the match
+     */
+    @Override
+    public void stopMatch(String message) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameover.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root, 1152, 768);
+        Platform.runLater(() -> {stage.setScene(scene);});
+    }
+
+    /**
      * Updates the game interface with the provided message during the flight phase.
      * The method ensures that the user interface is updated on the JavaFX Application Thread.
      *

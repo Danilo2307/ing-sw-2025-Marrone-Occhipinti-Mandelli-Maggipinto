@@ -37,6 +37,7 @@ public interface ViewAPI {
     void showIllegalTruck();
     void showTimeExpired();
     void endMatch(String message);
+    void stopMatch(String message);
     void showCannonShot(int coord, CannonShot cannonShot);
     void showCardUpdate(String message);
     void showDeck(ArrayList<Integer> ids, String description);

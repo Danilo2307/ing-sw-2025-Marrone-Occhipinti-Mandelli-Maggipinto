@@ -1,0 +1,6 @@
+.root {
+    -fx-background-image: url("../it/polimi/ingsw/psp23/images/utility/gameover.jpeg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+
+}

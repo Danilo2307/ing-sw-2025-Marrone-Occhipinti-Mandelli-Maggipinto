@@ -28,7 +28,7 @@ import java.util.UUID;
 public class MainServer {
     public static void main(String[] args) throws RemoteException {
 
-        System.setProperty("java.rmi.server.hostname", "localhost");
+        System.setProperty("java.rmi.server.hostname", "172.26.190.81");
 
         // 2) --- Avvio del registry RMI sulla 1099 ---
         Registry rmiRegistry = LocateRegistry.createRegistry(4321);
@@ -43,7 +43,7 @@ public class MainServer {
 
         System.out.println("RMI registry avviato su port 4321");
 
-        Server.getInstance("localhost", 8000, rmiServer);
+        Server.getInstance("172.26.190.81", 8000, rmiServer);
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
