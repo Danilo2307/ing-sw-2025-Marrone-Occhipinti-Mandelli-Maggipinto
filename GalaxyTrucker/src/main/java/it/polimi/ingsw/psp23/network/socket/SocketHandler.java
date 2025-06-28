@@ -7,6 +7,7 @@ import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.protocol.request.SetUsername;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
+import it.polimi.ingsw.psp23.protocol.response.MatchAbandoned;
 import it.polimi.ingsw.psp23.protocol.response.MatchFinished;
 
 import java.io.IOException;
@@ -78,7 +79,7 @@ public class SocketHandler {
             catch (IOException e) {
                 // e.printStackTrace();
                 int gameId = UsersConnected.getInstance().getGameFromUsername(username).getId();
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata perchè un player è uscito")), gameId);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito")), gameId);
                 Server.getInstance().disconnectAll(gameId, username);
                 throw new SocketTimeoutException("stop listening");
                 // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
@@ -87,7 +88,6 @@ public class SocketHandler {
                 throw new RuntimeException("Problema(ClassNotFoundException) in readMessage in SocketHandler " + e.getMessage());
             }
         }
-        return null;
     }
 
 

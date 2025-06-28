@@ -60,4 +60,6 @@ public interface EventVisitor<T> {
 
     public T visitForFinalRanking(FinalRanking ranking, ViewAPI viewAPI);
 
+    public T visitForMatchAbandoned(MatchAbandoned matchAbandoned, ViewAPI viewAPI);
+
 }
