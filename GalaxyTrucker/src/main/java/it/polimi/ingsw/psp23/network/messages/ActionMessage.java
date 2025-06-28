@@ -3,8 +3,15 @@
 package it.polimi.ingsw.psp23.network.messages;
 
 import it.polimi.ingsw.psp23.protocol.request.Action;
-import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
 
+
+/**
+ * Represents a type of message used for communication between client and server, encapsulating an {@link Action}.
+ * This class extends the {@link Message} abstract class.
+ *
+ * The {@code ActionMessage} class includes functionality for retrieving its encapsulated {@link Action}
+ * and for accepting a visitor via the Visitor Pattern defined by {@link MessageVisitor}.
+ */
 public final class ActionMessage extends Message{
 
     Action a;

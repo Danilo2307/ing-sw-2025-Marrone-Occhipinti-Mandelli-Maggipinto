@@ -1,8 +1,6 @@
 package it.polimi.ingsw.psp23.network.socket;
 
-import it.polimi.ingsw.psp23.controller.Controller;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
-import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
@@ -23,6 +21,20 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
+
+
+/**
+ * The Server class is responsible for managing server-side operations,
+ * including handling client connections, sending and receiving messages,
+ * and managing game sessions.
+ *
+ * Fields:
+ * - serverSocket: Represents the ServerSocket used for client connections.
+ * - clients: Stores the connected clients along with their respective connection handlers.
+ * - rmiServer: Interface for handling RMI (Remote Method Invocation) server functionalities.
+ * - games: Stores the list of games managed by the server.
+ */
 public class Server {
 
     private static Server instance;
@@ -32,6 +44,15 @@ public class Server {
     private final HashMap<Integer, Game> games;
 
 
+    /**
+     * Constructs a new {@code Server} instance, initializing a server socket bound to the
+     * specified port and address. The server will listen for incoming client connections.
+     * This constructor also initializes internal data structures for managing connected
+     * clients and ongoing games.
+     *
+     * @param port the port number on which the server socket will listen for connections
+     * @throws RuntimeException if there is an error initializing the server socket
+     */
     // Qui creo il server
     Server(int port) {
         try {
@@ -53,6 +74,16 @@ public class Server {
         }
     }
 
+    /**
+     * Constructs a new {@code Server} instance. This initializes a server socket bound to the
+     * specified port and address. The server manages incoming client connections and communication
+     * through the provided RMI handler interface.
+     *
+     * @param port the port number on which the server socket will listen for incoming connections
+     * @param host the hostname or IP address to bind the server socket
+     * @param rmiServer the RMI handler interface used for handling remote client operations
+     * @throws RuntimeException if there is an error initializing the server socket
+     */
     Server(int port, String host, ClientRMIHandlerInterface rmiServer) {
         try {
 
@@ -73,6 +104,13 @@ public class Server {
         }
     }
 
+    /**
+     * Returns the singleton instance of the {@code Server} class.
+     * If the instance has not been initialized yet, a {@code RuntimeException} is thrown.
+     *
+     * @return the singleton {@code Server} instance
+     * @throws RuntimeException if the server instance has not been initialized
+     */
     public static synchronized Server getInstance() {
 
         if (instance == null) {
@@ -82,6 +120,14 @@ public class Server {
         }
     }
 
+    /**
+     * Returns the singleton instance of the {@code Server} class, creating it
+     * if it has not yet been instantiated. The server is initialized to listen
+     * on the specified port if no instance currently exists.
+     *
+     * @param port the port number on which the server socket will listen for connections
+     * @return the singleton {@code Server} instance
+     */
     public static synchronized Server getInstance(int port) {
         if (instance == null) {
             instance = new Server(port);
@@ -90,6 +136,16 @@ public class Server {
         return instance;
     }
 
+    /**
+     * Returns the singleton instance of the {@code Server} class.
+     * If the instance has not been created, it initializes the server with the specified host, port,
+     * and RMI handler interface.
+     *
+     * @param host      the hostname or IP address to bind the server socket
+     * @param port      the port number on which the server socket will listen for connections
+     * @param serverRMI the RMI handler interface used for handling remote client operations
+     * @return the singleton {@code Server} instance
+     */
     public static synchronized Server getInstance(String host, int port, ClientRMIHandlerInterface serverRMI) {
         if (instance == null) {
             instance = new Server(port, host, serverRMI);
@@ -97,6 +153,12 @@ public class Server {
         return instance;
     }
 
+    /**
+     * Closes the server socket, releasing any resources associated with it.
+     * This method ensures that the server socket is properly shut down,
+     * preventing any further client connections. If an I/O exception occurs
+     * during the closing operation, an error message will be logged to the console.
+     */
     public void close() {
         try {
             serverSocket.close();
@@ -106,6 +168,16 @@ public class Server {
         }
     }
 
+    /**
+     * Disconnects all players related to the specified game and username.
+     * This method handles removing the specified player from both the active
+     * and inactive player lists of the game and ensures all relevant client connections
+     * are closed. A message is sent to affected clients indicating the game has ended.
+     *
+     * @param gameId   the unique identifier of the game from which players should be disconnected
+     * @param username the username of the player to be removed and whose related players' connections
+     *                 need to be terminated
+     */
     public void disconnectAll(int gameId, String username) {
 
         synchronized (games.get(gameId)) {
@@ -155,6 +227,14 @@ public class Server {
         return serverSocket;
     }
 
+    /**
+     * Handles the connection of new clients to the server, assigns them to available games,
+     * or facilitates the creation of new games. Validates the client's choices and ensures
+     * they are appropriately added to game lobbies based on their selection.
+     *
+     * @param nameConnection The unique identifier for the client connection.
+     *                        Used to identify the client within the server system.
+     */
     public void connectClients(String nameConnection) {
         if (clients.containsKey(nameConnection)) {
             throw new RuntimeException("La connessione è già presente!!");
@@ -324,7 +404,18 @@ public class Server {
     }
 
 
-    // Metodo incaricato dell'invio dei messaggi ai client. Il parametro indice ci dice quale elemento della lista di
+    /**
+     * Sends a message to a specified client connection. If the client connection is present in the
+     * list of active sockets, the message is sent via the corresponding socket handler. If the
+     * connection is not found in the active sockets, it falls back to using the RMI server handler
+     * to deliver the message.
+     *
+     * @param message the {@code Message} object representing the information to be sent to the client
+     * @param nameConnection the unique identifier for the client connection, used to look up the
+     *                        appropriate socket handler or delegate message delivery through the RMI server
+     * @throws RuntimeException if the specified client connection is found in the socket list but is null
+     */
+    // Metodo incaricato dell'invio dei messaggi ai client. Il parametro nameconnection ci dice quale elemento della lista di
     // socket bisogna considerare
     public void sendMessage(Message message, String nameConnection) {
 
@@ -353,10 +444,15 @@ public class Server {
 
     }
 
-    /* Questo metodo permette di inviare messaggi conoscendo lo username e non il connectionID
-       TODO: bisogna gestire il caso in cui ci siano client con username uguali, magari si potrebbe mettere un controllo
-        al momento dell'inserimento
-    */
+    /**
+     * Sends a message to a client identified by their username. If the associated connection ID
+     * is found in the active client list, the message is sent through that connection. If no
+     * such connection ID is found, the message is sent through the RMI server handler.
+     *
+     * @param username the username identifying the client to whom the message should be sent
+     * @param message the {@code Message} object representing the information to be sent to the client
+     * @throws RuntimeException if the provided username or message is {@code null}
+     */
     public void sendMessage(String username, Message message) {
         if (username != null && message != null) {
             String connectionID = null;
@@ -384,6 +480,15 @@ public class Server {
         }
     }
 
+    /**
+     * Receives a message from a client identified by a given connection name.
+     * This method retrieves the corresponding socket handler for the specified connection
+     * and attempts to read a message from it.
+     *
+     * @param nameConnection the unique identifier of the client's connection from which the message should be retrieved
+     * @return the {@code Message} object received from the specified connection, or {@code null} if the connection does not exist
+     * @throws RuntimeException if an I/O error occurs while receiving the message
+     */
     public Message receiveMessage(String nameConnection) {
 
         SocketHandler socketHandler = null;
@@ -428,6 +533,15 @@ public class Server {
         }
     }
 
+    /**
+     * Notifies all active observers (players) of a specific game with the given message.
+     * This method attempts to send the message to each client associated with the game. If a player's
+     * connection cannot be reached via the active socket handlers, the RMI server is used as a fallback
+     * to deliver the message to any remaining clients.
+     *
+     * @param message the {@code Message} object containing the information to be sent to the observers
+     * @param gameId the unique identifier of the game whose observers are to be notified
+     */
     public void notifyAllObservers(Message message, int gameId) {
         synchronized (games.get(gameId)) {
             List<String> players = games.get(gameId).getPlayers().stream().map(Player::getNickname).collect(Collectors.toList());
@@ -496,14 +610,31 @@ public class Server {
         return new HashMap<>(clients);
     }
 
+    /**
+     * Retrieves the username associated with the specified client connection ID.
+     *
+     * @param connectionID the unique identifier of the client connection whose username is to be retrieved
+     * @return the username of the client associated with the given connection ID
+     */
     public String getUsernameForConnection(String connectionID) {
         return clients.get(connectionID).getUsername();
     }
 
+    /**
+     * Retrieves the {@code Game} instance associated with the specified unique identifier.
+     *
+     * @param id the unique identifier of the game to be retrieved
+     * @return the {@code Game} object corresponding to the given identifier, or {@code null} if no such game exists
+     */
     public Game getGame(int id) {
         return games.get(id);
     }
 
+    /**
+     * Adds a game to the server's game collection and sets its controller.
+     *
+     * @param game the {@code Game} instance to be added to the server's collection
+     */
     public void addGame(Game game) {
         games.put(game.getId(), game);
         game.setController();
@@ -513,6 +644,11 @@ public class Server {
         return games.size();
     }
 
+    /**
+     * Retrieves a list of all currently available games managed by the server.
+     *
+     * @return a synchronized list of {@code Game} objects representing the active games on the server
+     */
     public synchronized List<Game> getGames() {
         return games.values().stream().toList();
     }

@@ -16,18 +16,17 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-/*
- * Questa classe serve per far sì che il server invochi i metodi di sendMessage e readMessage specifici per le istanze
- * di socketHandler che gestiscono le socket specifiche dei vari client(in pratica ci sarà un socketHandler specifico
- * per ogni client). Questa classe sarà usata anche nel client perchè, come dice il nome, permette di gestire le socket
- */
 
+/**
+ * The SocketHandler class is responsible for managing socket communication
+ * between a client and a server over Object Streams. It provides methods
+ * for reading and sending messages, and ensures thread-safe operations
+ * through synchronization mechanisms.
+ */
 public class SocketHandler {
 
     Socket socket;
-
     ObjectOutputStream out;
-
     ObjectInputStream in;
 
     // Gli oggetti di lock mi permettono di inviare/ricevere un messaggio alla volta
@@ -37,6 +36,17 @@ public class SocketHandler {
 
     String username = null;
 
+    /**
+     * Creates a new instance of the SocketHandler class to manage communication
+     * with the specified socket. This involves setting up ObjectOutputStream
+     * and ObjectInputStream for data transmission and reception.
+     *
+     * @param socket the socket to be used for communication. The provided socket
+     *               must already be connected to ensure proper functionality.
+     *               It enables data input and output streams for message handling.
+     * @throws RuntimeException if there are issues during the initialization
+     *                          of the ObjectOutputStream or ObjectInputStream.
+     */
     public SocketHandler(Socket socket){
 
         this.socket = socket;
@@ -59,17 +69,24 @@ public class SocketHandler {
             throw new RuntimeException("Problema nell'istanziazione di 'in' in SocketHandler " + e.getMessage());
         }
 
-
         System.out.println("SocketHandler istanziato correttamente");
 
     }
 
 
+    /**
+     * Reads a message sent through the input stream associated with the current socket connection.
+     * The method waits for incoming data and attempts to deserialize it into a {@code Message} object.
+     * The method uses synchronization to ensure thread-safe access to the input stream.
+     *
+     * @return the {@code Message} object received, deserialized from the input stream.
+     * @throws SocketTimeoutException if a timeout occurs or the socket connection is deemed unreliable.
+     * @throws RuntimeException for other unexpected deserialization errors.
+     */
     public Message readMessage() throws SocketTimeoutException {
         synchronized (lockLettura) {
             Message received = null;
             try {
-
                 received = (Message)in.readObject();
                 return received;
 
@@ -91,6 +108,17 @@ public class SocketHandler {
     }
 
 
+    /**
+     * Sends a {@code Message} object through the output stream associated with the current socket connection.
+     * The method ensures thread-safe access to the shared output stream by synchronizing on a lock.
+     * It resets, writes, and flushes the object to the output stream to complete the transmission.
+     *
+     * @param message the {@code Message} object to be sent. The message must implement the
+     *                {@code Serializable} interface to allow for proper serialization.
+     * @return {@code true} if the message was successfully sent.
+     * @throws RuntimeException if any {@code IOException} occurs during the reset, write, or flush operations
+     *                          of the output stream.
+     */
     public boolean sendMessage(Message message) {
         synchronized (lockScrittura){
             try {
@@ -113,6 +141,12 @@ public class SocketHandler {
         return true;
     }
 
+    /**
+     * Closes the resources associated with this SocketHandler instance.
+     * Ensures proper closure of the input stream, output stream, and socket associated with the handler.
+     * This method aims to clean up resources and ensure the SocketHandler object is left in a consistent state by
+     * nullifying its references to the underlying resources.
+     */
     public void close(){
         try {
             this.in.close();
@@ -146,6 +180,13 @@ public class SocketHandler {
         }
     }
 
+    /**
+     * Sets the username for the current SocketHandler instance.
+     * This username can be used to identify the client being managed by this handler.
+     *
+     * @param username the username to be associated with this SocketHandler instance.
+     *                 Must be a non-null and non-empty String.
+     */
     public void setUsername(String username) {
         this.username = username;
     }
