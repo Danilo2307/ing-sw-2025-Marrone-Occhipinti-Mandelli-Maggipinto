@@ -106,35 +106,6 @@ public class Server {
         }
     }
 
-    public void setServerSocket(String host, int port) {
-        try {
-            ServerSocket newSock = new ServerSocket();
-            newSock.setReuseAddress(true);
-            newSock.bind(new InetSocketAddress(host, port), 10);
-            serverSocket = newSock;
-        }
-        catch (IOException e){
-            System.out.println("Error re-instancing server: " + e.getMessage());
-        }
-    }
-
-    /*public void disconnectAll(int gameId) {
-        synchronized (clients) {
-            for (String stringa : clients.keySet()) {
-                if (clients.get(stringa).getUsername().){
-                    try {
-                        SocketHandler socketHandler = clients.get(stringa);
-                        socketHandler.close();
-                        System.out.println("Chiuso client: " + stringa);
-                    } catch (Exception e) {
-                        System.err.println("Errore chiudendo il client" + stringa + ": " + e.getMessage());
-                    }
-                }
-            }
-            clients.clear();
-        }
-    }*/
-
     public void disconnectAll(int gameId, String username) {
 
         synchronized (games.get(gameId)) {
@@ -147,7 +118,17 @@ public class Server {
                     break;        // esce se vuoi rimuovere solo il primo match
                 }
             }
-            List<String> players = new ArrayList<>(game.getPlayers().stream().map(p -> p.getNickname()).collect(Collectors.toList()));
+            Iterator<Player> it2 = game.getPlayersNotOnFlight().iterator();
+            while (it2.hasNext()) {
+                Player p = it2.next();
+                if (p.getNickname().equals(username)) {
+                    it2.remove();  // rimuove in modo sicuro l’elemento corrente
+                    break;        // esce se vuoi rimuovere solo il primo match
+                }
+            }
+            List<String> players = games.get(gameId).getPlayers().stream().map(Player::getNickname).collect(Collectors.toList());
+            List<String> notOnFlight = games.get(gameId).getPlayersNotOnFlight().stream().map(Player::getNickname).toList();
+            players.addAll(notOnFlight);
             try {
                 for (String s : clients.keySet()) {
                     String user = getUsernameForConnection(s);

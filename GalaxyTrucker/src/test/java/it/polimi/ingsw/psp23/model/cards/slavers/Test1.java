@@ -38,15 +38,15 @@ public class Test1 {
     void setUp() throws Exception {
         
         try {
-    Registry rmiRegistry = LocateRegistry.createRegistry(1099);
-    ClientRegistryInterface clientRegistry = new ClientRegistry();
-    rmiRegistry.rebind("ClientRegistry", clientRegistry);
-    ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
-    rmiRegistry.rebind("GameServer", rmiServer);
-    Server.getInstance("localhost", 8000, rmiServer);
-} catch (Exception ignored) {
-    // Silently ignore RMI registry errors in tests
-}
+            Registry rmiRegistry = LocateRegistry.createRegistry(1099);
+            ClientRegistryInterface clientRegistry = new ClientRegistry();
+            rmiRegistry.rebind("ClientRegistry", clientRegistry);
+            ClientRMIHandlerInterface rmiServer = new ClientRMIHandler(clientRegistry);
+            rmiRegistry.rebind("GameServer", rmiServer);
+            Server.getInstance("localhost", 8000, rmiServer);
+        } catch (Exception ignored) {
+            // Silently ignore RMI registry errors in tests
+        }
         
         this.game = new Game(2,0);
         Server.getInstance().addGame(game);

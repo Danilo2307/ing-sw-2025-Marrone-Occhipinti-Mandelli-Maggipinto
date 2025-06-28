@@ -16,6 +16,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.IncorrectWelding;
+import it.polimi.ingsw.psp23.protocol.response.LobbyAvailable;
 import it.polimi.ingsw.psp23.protocol.response.MatchFinished;
 
 import java.rmi.RemoteException;
@@ -233,6 +234,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
     public void disconnectAll(List<String> players) throws RemoteException {
         for(String player : players) {
             String nameConnection = registry.getPlayerConnectionFromNickname(player);
+            sendToUser(nameConnection, new DirectMessage(new MatchFinished("La partita è terminata perchè un player è uscito")));
             registry.unregisterClient(nameConnection);
         }
     }
