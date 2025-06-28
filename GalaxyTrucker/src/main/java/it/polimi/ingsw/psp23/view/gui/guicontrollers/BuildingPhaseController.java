@@ -410,6 +410,13 @@ public class BuildingPhaseController {
 
     }
 
+    /**
+     * Configures the view to display buttons corresponding to other players' ships.
+     *
+     * This method retrieves the list of other players available from the {@code GuiApplication}
+     * instance and uses it to dynamically set the text and enable the buttons related
+     * to those players.
+     */
     public void setupViewOtherShipsBtn() {
         ArrayList<String> otherPlayers = GuiApplication.getInstance().getOtherUsers();
 
@@ -426,11 +433,32 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Handles the event triggered when the user clicks the "Draw from Heap" button.
+     *
+     * This method sends a {@link DrawFromHeap} action to the server through the client.
+     * The action informs the server that the player wishes to draw a component
+     * from the heap.
+     *
+     * @throws RemoteException if there is an issue with the remote communication
+     *                         while attempting to send the action to the server.
+     */
     @FXML
     public void onDrawHeapClicked() throws RemoteException {
         client.sendAction(new DrawFromHeap());
     }
 
+    /**
+     * Handles the user action of releasing a tile currently held in hand.
+     *
+     * If the tile in hand is not reserved, the method sends a {@code ReleaseTile} action to the server,
+     * indicating the intent to discard the tile. Upon successful execution, the tile in hand is removed
+     * from the UI.
+     * If the tile in hand is reserved, an error message is displayed, notifying the user that reserved tiles
+     * cannot be discarded.
+     *
+     * @throws RemoteException if there is an issue communicating with the server while sending the action
+     */
     @FXML
     public void onReleaseClicked() throws RemoteException{
         if (!reservedInHand) {
@@ -444,6 +472,15 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Handles the event triggered when the "Rotate" button is clicked.
+     * This method performs a 90-degree clockwise rotation of the tile currently held in hand.
+     * It retrieves the current rotation value of the tile in hand, sends a {@code RotateTile}
+     * action to the server through the client, and updates the rotation of the tile in the UI
+     * on the JavaFX application thread.
+     *
+     * @throws RemoteException if an error occurs while communicating with the server.
+     */
     @FXML
     public void onRotateClicked() throws RemoteException{
         int rotation = componentInHand.getRotate();
@@ -453,6 +490,22 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Handles the event triggered when the "Put" button is clicked by the user.
+     * This method performs the following actions:
+     * 1. Sets the {@code putClicked} flag to true, indicating that the "Put" button
+     *    has been interacted with.
+     * 2. Sends a {@link Put} action to the server using the {@code client} instance.
+     * 3. Disables and hides the building-related commands or button options
+     *    by invoking the {@code hideBuildCommands()} method.
+     *
+     * The method interacts with the server-side through the {@code client.sendAction()} call
+     * to notify that the player has completed their building phase and is ready
+     * to proceed with the game.
+     *
+     * @throws RemoteException if there is an issue with the remote communication
+     *                         while sending the {@link Put} action to the server.
+     */
     @FXML
     public void onPutClicked() throws RemoteException{
         putClicked = true;
@@ -463,6 +516,13 @@ public class BuildingPhaseController {
         hideBuildCommands();
     }
 
+    /**
+     * Hides and disables the visibility and management of UI components related to
+     * build commands in the application.
+     * This method adjusts multiple UI elements, including buttons, tiles, boxes,
+     * and scroll panes, making them non-visible and unmanaged.
+     * Additionally, for level 2 of the application, it clears and disables reserved elements.
+     */
     public void hideBuildCommands() {
         releaseBtn.setVisible(false);
         releaseBtn.setManaged(false);
@@ -494,16 +554,31 @@ public class BuildingPhaseController {
         }
     }
 
-    @FXML
-    public void onLeaveClicked() throws RemoteException{
-        client.sendAction(new LeaveFlight());
-    }
 
+    /**
+     * Handles the event triggered when the "Turn" button is clicked by the user.
+     *
+     * This method sends a {@code TurnHourglass} action to the server through the client.
+     * The {@code TurnHourglass} action signifies that the player has completed their ship
+     * and the timer should advance.
+     *
+     * @throws RemoteException if an issue occurs during remote communication
+     *                         while sending the {@code TurnHourglass} action to the server.
+     */
     @FXML
     public void onTurnClicked() throws RemoteException{
         client.sendAction(new TurnHourglass());
     }
 
+    /**
+     * Displays the specified tile component visually by updating the appropriate
+     * UI elements. If the system is in the process of adding a crew, the method
+     * does nothing.
+     *
+     * @param toDraw the Component object representing the tile to be displayed.
+     *               The method uses this component's properties to determine
+     *               the image to show and the rotation angle to apply.
+     */
     public void showTile(Component toDraw) {
         if (inAddCrew)
             return;
@@ -518,6 +593,14 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Displays the uncovered components in a graphical user interface by updating their visual representation
+     * based on the provided list and the specified version.
+     *
+     * @param uncovered the list of uncovered components to be displayed, each represented by a Component object.
+     *                  Each component will have an associated image and a click listener.
+     * @param lastVersion an integer indicating the latest version of the uncovered components being updated.
+     */
     public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
         // aggiorno attributo che indica l'ultima versione
         this.lastVersion = lastVersion;
@@ -553,17 +636,38 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Draws an uncovered tile represented by the specified ImageView. The method identifies
+     * the index of the provided ImageView in the uncoveredBox container and sends a corresponding
+     * action to the client.
+     *
+     * @param imageView the ImageView object representing the uncovered card to be drawn
+     * @throws RemoteException if a communication-related exception occurs
+     */
     private void drawUncovered(ImageView imageView) throws RemoteException {
         int index = uncoveredBox.getChildren().indexOf(imageView);
         client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
 
 
+    /**
+     * Handles the action of refreshing uncovered items or data.
+     * This method sends a request to the client to perform an action related to refreshing uncovered tiles.
+     *
+     * @throws RemoteException if there is a communication-related error during the remote method call
+     */
     @FXML
     public void onUncoveredRefresh() throws RemoteException{
         client.sendAction(new RequestUncovered());
     }
 
+    /**
+     * Handles the event when the flight board button is clicked in the user interface.
+     * Sends a request for the flight board details to the server through the client object.
+     *
+     * Throws:
+     * RuntimeException - if a RemoteException occurs during the operation.
+     */
     @FXML
     public void onFlightBoardClicked(){
         try {
@@ -573,6 +677,19 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Configures the user interface and drag-and-drop functionality for tile management in the check-phase.
+     * This method interacts with the following components:
+     * - Makes the bin check and ship correction indicators visible and managed.
+     * - Hides and disables management of the tile held in hand.
+     * It also sets up drag-and-drop functionality for tiles:
+     * - Enables drag-and-drop listeners for each node in a grid (associated with a "ship").
+     * - Allows tiles within the grid to be dragged to a bin check area for removal.
+     *
+     * Exceptions:
+     * - If a RemoteException occurs when sending the action to the client, it wraps the exception
+     *   in a RuntimeException.
+     */
     public void toCheck() {
         Platform.runLater(() -> {
             binCheck.setVisible(true);
@@ -646,6 +763,15 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Handles the event triggered when the ship correction process is completed.
+     *
+     * This method sends a "Fixed" action to the client, indicating that the ship has been corrected.
+     * It then updates the user interface by hiding and disabling relevant buttons and drag-and-drop
+     * functionality.
+     *
+     * @throws RemoteException if there is a communication-related exception during the invocation of the remote method.
+     */
     @FXML
     public void onShipCorrected() throws RemoteException{
         client.sendAction(new Fixed());
@@ -662,6 +788,14 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Sends a crew action command to the server with the specified parameters.
+     *
+     * @param row the row coordinate where the action is to be performed
+     * @param col the column coordinate where the action is to be performed
+     * @param isAlien a flag indicating if the crew member is an alien (true) or not (false)
+     * @param color the color associated with the possible alien (null if humans)
+     */
     private void sendCrewAction(int row, int col, boolean isAlien, Color color) {
         try {
             client.sendAction(new SetCrew(row, col, isAlien, color));
@@ -670,6 +804,13 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Configures the UI and logic for adding a crew to the ship in the application.
+     *
+     * This method sets up the visibility and event handling for buttons that allow the user
+     * to select and add a crew type (astronaut, purple alien, or brown alien) to specific locations
+     * on the ship. The functionality is dynamically adjusted based on the current game level.
+     */
     public void toAddCrew() {
         inAddCrew = true;
         Platform.runLater(() -> {
@@ -708,6 +849,11 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Handles the event triggered when the "Finished" button is clicked.
+     * It also disables and hides multiple UI buttons.
+     * @throws RemoteException if there is an error during the remote method call.
+     */
     @FXML
     public void onFinishedClicked() throws RemoteException {
         client.sendAction(new Finished());
@@ -727,6 +873,14 @@ public class BuildingPhaseController {
         return ship;
     }
 
+    /**
+     * Handles the event triggered when the "Spy Others" button is clicked.
+     *
+     * @param event the ActionEvent triggered by the button click, carrying information
+     *              about the source of the event (the clicked button)
+     * @throws RemoteException if a remote communication error occurs during the
+     *                         handling of the client request
+     */
     @FXML
     public void onSpyOthersClicked(javafx.event.ActionEvent event) throws RemoteException {
         Button clickedButton = (Button) event.getSource();  // bottone che ha scatenato l’evento
