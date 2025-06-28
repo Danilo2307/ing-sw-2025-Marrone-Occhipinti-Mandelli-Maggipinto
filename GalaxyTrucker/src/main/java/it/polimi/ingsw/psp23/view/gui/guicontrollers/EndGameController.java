@@ -83,6 +83,10 @@ public class EndGameController {
         }
     }
 
+    /**
+     * Closes the stage associated with the current controller.
+     * This method is typically invoked to terminate the current window.
+     */
     @FXML void closeStage() {
         stage.close();
     }
