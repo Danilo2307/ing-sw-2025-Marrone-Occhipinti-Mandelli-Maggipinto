@@ -425,7 +425,15 @@ public class GuiApplication extends Application implements ViewAPI {
      */
     @Override
     public void stopMatch(String message) {
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/gameover.fxml"));
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Scene scene = new Scene(root, 1152, 768);
+        Platform.runLater(() -> {stage.setScene(scene);});
     }
 
     /**
