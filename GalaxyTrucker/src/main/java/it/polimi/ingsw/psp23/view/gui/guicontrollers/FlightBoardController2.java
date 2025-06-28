@@ -20,6 +20,13 @@ import java.util.Objects;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import javafx.stage.Stage;
 
+
+/**
+ * The FlightBoardController2 class is responsible for managing the flight board view and its interactions in the UI.
+ * It handles user input via various buttons and updates the displayed elements according to the current game state.
+ * The class is associated with various ImageView components representing positions on the board,
+ * and buttons for interacting with different deck options or returning to the ship.
+ */
 public class FlightBoardController2 {
     @FXML private Button firstDeck;
     @FXML private Button secondDeck;
@@ -74,6 +81,18 @@ public class FlightBoardController2 {
         return this.deck;
     }
 
+    /**
+     * This method updates the current deck selection to the first deck
+     * and sends an action to the server to process the selection
+     * of the first visible deck. If a RemoteException occurs during the
+     * action dispatch, it throws a RuntimeException to handle the error.
+     *
+     * The method specifically sends a {@link TakeVisibleDeck} action
+     * with an index of 1, which corresponds to the first deck.
+     *
+     * Throws:
+     * - RuntimeException: If a RemoteException occurs while sending the action to the client.
+     */
     @FXML
     public void onFirstDeckClicked(){
         deck = 1;
@@ -84,6 +103,16 @@ public class FlightBoardController2 {
         }
     }
 
+    /**
+     * This method is triggered when the second deck is clicked.
+     * It sets the current deck to the second deck and sends an action to the server to process this selection.
+     * If a remote communication issue occurs while sending the action, a runtime exception is thrown.
+     *
+     * The action sent is encapsulated in a TakeVisibleDeck object, specifying the second deck index.
+     *
+     * Exception:
+     * - Throws RuntimeException if a RemoteException occurs during the action transmission.
+     */
     @FXML
     public void onSecondDeckClicked(){
         deck = 2;
@@ -94,6 +123,18 @@ public class FlightBoardController2 {
         }
     }
 
+    /**
+     * Handles the action when the third deck is clicked by the user on the flight board interface.
+     *
+     * This method sets the currently selected deck to the third deck. It then attempts to send a
+     * corresponding action, encapsulated in a {@link TakeVisibleDeck} object, to the server via the
+     * {@code client.sendAction} method.
+     *
+     * If a {@link RemoteException} occurs during the action transmission, it wraps and rethrows it
+     * as a {@link RuntimeException}.
+     *
+     * The third deck is identified by its index value of 3.
+     */
     @FXML
     public void onThirdDeckClicked(){
         deck = 3;
@@ -105,11 +146,18 @@ public class FlightBoardController2 {
     }
 
 
+    /**
+     * Handles the event when the "Back to Ship" option is clicked in the user interface.
+     * It invokes the {@code backToShip} method to perform the corresponding navigation or state change.
+     */
     @FXML
     public void onBackToShipClicked(){
         GuiApplication.getInstance().backToShip();
     }
 
+    /**
+     * Disables the click events for the deck buttons in the flight board interface.
+     */
     public void disableDeckClick(){
         firstDeck.setOnAction(event -> {});
         secondDeck.setOnAction(event -> {});
@@ -125,7 +173,7 @@ public class FlightBoardController2 {
                 positions[finalI].setImage(null);
             });
 
-        }
+       }
 
         for(Map.Entry<Color,Integer> entry : colors.entrySet()){
             Platform.runLater(()->{
@@ -143,8 +191,8 @@ public class FlightBoardController2 {
                     case Green -> positions[newPosition % 24].setImage(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/it/polimi/ingsw/psp23/images/utility/green.jpg"))));
                 }
             });
-
         }
+
     }
 
 

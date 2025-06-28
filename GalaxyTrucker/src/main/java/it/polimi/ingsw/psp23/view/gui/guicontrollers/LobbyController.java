@@ -24,6 +24,12 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * The LobbyController class manages the user interface and interaction logic for the game's lobby.
+ * It facilitates game creation, lobby selection, username input, level selection, and number of players
+ * selection, providing communication with the client-side game logic.
+ */
 public class LobbyController {
     private Client client;
 
@@ -55,6 +61,18 @@ public class LobbyController {
         this.client = client;
     }
 
+    /**
+     * Displays the available lobbies to the user and provides options to join one of them.
+     * Updates the UI dynamically by creating buttons for each available lobby with
+     * relevant information about the lobby.
+     *
+     * @param availableLobbies a list of lobbies where each lobby is represented
+     *                         as a list of integers. The list contains the following elements:
+     *                         - index 0: the ID of the lobby
+     *                         - index 1: the current number of players in the lobby
+     *                         - index 2: the maximum number of players allowed in the lobby
+     *                         - index 3: the level of the lobby
+     */
     public void showLobbies(List<List<Integer>> availableLobbies) {
         Platform.runLater(() -> {
             if (!availableLobbies.isEmpty()) {
@@ -98,6 +116,14 @@ public class LobbyController {
         });
     }
 
+    /**
+     * Hides the UI elements related to the lobbies view. This includes
+     * making specific buttons and containers invisible and unmanaged within
+     * the layout. Clears any existing lobbies from the container.
+     *
+     * This method ensures that the view updates are performed on the JavaFX
+     * Application Thread using the {@code Platform.runLater} mechanism.
+     */
     private void hideLobbiesView() {
         Platform.runLater(() -> {
             createGameBtn.setVisible(false);
@@ -109,6 +135,13 @@ public class LobbyController {
         });
     }
 
+    /**
+     * Handles the creation of a new game. This method is triggered when the user initiates
+     * a request to create a game from the lobby view. Depending on the client's connection type (RMI or not),
+     * it sends the appropriate actions or updates RMI-specific data.
+     *
+     * @throws RemoteException if there is a failure in remote communication.
+     */
     @FXML
     private void createGame() throws RemoteException {
         if (!client.isRmi()) {
@@ -123,6 +156,9 @@ public class LobbyController {
         showLevelChoice();  // reindirizza al flow di creazione
     }
 
+    /**
+     * Displays the UI elements for selecting a level.
+     */
     public void showLevelChoice() {
         selectLevel.setVisible(true);
         trialLevel.setVisible(true);
@@ -132,6 +168,9 @@ public class LobbyController {
         twoLevel.setManaged(true);
     }
 
+    /**
+     * Hides the level selection UI elements.
+     */
     private void hideLevelChoice() {
         selectLevel.setVisible(false);
         trialLevel.setVisible(false);
@@ -141,6 +180,9 @@ public class LobbyController {
         twoLevel.setManaged(false);
     }
 
+    /**
+     * Displays the choice interface for the user to input their username.
+     */
     public void showUserChoice() {
         usernameField.setVisible(true);
         done.setVisible(true);
@@ -150,6 +192,9 @@ public class LobbyController {
         usernameLabel.setManaged(true);
     }
 
+    /**
+     * Hides the UI elements associated with the user choice interface.
+     */
     public void hideUserChoice() {
         usernameField.setVisible(false);
         usernameField.setManaged(false);
@@ -159,6 +204,11 @@ public class LobbyController {
         usernameLabel.setManaged(false);
     }
 
+    /**
+     * Handles the action triggered when the trial level option is selected.
+     * This method determines the type of connection used by the client (RMI or not)
+     * and configures the game level accordingly.
+     */
     @FXML
     public void onTrialLevel() {
         try{
@@ -176,6 +226,13 @@ public class LobbyController {
         showUserChoice();
     }
 
+    /**
+     * Handles the selection of the second level in the game setup process.
+     *
+     * After processing the level selection, this method updates the user interface:
+     * - Hides the level selection view using {@code hideLevelChoice}.
+     * - Displays the user choice view using {@code showUserChoice}.
+     */
     @FXML
     public void onTwoLevel() {
         try{
@@ -194,6 +251,15 @@ public class LobbyController {
         showUserChoice();
     }
 
+    /**
+     * Handles the action triggered when the "Done" button is clicked in the
+     * lobby view. This method facilitates username assignment and initiates
+     * game-related actions depending on the type of client connection (RMI or not).
+     * If the current client is the game creator, this method also displays the
+     * options for selecting the number of players.
+     *
+     * @throws RemoteException if an error occurs during remote communication.
+     */
     @FXML
     public void onDoneClicked() throws RemoteException{
         String username = usernameField.getText();
@@ -229,7 +295,10 @@ public class LobbyController {
         }
     }
 
-    public void showNumPlayers() {
+    /**
+     * Displays the UI elements for selecting the number of players.
+     */
+    private void showNumPlayers() {
         selectPlayersLabel.setVisible(true);
         twoPlayersButton.setVisible(true);
         threePlayersButton.setVisible(true);
@@ -240,6 +309,10 @@ public class LobbyController {
         fourPlayersButton.setManaged(true);
     }
 
+    /**
+     * Hides the user interface elements related to selecting the number of players.
+     * This includes labels and buttons for two, three, and four players.
+     */
     private void hideNumPlayers() {
         selectPlayersLabel.setVisible(false);
         twoPlayersButton.setVisible(false);
@@ -251,31 +324,58 @@ public class LobbyController {
         fourPlayersButton.setManaged(false);
     }
 
+    /**
+     * Handles the selection of two players during the game setup process.
+     * This method sends an action to the server registering the number of players as two.
+     * It also updates the user interface by hiding the elements related to the
+     * player number selection.
+     *
+     * @param actionEvent the event triggered when the user selects two players
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @FXML
     public void onSelectTwoPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(2));
         hideNumPlayers();
     }
 
+    /**
+     * Handles the selection of three players for the game. This method is triggered
+     * when the three players option is selected in the UI. It sends the action to
+     * register the number of players as three to the client and hides the player
+     * selection UI afterward.
+     *
+     * @param actionEvent the ActionEvent that triggered this method, typically associated
+     *                    with the selection of the three players option in the UI
+     * @throws RemoteException if there is a failure in remote communication
+     */
     @FXML
     public void onSelectThreePlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(3));
         hideNumPlayers();
     }
 
+    /**
+     * Handles the selection of four players during the game setup process.
+     * This method performs the following actions:
+     * - Sends an action to the client indicating that four players have been selected.
+     * - Hides the UI components related to the number of players selection.
+     *
+     * @param actionEvent the event triggered when the four players option is selected
+     * @throws RemoteException if an error occurs during remote communication
+     */
     @FXML
     public void onSelectFourPlayers(javafx.event.ActionEvent actionEvent) throws RemoteException {
         client.sendAction(new RegisterNumPlayers(4));
         hideNumPlayers();
     }
 
+    /**
+     * Clears text
+     */
     public void flushText() {
         usernameField.setText("");
     }
-
-
-
-
 
 
 
