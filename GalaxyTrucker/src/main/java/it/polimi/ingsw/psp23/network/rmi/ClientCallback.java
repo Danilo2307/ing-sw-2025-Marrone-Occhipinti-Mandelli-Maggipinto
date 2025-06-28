@@ -33,7 +33,9 @@ public class ClientCallback extends UnicastRemoteObject implements ClientCallbac
 
     @Override
     public void disconnectClient() throws RemoteException {
+        view.endMatch("La partita è terminata perchè un player è uscito\n");
         UnicastRemoteObject.unexportObject(this, true);
+        System.exit(130);
     }
 
     @Override
