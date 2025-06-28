@@ -6,6 +6,7 @@ import it.polimi.ingsw.psp23.exceptions.PlayerExistsException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
 import it.polimi.ingsw.psp23.network.UsersConnected;
+import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
@@ -14,6 +15,7 @@ import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
 import it.polimi.ingsw.psp23.protocol.response.IncorrectWelding;
+import it.polimi.ingsw.psp23.protocol.response.MatchAbandoned;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -219,7 +221,7 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
                         String nameConnection = registry.getNameConnectionFromCallback(client);
                         String nickname = registry.getPlayerNicknameFromConnection(nameConnection);
                         int gameId = UsersConnected.getInstance().getGameFromUsername(nickname).getId();
-                        // Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchFinished("La partita è terminata perchè un player è uscito")), gameId);
+                        Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito")), gameId);
                         Server.getInstance().disconnectAll(gameId, nickname);
                     }
                 }

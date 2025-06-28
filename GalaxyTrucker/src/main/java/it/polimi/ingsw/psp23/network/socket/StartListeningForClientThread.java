@@ -61,7 +61,12 @@ public class StartListeningForClientThread extends Thread {
                     break;
                 }
             }
-            Message receivedMessage = Server.getInstance().receiveMessage(connectionID);
+            Message receivedMessage = null;
+            try {
+                receivedMessage = Server.getInstance().receiveMessage(connectionID);
+            }catch(Exception e){
+
+            }
             System.out.println("Message read in class StartListeningForClientThread: " + receivedMessage);
             if(receivedMessage != null) {
                 Users.getInstance().getClientHandler(connectionID).handleMessage(receivedMessage);
