@@ -5,7 +5,7 @@ import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.model.cards.visitor.HelpVisitor;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 
 public record Help() implements Action {

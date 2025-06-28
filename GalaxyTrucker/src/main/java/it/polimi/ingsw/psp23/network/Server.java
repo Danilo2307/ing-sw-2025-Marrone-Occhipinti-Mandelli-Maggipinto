@@ -1,14 +1,14 @@
-package it.polimi.ingsw.psp23.network.socket;
+package it.polimi.ingsw.psp23.network;
 
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.enumeration.GameStatus;
-import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
 import it.polimi.ingsw.psp23.network.messages.GetActionVisitor;
 import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
+import it.polimi.ingsw.psp23.network.socket.SocketHandler;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.request.HandleActionVisitor;
 import it.polimi.ingsw.psp23.protocol.request.SetUsernameActionVisitor;
@@ -577,20 +577,6 @@ public class Server {
         }
     }
 
-    public void stampa() {
-        if (clients.isEmpty()) {
-            System.out.println("No client connected");
-        } else {
-            for (HashMap.Entry<String, SocketHandler> entry : clients.entrySet()) {
-                String connectionId = entry.getKey();
-                SocketHandler handler = entry.getValue();
-                Socket socket = handler.socket;  // stessa package; altrimenti aggiungi getSocket()
-
-                System.out.println("ConnectionId: " + connectionId + ", RemoteAddress: " + socket.getRemoteSocketAddress());
-                System.out.println("");
-            }
-        }
-    }
 
     public int getSize() {
         return clients.size();

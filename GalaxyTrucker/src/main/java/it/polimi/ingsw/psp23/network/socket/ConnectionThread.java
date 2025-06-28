@@ -1,5 +1,7 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.Server;
+
 import java.util.UUID;
 
 /**

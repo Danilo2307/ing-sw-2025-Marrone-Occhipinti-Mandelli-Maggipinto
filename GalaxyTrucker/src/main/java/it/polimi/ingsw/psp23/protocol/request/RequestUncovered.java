@@ -2,10 +2,8 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
 
 public record RequestUncovered() implements Action {

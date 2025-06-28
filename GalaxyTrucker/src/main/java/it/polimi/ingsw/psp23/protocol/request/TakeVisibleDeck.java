@@ -5,15 +5,12 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.cards.Card;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 import it.polimi.ingsw.psp23.protocol.response.VisibleDeckResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public record TakeVisibleDeck(int index) implements Action{
 

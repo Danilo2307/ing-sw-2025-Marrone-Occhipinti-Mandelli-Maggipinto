@@ -16,7 +16,7 @@ import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

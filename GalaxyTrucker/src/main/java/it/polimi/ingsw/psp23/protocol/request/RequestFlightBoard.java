@@ -4,14 +4,11 @@ import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.response.FlightBoardResponse;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public record RequestFlightBoard() implements Action{

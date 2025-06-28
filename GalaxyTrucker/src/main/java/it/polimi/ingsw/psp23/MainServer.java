@@ -1,27 +1,17 @@
 package it.polimi.ingsw.psp23;
 
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
-import it.polimi.ingsw.psp23.model.Game.Game;
-import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.network.socket.Users;
-import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
 
-import java.net.Inet4Address;
-import java.net.InetAddress;
-import java.net.NetworkInterface;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.Enumeration;
 import java.util.UUID;
 
 

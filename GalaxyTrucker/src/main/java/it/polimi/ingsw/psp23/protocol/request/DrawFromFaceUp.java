@@ -5,17 +5,13 @@ import it.polimi.ingsw.psp23.exceptions.NoTileException;
 import it.polimi.ingsw.psp23.model.Game.Game;
 import it.polimi.ingsw.psp23.model.components.Component;
 import it.polimi.ingsw.psp23.network.UsersConnected;
-import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.messages.Message;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.response.ErrorResponse;
-import it.polimi.ingsw.psp23.protocol.response.StringResponse;
 import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 import it.polimi.ingsw.psp23.protocol.response.UncoveredListResponse;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /** Event triggered when the user wants to draw a face-up component at position x. */
 public record DrawFromFaceUp (int x, int version) implements Action {

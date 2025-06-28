@@ -3,7 +3,7 @@ package it.polimi.ingsw.psp23.network.rmi;
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
 import it.polimi.ingsw.psp23.network.Client;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
-import it.polimi.ingsw.psp23.network.socket.Server;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.protocol.request.Action;
 import it.polimi.ingsw.psp23.protocol.response.LobbyUnavailable;
 import it.polimi.ingsw.psp23.view.ClientEventHandler;

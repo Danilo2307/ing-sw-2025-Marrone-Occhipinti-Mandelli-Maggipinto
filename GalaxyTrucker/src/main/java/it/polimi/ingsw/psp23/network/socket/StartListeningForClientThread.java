@@ -1,5 +1,6 @@
 package it.polimi.ingsw.psp23.network.socket;
 
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.network.messages.Message;
 
 /**

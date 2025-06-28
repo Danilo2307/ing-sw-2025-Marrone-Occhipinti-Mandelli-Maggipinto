@@ -12,14 +12,21 @@ import java.net.SocketTimeoutException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
+
+/**
+ * The Client class represents an abstract entity for managing connections and communications
+ * within a client-server architecture.
+ *
+ * This class acts as a base implementation for client-side functionality, providing methods
+ * to send and receive messages or actions, manage client-server communication, and handle
+ * other common behaviors required for interaction with a server.
+ */
 public abstract class Client {
 
     // attributo contenente l'identificativo del game a cui appartengono i client
     int id;
 
-    public void sendAction(Action action) throws RemoteException{
-
-    }
+    public void sendAction(Action action) throws RemoteException{ }
     public boolean isRmi() throws RemoteException{
         return false;
     }
