@@ -8,6 +8,24 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
+
+/**
+ * ClientRMIHandlerInterface defines a remote interface for handling
+ * client-server interactions in a distributed system using RMI (Remote Method Invocation).
+ *
+ * This interface provides methods for various functionalities including:
+ * - Registering a client and managing client callbacks.
+ * - Sending messages to specific users or broadcast messages to multiple clients.
+ * - Performing game-level operations such as setting levels, checking game status,
+ *   managing players, and monitoring connected users.
+ * - Initiating game phases like the building phase.
+ * - Disconnecting players and managing available games.
+ *
+ * All listed methods throw {@link RemoteException} to handle issues
+ * that may occur during remote communication.
+ *
+ * This interface extends {@link Remote}, enabling it to serve as an RMI remote object.
+ */
 public interface ClientRMIHandlerInterface extends Remote{
     void registerClient(String username, String nameConnection, ClientCallbackInterface stub) throws RemoteException;
     void heartbeat(String username) throws RemoteException;

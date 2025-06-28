@@ -31,6 +31,16 @@ public class ClientSocket extends Client {
     StartListeningForServerThread startListeningForServerThread;
 
 
+    /**
+     * Constructs a new ClientSocket that establishes a connection to the server
+     * and initializes the necessary components for communication and handling events.
+     *
+     * @param serverIP the IP address of the server to connect to
+     * @param port the port number on the server to connect to
+     * @param username the username of the client connecting to the server
+     * @param clientEventHandler the event handler responsible for processing events received from the server
+     * @throws RuntimeException if an error occurs while creating the socket connection
+     */
     // Nel costruttore verrà eseguita la connessione tra client e server
     public ClientSocket(String serverIP, int port, String username, ClientEventHandler clientEventHandler) {
 
