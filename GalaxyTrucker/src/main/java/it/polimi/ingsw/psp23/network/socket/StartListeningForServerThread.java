@@ -32,8 +32,13 @@ public class StartListeningForServerThread extends Thread {
     public void run() {
         try{
             while(running){
-                Message message = socketHandler.readMessage();
-                if(message != null) {
+                Message message = null;
+                try {
+                    message = socketHandler.readMessage();
+                }catch(Exception e){
+                    running = false;
+                }
+                if(running && message != null) {
 
                     // Dopo che ci arriva un messaggio dobbiamo interpretarlo. Se è un messaggio di tipo "observer"
                     // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
