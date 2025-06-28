@@ -27,9 +27,13 @@ import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 
-// carica la prima scena e inizializza tutti gli oggetti di servizio come ad esempio i controller.
-// la prima scena viene caricata con l'aiuto di FxmlViewLOader, inoltre questa classe contiene il main
-// da cui viene effettivamente fatta partire la gui
+/**
+ * GuiApplication is the graphical user interface entry point and main controller for the client application.
+ * It manages the application lifecycle, transitions between game phases, and interaction
+ * with the client and server through the ViewAPI interface. The class enables users to interact with
+ * the game via a GUI using JavaFX.
+ * GuiApplication extends JavaFX's Application and implements ViewAPI to handle game server updates effectively.
+ */
 public class GuiApplication extends Application implements ViewAPI {
     private static final CountDownLatch latch = new CountDownLatch(1);
     private Client client;
@@ -72,6 +76,9 @@ public class GuiApplication extends Application implements ViewAPI {
         return level;
     }
 
+    /**
+     * @return the singleton {@code GuiApplication} instance
+     */
     public static GuiApplication getInstance() {
         return instance;
     }
@@ -81,6 +88,14 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
 
+    /**
+     * Initializes and displays the primary stage of the application. This method is responsible for loading
+     * the initial FXML file, setting up the respective controller, and preparing the GUI environment for the game.
+     * Once the setup is complete, it notifies the application by decrementing the latch count to allow further execution.
+     *
+     * @param stage the primary stage for the application, provided by the JavaFX runtime
+     * @throws Exception if there is an issue loading the FXML file or initializing the stage
+     */
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -115,50 +130,44 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
 
+    /**
+     * Configures the socket connection on the client side and starts the server listening thread.
+     * This method invokes the {@code avvia()} method of the {@code Client} class, ensuring that
+     * the client is ready to receive and process server events.
+     */
     @Override
     public void setup() {
         client.avvia();
-        /*
-        Socket socket = client.getSocket();
-        try {
-            socket.setSoTimeout(1000);
-            Message messaggio = client.readMessage();
-            messaggio.call(new GetEventVisitor()).call(new HandleEventVisitor(), this);
-            client.avvia();
-            socket.setSoTimeout(0);
-        } catch (SocketTimeoutException ste) {
-            try {
-                socket.setSoTimeout(0);
-                client.avvia();
-                lobbyController.showUserChoice();
-            }
-            catch (SocketException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        catch (SocketException e) {
-            throw new RuntimeException(e);
-        }
-     */ }
+    }
 
 
+    /**
+     * Sets up the RMI (Remote Method Invocation) connection for the client by retrieving the list of
+     * available games from the game server and sending this information encapsulated in a
+     * {@link DirectMessage} to the specified user connection.
+     *
+     * @param nameConnection the name of the connection to which the {@link DirectMessage} containing
+     *                       the available lobbies information is sent.
+     * @throws RemoteException if there is a communication-related exception during the RMI operation.
+     */
     @Override
     public void setupRMI(String nameConnection) throws RemoteException{
 
         List<List<Integer>> matchesAvailable = client.getGameServer().getGamesAvailables();
         client.getGameServer().sendToUser(nameConnection, new DirectMessage(new LobbyAvailable(matchesAvailable)));
-
-        /*
-        if(client.getGameServer().getNumPlayersConnected(client.getId()) == 1) {
-
-            Message msg = (new DirectMessage(new SelectLevel()));
-            client.getGameServer().sendToUser(nameConnection, msg);
-        }
-        else{
-            lobbyController.showUserChoice();
-        }*/
     }
 
+    /**
+     * Prepares and transitions the application's user interface to the building phase.
+     * If the building phase scene has not been initialized, it loads the FXML file,
+     * sets up the corresponding controller and scene, and displays it. If the scene
+     * is already initialized, it simply sets the existing scene as active.
+     * Additionally, it configures the scene based on the player's color by updating
+     * the central cabin.
+     *
+     * @param playerColor the {@link Color} representing the player's assigned color,
+     *                    used to customize and configure the building phase layout.
+     */
     public void toBuildingPhase(Color playerColor) {
         if(buildingPhaseScene == null) {
             FXMLLoader loader = new FXMLLoader(
@@ -194,6 +203,13 @@ public class GuiApplication extends Application implements ViewAPI {
         //lobbyController.showNumPlayers();
     }
 
+    /**
+     * This method hides the user choice elements in the lobby interface and stores the
+     * user's level for future use.
+     *
+     * @param username the username to be displayed or assigned
+     * @param level the level associated with the user
+     */
     @Override
     public void showAppropriateUsername(String username, int level) {
         myNickname = username;
@@ -201,6 +217,13 @@ public class GuiApplication extends Application implements ViewAPI {
         this.level = level;
     }
 
+    /**
+     * Displays an error message signaling that the entered username is invalid.
+     * This method uses the JavaFX `Platform.runLater` functionality to ensure
+     * that the user interface updates occur on the JavaFX Application Thread.
+     * It clears the username input field in the lobby, then shows an alert dialog
+     * of type `ERROR` to inform the user to provide a different username.
+     */
     @Override
     public void showWrongUsername() {
         Platform.runLater(() -> {
@@ -213,6 +236,15 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
+    /**
+     * Displays the tile based on the given component.
+     * If the requested component represents the central cabin (IDs >= 900),
+     * the player's color is updated accordingly, and the building phase setup begins.
+     * Otherwise, forwards the request to the building phase controller to handle the display.
+     *
+     * @param requested the component representing the tile to be shown,
+     *                  identified by its unique ID.
+     */
     @Override
     public void showTile(Component requested) {
         // se è la cabina centrale salvo il colore e la aggiungo all'inizio di buildingphase
@@ -233,6 +265,14 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
+    /**
+     * Displays the ship configuration for a specific user during the game. Depending on whether
+     * the owner of the ship matches the user's nickname, the method initializes and renders
+     * appropriate scenes and controllers to show the ship details.
+     *
+     * @param ship a 2-dimensional array of {@code Component} objects representing the ship's current configuration
+     * @param owner the nickname of the ship's owner whose ship configuration is being displayed
+     */
     @Override
     public void showShip(Component[][] ship, String owner) {
         if (!owner.equals(myNickname)) {
@@ -262,11 +302,25 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
+    /**
+     * This method forwards the uncovered components and version information to the
+     * building phase controller for handling and display.
+     *
+     * @param uncovered the list of {@code Component} objects that have been uncovered
+     *                  and need to be displayed
+     * @param lastVersion an integer representing the latest version of the uncovered components
+     */
     @Override
     public void showUncovered(ArrayList<Component> uncovered, int lastVersion) {
         buildingPhaseController.showUncovered(uncovered, lastVersion);
     }
 
+    /**
+     * Displays an error message in a blocking alert dialog.
+     * The error message is shown on the JavaFX Application Thread to ensure proper UI rendering.
+     *
+     * @param error the error message to be displayed in the dialog
+     */
     @Override
     public void showError(String error) {
         Platform.runLater(() -> {
@@ -277,6 +331,12 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
+    /**
+     * Displays an informational message in a blocking alert dialog using the JavaFX platform.
+     * The method ensures that the alert dialog is created and displayed on the JavaFX Application Thread.
+     *
+     * @param message the informational message to be displayed in the dialog
+     */
     @Override
     public void showMessage(String message) {
         Platform.runLater(()  -> {
@@ -287,6 +347,12 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
+    /**
+     * Handles the transitions between game states by updating the current {@code gameStatus}
+     * and invoking the corresponding UI updates for each state.
+     *
+     * @param newState the {@link GameStatus} representing the new state of the game
+     */
     @Override
     public void stateChanged(GameStatus newState) {
         gameStatus = newState;
@@ -300,14 +366,24 @@ public class GuiApplication extends Application implements ViewAPI {
         });
     }
 
+    /**
+     * Displays a message indicating that a cannon shot is incoming, along with details
+     * about the size and direction of the shot, and its associated coordinate.
+     *
+     * @param coord the coordinate related to the cannon shot
+     * @param cannonShot the {@link CannonShot} object representing the fired shot,
+     *                   including its size and direction
+     */
     @Override
     public void showCannonShot(int coord, CannonShot cannonShot) {
         showMessage("Sta arrivando una cannonata " + cannonShot.isBig() + " dalla direzione " + cannonShot.getDirection() + coord);
     }
 
 
-
-
+    /**
+     * This method delegates the processing to the building phase controller, ensuring that the illegal truck
+     * logic or behavior is appropriately handled within the current game phase.
+     */
     @Override
     public void showIllegalTruck() {
         buildingPhaseController.toCheck();
@@ -331,11 +407,23 @@ public class GuiApplication extends Application implements ViewAPI {
 
 
 
+    /**
+     * Ends the current match and displays a message to the user.
+     * This method delegates the task of showing the message to the {@code showMessage} method.
+     *
+     * @param message the message to be displayed when the player quits from the flight phase
+     */
     @Override
     public void endMatch(String message) {
         showMessage(message);
     }
 
+    /**
+     * Updates the game interface with the provided message during the flight phase.
+     * The method ensures that the user interface is updated on the JavaFX Application Thread.
+     *
+     * @param message the message to be displayed on the card in the flight phase
+     */
     @Override
     public void showCardUpdate(String message) {
         Platform.runLater(() -> {
@@ -344,6 +432,14 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
 
+    /**
+     * Displays the deck screen in the application. This method initializes the deck view,
+     * loads the corresponding FXML file, and sets up the images for the cards specified by their IDs.
+     * The method ensures that the user interface updates occur on the JavaFX Application Thread.
+     *
+     * @param idCards the list of integers representing the IDs of the cards to be displayed
+     * @param description the description to be displayed along with the cards
+     */
     @Override
     public void showDeck(ArrayList<Integer> idCards, String description) {
         ImageView card1;
@@ -375,6 +471,12 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
+    /**
+     * Displays a new card and triggers the corresponding actions in the flight-phase controller based on the card's ID.
+     *
+     * @param id the unique identifier of the card to be displayed
+     * @param description a description of the card being displayed
+     */
     @Override
     public void showNewCard(int id, String description) {
         Platform.runLater(() -> {
@@ -416,11 +518,16 @@ public class GuiApplication extends Application implements ViewAPI {
                 case 108, 220 -> {
                     flightPhaseController.combatZoneCommands();
                 }
-
             }
         });
     }
 
+    /**
+     * Makes adjustments to the game interface when a tile placement is deemed incorrect.
+     * This method is executed on the JavaFX Application Thread using the `Platform.runLater` mechanism.
+     * It ensures that the tile currently held is made visible and that the cell
+     * designated for tile removal is cleared of its children nodes.
+     */
     @Override
     public void incorrectTile(){
         Platform.runLater(() -> {
@@ -430,6 +537,14 @@ public class GuiApplication extends Application implements ViewAPI {
 
     }
 
+    /**
+     * Displays the flight board interface by setting up the appropriate scene
+     * depending on the current game level. It updates the board with the provided
+     * player positions and ensures the correct UI is loaded.
+     *
+     * @param positions a map containing the player positions, where the key represents
+     *                  the player color and the value represents their respective position.
+     */
     @Override
     public void showFlightBoard(Map<Color,Integer> positions){
         FXMLLoader loader;
@@ -492,6 +607,10 @@ public class GuiApplication extends Application implements ViewAPI {
         flightBoardController2.disableDeckClick();
     }
 
+    /**
+     * Transitions the application to the "flight phase" view by loading the associated FXML file
+     * and initializing its controller. If the scene has already been created, it switches directly to it.
+     */
     public void toFlightPhase(){
         if(flightPhaseController == null) {
             FXMLLoader loader = new FXMLLoader(
@@ -521,12 +640,24 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
+    /**
+     * Retrieves a list of usernames excluding the current user's nickname.
+     *
+     * @return an ArrayList of usernames in the game excluding the current user's nickname
+     */
     public ArrayList<String> getOtherUsers() {
         ArrayList<String> copy = new ArrayList<>(usernames); // copia difensiva
         copy.remove(myNickname); // rimuove il proprio nickname
         return copy;
     }
 
+    /**
+     * Transitions the game state back to the ship phase based on the current game status.
+     * If the game status is in the building phase, it transitions to the building phase.
+     * Otherwise, it transitions to the flight phase.
+     * This method ensures the UI transitions are correctly handled based
+     * on the current context.
+     */
     public void backToShip(){
         if(gameStatus == GameStatus.Building)
             toBuildingPhase(null);
@@ -534,11 +665,25 @@ public class GuiApplication extends Application implements ViewAPI {
             toFlightPhase();
     }
 
+    /**
+     * Displays the list of available lobbies by forwarding the provided information
+     * to the lobby controller.
+     *
+     * @param availableLobbies a list containing details of available lobbies, where
+     *                         each inner list represents specific information regarding a lobby
+     */
     @Override
     public void showAvailableLobbies(List<List<Integer>> availableLobbies){
         lobbyController.showLobbies(availableLobbies);
     }
 
+    /**
+     * Displays the ranking screen at the end of the game.
+     *
+     * @param ranking a list of player rankings where each entry represents a player,
+     *                with the key being the player's name (String) and the value
+     *                being their score (Integer)
+     */
     @Override
     public void showRanking(List<AbstractMap.SimpleEntry<String,Integer>> ranking) {
         FXMLLoader loader = new FXMLLoader(
@@ -557,6 +702,11 @@ public class GuiApplication extends Application implements ViewAPI {
         }
     }
 
+    /**
+     * Saves the list of player names into the usernames list.
+     *
+     * @param players the list of player names to be saved
+     */
     @Override
     public void savePlayersNames(List<String> players) {
         usernames = new ArrayList<>(players);
