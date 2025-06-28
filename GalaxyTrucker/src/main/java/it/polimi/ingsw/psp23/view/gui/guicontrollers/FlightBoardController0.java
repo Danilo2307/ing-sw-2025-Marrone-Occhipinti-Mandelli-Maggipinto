@@ -10,6 +10,11 @@ import java.util.Map;
 import java.util.Objects;
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 
+
+/**
+ * The FlightBoardController0 class is responsible for controlling the flight board user interface in the application.
+ * It provides functionalities to manage and update flight board elements and interactions based on the game state.
+ */
 public class FlightBoardController0 {
     @FXML private Button backToShip;
     @FXML private ImageView position0;
@@ -46,12 +51,24 @@ public class FlightBoardController0 {
     }
 
 
+    /**
+     * Handles the action event triggered by clicking the "Back to Ship" button in the GUI.
+     * This method directs the user back to the ship screen of the application by invoking
+     * the appropriate method in the GuiApplication instance.
+     */
     @FXML
     public void onBackToShipClicked(){
         GuiApplication.getInstance().backToShip();
     }
 
 
+    /**
+     * Updates the graphical positions on the board with images associated with specific colors and their corresponding positions.
+     * This method clears any existing images in the positions array and maps new images based on the given color-position mapping.
+     *
+     * @param colors a map containing color-to-position associations, where the key is the Color type of the player and
+     *               the value is the position index at which the color's image should be displayed
+     */
     public void setColors(Map<Color,Integer> colors){
 
         for(int i =0; i<positions.length; i++){
@@ -82,6 +99,5 @@ public class FlightBoardController0 {
 
         }
     }
-
 
 }

@@ -28,6 +28,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+/**
+ * The BuildingPhaseController class is responsible for managing the building phase of a game.
+ * It interacts with the user interface and processes various user actions related to building,
+ * reserving, and managing tiles and components during the game phase.
+ *
+ * Class members include functionality to handle:
+ * - Drag-and-drop interactions for placing/removing tiles and components
+ * - Managing client-server communication for actions like reserving tiles, drawing from heaps, and more
+ * - Updating UI components such as buttons and slots
+ * - Handling events triggered by user interactions (e.g., rotating components, adding crew members).
+ */
 public class BuildingPhaseController {
     private Client client;
     int lastVersion;
@@ -77,11 +89,21 @@ public class BuildingPhaseController {
     boolean inAddCrew = false;
     boolean putClicked = false;
 
+    /**
+     * Enables the specified button by making it visible and allowing it to be managed by the layout.
+     *
+     * @param button the button to be enabled
+     */
     private void enable(Button button) {
         button.setVisible(true);
         button.setManaged(true);
     }
 
+    /**
+     * Disables the specified button by setting its visibility and manageability to false.
+     *
+     * @param button the button to be disabled
+     */
     private void disable(Button button) {
         button.setVisible(false);
         button.setManaged(false);
@@ -91,6 +113,13 @@ public class BuildingPhaseController {
         return tileInHand;
     }
 
+    /**
+     * Handles the event when a timer ends by toggling the visibility and manageability
+     * of the "put" button if it has not been clicked.
+     *
+     * This method ensures that the "put" button is visible and managed only if the
+     * user has not already interacted with it by clicking it.
+     */
     public void timerEnded() {
         if(!putClicked) {
                 putBtn.setVisible(true);
@@ -98,14 +127,33 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Retrieves the current cell to be removed in the BuildingPhaseController.
+     *
+     * @return the StackPane representing the cell to remove
+     */
     public StackPane getCellToRemove() {
         return cellToRemove;
     }
 
+    /**
+     * Sets the client instance for this controller.
+     *
+     * @param client the client to be associated with this controller.
+     *               This client typically manages communication and
+     *               interactions with the game server.
+     */
     public void setClient(Client client) {
         this.client = client;
     }
 
+    /**
+     * Initializes the graphical user interface for the building phase of the game.
+     *
+     * Depending on the game level, this method adjusts the board image and manages visibility
+     * and layout of specific elements. It sets up the grid for the player's ship with appropriate
+     * drop capabilities for tiles, reserving some cells based on level-specific conditions.
+     */
     public void initialize() {
 
         if(GuiApplication.getInstance().getLevel() == 0){
@@ -157,6 +205,13 @@ public class BuildingPhaseController {
         finishedBtn.setManaged(false);
     }
 
+    /**
+     * Handles the drag-and-drop detection when a drag event is initiated on the tile in hand.
+     * Initiates a drag operation if there is an image present in the tile being interacted with.
+     * Consumes the event to prevent further propagation.
+     *
+     * @param event the MouseEvent associated with the drag detection action
+     */
     @FXML
     private void handleDragDetected(MouseEvent event) {
         if (tileInHand.getImage() == null) {
@@ -170,6 +225,15 @@ public class BuildingPhaseController {
         event.consume();
     }
 
+    /**
+     * Configures a StackPane cell to handle various user interactions, including mouse hover
+     * effects and drag-and-drop events. This method manages the visual feedback for the cell
+     * during these interactions and processes actions for dropping a tile into the cell.
+     *
+     * @param cell the StackPane representing the cell to configure for user interaction
+     * @param row the row index of the cell in the grid
+     * @param col the column index of the cell in the grid
+     */
     private void setupCellForDrop(StackPane cell, int row, int col) {
 
         cell.setOnMouseEntered(e -> {
@@ -227,7 +291,15 @@ public class BuildingPhaseController {
         });
     }
 
-    public void setupReserveSlot(StackPane slot) {
+    /**
+     * Sets up a StackPane to handle drag-and-drop functionality for reserving a tile.
+     * The method configures the given StackPane with event handlers for drag over and drag drop actions.
+     * It checks if the drag event contains an image and processes the drop to add the image
+     * to the `slot` and send a reserve action to the client.
+     *
+     * @param slot the StackPane that serves as the target for drag-and-drop operations
+     */
+    private void setupReserveSlot(StackPane slot) {
         slot.setOnDragOver(event -> {
             if (event.getGestureSource() != slot && event.getDragboard().hasImage()) {
                 event.acceptTransferModes(TransferMode.MOVE);
@@ -258,6 +330,12 @@ public class BuildingPhaseController {
         });
     }
 
+    /**
+     * Handles the action of picking up the first reserved tile (index 0) from the reserved slot.
+     * This operation relies on communication to handle the action on the server side.
+     *
+     * @throws RemoteException if a communication-related exception occurs during the client action.
+     */
     @FXML
     public void takeReserved1() throws RemoteException {
         if (!reserved1.getChildren().isEmpty()) {
@@ -272,6 +350,16 @@ public class BuildingPhaseController {
         }
     }
 
+    /**
+     * Handles the process of taking the reserved tile from the second reserved slot.
+     * This method checks if the second reserved slot contains a tile. If a tile is present,
+     * it sends an action to the client to take the reserved tile, sets the image of the
+     * tile in the player's hand to the tile from the reserved slot, and makes the necessary
+     * updates to the UI components.
+     *
+     * @throws RemoteException if there is an issue communicating with the server or performing
+     *                         the required remote operation.
+     */
     @FXML
     public void takeReserved2() throws RemoteException {
         if (!reserved2.getChildren().isEmpty()) {
@@ -290,6 +378,15 @@ public class BuildingPhaseController {
         return boardStack;
     }
 
+    /**
+     * Updates the central cell of the ship's grid layout based on the provided player's color.
+     * This method dynamically sets up an image corresponding to the player's color in the
+     * central position of the grid. The image is determined by mapping the specified color
+     * to a unique identifier.
+     *
+     * @param playerColor the color of the player, represented as an enum value of type {@code Color}.
+     *                    It determines which image is displayed in the central grid cell.
+     */
     public void setCentral(Color playerColor) {
         int id = 0;
         switch (playerColor) {
