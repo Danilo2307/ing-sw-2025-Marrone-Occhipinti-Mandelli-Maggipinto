@@ -368,7 +368,6 @@ public class TuiApplication implements ViewAPI {
                 }
             }
             case "salda" -> {
-                // TODO: inserire controlli interi ovunque e rendere gli indici delle tiles nella ship 1-based
                 if (!secondHourGlassExpired){
                     try {
                         if (words.length != 3) {

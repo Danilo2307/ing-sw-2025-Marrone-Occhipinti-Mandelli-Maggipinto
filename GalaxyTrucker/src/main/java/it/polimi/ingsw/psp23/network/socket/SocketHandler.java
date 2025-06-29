@@ -92,7 +92,7 @@ public class SocketHandler {
             catch (IOException e) {
                 // e.printStackTrace();
                 int gameId = UsersConnected.getInstance().getGameFromUsername(username).getId();
-                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito")), gameId);
+//                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito\n")), gameId);
                 Server.getInstance().disconnectAll(gameId, username);
                 throw new SocketTimeoutException("stop listening");
                 // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());

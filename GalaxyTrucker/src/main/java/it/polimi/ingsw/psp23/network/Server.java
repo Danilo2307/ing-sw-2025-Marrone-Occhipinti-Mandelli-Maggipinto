@@ -207,7 +207,7 @@ public class Server {
                     if (players.contains(user)) {
                         try {
                             SocketHandler socketHandler = clients.get(s);
-                            socketHandler.sendMessage(new DirectMessage(new MatchFinished("La partita è terminata perchè un player è uscito")));
+                            socketHandler.sendMessage(new DirectMessage(new MatchFinished("La partita è terminata perchè un player è uscito\n")));
                             socketHandler.close();
                             System.out.println("Chiuso client: " + s);
                         } catch (RuntimeException e) {
