@@ -57,7 +57,7 @@ public class Server {
     Server(int port) {
         try {
 
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("localhost"));
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName("172.26.190.81"));
 
             this.serverSocket.setReuseAddress(true);
 
