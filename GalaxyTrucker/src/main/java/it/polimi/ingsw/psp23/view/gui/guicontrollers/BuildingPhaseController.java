@@ -314,7 +314,7 @@ public class BuildingPhaseController {
                 dropped.setFitWidth(86);
                 dropped.setFitHeight(86);
                 slot.getChildren().clear(); // rimuovi vecchie immagini
-                slot.getChildren().get(0).setRotate(tileInHand.getRotate());
+                dropped.setRotate(tileInHand.getRotate());
                 slot.getChildren().add(dropped);
                 try {
                     client.sendAction(new ReserveTile());
