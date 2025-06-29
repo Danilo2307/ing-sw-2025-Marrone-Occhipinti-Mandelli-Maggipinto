@@ -314,6 +314,7 @@ public class BuildingPhaseController {
                 dropped.setFitWidth(86);
                 dropped.setFitHeight(86);
                 slot.getChildren().clear(); // rimuovi vecchie immagini
+                slot.getChildren().get(0).setRotate(tileInHand.getRotate());
                 slot.getChildren().add(dropped);
                 try {
                     client.sendAction(new ReserveTile());
@@ -342,8 +343,8 @@ public class BuildingPhaseController {
             ImageView imageView = (ImageView) reserved1.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(0));
-                tileInHand.setRotate(0);
                 tileInHand.setImage(imageView.getImage());
+                tileInHand.setRotate(imageView.getRotate());
                 tileInHand.setVisible(true);
                 reserved1.getChildren().remove(imageView); // rimuovi dalla riserva
                 reservedInHand = true;
@@ -367,8 +368,8 @@ public class BuildingPhaseController {
             ImageView imageView = (ImageView) reserved2.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(1));
-                tileInHand.setRotate(0);
                 tileInHand.setImage(imageView.getImage());
+                tileInHand.setRotate(imageView.getRotate());
                 tileInHand.setVisible(true);
                 reserved2.getChildren().remove(imageView);
                 reservedInHand = true;
