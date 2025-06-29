@@ -63,7 +63,7 @@ public class MainClient {
             if (protocol == 1) {
                 ClientRMI clientRmi = null;
                 try {
-                    clientRmi = new ClientRMI("172.26.109.5", 4321, null, clientEventHandler);
+                    clientRmi = new ClientRMI("172.26.190.81", 4321, null, clientEventHandler);
                 }
                 catch (LobbyUnavailableException e) {
                     System.out.println("Lobby unavailable");
@@ -73,7 +73,7 @@ public class MainClient {
                 if(interfaceChosen == 2)
                     GuiApplication.getInstance().showLobby();
             } else if (protocol == 2) {
-                client = new ClientSocket("172.26.109.5", 8000, null, clientEventHandler);
+                client = new ClientSocket("172.26.190.81", 8000, null, clientEventHandler);
                 view.setClient(client);
                 view.setup();  // Avvio della view scelta
                 if(interfaceChosen == 2)
