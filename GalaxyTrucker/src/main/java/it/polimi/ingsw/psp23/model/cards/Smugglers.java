@@ -202,8 +202,6 @@ public class Smugglers extends Card {
      */
     public void removePreciousItem(String username, int i, int j, int num) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
-        Component c = game.getPlayerFromNickname(username).getTruck().getShip()[i][j];
-        int indexOfC = game.getPlayerFromNickname(username).getTruck().getContainers().indexOf(c);
         if (game.getGameStatus() != GameStatus.END_SMUGGLERS) {
             throw new CardException("Cannot remove goods");
         }
@@ -212,9 +210,6 @@ public class Smugglers extends Card {
         }
         if(game.getPlayerFromNickname(username).getTruck().calculateGoods() < num){
             throw new CardException("You can only lose batteries");
-        }
-        if(game.getPlayerFromNickname(username).getTruck().getContainers().get(indexOfC).getItems().isEmpty()){
-            throw new CardException("You have no items in this container");
         }
         try {
             Board board = game.getPlayerFromNickname(username).getTruck();

@@ -491,6 +491,9 @@ public class Board {
                 if (index == -1) {
                     throw new ComponentMismatchException("Invalid coordinates: ship[i][j] does not contain a container.");
                 }
+                if(containers.get(index).getItems().isEmpty()){
+                    throw new ComponentMismatchException("You have no items in this container");
+                }
                 Item itemToRemove = containers.get(index).getItems().get(item - 1);
                 // Controllo che l'item sia tra i più preziosi attualmente a bordo
                 if (!isMostPrecious(itemToRemove))
