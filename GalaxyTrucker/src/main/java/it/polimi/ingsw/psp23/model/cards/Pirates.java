@@ -180,7 +180,6 @@ public class Pirates extends Card {
         else{
             game.setGameStatus(GameStatus.END_PIRATES);
             game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
-            game.fireEvent(new TurnOf(game.getGameStatus(), game.getCurrentPlayer().getNickname()));
             if(getLevel() == 2){
                 CannonShot c = cannonShot.get(countCannonShot);
                 for (String player : losers) {
