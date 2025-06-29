@@ -312,8 +312,6 @@ public class Server {
 
                     else if(UsersConnected.getInstance().getClients(gameIdConsidering).size() == 1){
 
-                        // socketHandler.sendMessage(new DirectMessage(new SelectLevel()));
-
                         Message message = socketHandler.readMessage();
 
                         System.out.println(message.toString());
@@ -325,27 +323,10 @@ public class Server {
                     }
                 }
 
-                // Adesso mi occupo di ricevere lo username del player
-                // Queste sono le istruzioni necessarie per ricevere lo username dal client, ELABORARLO e permettere
-                // al game di aggiungere il player alla lista di player tramite l'handle delle action
-
                 Action a = null;
                 String username = null;
 
                 boolean error;
-
-                /*do {
-                    try {
-                        a = socketHandler.readMessage().call(new GetActionVisitor());
-                        username = a.call(new SetUsernameActionVisitor());
-                        a.call(new HandleActionVisitor(), username);
-                        error = false;
-                    }
-                    catch(PlayerExistsException e){
-                        socketHandler.sendMessage(new DirectMessage(new WrongUsername()));
-                        error = true;
-                    }
-                } while(error);*/
 
                 do {
                         a = socketHandler.readMessage().call(new GetActionVisitor());
@@ -363,22 +344,8 @@ public class Server {
                 } while(error);
 
                 socketHandler.sendMessage(new DirectMessage(new AppropriateUsername(username, games.get(gameIdConsidering).getLevel())));
-                /*int indiceUsernameDaCambiare = usersConnected.indexOf(username);
-                usersConnected.remove(indiceUsernameDaCambiare);
-                usersConnected.add(indiceUsernameDaCambiare, username);*/
+
                 socketHandler.setUsername(username);
-
-                /*synchronized (Server.getInstance().getClients()) {
-                    if (Server.getInstance().getClients().size() == 1 && UsersConnected.getInstance().getClients().size() != 1) {
-                        // Se è chiusa e siamo nel primo player riapriamo la serversocket
-
-                        //Server.getInstance().setServerSocket("localhost", 8000);
-
-                        // In questo punto permettiamo al Server di accettare nuovi client
-                        ConnectionThread.getInstance().start();
-                    }
-                }*/
-
 
                 if(UsersConnected.getInstance().getClients(gameIdConsidering).size() == games.get(gameIdConsidering).getNumRequestedPlayers()){
                     games.get(gameIdConsidering).getController().startBuildingPhase();
