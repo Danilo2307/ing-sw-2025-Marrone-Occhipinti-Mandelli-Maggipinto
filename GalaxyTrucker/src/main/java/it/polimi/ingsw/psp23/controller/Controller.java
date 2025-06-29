@@ -202,11 +202,9 @@ public class Controller {
      *      is sent directly to the player, interrupting the execution to prevent further progression.
      * 3. If all trucks pass validation, it updates the allowed aliens for each player's truck.
      * 4. Calls the {@code startSetCrew} method to transition to the next phase of the game.
-     *
-     * @throws IllegalTruckException if an error occurs during the truck validation phase,
-     *         preventing the game from continuing.
+     *.
      */
-    public void startCheckBoard() throws IllegalTruckException {
+    public void startCheckBoard()  {
 
         if (Server.getInstance().getGame(gameId).getGameStatus() == GameStatus.Building) {
             timer.shutdown();
