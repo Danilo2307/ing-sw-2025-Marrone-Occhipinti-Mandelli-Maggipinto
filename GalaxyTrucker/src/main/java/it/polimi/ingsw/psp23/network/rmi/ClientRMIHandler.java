@@ -384,14 +384,14 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
                         String nameConnection = registry.getNameConnectionFromCallback(client);
                         String nickname = registry.getPlayerNicknameFromConnection(nameConnection);
                         int gameId = UsersConnected.getInstance().getGameFromUsername(nickname).getId();
-                        Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito")), gameId);
+//                        Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito")), gameId);
                         Server.getInstance().disconnectAll(gameId, nickname);
                     }
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
-        }, 0, 1, TimeUnit.SECONDS);
+        }, 0, 50, TimeUnit.MILLISECONDS);
     }
 
     /**

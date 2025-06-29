@@ -1,6 +1,10 @@
 package it.polimi.ingsw.psp23;
 
 import it.polimi.ingsw.psp23.exceptions.LobbyUnavailableException;
+import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.UsersConnected;
+import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.network.messages.Message;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistry;
 import it.polimi.ingsw.psp23.network.rmi.ClientRegistryInterface;
 import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandlerInterface;
@@ -8,17 +12,23 @@ import it.polimi.ingsw.psp23.network.rmi.ClientRMIHandler;
 import it.polimi.ingsw.psp23.network.socket.ConnectionThread;
 import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.network.socket.Users;
+import it.polimi.ingsw.psp23.protocol.response.RequestNumPlayers;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.Enumeration;
 import java.util.UUID;
 
 
 public class MainServer {
     public static void main(String[] args) throws RemoteException {
 
-        System.setProperty("java.rmi.server.hostname", "172.26.190.81");
+        System.setProperty("java.rmi.server.hostname", "172.26.109.5");
 
         // 2) --- Avvio del registry RMI sulla 1099 ---
         Registry rmiRegistry = LocateRegistry.createRegistry(4321);
@@ -33,7 +43,7 @@ public class MainServer {
 
         System.out.println("RMI registry avviato su port 4321");
 
-        Server.getInstance("172.26.190.81", 8000, rmiServer);
+        Server.getInstance("172.26.109.5", 8000, rmiServer);
 
         // attendo primo client: salvo il suo username e decido numero di avversari
         String connectionId = UUID.randomUUID().toString();
