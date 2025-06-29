@@ -2,9 +2,11 @@ package it.polimi.ingsw.psp23.protocol.request;
 
 import it.polimi.ingsw.psp23.model.Game.Player;
 import it.polimi.ingsw.psp23.model.Game.Game;
+import it.polimi.ingsw.psp23.network.Server;
 import it.polimi.ingsw.psp23.network.UsersConnected;
 import it.polimi.ingsw.psp23.network.messages.BroadcastMessage;
 import it.polimi.ingsw.psp23.network.messages.DirectMessage;
+import it.polimi.ingsw.psp23.protocol.response.TileResponse;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ public record TakeReservedTile(int index) implements Action{
             trueIndex = 0;
         }
         p.takeReservedTile(trueIndex);
+        Server.getInstance().sendMessage(username,new DirectMessage(new TileResponse(p.getCurrentTileInHand())));
     }
 
     @Override

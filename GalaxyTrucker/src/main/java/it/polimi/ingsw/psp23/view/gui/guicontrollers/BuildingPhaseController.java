@@ -315,7 +315,7 @@ public class BuildingPhaseController {
                 dropped.setFitWidth(86);
                 dropped.setFitHeight(86);
                 slot.getChildren().clear(); // rimuovi vecchie immagini
-                dropped.setRotate(tileInHand.getRotate());
+                dropped.setRotate(componentInHand.getRotate());
                 slot.getChildren().add(dropped);
                 try {
                     client.sendAction(new ReserveTile());
@@ -323,6 +323,7 @@ public class BuildingPhaseController {
                     throw new RuntimeException(e);
                 }
                 tileInHand.setVisible(false);
+                tileInHand.setImage(null);
                 event.setDropCompleted(true);
             } else {
                 event.setDropCompleted(false);
@@ -339,15 +340,10 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved1() throws RemoteException {
-        componentInHand = null;
-        fromReserved = true;
         if (!reserved1.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved1.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(0));
-                tileInHand.setImage(imageView.getImage());
-                tileInHand.setRotate(imageView.getRotate());
-                tileInHand.setVisible(true);
                 reserved1.getChildren().remove(imageView); // rimuovi dalla riserva
                 reservedInHand = true;
             }
@@ -366,15 +362,10 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved2() throws RemoteException {
-        componentInHand = null;
-        fromReserved = true;
         if (!reserved2.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved2.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(1));
-                tileInHand.setImage(imageView.getImage());
-                tileInHand.setRotate(imageView.getRotate());
-                tileInHand.setVisible(true);
                 reserved2.getChildren().remove(imageView);
                 reservedInHand = true;
             }
@@ -491,11 +482,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void onRotateClicked() throws RemoteException{
-        double rotation;
-        if(fromReserved)
-            rotation = tileInHand.getRotate();
-        else
-            rotation = componentInHand.getRotate();
+        int rotation = componentInHand.getRotate();
         client.sendAction(new RotateTile());
         Platform.runLater(() -> {
             tileInHand.setRotate(rotation + 90);
