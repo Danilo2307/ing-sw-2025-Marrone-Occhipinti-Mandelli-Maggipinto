@@ -74,6 +74,7 @@ public class BuildingPhaseController {
     boolean reservedInHand = false;
     Component componentInHand;
     private StackPane cellToRemove = null;
+    private boolean fromReserved = false;
 
 
     // check
@@ -309,7 +310,7 @@ public class BuildingPhaseController {
 
         slot.setOnDragDropped(event -> {
             Dragboard db = event.getDragboard();
-            if (db.hasImage()) {
+            if (db.hasImage() && !fromReserved) {
                 ImageView dropped = new ImageView(db.getImage());
                 dropped.setFitWidth(86);
                 dropped.setFitHeight(86);
@@ -339,6 +340,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved1() throws RemoteException {
+        fromReserved = true;
         if (!reserved1.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved1.getChildren().get(0);
             if (imageView.getImage() != null) {
@@ -364,6 +366,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved2() throws RemoteException {
+        fromReserved = true;
         if (!reserved2.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved2.getChildren().get(0);
             if (imageView.getImage() != null) {
@@ -448,6 +451,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void onDrawHeapClicked() throws RemoteException {
+        fromReserved = false;
         client.sendAction(new DrawFromHeap());
     }
 
@@ -648,6 +652,7 @@ public class BuildingPhaseController {
      * @throws RemoteException if a communication-related exception occurs
      */
     private void drawUncovered(ImageView imageView) throws RemoteException {
+        fromReserved = false;
         int index = uncoveredBox.getChildren().indexOf(imageView);
         client.sendAction(new DrawFromFaceUp(index, lastVersion));
     }
