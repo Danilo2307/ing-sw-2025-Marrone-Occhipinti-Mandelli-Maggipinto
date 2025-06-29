@@ -171,7 +171,9 @@ public class Planets extends Card {
         if (loadedCount.get(player) < items.size()) {
             try {
                 Board board = game.getPlayerFromNickname(username).getTruck();
-                board.loadGood(items.get(loadedCount.get(player)), i, j);
+                if(i >= 0 && j >= 0) {
+                    board.loadGood(items.get(loadedCount.get(player)), i, j);
+                }
                 loadedCount.set(player, loadedCount.get(player) + 1);
                 if (verifyAll()) {
                     game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
