@@ -274,7 +274,7 @@ public class BuildingPhaseController {
                 ImageView dropped = new ImageView(db.getImage());
                 dropped.setFitWidth(94);
                 dropped.setFitHeight(94);
-                dropped.setRotate(componentInHand.getRotate());
+                dropped.setRotate(tileInHand.getRotate());
                 cell.getChildren().add(dropped);
                 tileInHand.setVisible(false); // svuota la mano
 
@@ -322,7 +322,6 @@ public class BuildingPhaseController {
                 } catch (RemoteException e) {
                     throw new RuntimeException(e);
                 }
-                tileInHand.setImage(null);
                 tileInHand.setVisible(false);
                 event.setDropCompleted(true);
             } else {
@@ -471,7 +470,7 @@ public class BuildingPhaseController {
         if (!reservedInHand) {
             client.sendAction(new ReleaseTile());
             Platform.runLater(() -> {
-                tileInHand.setImage(null);
+                tileInHand.setVisible(false);
             });
         }
         else {
@@ -490,7 +489,11 @@ public class BuildingPhaseController {
      */
     @FXML
     public void onRotateClicked() throws RemoteException{
-        int rotation = componentInHand.getRotate();
+        double rotation;
+        if(fromReserved)
+            rotation = tileInHand.getRotate();
+        else
+            rotation = componentInHand.getRotate();
         client.sendAction(new RotateTile());
         Platform.runLater(() -> {
             tileInHand.setRotate(rotation + 90);
