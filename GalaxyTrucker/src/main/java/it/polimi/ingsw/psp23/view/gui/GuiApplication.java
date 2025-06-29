@@ -677,7 +677,7 @@ public class GuiApplication extends Application implements ViewAPI {
      * on the current context.
      */
     public void backToShip(){
-        if(gameStatus == GameStatus.Building)
+        if(gameStatus == GameStatus.Building || gameStatus == GameStatus.CheckBoards || gameStatus == GameStatus.SetCrew )
             toBuildingPhase(null);
         else
             toFlightPhase();
