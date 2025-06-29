@@ -369,6 +369,11 @@ public class FlightPhaseController {
         });
     }
 
+    /**
+     * Configures the provided button to skip the selection of a "good prize."
+     *
+     * @param skip the button that will be configured to trigger the skip action
+     */
     private void setupSkipGoodPrize(Button skip){
         skip.setText("Skippa merce");
         enable(skip);
@@ -713,6 +718,7 @@ public class FlightPhaseController {
         //  carica o scarica merce
         setupLoadGoodBtn(button3);
         setupDropGoodBtn(button4, false);
+        setupSkipGoodPrize(button5);
     }
 
 
@@ -735,12 +741,13 @@ public class FlightPhaseController {
         setupLoadGoodBtn(button3);
         setupDropGoodBtn(button4, false);
         setupPassBtn(button5);
+        setupSkipGoodPrize(button6);
 
         // comandi perdenti
-        setupDropGoodBtn(button6, true);
-        button7.setText("Rimuovi batteria");
-        enable(button7);
-        button7.setOnAction(e -> {
+        setupDropGoodBtn(button7, true);
+        button8.setText("Rimuovi batteria");
+        enable(button8);
+        button8.setOnAction(e -> {
             singleSelector = new SingleTileSelector(batteryHub -> {
                 try {
                     client.sendAction(new RemoveBatteries(batteryHub.x(), batteryHub.y(), 1));

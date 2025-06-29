@@ -268,7 +268,7 @@ public class TuiApplication implements ViewAPI {
             TuiState.CHECK, Set.of("rimuovi", "mostra", "info", "corretta", "rotta"),
             TuiState.ADDCREW, Set.of("info", "mostra", "equipaggio", "finito", "rotta", "abbandona"),
             TuiState.NOTYOURTURN, Set.of("abbandona"),
-            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti"),
+            TuiState.PLAY, Set.of("mostra", "info", "rotta", "attiva", "rimuovi", "atterra", "pronto", "attracca", "carica", "compra", "passa","aiuto", "perdi", "sposta", "abbandona", "carta", "crediti", "skippa"),
             TuiState.ENDGAME, Set.of("abbandona")
     );
 
@@ -315,8 +315,7 @@ public class TuiApplication implements ViewAPI {
         }
 
         // Questo serve nel caso in cui noi dobbiamo gestire username sbagliati, per far sì che ogni parola da noi inserita
-        // durante lo stato di prelobby sia letta come uno username. Tramite la return siamo sicuri di non entrare nello
-        // switch
+        // durante lo stato di prelobby sia letta come uno username. Tramite la return siamo sicuri di non entrare nello switch
         if(currentTuiState == TuiState.PRELOBBY) {
             client.sendAction(new SetUsername(keyword));
             return;
@@ -571,6 +570,9 @@ public class TuiApplication implements ViewAPI {
             }
             case "crediti" -> {
                 client.sendAction(new EarnCredits());
+            }
+            case "skippa" -> {
+                client.sendAction(new LoadGood(-1,-1));
             }
             case "compra" -> {
                 client.sendAction(new BuyShip());
