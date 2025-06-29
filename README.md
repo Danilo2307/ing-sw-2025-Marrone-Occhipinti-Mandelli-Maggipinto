@@ -48,6 +48,15 @@ All project documentation can be found in the `/deliverables` directory of this 
 
 The most important classes and methods are documented with JavaDoc.
 
+### Test Coverage – `model` Package
+
+| Metric           | Coverage         |
+|------------------|-----------------|
+| **Lines**        | 100% (71/71)    |
+| **Branches**     | 81% (450/551)   |
+| **Instructions** | 84% (2113/2496) |
+| **Methods**      | 75% (1071/1428) |
+
 #### Used Tools
 
 | Library/Plugin | Description                          |
@@ -61,7 +70,7 @@ The most important classes and methods are documented with JavaDoc.
 ### How to Run
 
 * **Make sure to download the JAR files with git LFS or directly from GitHub.**
-* Open a terminal in the `/deliverables/jar/` folder.
+* Open a terminal in the folder where you saved the JAR files.
 * To run the server, execute:
 
   ```bash
