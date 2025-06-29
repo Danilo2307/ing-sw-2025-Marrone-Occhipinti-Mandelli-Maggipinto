@@ -340,6 +340,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved1() throws RemoteException {
+        fromReserved = true;
         if (!reserved1.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved1.getChildren().get(0);
             if (imageView.getImage() != null) {
@@ -362,6 +363,7 @@ public class BuildingPhaseController {
      */
     @FXML
     public void takeReserved2() throws RemoteException {
+        fromReserved = true;
         if (!reserved2.getChildren().isEmpty()) {
             ImageView imageView = (ImageView) reserved2.getChildren().get(0);
             if (imageView.getImage() != null) {
