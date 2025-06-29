@@ -1,5 +1,13 @@
 # Galaxy Trucker
 
+### About the Project
+This project is a digital implementation of the board game Galaxy Trucker by Cranio Creations.
+
+The application uses a single-server architecture capable of managing multiple concurrent games.
+Each game supports 2 to 4 players, who can join and play either via a Text-based User Interface (CLI/TUI) or a Graphical User Interface (GUI).
+
+The codebase leverages several established Software Engineering Design Patterns, with a strong emphasis on the Model-View-Controller (MVC) architecture.
+
 ### Team
 
 * [Maggipinto Luigi](https://github.com/gigimaggi03)
