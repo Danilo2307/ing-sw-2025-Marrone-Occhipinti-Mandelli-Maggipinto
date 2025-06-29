@@ -53,6 +53,9 @@ public class ServerActionHandler {
             Server.getInstance().sendMessage(username, dm);
             DirectMessage dm1 = new DirectMessage(new IncorrectWelding());
             Server.getInstance().sendMessage(username, dm1);
+        }catch (NullPointerException e2){
+            DirectMessage dm = new DirectMessage(new ErrorResponse("Riprova, inserimento errato\n"));
+            Server.getInstance().sendMessage(username, dm);
         }
 
     }

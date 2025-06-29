@@ -207,6 +207,10 @@ public class ClientRMIHandler extends UnicastRemoteObject implements ClientRMIHa
             DirectMessage dm1 = new DirectMessage(new IncorrectWelding());
             Server.getInstance().sendMessage(username, dm1);
         }
+        catch (NullPointerException nullPointerException) {
+            DirectMessage dm = new DirectMessage(new ErrorResponse("Riprova, inserimento errato\n"));
+            Server.getInstance().sendMessage(username, dm);
+        }
     }
 
     /**
