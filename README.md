@@ -39,7 +39,6 @@ All project documentation can be found in the `/deliverables` directory of this 
 #### JavaDoc
 
 The most important classes and methods are documented with JavaDoc.
-The generated JavaDoc can be found in `/images/javadoc`.
 
 #### Used Tools
 
