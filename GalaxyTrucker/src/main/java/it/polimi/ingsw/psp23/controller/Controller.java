@@ -56,9 +56,8 @@ public class Controller {
      *
      * @param nickname the unique nickname of the player to be added to the game
      * @throws PlayerExistsException if a player with the specified nickname already exists in the game
-     * @throws GameFullException if the game has reached its maximum allowed number of players
      */
-    public void addPlayerToGame(String nickname) throws PlayerExistsException, GameFullException {
+    public void addPlayerToGame(String nickname) throws PlayerExistsException {
         Game game = Server.getInstance().getGame(gameId);
 
         if(game.getGameStatus() == GameStatus.Setup) {
