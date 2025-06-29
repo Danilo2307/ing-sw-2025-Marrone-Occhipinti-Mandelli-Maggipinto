@@ -297,7 +297,6 @@ public class Server {
 
                 List<String> usersConnected = UsersConnected.getInstance().getClients(gameIdConsidering);
 
-                // TODO: modifica l'oggetto di sincronizzazione
                 synchronized (UsersConnected.getInstance()) {
                     clients.put(nameConnection, socketHandler);
                     UsersConnected.getInstance().addClient(nameConnection, gameIdConsidering);

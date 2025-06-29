@@ -42,7 +42,6 @@ public class ServerActionHandler {
             a.call(new HandleActionVisitor(), username);
 
         }
-        /// TODO: raccolgo eccezioni lanciate dalla call
         // Catch all game-related exceptions triggered by invalid player actions.
         // These are not recoverable errors but rule violations (e.g., wrong component state or illegal move).
         // The server sends an error message back to the client to notify them, without stopping the game flow.

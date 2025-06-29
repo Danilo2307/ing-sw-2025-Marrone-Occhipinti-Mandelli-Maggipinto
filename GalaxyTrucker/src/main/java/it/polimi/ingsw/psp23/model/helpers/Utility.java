@@ -63,9 +63,6 @@ public final class Utility {
                         // resetting k causes the cycle to restart in case of a collision, ensuring
                         // the current player is compared with ALL OTHER PLAYERS PRESENT
                         k=0;
-
-                        /* TODO: bisogna attenzionare che non ci siano loop infiniti dovuto magari ad un accavallamento successivo delle pedine
-                                 che potrebbe portare questo ciclo a non esaurirsi mai perchè trova sempre posizioni occupate dopo */
                     }
                 }
             }
@@ -78,9 +75,6 @@ public final class Utility {
                         // resetting k causes the cycle to restart in case of a collision, ensuring
                         // the current player is compared with ALL OTHER PLAYERS PRESENT
                         k=0;
-                        
-                        /* TODO: bisogna attenzionare che non ci siano loop infiniti dovuto magari ad un accavallamento successivo delle pedine
-                                 che potrebbe portare questo ciclo a non esaurirsi mai perchè trova sempre posizioni occupate dopo */
                     }
                 }
             }

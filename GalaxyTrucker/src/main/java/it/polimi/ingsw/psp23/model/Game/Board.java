@@ -341,7 +341,6 @@ public class Board {
 
         // adesso elimino i pezzi che non sono più raggiungibili, ricominciando il ciclo ogni volta che ne trovo uno
         // perchè potrebbe essere importante per collegare altri componenti
-        // TODO: manca da analizzare il caso in cui venga eliminata il modulo centrale
         for (int row = 0; row < ship.length; row++) {
             for (int col = 0; col < ship[row].length; col++) {
                 // 2,3 sono le coordinate della cabina centrale

@@ -55,8 +55,6 @@ public class StartListeningForServerThread extends Thread {
      *
      * @throws RuntimeException if an unexpected error occurs during the execution of the method.
      */
-    // TODO: il seguente metodo potrebbe essere migliorato aggiungendo ad esempio un timeout nel caso in cui la
-    //       connessione dovesse cadere in maniera inappropriata, causando un mancato aggiornamento del flag isClosed
     @Override
     public void run() {
         try{
@@ -72,7 +70,6 @@ public class StartListeningForServerThread extends Thread {
                     // Dopo che ci arriva un messaggio dobbiamo interpretarlo. Se è un messaggio di tipo "observer"
                     // allora chiamiamo il metodo dell'interfaccia messageObserver, altrimenti si chiama il semplice
                     // handleMessage presente nel client
-                    // TODO: cambia switch con visitor
                     switch(message){
                         case BroadcastMessage m -> {
                             Event event = m.getEvent();

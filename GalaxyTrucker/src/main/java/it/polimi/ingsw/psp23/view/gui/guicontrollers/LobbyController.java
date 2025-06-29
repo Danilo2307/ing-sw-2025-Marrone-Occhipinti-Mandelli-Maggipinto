@@ -265,7 +265,6 @@ public class LobbyController {
         String username = usernameField.getText();
         if(client.isRmi()){
             try {
-                // TODO: client.getGameServer().setPlayerUsername(username);
                 if (RMIIdGameChosen == 0) {
                     RMIIdGameChosen = client.getGameServer().getGamesSize();
                     client.setId(RMIIdGameChosen - 1);

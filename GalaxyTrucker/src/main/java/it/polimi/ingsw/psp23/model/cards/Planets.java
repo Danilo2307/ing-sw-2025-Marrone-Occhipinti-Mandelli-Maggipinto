@@ -192,7 +192,6 @@ public class Planets extends Card {
      * Verifies if all goods for occupied planets are loaded.
      * @return true if all goods loaded, false otherwise
      */
-    // TODO: da rivedere perchè non è detto che i player che atterrano caricano tutte le merci presenti sul pianeta
     private boolean verifyAll() {
         for (String player : planetsOccupied) {
             if (player != null && loadedCount.get(planetsOccupied.indexOf(player)) != planetGoods.get(planetsOccupied.indexOf(player)).size()) {
