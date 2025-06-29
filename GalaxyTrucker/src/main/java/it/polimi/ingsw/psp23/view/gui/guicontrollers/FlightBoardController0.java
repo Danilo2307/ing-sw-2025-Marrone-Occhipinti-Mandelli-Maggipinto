@@ -82,7 +82,6 @@ public class FlightBoardController0 {
         for(Map.Entry<Color,Integer> entry : colors.entrySet()){
             Platform.runLater(()->{
                 Color color = entry.getKey();
-                System.out.println("Qui ci arrivo con almeno un colore " + entry.getValue() + " " + entry.getKey());
                 String imagePath = "/it/polimi/ingsw/psp23/images/cards/" + 101 + ".jpg";
                 javafx.scene.image.Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
                 int newPosition = entry.getValue();
