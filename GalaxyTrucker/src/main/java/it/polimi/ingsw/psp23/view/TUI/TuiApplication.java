@@ -388,6 +388,9 @@ public class TuiApplication implements ViewAPI {
                         io.error("Non hai inviato il numero corretto di parametri, riprova");
                     } else {
                         int index = Integer.parseInt(words[2]);
+                        if (index <= 0 || index >= 3) {
+                            throw new TuiInputException("Devi inserire un numero compreso tra 1 e 2!");
+                        }
                         client.sendAction(new TakeReservedTile(index - 1));
                     }
                 }

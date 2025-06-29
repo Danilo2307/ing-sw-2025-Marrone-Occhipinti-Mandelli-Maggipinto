@@ -18,8 +18,12 @@ public record TakeReservedTile(int index) implements Action{
     public void handle(String username) {
         Game game = UsersConnected.getInstance().getGameFromUsername(username);
         Player p = game.getPlayerFromNickname(username);
-        // suppongo utente inserisca 1-based
-        p.takeReservedTile(index);
+        int trueIndex = index;
+
+        if (p.getTruck().getReservedTiles().size() == 1 && index == 1) {
+            trueIndex = 0;
+        }
+        p.takeReservedTile(trueIndex);
     }
 
     @Override
