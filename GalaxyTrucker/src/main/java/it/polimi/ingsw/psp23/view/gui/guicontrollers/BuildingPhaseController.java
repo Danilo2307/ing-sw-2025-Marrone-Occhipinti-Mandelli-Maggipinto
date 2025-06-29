@@ -342,6 +342,7 @@ public class BuildingPhaseController {
             ImageView imageView = (ImageView) reserved1.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(0));
+                tileInHand.setRotate(0);
                 tileInHand.setImage(imageView.getImage());
                 tileInHand.setVisible(true);
                 reserved1.getChildren().remove(imageView); // rimuovi dalla riserva
@@ -366,6 +367,7 @@ public class BuildingPhaseController {
             ImageView imageView = (ImageView) reserved2.getChildren().get(0);
             if (imageView.getImage() != null) {
                 client.sendAction(new TakeReservedTile(1));
+                tileInHand.setRotate(0);
                 tileInHand.setImage(imageView.getImage());
                 tileInHand.setVisible(true);
                 reserved2.getChildren().remove(imageView);

@@ -71,12 +71,12 @@
                     <font>
                         <Font name="Arial Black" size="16.0" />
                     </font></Button>
-            <Button fx:id="button7" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" text="Bottone 7" visible="false">
+            <Button fx:id="button7" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" text="Bottone 7" visible="false" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="16.0" />
                </font>
             </Button>
-            <Button fx:id="button8" layoutX="10.0" layoutY="247.0" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" text="Bottone 8" visible="false">
+            <Button fx:id="button8" layoutX="10.0" layoutY="247.0" managed="false" mnemonicParsing="false" prefHeight="35.0" prefWidth="200.0" text="Bottone 8" visible="false" styleClass="default-button">
                <font>
                   <Font name="Arial Black" size="16.0" />
                </font>
