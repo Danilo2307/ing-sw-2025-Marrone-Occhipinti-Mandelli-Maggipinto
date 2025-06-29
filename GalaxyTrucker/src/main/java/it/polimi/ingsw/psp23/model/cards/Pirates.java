@@ -228,6 +228,11 @@ public class Pirates extends Card {
             losers.add(username);
         }
         if (game.getCurrentPlayerIndex() >= game.getPlayers().size() - 1) {
+            if(losers.isEmpty()){
+                game.setGameStatus(GameStatus.WAITING_FOR_NEW_CARD);
+                Server.getInstance().notifyAllObservers(new BroadcastMessage(new StringResponse("Il leader deve pescare la carta successiva\n")), game.getId());
+                return;
+            }
             game.setCurrentPlayer(game.getPlayerFromNickname(losers.getFirst()));
             game.setGameStatus(GameStatus.END_PIRATES);
             if(getLevel() == 2){
