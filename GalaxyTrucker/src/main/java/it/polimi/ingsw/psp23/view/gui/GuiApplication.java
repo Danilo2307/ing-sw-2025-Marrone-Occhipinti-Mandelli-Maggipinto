@@ -419,7 +419,7 @@ public class GuiApplication extends Application implements ViewAPI {
     }
 
     /**
-     * Stop the current match and close view.
+     * Stop the current match and show the game over scene on the view.
      *
      * @param message the message to be displayed to indicate the end of the match
      */

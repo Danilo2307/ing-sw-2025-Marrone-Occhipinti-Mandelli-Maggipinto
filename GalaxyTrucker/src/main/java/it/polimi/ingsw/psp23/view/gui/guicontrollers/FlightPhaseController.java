@@ -37,6 +37,7 @@ public class FlightPhaseController {
     @FXML Button button5;
     @FXML Button button6;
     @FXML Button button7;
+    @FXML Button button8;
     @FXML ImageView card;
     @FXML Button drawBtn;
     @FXML Label textLabel;
@@ -54,25 +55,6 @@ public class FlightPhaseController {
 
     public void setClient(Client client) {
         this.client = client;
-    }
-
-    public Button getButton1() {
-        return button1;
-    }
-    public Button getButton2() {
-        return button2;
-    }
-    public Button getButton3() {
-        return button3;
-    }
-    public Button getButton4() {
-        return button4;
-    }
-    public Button getButton5() {
-        return button5;
-    }
-    public Button getButton6() {
-        return button6;
     }
     public Button getDrawBtn() { return drawBtn; }
     public Label getTextLabel(){
@@ -240,6 +222,7 @@ public class FlightPhaseController {
         disable(button5);
         disable(button6);
         disable(button7);
+        disable(button8);
     }
 
 
@@ -380,6 +363,19 @@ public class FlightPhaseController {
         ready.setOnAction(e -> {
             try {
                 client.sendAction(new Ready());
+            } catch (RemoteException ex) {
+                ex.printStackTrace();
+            }
+        });
+    }
+
+    private void setupSkipGoodPrize(Button skip){
+        skip.setText("Skippa merce");
+        enable(skip);
+        skip.setOnAction(e -> {
+            try {
+                client.sendAction(new LoadGood(-1,-1));
+
             } catch (RemoteException ex) {
                 ex.printStackTrace();
             }
@@ -547,6 +543,7 @@ public class FlightPhaseController {
                 setupPassBtn(button5);
                 setupLoadGoodBtn(button6);
                 setupDropGoodBtn(button7, false);
+                setupSkipGoodPrize(button8);
 
             }
 
@@ -559,6 +556,7 @@ public class FlightPhaseController {
                 setupPassBtn(button4);
                 setupLoadGoodBtn(button5);
                 setupDropGoodBtn(button6, false);
+                setupSkipGoodPrize(button7);
 
             }
 
@@ -570,6 +568,7 @@ public class FlightPhaseController {
                 setupPassBtn(button3);
                 setupLoadGoodBtn(button4);
                 setupDropGoodBtn(button5, false);
+                setupSkipGoodPrize(button6);
 
             }
         }
