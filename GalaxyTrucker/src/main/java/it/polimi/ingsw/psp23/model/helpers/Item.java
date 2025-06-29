@@ -2,11 +2,14 @@ package it.polimi.ingsw.psp23.model.helpers;
 
 import it.polimi.ingsw.psp23.model.enumeration.Color;
 
+import java.io.Serializable;
+
 /**
  * Represents an item characterized by a specific color.
  * The color of the item is immutable and defined during object construction.
  */
-public class Item {
+public class Item implements Serializable {
+
     private final Color color;
 
     public Item(Color itemcolor) {
