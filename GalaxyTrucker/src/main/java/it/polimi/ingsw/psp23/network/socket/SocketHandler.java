@@ -90,12 +90,9 @@ public class SocketHandler {
                 throw new SocketTimeoutException("Problema(SocketTimeoutException) in readMessage in SocketHandler " + e.getMessage());
             }
             catch (IOException e) {
-                // e.printStackTrace();
                 int gameId = UsersConnected.getInstance().getGameFromUsername(username).getId();
-//                Server.getInstance().notifyAllObservers(new BroadcastMessage(new MatchAbandoned("La partita è terminata perchè un player è uscito\n")), gameId);
                 Server.getInstance().disconnectAll(gameId, username);
                 throw new SocketTimeoutException("stop listening");
-                // throw new RuntimeException("Problema(IOException) in readMessage in SocketHandler " + e.getMessage());
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 throw new RuntimeException("Problema(ClassNotFoundException) in readMessage in SocketHandler " + e.getMessage());
